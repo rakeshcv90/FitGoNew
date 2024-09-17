@@ -56,7 +56,7 @@ import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import FastImage from 'react-native-fast-image';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import OverExerciseModal from '../../Component/Utilities/OverExercise';
-import { ArrowLeft } from '../../Component/Utilities/Arrows/Arrow';
+import {ArrowLeft} from '../../Component/Utilities/Arrows/Arrow';
 
 const format = 'hh:mm:ss';
 const OneDay = ({navigation, route}: any) => {
@@ -236,7 +236,7 @@ const OneDay = ({navigation, route}: any) => {
     ) {
       console.warn('COMPLETEE', moment().format(format), getExerciseOutTime);
       dispatch(setExerciseInTime(moment().format(format)));
-    } 
+    }
   }, [getExerciseInTime, getExerciseOutTime, start]);
 
   const postCurrentDayAPI = async () => {
@@ -387,9 +387,19 @@ const OneDay = ({navigation, route}: any) => {
                 <Text style={[styles.small, {fontSize: 14}]}>
                   {item?.exercise_title}
                 </Text>
-                <Text style={styles.small}>
-                  {time > 60 ? Math.floor(time / 60) + ' min' : time + ' sec'}
-                </Text>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Text style={styles.small}>
+                    {'Time - ' +
+                      '1 x ' +
+                      (time > 60
+                        ? Math.floor(time / 60) + ' min'
+                        : time + ' sec')}{' '}
+                    |{' '}
+                  </Text>
+                  <Text style={styles.small}>
+                    {'Set - ' + item?.exercise_sets}
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
@@ -748,7 +758,7 @@ const OneDay = ({navigation, route}: any) => {
             color={AppColor.INPUTTEXTCOLOR}
           />
           {dayData?.total_rest > 60
-            ? ` ${(dayData?.total_rest / 60).toFixed(0)} min `
+            ? ` ${((dayData?.total_rest * 3) / 60).toFixed(0)} min `
             : ` ${dayData?.total_rest} sec `}
           <Icons name={'fire'} size={15} color={AppColor.INPUTTEXTCOLOR} />
           {` ${dayData?.total_calories} Kcal`}

@@ -906,19 +906,20 @@ const NewFocusWorkouts = ({route, navigation}) => {
                           }}>
                           {item?.exercise_title}
                         </Text>
-                        <Text
-                          style={{
-                            fontSize: 14,
-                            fontWeight: '400',
-                            lineHeight: 24,
-                            opacity: 0.7,
-                            fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                            color: '#1E1E1E',
-                          }}>
-                          {time > 60
-                            ? Math.floor(time / 60) + ' min'
-                            : time + ' sec'}
-                        </Text>
+                        <View
+                          style={{flexDirection: 'row', alignItems: 'center'}}>
+                          <Text style={styles.txt2}>
+                            {'Time - ' +
+                              '1 x ' +
+                              (time > 60
+                                ? Math.floor(time / 60) + ' min'
+                                : time + ' sec')}{' '}
+                            |{' '}
+                          </Text>
+                          <Text style={styles.txt2}>
+                            {'Set - ' + item?.exercise_sets}
+                          </Text>
+                        </View>
                       </View>
                       {selectedIndex == index && downloadProgress <= 5 ? (
                         <ActivityIndicator
@@ -1126,5 +1127,13 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  txt2: {
+    fontSize: 14,
+    fontWeight: '400',
+    lineHeight: 30,
+    // opacity: 0.7,
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    color: '#1E1E1E',
+  }
 });
 export default NewFocusWorkouts;

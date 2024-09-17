@@ -742,7 +742,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                         },
                       ]}>
                       {item?.total_rest > 60
-                        ? `${(item?.total_rest / 60).toFixed(0)} min`
+                        ? `${((item?.total_rest * 3) / 60).toFixed(0)} min`
                         : `${item?.total_rest} sec`}
                       {'   '}
                       <Text

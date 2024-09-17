@@ -71,36 +71,50 @@ export const ExerciseComponetWithoutEvents = ({
               width: DeviceWidth * 0.9,
               alignSelf: 'center',
             }}
-            renderItem={({item, index}) => (
-              <View key={index}>
-                <TouchableOpacity
-                  style={[styles.button, {justifyContent: 'flex-start'}]}
-                  onPress={() => {
-                    setData(item);
-                    setOpen(true);
-                  }}>
-                  <View style={[styles.View4]}>
-                    <Image
-                      source={{uri: item?.exercise_image_link}}
-                      style={{height: 70, width: 70}}
-                      resizeMode="contain"
-                      defaultSource={localImage.NOWORKOUT}
-                    />
-                  </View>
-                  <View style={{marginLeft: 15}}>
-                    <Text style={[styles.txt3, {marginVertical: 6}]}>
-                      {item?.exercise_title}
-                    </Text>
-                    <Text style={styles.txt2}>
-                      {'Time - ' + item?.exercise_rest}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-                {dayObject?.exercises.length - 1 == index ? null : (
-                  <View style={styles.border} />
-                )}
-              </View>
-            )}
+            renderItem={({item, index}) => {
+              const time = parseInt(item?.exercise_rest.split(' ')[0]);
+              return (
+                <View key={index}>
+                  <TouchableOpacity
+                    style={[styles.button, {justifyContent: 'flex-start'}]}
+                    onPress={() => {
+                      setData(item);
+                      setOpen(true);
+                    }}>
+                    <View style={[styles.View4]}>
+                      <Image
+                        source={{uri: item?.exercise_image_link}}
+                        style={{height: 70, width: 70}}
+                        resizeMode="contain"
+                        defaultSource={localImage.NOWORKOUT}
+                      />
+                    </View>
+                    <View style={{marginLeft: 15}}>
+                      <Text style={[styles.txt3, {marginVertical: 6}]}>
+                        {item?.exercise_title}
+                      </Text>
+                      <View
+                        style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <Text style={styles.txt2}>
+                          {'Time - ' +
+                            '1 x ' +
+                            (time > 60
+                              ? Math.floor(time / 60) + ' min'
+                              : time + ' sec')}{' '}
+                          |{' '}
+                        </Text>
+                        <Text style={styles.txt2}>
+                          {'Set - ' + item?.exercise_sets}
+                        </Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                  {dayObject?.exercises.length - 1 == index ? null : (
+                    <View style={styles.border} />
+                  )}
+                </View>
+              );
+            }}
           />
           <WorkoutsDescription data={data} open={open} setOpen={setOpen} />
         </>
@@ -279,36 +293,52 @@ export const ExerciseComponentWithEvent = ({
               alignSelf: 'center',
               // marginBottom: DeviceHeigth * 0.35,
             }}
-            renderItem={({item, index}) => (
-              <View key={index}>
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => {
-                    setData(item);
-                    setOpen(true);
-                  }}>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <View style={styles.View4}>
-                      <Image
-                        source={{uri: item?.exercise_image_link}}
-                        style={{height: 70, width: 70}}
-                        resizeMode="contain"
-                        defaultSource={localImage.NOWORKOUT}
-                      />
+            renderItem={({item, index}) => {
+              const time = parseInt(item?.exercise_rest.split(' ')[0]);
+              return (
+                <View key={index}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => {
+                      setData(item);
+                      setOpen(true);
+                    }}>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <View style={styles.View4}>
+                        <Image
+                          source={{uri: item?.exercise_image_link}}
+                          style={{height: 70, width: 70}}
+                          resizeMode="contain"
+                          defaultSource={localImage.NOWORKOUT}
+                        />
+                      </View>
+                      <View style={{marginLeft: 15, width: DeviceWidth * 0.55}}>
+                        <Text style={[styles.txt3]}>
+                          {item?.exercise_title}
+                        </Text>
+                        <View
+                          style={{flexDirection: 'row', alignItems: 'center'}}>
+                          <Text style={styles.txt2}>
+                            {'Time - ' +
+                              '1 x ' +
+                              (time > 60
+                                ? Math.floor(time / 60) + ' min'
+                                : time + ' sec')}{' '}
+                            |{' '}
+                          </Text>
+                          <Text style={styles.txt2}>
+                            {'Set - ' + item?.exercise_sets}
+                          </Text>
+                        </View>
+                      </View>
                     </View>
-                    <View style={{marginLeft: 15, width: DeviceWidth * 0.55}}>
-                      <Text style={[styles.txt3]}>{item?.exercise_title}</Text>
-                      <Text style={styles.txt2}>
-                        {'Time - ' + item?.exercise_rest}
-                      </Text>
-                    </View>
-                  </View>
-                </TouchableOpacity>
-                {dayObject?.exercises.length - 1 == index ? null : (
-                  <View style={styles.border} />
-                )}
-              </View>
-            )}
+                  </TouchableOpacity>
+                  {dayObject?.exercises.length - 1 == index ? null : (
+                    <View style={styles.border} />
+                  )}
+                </View>
+              );
+            }}
           />
           <WorkoutsDescription data={data} open={open} setOpen={setOpen} />
         </>

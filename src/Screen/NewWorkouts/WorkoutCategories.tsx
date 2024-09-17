@@ -67,152 +67,9 @@ interface BoxProps {
   downloadProgress: number;
   isItemDownload: boolean;
   isSelected: boolean;
-  switchButton: boolean;
-  handlePress: Function;
-  handleIconPress: Function;
-  selectedIndex: number;
 }
 
 const format = 'hh:mm:ss';
-
-const Box: FC<BoxProps> = ({
-  item,
-  index,
-  isSelected,
-  switchButton,
-  isItemDownload,
-  downloadProgress,
-  selectedIndex,
-  handleIconPress,
-  handlePress,
-}) => {
-  const time = parseInt(item?.exercise_rest.split(' ')[0]);
-  const showAds = (index + 1) % 9 == 0;
-  return (
-    <>
-      <View
-        style={{
-          borderColor: '#33333314',
-          borderBottomWidth: 1,
-        }}>
-        <TouchableOpacity
-          key={index}
-          onPress={() => {
-            if (isItemDownload || downloadProgress > 0) {
-            } else handlePress(item);
-          }}
-          activeOpacity={switchButton ? 0.8 : 1}
-          style={styles.boxContainer}>
-          <View style={styles.boxImage}>
-            <FastImage
-              // fallback={true}
-              style={{
-                width: '100%',
-                height: '100%',
-                justifyContent: 'center',
-                alignSelf: 'center',
-              }}
-              source={{
-                uri: item?.exercise_image_link,
-                headers: {Authorization: 'someAuthToken'},
-                priority: FastImage.priority.high,
-              }}
-              resizeMode={FastImage.resizeMode.contain}
-              defaultSource={localImage.NOWORKOUT}
-            />
-          </View>
-          <View
-            style={{
-              marginHorizontal: 15,
-              width: DeviceHeigth >= 1024 ? '80%' : '65%',
-              // backgroundColor: 'lightgreen',
-            }}>
-            <Text
-              style={{
-                fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                fontSize: 16,
-                fontWeight: '600',
-                color: AppColor.LITELTEXTCOLOR,
-                lineHeight: 24,
-              }}>
-              {item?.exercise_title}
-            </Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text style={[styles.small, {textTransform: 'capitalize'}]}>
-                {/* {item?.exercise_rest} */}
-                {time > 30 ? Math.floor(time / 60) + ' min' : time + ' sec'}
-              </Text>
-            </View>
-          </View>
-          {switchButton ? (
-            <TouchableOpacity
-              onPress={() => {
-                handleIconPress(item, index);
-              }}>
-              <View
-                style={[
-                  styles.boxIconView,
-                  {
-                    backgroundColor: isSelected ? '#f0013b' : 'white',
-                    borderColor: isSelected ? '#f0013b' : '#33333399',
-                  },
-                ]}>
-                {isSelected && <Font name="check" color="white" />}
-              </View>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              disabled={isItemDownload}
-              onPress={() => {
-                if (isItemDownload || downloadProgress > 0) {
-                } else {
-                  handleIconPress(item, index);
-                }
-              }}>
-              {isItemDownload && downloadProgress <= 5 ? (
-                <ActivityIndicator
-                  color={AppColor.NEW_DARK_RED}
-                  animating={isItemDownload && downloadProgress <= 5}
-                  size={30}
-                />
-              ) : (
-                <CircularProgressBase
-                  value={isItemDownload ? downloadProgress : 0}
-                  radius={14}
-                  activeStrokeColor={AppColor.RED}
-                  inActiveStrokeColor="#33333399"
-                  activeStrokeWidth={2}
-                  inActiveStrokeWidth={2}
-                  maxValue={100}>
-                  <Image
-                    source={localImage.ExercisePlay}
-                    tintColor={selectedIndex != index ? '#565656' : ''}
-                    resizeMode="contain"
-                    style={{
-                      width: 12,
-                      height: 12,
-                      alignSelf: 'center',
-                    }}
-                  />
-                </CircularProgressBase>
-              )}
-            </TouchableOpacity>
-          )}
-        </TouchableOpacity>
-      </View>
-      {/* {getAdsDisplay(index, item)} */}
-      {showAds && (
-        <View
-          style={{
-            alignSelf: 'center',
-            alignItems: 'center',
-          }}>
-          <NativeAddTest type="image" media={false} />
-        </View>
-      )}
-    </>
-  );
-};
 
 const WorkoutCategories = ({navigation, route}: any) => {
   const [item, setItem] = useState();
@@ -529,6 +386,147 @@ const WorkoutCategories = ({navigation, route}: any) => {
     }
   };
 
+  const Box: FC<BoxProps> = ({
+    item,
+    index,
+    isSelected,
+    isItemDownload,
+    downloadProgress,
+  }) => {
+    const time = parseInt(item?.exercise_rest.split(' ')[0]);
+    const showAds = (index + 1) % 9 == 0;
+    return (
+      <>
+        <View
+          style={{
+            borderColor: '#33333314',
+            borderBottomWidth: 1,
+          }}>
+          <TouchableOpacity
+            key={index}
+            onPress={() => {
+              if (isItemDownload || downloadProgress > 0) {
+              } else handlePress(item);
+            }}
+            activeOpacity={switchButton ? 0.8 : 1}
+            style={styles.boxContainer}>
+            <View style={styles.boxImage}>
+              <FastImage
+                // fallback={true}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  justifyContent: 'center',
+                  alignSelf: 'center',
+                }}
+                source={{
+                  uri: item?.exercise_image_link,
+                  headers: {Authorization: 'someAuthToken'},
+                  priority: FastImage.priority.high,
+                }}
+                resizeMode={FastImage.resizeMode.contain}
+                defaultSource={localImage.NOWORKOUT}
+              />
+            </View>
+            <View
+              style={{
+                marginHorizontal: 15,
+                width: DeviceHeigth >= 1024 ? '80%' : '65%',
+                // backgroundColor: 'lightgreen',
+              }}>
+              <Text
+                style={{
+                  fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                  fontSize: 16,
+                  fontWeight: '600',
+                  color: AppColor.LITELTEXTCOLOR,
+                  lineHeight: 24,
+                }}>
+                {item?.exercise_title}
+              </Text>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text style={[styles.small, {textTransform: 'capitalize'}]}>
+                  {'Time - ' +
+                    '1 x ' +
+                    (time > 60
+                      ? Math.floor(time / 60) + ' min'
+                      : time + ' sec')}{' '}
+                  |{' '}
+                </Text>
+                <Text style={[styles.small, {textTransform: 'capitalize'}]}>
+                  {'Set - ' + item?.exercise_sets}
+                </Text>
+              </View>
+            </View>
+            {switchButton ? (
+              <TouchableOpacity
+                onPress={() => {
+                  handleIconPress(item, index);
+                }}>
+                <View
+                  style={[
+                    styles.boxIconView,
+                    {
+                      backgroundColor: isSelected ? '#f0013b' : 'white',
+                      borderColor: isSelected ? '#f0013b' : '#33333399',
+                    },
+                  ]}>
+                  {isSelected && <Font name="check" color="white" />}
+                </View>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                disabled={isItemDownload}
+                onPress={() => {
+                  if (isItemDownload || downloadProgress > 0) {
+                  } else {
+                    handleIconPress(item, index);
+                  }
+                }}>
+                {isItemDownload && downloadProgress <= 5 ? (
+                  <ActivityIndicator
+                    color={AppColor.NEW_DARK_RED}
+                    animating={isItemDownload && downloadProgress <= 5}
+                    size={30}
+                  />
+                ) : (
+                  <CircularProgressBase
+                    value={isItemDownload ? downloadProgress : 0}
+                    radius={14}
+                    activeStrokeColor={AppColor.RED}
+                    inActiveStrokeColor="#33333399"
+                    activeStrokeWidth={2}
+                    inActiveStrokeWidth={2}
+                    maxValue={100}>
+                    <Image
+                      source={localImage.ExercisePlay}
+                      tintColor={selectedIndex != index ? '#565656' : ''}
+                      resizeMode="contain"
+                      style={{
+                        width: 12,
+                        height: 12,
+                        alignSelf: 'center',
+                      }}
+                    />
+                  </CircularProgressBase>
+                )}
+              </TouchableOpacity>
+            )}
+          </TouchableOpacity>
+        </View>
+        {/* {getAdsDisplay(index, item)} */}
+        {showAds && (
+          <View
+            style={{
+              alignSelf: 'center',
+              alignItems: 'center',
+            }}>
+            <NativeAddTest type="image" media={false} />
+          </View>
+        )}
+      </>
+    );
+  };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
       <Wrapper>
@@ -599,12 +597,8 @@ const WorkoutCategories = ({navigation, route}: any) => {
                   item={item}
                   index={index}
                   isSelected={selectedExercise.includes(item?.exercise_id)}
-                  switchButton={switchButton}
                   isItemDownload={selectedIndex == index}
                   downloadProgress={downloadProgress}
-                  handleIconPress={handleIconPress}
-                  handlePress={handlePress}
-                  selectedIndex={selectedIndex}
                 />
               );
             }}
@@ -706,7 +700,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500',
     color: '#1E1E1ECC',
-    lineHeight: 20,
+    lineHeight: 30,
   },
   buttonText: {
     fontSize: 14,
