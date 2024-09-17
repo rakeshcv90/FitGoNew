@@ -234,7 +234,7 @@ const UserEspecially = () => {
               lineHeight: 20,
               color: AppColor.PrimaryTextColor,
             }}>
-            Especially for you
+            Especially For You
           </Text>
         </View>
         <View
@@ -330,7 +330,7 @@ const UserEspecially = () => {
                     lineHeight: 17,
                     color: AppColor.WHITE,
                   }}>
-                  Near by gym
+                  Nearby Gyms
                 </Text>
                 <View
                   style={{
@@ -414,7 +414,7 @@ const UserEspecially = () => {
                       lineHeight: 16,
                       color: AppColor.WHITE,
                     }}>
-                    Reach Your Goals Quicker with a Nutritious Diet
+                    Reach your goals quicker with a nutritious diet
                   </Text>
                   {/* <Text
                     style={{

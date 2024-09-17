@@ -184,14 +184,6 @@ const Workouts = ({navigation}: any) => {
 
   useEffect(() => {
     if (isFocused) {
-      initInterstitial();
-      // getAllExerciseData();
-      // ChallengesDataAPI();
-      getAllChallangeAndAllExerciseData();
-      // getCustomeWorkoutTimeDetails();
-      // getCustomWorkout();
-      getUserDetailData();
-      getWorkoutStatus();
       setCurrentCategories(
         getUserDataDetails?.gender == 'Female' ? FemaleCategory : MaleCategory,
       );
@@ -232,85 +224,6 @@ const Workouts = ({navigation}: any) => {
     },
   ];
 
-  const getAllChallangeAndAllExerciseData = async () => {
-    let responseData = 0;
-    if (Object.keys(getUserDataDetails).length > 0) {
-      try {
-        responseData = await axios.get(
-          `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
-        );
-        setIsLoaded(true);
-        dispatch(setChallengesData(responseData?.data?.challenge_data));
-        dispatch(setAllExercise(responseData?.data?.data));
-      } catch (error) {
-        setIsLoaded(true);
-        console.log('GET-USER-Challange and AllExerciseData DATA', error);
-        dispatch(setChallengesData([]));
-        dispatch(setAllExercise([]));
-      }
-    } else {
-      try {
-        responseData = await axios.get(
-          `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}`,
-        );
-        setIsLoaded(true);
-        dispatch(setChallengesData(responseData?.data?.challenge_data));
-        dispatch(setAllExercise(responseData?.data?.data));
-      } catch (error) {
-        setIsLoaded(true);
-        dispatch(setChallengesData([]));
-        dispatch(setAllExercise([]));
-
-        console.log('GET-USER-Challange and AllExerciseData DATA', error);
-      }
-    }
-  };
-  const getWorkoutStatus = async () => {
-    try {
-      const exerciseStatus = await axios.get(
-        `${NewAppapi.USER_EXERCISE_COMPLETE_STATUS}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}`,
-      );
-
-      if (
-        exerciseStatus?.data.msg ==
-        'Please update the app to the latest version'
-      ) {
-      } else if (exerciseStatus?.data.length > 0) {
-        dispatch(setWorkoutTimeCal(exerciseStatus?.data));
-      } else {
-        dispatch(setWorkoutTimeCal([]));
-      }
-    } catch (error) {
-      console.log('Workout-Status', error);
-    }
-  };
-
-  const getUserDetailData = async () => {
-    try {
-      const responseData = await axios.get(
-        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
-      );
-
-      if (
-        responseData?.data?.msg ==
-        'Please update the app to the latest version.'
-      ) {
-        showMessage({
-          message: responseData?.data?.msg,
-          type: 'danger',
-          animationDuration: 500,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-      } else {
-        setIsLoaded(true);
-        dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
-      }
-    } catch (error) {
-      setIsLoaded(true);
-      console.log('GET-USER-DATA', error);
-    }
-  };
   const renderItem = useMemo(() => {
     return ({item, index}: any) => (
       <>
@@ -756,26 +669,11 @@ const Workouts = ({navigation}: any) => {
   return (
     <>
       <View style={styles.container}>
-        {isLoaded ? null : <ActivityLoader />}
       <Wrapper styles={{backgroundColor:AppColor.WHITE}}>
         <NewHeader1 header={'Workouts'}/>
       <FlatList
           data={[1, 2, 3, 4]}
           showsVerticalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl
-              refreshing={refresh}
-              onRefresh={() => {
-                //getAllExerciseData();
-                // ChallengesDataAPI();
-                getAllChallangeAndAllExerciseData();
-                // workoutStatusApi();
-                //  getCustomWorkout();
-                getUserDetailData();
-              }}
-              colors={[AppColor.RED, AppColor.WHITE]}
-            />
-          }
           renderItem={({item, index}: any) => {
             return (
               <View
@@ -877,10 +775,10 @@ const Workouts = ({navigation}: any) => {
 
                                 <Text
                                   style={{
-                                    color: 'black',
-                                    fontSize: 12,
+                                    color: '#434343',
+                                    fontSize: 15,
                                     fontWeight: '500',
-                                    lineHeight: 30,
+                                    lineHeight: 25,
                                     top: -8,
                                     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                                   }}>

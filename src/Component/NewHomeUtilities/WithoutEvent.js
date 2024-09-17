@@ -2,10 +2,6 @@ import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
 import {DeviceHeigth, DeviceWidth} from '../Config';
 import {AppColor, Fonts} from '../Color';
-import {ImageBackground} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import {localImage} from '../Image';
-import {showMessage} from 'react-native-flash-message';
 import {useNavigation} from '@react-navigation/native';
 import {AnalyticsConsole} from '../AnalyticsConsole';
 

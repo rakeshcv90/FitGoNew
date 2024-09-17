@@ -105,7 +105,7 @@ const Leaderboard = () => {
       });
 
       if (result.data) {
-        console.log(result.data)
+        console.log(result.data);
         const top5 = result.data?.data?.filter((item: any) => item?.rank <= 5);
         const after5 = result.data?.data?.filter(
           (item: any) => item?.rank > 3 && item?.rank < 6,
@@ -704,7 +704,7 @@ const Leaderboard = () => {
                         justifyContent: 'center',
                         paddingRight: 10,
                         position: 'absolute',
-                        right:0
+                        right: 0,
                       }}>
                       <AnimatedLottieView
                         source={require('../../Icon/Images/InAppRewards/ReferButton.json')}
@@ -768,7 +768,7 @@ const Leaderboard = () => {
                         width: 50,
                         paddingRight: 10,
                         position: 'absolute',
-                        right:0
+                        right: 0,
                       }}
                     />
                   )}
@@ -777,12 +777,7 @@ const Leaderboard = () => {
             />
 
             <ScrollView
-              keyboardDismissMode="interactive"
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{
-                flexGrow: 1,
-                paddingBottom: DeviceHeigth * 0.1,
-              }}
               refreshControl={
                 <RefreshControl
                   refreshing={refresh}
@@ -795,8 +790,7 @@ const Leaderboard = () => {
                   colors={[AppColor.RED, AppColor.WHITE]}
                 />
               }
-              style={[styles.container,{marginTop: 10}]}
-              nestedScrollEnabled>
+              style={[styles.container, {marginTop: 10}]}>
               <View
                 style={{
                   width: '95%',
@@ -1025,7 +1019,6 @@ const Leaderboard = () => {
                           top: 2,
                           color: AppColor.PrimaryTextColor,
                         }}>
-                        {/* {mainData[0]?.name} */}
                         {mainData[0]?.name.charAt(0).toUpperCase()}
                         {mainData[0]?.name.slice(1).toLowerCase()}
                       </Text>
@@ -1096,7 +1089,6 @@ const Leaderboard = () => {
                         fontSize: 12,
                       }}>
                       {' '}
-                      {/* {mainData[2]?.fit_coins} */}
                       {mainData[2]?.fit_coins > 0 ? mainData[2]?.fit_coins : 0}
                     </Text>
                   </LinearGradient>
@@ -1917,7 +1909,13 @@ const Leaderboard = () => {
                       activeOpacity={0.8}
                       onPress={() => {
                         // navigation?.navigate('NewSubscription', {upgrade: true});
-                        navigation.navigate('StepGuide');
+                        if (enteredCurrentEvent) {
+                          navigation.navigate('UpcomingEvent', {
+                            eventType: 'upcoming',
+                          });
+                        } else {
+                          navigation.navigate('StepGuide');
+                        }
                       }}
                       style={{
                         //width: '30%',

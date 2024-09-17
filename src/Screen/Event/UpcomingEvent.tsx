@@ -46,7 +46,7 @@ import TrackPlayer, {
 } from 'react-native-track-player';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const UpcomingEvent = ({navigation, route}: any) => {
   const {eventType} = route?.params;
@@ -68,6 +68,9 @@ const UpcomingEvent = ({navigation, route}: any) => {
   );
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
+  );
+  const getOfferAgreement = useSelector(
+    (state: any) => state.getOfferAgreement,
   );
   const [openChange, setOpenChange] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -424,7 +427,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
                   borderRadius: 5,
                 }}>
                 <FitText
-                  value={'Start on:'}
+                  value={'Starts on:'}
                   type="normal"
                   color="#1E1E1E"
                   fontWeight="600"
@@ -458,17 +461,26 @@ const UpcomingEvent = ({navigation, route}: any) => {
                   marginVertical: 10,
                 },
               ]}>
-              <Svg
-                width={45}
-                height={45}
-                fill="#F38029"
-                viewBox="0 -960 960 960">
-                <Path d="M480-520q33 0 56.5-23.5T560-600q0-33-23.5-56.5T480-680q-33 0-56.5 23.5T400-600q0 33 23.5 56.5T480-520ZM280-120v-80h160v-124q-49-11-87.5-41.5T296-442q-75-9-125.5-65.5T120-640v-40q0-33 23.5-56.5T200-760h80v-80h400v80h80q33 0 56.5 23.5T840-680v40q0 76-50.5 132.5T664-442q-18 46-56.5 76.5T520-324v124h160v80H280Zm0-408v-152h-80v40q0 38 22 68.5t58 43.5Zm200 128q50 0 85-35t35-85v-240H360v240q0 50 35 85t85 35Zm200-128q36-13 58-43.5t22-68.5v-40h-80v152Zm-200-52Z" />
-              </Svg>
-              <View style={{marginLeft: 10}}>
-                <FitText type="normal" value="Winnning price" />
-                <FitText type="Heading" value="₹1,000/-" />
-              </View>
+              <Image
+                source={require('../../Icon/Images/NewHome/gift.png')}
+                style={{height: 60, width: 60}}
+                resizeMode="contain"
+              />
+              {getOfferAgreement?.location == 'India' ? (
+                <View style={{marginLeft: 10}}>
+                  <FitText type="normal" value="Winning price upto" />
+                  <FitText type="Heading" value="₹1000/-" />
+                </View>
+              ) : (
+                <View style={{marginLeft: 10}}>
+                  <FitText
+                    type="Heading"
+                    value="Winning Voucher"
+                    fontSize={18}
+                  />
+                  <FitText type="normal" value="Earn the amazing price" />
+                </View>
+              )}
             </LinearGradient>
             <FitText
               type="SubHeading"
@@ -494,6 +506,14 @@ const UpcomingEvent = ({navigation, route}: any) => {
               fontFamily={Fonts.MONTSERRAT_MEDIUM}
               fontWeight="600"
             />
+            <FitText
+              type="normal"
+              value="Note: You will receive the prize as a voucher."
+              textAlign="center"
+              color={AppColor.NEW_GREY_TEXT}
+              fontFamily={Fonts.MONTSERRAT_MEDIUM}
+              fontWeight="600"
+              />
 
             {getPurchaseHistory?.plan != null &&
             getPurchaseHistory?.used_plan < getPurchaseHistory?.allow_usage &&
@@ -651,7 +671,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
                   />
                   <FitText
                     type="normal"
-                    value="Winning price ₹1000/-"
+                    value="Unlocked 150+ Exercises"
                     color="#333333E5"
                     marginVertical={3}
                   />
@@ -676,8 +696,8 @@ const UpcomingEvent = ({navigation, route}: any) => {
                       getPurchaseHistory?.plan == 'noob'
                         ? '1 event/month'
                         : getPurchaseHistory?.plan == 'pro'
-                        ? '2 event/month'
-                        : '3 event/month'
+                        ? '2 events/month'
+                        : '3 events/month'
                     }
                     color="#333333E5"
                     marginVertical={3}
@@ -704,7 +724,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
                         ? 'With Ads'
                         : getPurchaseHistory?.plan == 'pro'
                         ? 'Fewer Ads'
-                        : 'No Ads'
+                        : 'Fewer Ads'
                     }
                     color="#333333E5"
                     marginVertical={3}

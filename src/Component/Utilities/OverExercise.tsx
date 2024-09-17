@@ -83,7 +83,7 @@ const OverExerciseModal = ({
             />
             <FitText
               type="normal"
-              value={`You've exceeded your 45-minute exercise limit today. Give your body time to recover and return tomorrow feeling stronger!`}
+              value={`You’ve Completed a 45-Minute Workout! We Recommend You to Take a Break and Give Your Body the Rest It Deserves.`}
               color="#6B7280"
               textAlign="center"
               lineHeight={23}

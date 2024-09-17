@@ -529,9 +529,9 @@ const Breathe = ({navigation, route}) => {
                   textAlign: 'center',
                   fontSize: 22,
                 }}>
-                WELCOME
+                Welcome
               </Text>
-              <Text style={styles.txt3}>to your breathe exercise session!</Text>
+              <Text style={styles.txt3}>to Your Breathing Session!</Text>
               <Text style={[styles.txt2]}>
                 Follow the animation to guide your breathing. Let's get started
                 with calming breaths.
@@ -645,7 +645,7 @@ const Breathe = ({navigation, route}) => {
                 textAlign: 'center',
               }}>
               {
-                "You've completed your breathing exercise.\nTake a moment to appreciate your progress."
+                "You've completed your breathing exercise.\nKeep up the great work and stay healthy with us!"
               }
             </Text>
             <Text
@@ -659,7 +659,7 @@ const Breathe = ({navigation, route}) => {
                 marginTop: DeviceHeigth * 0.03,
                 marginBottom: 8,
               }}>
-              You've earned
+              You've Earned
             </Text>
             <View
               style={{

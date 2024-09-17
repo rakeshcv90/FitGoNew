@@ -239,13 +239,13 @@ const Exercise = ({navigation, route}: any) => {
             Tts.stop();
             setSeconds(
               parseInt(allExercise[number]?.exercise_rest.split(' ')[0]),
-              );
-              
-              setTimer(10);
-              // setDemoW(0);
-              setDemo(!demo);
-              timerProgress.setValue(0);
-              setDemoW(0);
+            );
+
+            setTimer(10);
+            // setDemoW(0);
+            setDemo(!demo);
+            timerProgress.setValue(0);
+            setDemoW(0);
             PauseAudio(playbackState);
             Platform.OS == 'android'
               ? Platform.Version != 34 && setupPlayer()
@@ -401,6 +401,7 @@ const Exercise = ({navigation, route}: any) => {
                 ? postSingleExerciseAPI(number)
                 : postCurrentExerciseAPI(number);
               let checkAdsShow = AddCountFunction();
+              clearTimeout(playTimerRef.current);
               if (checkAdsShow == true) {
                 showInterstitialAd();
                 navigation.navigate('SaveDayExercise', {
@@ -446,7 +447,18 @@ const Exercise = ({navigation, route}: any) => {
     } else {
     }
     // return () => clearTimeout(playTimerRef.current);
-  }, [pause, timer, back, demo, seconds, restStart, showSet, addClosed, playW,demoW]);
+  }, [
+    pause,
+    timer,
+    back,
+    demo,
+    seconds,
+    restStart,
+    showSet,
+    addClosed,
+    playW,
+    demoW,
+  ]);
   useEffect(() => {
     Animated.timing(animatedProgress, {
       toValue: Math.round(playW) == 100 ? 0 : Math.round(playW),
@@ -458,8 +470,8 @@ const Exercise = ({navigation, route}: any) => {
       duration: 500, // Duration of the animation (500ms)
       useNativeDriver: true,
     }).start();
-  }, [playW,demoW]);
-  
+  }, [playW, demoW]);
+
   useEffect(() => {
     setRestStart(true);
     setTimer(10);
@@ -901,6 +913,8 @@ const Exercise = ({navigation, route}: any) => {
                       setSkip(skip + 1);
                       clearTimeout(playTimerRef.current);
                       setTimer(0);
+                      setDemoW(0);
+                      timerProgress.setValue(0);
                     }}>
                     <Image
                       source={require('../../../Icon/Images/InAppRewards/SkipButton.png')}

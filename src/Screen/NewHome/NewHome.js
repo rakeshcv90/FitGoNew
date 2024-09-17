@@ -108,12 +108,12 @@ const NewHome = ({navigation}) => {
   const getRewardModalStatus = useSelector(
     state => state?.getRewardModalStatus,
   );
+  const getPastWinners = useSelector(state => state?.getPastWinners);
   const [showRewardModal, setShowRewardModal] = useState(false);
 
   const Sat = getPurchaseHistory?.currentDay == 6;
   const Sun = getPurchaseHistory?.currentDay == 0;
   const [myRank, setMyRank] = useState(0);
-  const [pastWinners, setPastWinners] = useState([]);
   const [coins, setCoins] = useState({});
   const [winnerAnnounce, setWinnerAnnounce] = useState();
 
@@ -121,11 +121,6 @@ const NewHome = ({navigation}) => {
     if (isFocused) {
       getAllChallangeAndAllExerciseData();
       getLeaderboardDataAPI();
-      allWorkoutApi();
-      getWorkoutStatus();
-      getUserDetailData();
-      getPastWinner();
-      getWeeklyAPI();
 
       enteredCurrentEvent && getEarnedCoins();
     }
@@ -168,34 +163,6 @@ const NewHome = ({navigation}) => {
       false,
     );
   }, []);
-  const getWeeklyAPI = async () => {
-    try {
-      const res = await axios(`${NewAppapi.NEW_WEEKDAY_EXERCISE_API}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          version: VersionNumber.appVersion,
-          user_id: getUserDataDetails?.id,
-        },
-      });
-
-      if (res.data?.msg == 'User not exist.') {
-        showMessage({
-          message: res?.data?.msg,
-          type: 'danger',
-          animationDuration: 500,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-      } else {
-        dispatch(setWeeklyPlansData(res?.data));
-      }
-    } catch (error) {
-      console.error(error.response, 'DaysAPIERror');
-    }
-  };
 
   const getEarnedCoins = async () => {
     // const url =
@@ -236,100 +203,6 @@ const NewHome = ({navigation}) => {
     }
   };
 
-  const getUserDetailData = async () => {
-    try {
-      const responseData = await axios.get(
-        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
-      );
-
-      if (
-        responseData?.data?.msg ==
-        'Please update the app to the latest version.'
-      ) {
-        showMessage({
-          message: responseData?.data?.msg,
-          type: 'danger',
-          animationDuration: 500,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-      } else {
-        dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
-        dispatch(setOfferAgreement(responseData?.data?.additional_data));
-        dispatch(setUserProfileData(responseData?.data?.profile));
-        if (responseData?.data.event_details == 'Not any subscription') {
-          dispatch(setPurchaseHistory([]));
-        } else {
-          dispatch(setPurchaseHistory(responseData?.data.event_details));
-          EnteringEventFunction(
-            dispatch,
-            responseData?.data.event_details,
-            setEnteredCurrentEvent,
-            setEnteredUpcomingEvent,
-            setPlanType,
-          );
-        }
-      }
-    } catch (error) {
-      console.log('GET-USER-DATA', error);
-    }
-  };
-  const getWorkoutStatus = async () => {
-    try {
-      const exerciseStatus = await axios.get(
-        `${NewAppapi.USER_EXERCISE_COMPLETE_STATUS}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}`,
-      );
-
-      if (
-        exerciseStatus?.data.msg ==
-        'Please update the app to the latest version'
-      ) {
-      } else if (exerciseStatus?.data.length > 0) {
-        dispatch(setWorkoutTimeCal(exerciseStatus?.data));
-      } else {
-        dispatch(setWorkoutTimeCal([]));
-      }
-    } catch (error) {
-      console.log('Workout-Status', error);
-    }
-  };
-  const allWorkoutApi = async () => {
-    try {
-      const payload = new FormData();
-      payload.append('id', getUserDataDetails?.id);
-
-      payload.append('version', VersionNumber.appVersion);
-      const res = await axios({
-        url: NewAppapi.ALL_WORKOUTS,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: payload,
-      });
-
-      if (res?.data?.msg == 'Please update the app to the latest version.') {
-        showMessage({
-          message: res?.data?.msg,
-          type: 'danger',
-          animationDuration: 500,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-        setRefresh(false);
-      } else if (res?.data) {
-        setRefresh(false);
-        dispatch(setAllWorkoutData(res?.data));
-      } else {
-        setRefresh(false);
-        dispatch(setAllWorkoutData([]));
-      }
-    } catch (error) {
-      setRefresh(false);
-      console.error(error, 'customWorkoutDataApiError');
-      dispatch(setAllWorkoutData([]));
-    }
-  };
   const getLeaderboardDataAPI = async () => {
     try {
       const result = await axios({
@@ -412,38 +285,22 @@ const NewHome = ({navigation}) => {
   };
 
   const getAllChallangeAndAllExerciseData = async () => {
-    let responseData = 0;
-    if (Object.keys(getUserDataDetails).length > 0) {
-      try {
-        responseData = await axios.get(
-          `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
-        );
-        dispatch(setChallengesData(responseData.data.challenge_data));
-        const challenge = responseData?.data?.challenge_data?.filter(
-          item => item?.status == 'active',
-        );
+    try {
+      const responseData = await axios.get(
+        `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
+      );
+      dispatch(setChallengesData(responseData.data.challenge_data));
+      const challenge = responseData?.data?.challenge_data?.filter(
+        item => item?.status == 'active',
+      );
 
-        setCurrentChallenge(challenge);
-        getCurrentDayAPI(challenge);
-        dispatch(setAllExercise(responseData.data.data));
-      } catch (error) {
-        console.log('GET-USER-Challange and AllExerciseData DATA', error);
-        dispatch(setChallengesData([]));
-        dispatch(setAllExercise([]));
-      }
-    } else {
-      try {
-        responseData = await axios.get(
-          `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}`,
-        );
-        dispatch(setChallengesData(responseData.data.challenge_data));
-        dispatch(setAllExercise(responseData.data.data));
-      } catch (error) {
-        dispatch(setChallengesData([]));
-        dispatch(setAllExercise([]));
-
-        console.log('GET-USER-Challange and AllExerciseData DATA', error);
-      }
+      setCurrentChallenge(challenge);
+      getCurrentDayAPI(challenge);
+      // dispatch(setAllExercise(responseData.data.data));
+    } catch (error) {
+      console.log('GET-USER-Challange and AllExerciseData DATA', error);
+      // dispatch(setChallengesData([]));
+      // dispatch(setAllExercise([]));
     }
   };
   const getCurrentDayAPI = async challenge => {
@@ -525,26 +382,6 @@ const NewHome = ({navigation}) => {
 
     return {one, two};
   }
-  const getPastWinner = () => {
-    const url =
-      'https://fitme.cvinfotechserver.com/adserver/public/api/past_winners';
-    RequestAPI.makeRequest(
-      'POST',
-      // url,
-      NewAppapi.GET_PAST_WINNERS,
-      {
-        version: VersionNumber.appVersion,
-      },
-      res => {
-        if (res.error) {
-          setPastWinners([]);
-        }
-        if (res.data) {
-          setPastWinners(res.data?.data);
-        }
-      },
-    );
-  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -553,27 +390,8 @@ const NewHome = ({navigation}) => {
         barStyle={'dark-content'}
       />
       <ScrollView
-        keyboardDismissMode="interactive"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          flexGrow: 1,
-        }}
-        refreshControl={
-          <RefreshControl
-            refreshing={refresh}
-            onRefresh={() => {
-              getAllChallangeAndAllExerciseData();
-              getUserAllInData();
-              getLeaderboardDataAPI();
-              getWeeklyAPI();
-
-              enteredCurrentEvent && getEarnedCoins();
-            }}
-            colors={[AppColor.RED, AppColor.WHITE]}
-          />
-        }
-        style={[styles.container]}
-        nestedScrollEnabled>
+        style={[styles.container]}>
         <View style={styles.userCard}>
           <View
             style={{
@@ -664,14 +482,14 @@ const NewHome = ({navigation}) => {
                     flexDirection: 'row',
                     backgroundColor: '#DBEAFE',
                     marginHorizontal: 10,
-                    paddingLeft: 10,
+                    justifyContent: 'center',
                   }}>
                   <Image
                     source={require('../../Icon/Images/NewHome/cup.png')}
                     style={{height: 15, width: 15}}
                     resizeMode="contain"
                   />
-                  <Text style={styles.cointxt}>#{myRank}</Text>
+                  <Text style={styles.cointxt1}>#{myRank}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   activeOpacity={0.6}
@@ -843,7 +661,7 @@ const NewHome = ({navigation}) => {
           />
         )}
 
-        <WithoutEvent pastWinners={pastWinners} />
+        <WithoutEvent pastWinners={getPastWinners || []} />
 
         {currentChallenge?.length > 0 && (
           <WorkoutChallengeZone day={day} currentChallenge={currentChallenge} />
@@ -871,7 +689,7 @@ const NewHome = ({navigation}) => {
 
         // }}
       />
-      {getOfferAgreement?.location === 'India' ||
+      {/* {getOfferAgreement?.location === 'India' ||
       getOfferAgreement?.location == 'United States' ? (
         (getPopUpFreuqency == 6 || getPopUpFreuqency % 5 == 0) &&
         !enteredUpcomingEvent ? (
@@ -914,7 +732,7 @@ const NewHome = ({navigation}) => {
             }}
           />
         ) : null
-      ) : null}
+      ) : null} */}
       <LocationPermissionModal
         locationP={locationP1}
         setLocationP={setLocationP1}
@@ -995,6 +813,13 @@ var styles = StyleSheet.create({
     lineHeight: 30,
     // marginTop: 5,
     marginHorizontal: 5,
+  },
+  cointxt1: {
+    color: '#1E40AF',
+    fontSize: 16,
+    fontFamily: Fonts.HELVETICA_BOLD,
+    lineHeight: 30,
+    marginLeft: 5,
   },
   shimmerWrapper: {
     height: '100%',

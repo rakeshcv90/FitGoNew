@@ -61,7 +61,7 @@ const WorkoutChallengeZone = ({day, currentChallenge}) => {
               <Text
                 style={{
                   fontFamily: Fonts.HELVETICA_BOLD,
-                  fontSize: 14,
+                  fontSize: 15,
                   fontWeight: '700',
                   lineHeight: 25,
                   // marginVertical: DeviceHeigth * 0.025,

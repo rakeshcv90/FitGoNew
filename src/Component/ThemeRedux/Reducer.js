@@ -428,6 +428,11 @@ const ThemeReducer = (state = intialState, action) => {
         ...state,
         getDeviceID: action.payload,
       };
+    case types.PAST_WINNERS:
+      return {
+        ...state,
+        getPastWinners: action.payload,
+      };
     default:
       return state;
   }

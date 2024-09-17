@@ -379,8 +379,8 @@ const OfferPage = ({navigation, route}) => {
           />
           <OfferCards
             imgSource={localImage.reffer_banner}
-            header={'Refer and earn'}
-            text1={'Refer and earn'}
+            header={'Refer and Earn'}
+            text1={'Refer and Earn'}
             text1Color={AppColor.BLACK}
             text2={'Invite your friends & earn bonus FitCoins.'}
             text3={'5 coins'}

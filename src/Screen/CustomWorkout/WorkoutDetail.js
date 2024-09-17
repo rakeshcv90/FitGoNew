@@ -146,11 +146,11 @@ const WorkoutDetail = ({navigation, route}) => {
             marginTop: 10,
           }}
           onReadyForDisplay={() => setIsLoading(false)}
-          poster={
-            data?.exercise_image?.includes('https')
-              ? data?.exercise_image
-              : data?.exercise_image_link
-          }
+          // poster={
+          //   data?.exercise_image?.includes('https')
+          //     ? data?.exercise_image
+          //     : data?.exercise_image_link
+          // }
         />
         <View style={styles.container1}>
           <View style={styles.content}>

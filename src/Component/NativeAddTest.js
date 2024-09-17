@@ -85,7 +85,7 @@ const NativeAddTest = ({media, type}) => {
       style={{
         width: '100%',
         alignSelf: 'center',
-        backgroundColor: '#f0f0f0',
+        backgroundColor: '#fff',
       }}
       videoOptions={{
         customControlsRequested: true,
@@ -109,6 +109,7 @@ const NativeAddTest = ({media, type}) => {
           width: '100%',
           alignItems: 'center',
           backgroundColor: '#fff',
+          marginVertical: 10
         }}>
         <View
           style={{

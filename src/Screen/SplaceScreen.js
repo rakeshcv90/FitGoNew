@@ -15,6 +15,7 @@ import {
   Setmealdata,
   setAgreementContent,
   setAllExercise,
+  setAllWorkoutData,
   setBanners,
   setChallengesData,
   setCompleteProfileData,
@@ -28,6 +29,7 @@ import {
   setFitmeAdsCount,
   setInappPurchase,
   setOfferAgreement,
+  setPastWinners,
   setPlanType,
   setPurchaseHistory,
   setStoreData,
@@ -59,6 +61,7 @@ import AnimatedLottieView from 'lottie-react-native';
 import codePush from 'react-native-code-push';
 import {CommonActions} from '@react-navigation/native';
 import {PLATFORM_IOS} from '../Component/Color';
+import {RequestAPI} from '../Component/Utilities/RequestAPI';
 const products = Platform.select({
   ios: ['fitme_noob', 'fitme_pro', 'fitme_legend'],
   android: ['fitme_monthly', 'a_monthly', 'fitme_legend'],
@@ -95,7 +98,8 @@ const SplaceScreen = ({navigation, route}) => {
     requestPermissionforNotification(dispatch);
     getUserAllInData();
     getPlanData();
-
+    allWorkoutApi();
+    getPastWinner();
     dispatch(setFitmeAdsCount(0));
   }, []);
   useEffect(() => {
@@ -217,6 +221,56 @@ const SplaceScreen = ({navigation, route}) => {
     }
   };
 
+  const getPastWinner = () => {
+    RequestAPI.makeRequest(
+      'POST',
+      NewAppapi.GET_PAST_WINNERS,
+      {
+        version: VersionNumber.appVersion,
+      },
+      res => {
+        if (res.error) {
+        }
+        if (res.data) {
+          dispatch(setPastWinners(res.data?.data));
+        }
+      },
+    );
+  };
+
+  const allWorkoutApi = async () => {
+    try {
+      const payload = new FormData();
+      payload.append('id', getUserDataDetails?.id);
+
+      payload.append('version', VersionNumber.appVersion);
+      const res = await axios({
+        url: NewAppapi.ALL_WORKOUTS,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: payload,
+      });
+
+      if (res?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: res?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (res?.data) {
+        dispatch(setAllWorkoutData(res?.data));
+      } else {
+        // dispatch(setAllWorkoutData([]));
+      }
+    } catch (error) {
+      console.error(error, 'customWorkoutDataApiError');
+      // dispatch(setAllWorkoutData([]));
+    }
+  };
   const getPlanData = () => {
     Platform.OS === 'ios'
       ? RNIap.initConnection()

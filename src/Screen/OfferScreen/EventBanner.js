@@ -57,7 +57,7 @@ const EventBanner = React.memo(({navigation}) => {
           iconSize={18}
           onPress={() => {
             if (enteredCurrentEvent) {
-              navigation.navigate('UpcomingEvent',{eventType: 'upcoming'});
+              navigation.navigate('UpcomingEvent',{eventType: 'current'});
             } else {
               navigation.navigate('NewSubscription',{upgrade:false});
             }

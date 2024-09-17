@@ -399,7 +399,6 @@ const styles = StyleSheet.create({
     lineHeight: 25,
     fontWeight: '600',
     textAlign: 'center',
-    textTransform: 'capitalize',
   },
   features: {
     color: '#505050',

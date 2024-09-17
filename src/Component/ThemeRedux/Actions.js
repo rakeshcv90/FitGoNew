@@ -454,3 +454,9 @@ export const setExerciseOutTime=data=>{
       payload:data
     }
 }
+  export const setPastWinners=data=>{
+    return{
+      type:types.PAST_WINNERS,
+      payload:data
+    }
+}

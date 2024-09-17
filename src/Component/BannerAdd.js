@@ -68,24 +68,27 @@ export const BannerAdd = ({bannerAdId}) => {
 };
 export const NewInterstitialAd = setClosed => {
   // Created specially for Splash Screen by Sahil
-  const interstitialAdRef = useRef(null);
+  const interstitialAdRef = useRef(false);
   const adStatus = useRef(true);
   const initInterstitial = async () => {
     if (interstitialAdRef.current) return;
+    console.log("ADDD CALLED")
     const interstitialAd = InterstitialAd.createForAdRequest(
       IsTesting ? interstitialAdIdTest : interstitialAdId,
       {},
     );
     interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
       adStatus.current = interstitialAd;
-      interstitialAdRef.current = interstitialAd;
+      interstitialAdRef.current = true;
     });
     interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {
       interstitialAd.load();
       setClosed(true);
+      console.log("CLOSED")
     });
     interstitialAd.addAdEventListener(AdEventType.CLICKED, () => {});
     interstitialAd.addAdEventListener(AdEventType.ERROR, error => {
+      console.log('eerrr',error)
       setClosed(true);
     });
     interstitialAd.addAdEventListener(AdEventType.OPENED, () => {
@@ -97,7 +100,7 @@ export const NewInterstitialAd = setClosed => {
   const showInterstitialAd = async () => {
     if (adStatus.current?._loaded) {
       adStatus.current.show();
-      interstitialAdRef.current = null;
+      interstitialAdRef.current = false;
     } else {
       // setClosed(true);
     }

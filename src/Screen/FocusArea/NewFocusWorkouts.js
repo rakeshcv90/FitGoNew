@@ -991,7 +991,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
           <NewButton
             position={'absolute'}
             bottom={10}
-            title={'Start Workouts'}
+            title={'Start Workout'}
             withAnimation
             download={downloaded}
             onPress={() => {

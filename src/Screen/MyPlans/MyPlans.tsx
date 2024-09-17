@@ -105,7 +105,6 @@ const MyPlans = ({navigation}: any) => {
   const [downlodedVideoSent, setDownloadedVideoSent] = useState(false);
   const [fetchCoins, setFetchCoins] = useState(false);
   const [start, setStart] = useState(false);
-  const [streakModalVisibility, setStreakModalVisibility] = useState(false);
   const getStreakStatus = useSelector((state: any) => state?.getStreakStatus);
   const [myRank, setMyRank] = useState(0);
   const [totalData, setTotalData] = useState([]);
@@ -187,21 +186,12 @@ const MyPlans = ({navigation}: any) => {
   }, [getExerciseInTime, getExerciseOutTime, start]);
 
   useEffect(() => {
-    initInterstitial();
-    allWorkoutApi1();
-    //getAllExerciseData();
-    getAllChallangeAndAllExerciseData();
-    getGraphData();
-    checkMealAddCount();
-    // PurchaseDetails();
-    getUserDetailData();
-  }, []);
-  useEffect(() => {
     getWeeklyAPI();
     console.log('called');
   }, [workoutPrepared]);
   useFocusEffect(
     React.useCallback(() => {
+      initInterstitial();
       if (enteredCurrentEvent) {
         getEarnedCoins();
         getLeaderboardDataAPI();
@@ -210,13 +200,12 @@ const MyPlans = ({navigation}: any) => {
       }
     }, []),
   );
-  console.log(getEquipmentExercise);
   //condition to check streak modal
   useEffect(() => {
     if (
+      enteredCurrentEvent &&
       WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1] !== 'Monday' &&
       coins[WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2]] < 0 &&
-      enteredCurrentEvent &&
       !Sat &&
       !Sun &&
       !getStreakStatus?.includes(
@@ -224,85 +213,8 @@ const MyPlans = ({navigation}: any) => {
       )
     ) {
       dispatch(setStreakModalVisible(true));
-      dispatch(
-        setStreakStatus([
-          ...getStreakStatus,
-          WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2],
-        ]),
-      );
     }
-  }, [getStreakModalVisible, coins]);
-  const getAllChallangeAndAllExerciseData = async () => {
-    let responseData = 0;
-    if (Object.keys(getUserDataDetails).length > 0) {
-      try {
-        responseData = await axios.get(
-          `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
-        );
-        dispatch(setChallengesData(responseData.data.challenge_data));
-        dispatch(setAllExercise(responseData.data.data));
-      } catch (error) {
-        console.log('GET-USER-Challange and AllExerciseData DATA', error);
-        dispatch(setChallengesData([]));
-        dispatch(setAllExercise([]));
-      }
-    } else {
-      try {
-        responseData = await axios.get(
-          `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}`,
-        );
-        dispatch(setChallengesData(responseData.data.challenge_data));
-        dispatch(setAllExercise(responseData.data.data));
-      } catch (error) {
-        dispatch(setChallengesData([]));
-        dispatch(setAllExercise([]));
-
-        console.log('GET-USER-Challange and AllExerciseData DATA', error);
-      }
-    }
-  };
-  const getUserDetailData = async () => {
-    try {
-      const responseData = await axios.get(
-        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
-      );
-
-      if (
-        responseData?.data?.msg ==
-        'Please update the app to the latest version.'
-      ) {
-        showMessage({
-          message: responseData?.data?.msg,
-          type: 'danger',
-          animationDuration: 500,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-      } else {
-        dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
-        dispatch(setOfferAgreement(responseData?.data?.additional_data));
-        dispatch(setUserProfileData(responseData?.data?.profile));
-        setRefresh(false);
-        if (responseData?.data.event_details == 'Not any subscription') {
-          dispatch(setPurchaseHistory([]));
-        } else {
-          setRefresh(false);
-          dispatch(setPurchaseHistory(responseData?.data.event_details));
-          EnteringEventFunction(
-            dispatch,
-            responseData?.data.event_details,
-            setEnteredCurrentEvent,
-            setEnteredUpcomingEvent,
-            setPlanType,
-          );
-        }
-      }
-    } catch (error) {
-      console.log('GET-USER-DATA', error);
-
-      setRefresh(false);
-    }
-  };
+  }, []);
 
   // getCoinsdetails
   const getEarnedCoins = async () => {
@@ -333,42 +245,6 @@ const MyPlans = ({navigation}: any) => {
         floating: true,
         icon: {icon: 'auto', position: 'left'},
       });
-    }
-  };
-  const allWorkoutApi1 = async () => {
-    try {
-      //  setRefresh(true);
-      const payload = new FormData();
-      payload.append('id', getUserDataDetails?.id);
-      payload.append('version', VersionNumber.appVersion);
-      const res = await axios({
-        url: NewAppapi.ALL_WORKOUTS,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: payload,
-      });
-      if (res?.data?.msg == 'Please update the app to the latest version.') {
-        showMessage({
-          message: res?.data?.msg,
-          type: 'danger',
-          animationDuration: 500,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-        setRefresh(false);
-      } else if (res?.data) {
-        setRefresh(false);
-        dispatch(setAllWorkoutData(res?.data));
-      } else {
-        setRefresh(false);
-        dispatch(setAllWorkoutData([]));
-      }
-    } catch (error) {
-      setRefresh(false);
-      console.error(error, 'customWorkoutDataApiError');
-      dispatch(setAllWorkoutData([]));
     }
   };
   const getWeeklyAPI = async () => {
@@ -404,35 +280,6 @@ const MyPlans = ({navigation}: any) => {
     } catch (error) {
       setLoader(false);
       console.error(error.response, 'DaysAPIERror');
-    }
-  };
-  const getGraphData = async () => {
-    try {
-      const res = await axios({
-        url: NewAppapi.HOME_GRAPH_DATA,
-        method: 'post',
-        data: {
-          user_id: getUserDataDetails?.id,
-          version: VersionNumber.appVersion,
-        },
-      });
-
-      if (res?.data?.msg == 'Please update the app to the latest version.') {
-        showMessage({
-          message: res?.data?.msg,
-          type: 'danger',
-          animationDuration: 500,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-      } else if (res.data?.message != 'No data found') {
-        dispatch(setHomeGraphData(res.data));
-      } else {
-        dispatch(setHomeGraphData([]));
-      }
-    } catch (error) {
-      console.error(error, 'GraphError');
-      dispatch(setHomeGraphData([]));
     }
   };
   const WeeklyStatusAPI = async () => {
@@ -510,8 +357,8 @@ const MyPlans = ({navigation}: any) => {
     dispatch(setVideoLocation(StoringData));
   };
   useEffect(() => {
-    !overExerciseVisible && setDownloadText(false)
-  },[overExerciseVisible])
+    !overExerciseVisible && setDownloadText(false);
+  }, [overExerciseVisible]);
   let datas = [];
   const handleStart = () => {
     if (
@@ -911,7 +758,7 @@ const MyPlans = ({navigation}: any) => {
           alignItems: 'center',
         }}>
         <AnimatedLottieView
-           source={require('../../Icon/Images/NewImage/NoData.json')}
+          source={require('../../Icon/Images/NewImage/NoData.json')}
           speed={2}
           autoPlay
           loop
@@ -923,35 +770,6 @@ const MyPlans = ({navigation}: any) => {
         />
       </View>
     );
-  };
-  const checkMealAddCount = () => {
-    if (getPurchaseHistory?.length > 0) {
-      if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-      ) {
-        dispatch(setFitmeMealAdsCount(0));
-        setHasAds(false);
-        return false;
-      } else {
-        setHasAds(true);
-        if (getFitmeMealAdsCount < 3) {
-          dispatch(setFitmeMealAdsCount(getFitmeMealAdsCount + 1));
-          return false;
-        } else {
-          dispatch(setFitmeMealAdsCount(0));
-          return true;
-        }
-      }
-    } else {
-      setHasAds(true);
-      if (getFitmeMealAdsCount < 3) {
-        dispatch(setFitmeMealAdsCount(getFitmeMealAdsCount + 1));
-        return false;
-      } else {
-        dispatch(setFitmeMealAdsCount(0));
-        return true;
-      }
-    }
   };
   const BottomModal = ({setVisible1, visible1}: any) => {
     return (
@@ -1528,7 +1346,9 @@ const MyPlans = ({navigation}: any) => {
 
         {enteredCurrentEvent &&
           coins[WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1]] ==
-            null && WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1]== WeekArrayWithEvent[selectedDay]&&(
+            null &&
+          WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1] ==
+            WeekArrayWithEvent[selectedDay] && (
             <TouchableOpacity
               activeOpacity={1}
               onPress={() => {
@@ -1581,7 +1401,6 @@ const MyPlans = ({navigation}: any) => {
       {downlodedVideoSent ? <ActivityLoader /> : null}
       <StreakModal
         streakDays={coins}
-        setVisible={setStreakModalVisibility}
         WeekArray={WeekArrayWithEvent}
         missedDay={WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2]}
       />
