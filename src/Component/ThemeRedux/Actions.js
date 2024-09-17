@@ -364,12 +364,6 @@ export const setHindiLanuage = data => {
     payload: data,
   };
 };
-export const setRewardPopUp = data => {
-  return {
-    type: types.TRACK_REWARDPOPUP,
-    payload: data,
-  };
-};
 export const setPopUpSeen = data => {
   return {
     type: types.POPUPSEEN,
@@ -453,4 +447,10 @@ export const setExerciseOutTime=data=>{
       type:types.DEVICE_ID,
       payload:data
     }
+}
+export const setPermissionIos=data=>{
+  return{
+    type:types.PERMISSION_IOS,
+    payload:data
+  }
 }

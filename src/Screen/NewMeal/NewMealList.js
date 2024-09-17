@@ -86,7 +86,7 @@ const NewMealList = ({navigation, route}) => {
               lineHeight: 26,
               fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
             }}>
-            No meal available !
+            No Meal Available !
           </Text>
         </View>
         <View
@@ -105,7 +105,7 @@ const NewMealList = ({navigation, route}) => {
               opacity: 0.6,
               fontFamily: Fonts.MONTSERRAT_MEDIUM,
             }}>
-            Create your perfect workout plan based 
+            No meals available right now.
           </Text>
           <Text
             style={{
@@ -116,7 +116,7 @@ const NewMealList = ({navigation, route}) => {
               opacity: 0.6,
               fontFamily: Fonts.MONTSERRAT_MEDIUM,
             }}>
-            on your preferences.
+           Check back later for healthier options!
           </Text>
          
         </View>

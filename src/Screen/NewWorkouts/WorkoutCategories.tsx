@@ -329,8 +329,8 @@ const WorkoutCategories = ({navigation, route}: any) => {
                     <Text style={[styles.small, {textTransform: 'capitalize'}]}>
                       {/* {item?.exercise_rest} */}
                       {time > 30
-                          ? Math.floor(time / 60) + ' min'
-                          : time + ' sec'}
+                        ? Math.floor(time / 60) + ' min'
+                        : time + ' sec'}
                     </Text>
                   </View>
                 </View>
@@ -452,16 +452,15 @@ const WorkoutCategories = ({navigation, route}: any) => {
 
   const getNativeAdsDisplay = () => {
     if (getPurchaseHistory?.plan != null) {
-        return (
-          <View
-            style={{
-              alignSelf: 'center',
-              alignItems: 'center',
-            }}>
-            <NativeAddTest type="image" media={false} />
-          </View>
-        );
-      
+      return (
+        <View
+          style={{
+            alignSelf: 'center',
+            alignItems: 'center',
+          }}>
+          <NativeAddTest type="image" media={false} />
+        </View>
+      );
     } else {
       return (
         <View
@@ -479,7 +478,11 @@ const WorkoutCategories = ({navigation, route}: any) => {
     const searchArray = exercise.filter((item: any) =>
       item?.exercise_title.toLowerCase().includes(text.toLowerCase()),
     );
-    setFilteredExercise(searchArray);
+    if (searchArray.length > 0) {
+      setFilteredExercise(searchArray);
+    } else {
+      setFilteredExercise(categoryExercise);
+    }
   };
 
   const Start = (exercise: Array<any>) => {

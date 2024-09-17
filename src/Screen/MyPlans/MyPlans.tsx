@@ -510,8 +510,8 @@ const MyPlans = ({navigation}: any) => {
     dispatch(setVideoLocation(StoringData));
   };
   useEffect(() => {
-    !overExerciseVisible && setDownloadText(false)
-  },[overExerciseVisible])
+    !overExerciseVisible && setDownloadText(false);
+  }, [overExerciseVisible]);
   let datas = [];
   const handleStart = () => {
     if (
@@ -911,7 +911,7 @@ const MyPlans = ({navigation}: any) => {
           alignItems: 'center',
         }}>
         <AnimatedLottieView
-           source={require('../../Icon/Images/NewImage/NoData.json')}
+          source={require('../../Icon/Images/NewImage/NoData.json')}
           speed={2}
           autoPlay
           loop
@@ -1403,7 +1403,8 @@ const MyPlans = ({navigation}: any) => {
                     style={{height: 20, width: 20}}
                     resizeMode="contain"
                   />
-                  <Text style={styles.cointxt}>
+                  <Text
+                    style={[styles.cointxt, {color: AppColor.orangeColor1}]}>
                     {fitCoins <= 0 ? 0 : fitCoins}
                   </Text>
                 </TouchableOpacity>
@@ -1528,7 +1529,9 @@ const MyPlans = ({navigation}: any) => {
 
         {enteredCurrentEvent &&
           coins[WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1]] ==
-            null && WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1]== WeekArrayWithEvent[selectedDay]&&(
+            null &&
+          WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1] ==
+            WeekArrayWithEvent[selectedDay] && (
             <TouchableOpacity
               activeOpacity={1}
               onPress={() => {

@@ -27,7 +27,6 @@ import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import moment from 'moment';
 import NativeAddTest from '../../Component/NativeAddTest';
 import {
-  setRewardPopUp,
   setVideoLocation,
 } from '../../Component/ThemeRedux/Actions';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -59,7 +58,6 @@ const MeditationDetails = ({navigation, route}) => {
     state => state?.enteredUpcomingEvent,
   );
   const getOfferAgreement = useSelector(state => state?.getOfferAgreement);
-  const getPopUpFreuqency = useSelector(state => state?.getPopUpFreuqency);
   const colors = [
     {color1: '#E2EFFF', color2: '#9CC2F5', color3: '#425B7B'},
     {color1: '#BFF0F5', color2: '#8DD9EA', color3: '#1F6979'},
@@ -68,14 +66,6 @@ const MeditationDetails = ({navigation, route}) => {
   ];
   const dispatch = useDispatch();
   useEffect(() => {
-    setTimeout(() => {
-      if (
-        (!enteredCurrentEvent && !enteredUpcomingEvent) ||
-        (!enteredUpcomingEvent && enteredCurrentEvent)
-      ) {
-        dispatch(setRewardPopUp(getPopUpFreuqency + 1));
-      }
-    }, 1000);
     if (isFocused) {
       if (route?.params?.item) {
         getCaterogy(
@@ -583,41 +573,6 @@ const MeditationDetails = ({navigation, route}) => {
             />
           )}
         </View>
-        {getOfferAgreement?.location === 'India' ||
-        getOfferAgreement?.location == 'United States' ? (
-          getPopUpFreuqency == 5 || getPopUpFreuqency % 4 == 0 ? (
-            <UpcomingEventModal
-              visible={true}
-              onConfirm={() => {
-                if (getPurchaseHistory?.plan != null) {
-                  if (
-                    getPurchaseHistory?.end_date >=
-                    moment().format('YYYY-MM-DD')
-                  ) {
-                    AnalyticsConsole('UP_D_B');
-                    navigation.navigate('UpcomingEvent', {
-                      eventType: 'upcoming',
-                    });
-                    dispatch(setRewardPopUp(1));
-                  } else {
-                    AnalyticsConsole('PP_D_B');
-                    navigation.navigate('NewSubscription', {upgrade: false});
-                    dispatch(setRewardPopUp(1));
-                  }
-                } else {
-                  AnalyticsConsole('PP_D_B');
-                  // navigation.navigate('NewSubscription', {upgrade: false});
-                  navigation?.navigate('StepGuide');
-                  dispatch(setRewardPopUp(1));
-                }
-              }}
-              onCancel={() => {
-                AnalyticsConsole('JNC_D_B');
-                dispatch(setRewardPopUp(1));
-              }}
-            />
-          ) : null
-        ) : null}
       </Wrapper>
       {/* {bannerAdsDisplay()} */}
       <BannerAdd bannerAdId={bannerAdId} />

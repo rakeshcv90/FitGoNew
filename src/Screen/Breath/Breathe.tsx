@@ -420,7 +420,7 @@ const Breathe = ({navigation, route}) => {
   const BackButton = () => {
     return (
       <TouchableOpacity
-        style={{marginTop:getStatusBarHeight(), marginLeft: 16}}
+        style={{marginTop: getStatusBarHeight(), marginLeft: 16}}
         onPress={handleBack}>
         <ArrowLeft fillColor={AppColor.WHITE} />
       </TouchableOpacity>
@@ -467,10 +467,14 @@ const Breathe = ({navigation, route}) => {
       </View>
     );
   });
-  
+
   return (
     <View style={styles.container1}>
-      <StatusBar backgroundColor={AppColor.BLACK} barStyle={'light-content'} translucent={false}/>
+      <StatusBar
+        backgroundColor={AppColor.BLACK}
+        barStyle={'light-content'}
+        translucent={false}
+      />
       <BackButton />
       <Animated.View
         style={[
@@ -530,7 +534,7 @@ const Breathe = ({navigation, route}) => {
                 }}>
                 WELCOME
               </Text>
-              <Text style={styles.txt3}>to your breathe exercise session!</Text>
+              <Text style={styles.txt3}>to Your Breathing Session!</Text>
               <Text style={[styles.txt2]}>
                 Follow the animation to guide your breathing. Let's get started
                 with calming breaths.
@@ -644,7 +648,7 @@ const Breathe = ({navigation, route}) => {
                 textAlign: 'center',
               }}>
               {
-                "You've completed your breathing exercise.\nTake a moment to appreciate your progress."
+                "You've completed your breathing exercise.\nKeep up the great work and stay healthy with us!"
               }
             </Text>
             <Text
@@ -658,7 +662,7 @@ const Breathe = ({navigation, route}) => {
                 marginTop: DeviceHeigth * 0.03,
                 marginBottom: 8,
               }}>
-              You've earned
+              You've Earned
             </Text>
             <View
               style={{

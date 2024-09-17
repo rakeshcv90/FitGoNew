@@ -66,14 +66,12 @@ const EditCustomWorkout = ({navigation, route}) => {
   }, [bodyPart]);
   useEffect(() => {
     filterData(route?.params?.item);
-  }, [filteredCategories]);
+  }, []); // removed depedency to resolve the count bug
   const filterData = () => {
     const ExerciseIds = [];
-
     data.exercise_data.map(item => ExerciseIds.push(item.exercise_id));
     setSelectedItems(ExerciseIds);
   };
-
   const renderItem1 = useMemo(
     () =>
       ({item, index}) => {
@@ -221,10 +219,9 @@ const EditCustomWorkout = ({navigation, route}) => {
     } else {
       newSelectedItems.splice(index, 1);
     }
-
+    console.log(newSelectedItems.length)
     setSelectedItems(newSelectedItems);
   };
-
   const submitCustomExercise = async () => {
     setForLoading(true);
     const payload = new FormData();
@@ -339,11 +336,70 @@ const EditCustomWorkout = ({navigation, route}) => {
 
     setFilteredCategories(filteredItems);
   };
+  const TopTabBar = () => {
+    return (
+      <View
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          alignSelf: 'center',
+          width: '100%',
+          alignSelf: 'center',
+        }}>
+        <FlatList
+          data={completeProfileData?.focusarea}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({item, index}) => (
+            <TouchableOpacity
+              activeOpacity={0.9}
+              style={[
+                styles.listView,
+                {
+                  backgroundColor:
+                    bodyPart == item.bodypart_title ? '#A937371A' : '#fff',
+                  borderWidth: bodyPart != item.bodypart_title ? 1 : 0,
+                  borderColor:
+                    bodyPart != item.bodypart_title ? '#33333333' : '#A937371A',
+                  marginLeft: index == 0 ? DeviceWidth * 0.0 : 0,
+                  marginRight:
+                    index == completeProfileData?.focusarea?.length - 1
+                      ? DeviceWidth * 0.06
+                      : 5,
+                },
+              ]}
+              onPress={() => {
+                setBodyPart(item.bodypart_title);
+              }}>
+              <Text
+                style={{
+                  fontSize: 12,
+                  fontWeight: '500',
+                  lineHeight: 16,
+                  textAlign: 'center',
+                  color:
+                    bodyPart != item.bodypart_title ? '#333333E5' : '#f0013b',
+                  fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                }}>
+                {item.bodypart_title}
+              </Text>
+            </TouchableOpacity>
+          )}
+          showsVerticalScrollIndicator={false}
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          updateCellsBatchingPeriod={100}
+          removeClippedSubviews={true}
+        />
+      </View>
+    );
+  };
   return (
     <>
       {forLoading ? <ActivityLoader /> : ''}
       <View style={styles.container}>
-        <Wrapper styles={{backgroundColor: AppColor.WHITE,}} >
+        <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
           <NewHeader1 header={'Edit Custom Workout'} backButton />
           <View style={{width: '95%', alignSelf: 'center'}}>
             <View
@@ -356,7 +412,7 @@ const EditCustomWorkout = ({navigation, route}) => {
                 flexDirection: 'row',
                 alignItems: 'center',
                 paddingLeft: 10,
-                marginBottom: 10
+                marginBottom: 10,
               }}>
               <Icons name="search" size={18} color={'#333333E5'} />
               <TextInput
@@ -370,67 +426,7 @@ const EditCustomWorkout = ({navigation, route}) => {
                 style={styles.inputText}
               />
             </View>
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                alignSelf: 'center',
-                width: '100%',
-                alignSelf: 'center',
-              }}>
-              <FlatList
-                data={completeProfileData?.focusarea}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({item, index}) => (
-                  <TouchableOpacity
-                    activeOpacity={0.9}
-                    style={[
-                      styles.listView,
-                      {
-                        backgroundColor:
-                          bodyPart == item.bodypart_title
-                            ? '#A937371A'
-                            : '#fff',
-                        borderWidth: bodyPart != item.bodypart_title ? 1 : 0,
-                        borderColor:
-                          bodyPart != item.bodypart_title
-                            ? '#33333333'
-                            : '#A937371A',
-                        marginLeft: index == 0 ? DeviceWidth * 0.0 : 0,
-                        marginRight:
-                          index == completeProfileData?.focusarea?.length - 1
-                            ? DeviceWidth * 0.06
-                            : 5,
-                      },
-                    ]}
-                    onPress={() => {
-                      setBodyPart(item.bodypart_title);
-                    }}>
-                    <Text
-                      style={{
-                        fontSize: 12,
-                        fontWeight: '500',
-                        lineHeight: 16,
-                        textAlign: 'center',
-                        color:
-                          bodyPart != item.bodypart_title
-                            ? '#333333E5'
-                            : '#f0013b',
-                        fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                      }}>
-                      {item.bodypart_title}
-                    </Text>
-                  </TouchableOpacity>
-                )}
-                showsVerticalScrollIndicator={false}
-                initialNumToRender={10}
-                maxToRenderPerBatch={10}
-                updateCellsBatchingPeriod={100}
-                removeClippedSubviews={true}
-              />
-            </View>
+           <TopTabBar/>
             <View
               style={[
                 styles.meditionBox,
@@ -473,9 +469,7 @@ const EditCustomWorkout = ({navigation, route}) => {
             }}>
             <TouchableOpacity
               style={{
-                width: 180,
-                height: 40,
-
+                paddingVertical: 6,
                 borderRadius: 30,
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -490,11 +484,10 @@ const EditCustomWorkout = ({navigation, route}) => {
                 tintColor={AppColor.WHITE}
                 style={{width: 20, height: 20}}
               />
-              <Text style={styles.button}>{'Update Workout '}</Text>
-
-              <Text style={[styles.button, {marginHorizontal: -5}]}>
-                ({selectedItems?.length}){' '}
-              </Text>
+              <Text
+                style={
+                  styles.button
+                }>{`Update Workout (${selectedItems?.length})`}</Text>
             </TouchableOpacity>
           </View>
         </Wrapper>
@@ -547,7 +540,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
     textAlign: 'center',
-    marginHorizontal: 10,
+    marginHorizontal: 8,
     color: AppColor.WHITE,
     fontWeight: '600',
     backgroundColor: 'transparent',

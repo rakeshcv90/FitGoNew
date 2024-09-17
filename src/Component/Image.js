@@ -318,5 +318,6 @@ export const localImage = {
   NormalRank: require('../Icon/Images/InAppRewards/NormalRank.png'),
   cautionLottie:require('../Icon/Images/InAppRewards/cautionLottie.json'),
   celebrationAnimation:require('../Icon/Images/InAppRewards/celebration.json'),
-  celebrationTrophy:require('../Icon/Images/InAppRewards/celebrationTrophy.png')
+  celebrationTrophy:require('../Icon/Images/InAppRewards/celebrationTrophy.png'),
+  startCorner1:require('../Icon/Images/InAppRewards/starCorner1.png')
 };

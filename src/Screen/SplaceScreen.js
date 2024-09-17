@@ -29,6 +29,7 @@ import {
   setInappPurchase,
   setOfferAgreement,
   setPlanType,
+  setPopUpSeen,
   setPurchaseHistory,
   setStoreData,
   setUserProfileData,
@@ -95,7 +96,7 @@ const SplaceScreen = ({navigation, route}) => {
     requestPermissionforNotification(dispatch);
     getUserAllInData();
     getPlanData();
-
+     dispatch(setPopUpSeen(false))
     dispatch(setFitmeAdsCount(0));
   }, []);
   useEffect(() => {

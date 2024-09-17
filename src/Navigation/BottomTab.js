@@ -25,7 +25,6 @@ import {AppColor, Fonts} from '../Component/Color';
 import {
   setFitmeAdsCount,
   setOpenAdsCount,
-  setRewardPopUp,
 } from '../Component/ThemeRedux/Actions';
 import MyPlans, {handleStart} from '../Screen/MyPlans/MyPlans';
 import GradientButton from '../Component/GradientButton';
@@ -55,7 +54,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
   const enteredUpcomingEvent = useSelector(
     state => state?.enteredUpcomingEvent,
   );
-  const getPopUpFreuqency = useSelector(state => state?.getPopUpFreuqency);
+  // const getPopUpFreuqency = useSelector(state => state?.getPopUpFreuqency);
   useEffect(() => {
     initInterstitial();
   }, []);
@@ -99,12 +98,6 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
         const Sun = getPurchaseHistory?.currentDay == 0;
         const onPress = () => {
           AnalyticsConsole(`${route.name}_TAB`);
-          if (
-            (!enteredCurrentEvent && !enteredUpcomingEvent) ||
-            (!enteredUpcomingEvent && enteredCurrentEvent)
-          ) {
-            Dispatch(setRewardPopUp(getPopUpFreuqency + 1));
-          }
           if (enteredCurrentEvent && route.key?.includes('MyPlans') && Sat) {
             showMessage({
               message:

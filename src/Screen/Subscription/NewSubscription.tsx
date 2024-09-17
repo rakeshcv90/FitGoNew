@@ -813,8 +813,8 @@ const NewSubscription = ({navigation, route}: any) => {
               planName.includes('noob')
                 ? '1 event/month'
                 : planName.includes('pro')
-                ? '2 event/month'
-                : '3 event/month'
+                ? '2 events/month'
+                : '3 events/month'
             }
             color="#333333E5"
             fontFamily={Fonts.MONTSERRAT_MEDIUM}
@@ -832,7 +832,7 @@ const NewSubscription = ({navigation, route}: any) => {
           <CheckIcon />
           <FitText
             type="normal"
-            value="Unlocked 150+ Exercises"
+            value="Unlock 150+ Exercises"
             color="#333333E5"
             fontFamily={Fonts.MONTSERRAT_MEDIUM}
             marginVertical={3}

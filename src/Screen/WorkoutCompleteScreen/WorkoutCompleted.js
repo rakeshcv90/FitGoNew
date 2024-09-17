@@ -164,7 +164,9 @@ const WorkoutCompleted = ({navigation, route}) => {
   const getExerciseInTime = useSelector(state => state.getExerciseInTime);
   const getExerciseOutTime = useSelector(state => state.getExerciseOutTime);
   const [overExerciseVisible, setOverExerciseVisible] = useState(false);
-  const getEquipmentExercise=useSelector(state=>state?.getEquipmentExercise)
+  const getEquipmentExercise = useSelector(
+    state => state?.getEquipmentExercise,
+  );
   const focused = useIsFocused();
 
   useEffect(() => {
@@ -286,9 +288,15 @@ const WorkoutCompleted = ({navigation, route}) => {
   const filterCardioExercise = () => {
     let exercises = getAllExercise?.filter(item => {
       if (getEquipmentExercise == 0) {
-        return item?.exercise_bodypart == 'Cardio' && item?.exercise_equipment !='No Equipment';
-      }else{
-        return item?.exercise_bodypart == 'Cardio' && item?.exercise_equipment =='No Equipment';
+        return (
+          item?.exercise_bodypart == 'Cardio' &&
+          item?.exercise_equipment != 'No Equipment'
+        );
+      } else {
+        return (
+          item?.exercise_bodypart == 'Cardio' &&
+          item?.exercise_equipment == 'No Equipment'
+        );
       }
     });
     setCardioExercise(exercises);
@@ -342,7 +350,7 @@ const WorkoutCompleted = ({navigation, route}) => {
         getLeaderboardDataAPI();
       }
     } catch (error) {
-      getLeaderboardDataAPI()
+      getLeaderboardDataAPI();
       showMessage({
         message: 'Something went wrong.',
         type: 'danger',
@@ -389,7 +397,9 @@ const WorkoutCompleted = ({navigation, route}) => {
         if (openIndex == -1 && type == 'cardio') {
           handleCompleteSkip();
         } else if (type == 'weekly' && openIndex != -1) {
-          setBraetheSessionAvailable(result?.data?.sessions[openIndex]?.complete_status);
+          setBraetheSessionAvailable(
+            result?.data?.sessions[openIndex]?.complete_status,
+          );
           setBreatheCoins(result?.data?.sessions[openIndex]?.fit_coins);
         } else if (type == 'cardio') {
           setBreatheCoins(result?.data?.sessions[openIndex]?.fit_coins);
@@ -415,7 +425,7 @@ const WorkoutCompleted = ({navigation, route}) => {
               backgroundColor={AppColor.GRAY}
               barStyle={'dark-content'}
             />
-            <Text style={styles.headerText}>Rewards unlocked</Text>
+            <Text style={styles.headerText}>Workout Completed</Text>
             <View style={{flex: 1, marginTop: 5}}>
               <Animated.View style={[styles.imgView, streakAnimation]}>
                 <View
@@ -450,9 +460,8 @@ const WorkoutCompleted = ({navigation, route}) => {
                   streakCoins={coins}
                   cardioCoins={cardioExxercise[0]?.fit_coins}
                   download={0}
-                  title={
-                    `You’ve completed your workout for the day. Workout regularly to increase your chances of winning exciting prizes!`
-                  }
+                  title={`You’ve completed your workout for the day. Workout regularly to increase your chances of winning exciting prizes!`}
+                  cardHeader={'Fitcoins Earned'}
                 />
               </Animated.View>
               <Animated.View style={[styles.imgView, cardioAnimation]}>
@@ -478,9 +487,7 @@ const WorkoutCompleted = ({navigation, route}) => {
                   }}
                   download={downloaded}
                   EarnedCoins={earnedCoin}
-                  title={
-                    `Complete the 15-minute cardio session and increase your chances of winning fantastic prizes!`
-                   }
+                  title={`Complete the 15-minute cardio session and increase your chances of winning fantastic prizes!`}
                 />
               </Animated.View>
               <Animated.View style={[styles.imgView, breatheAnimation]}>
