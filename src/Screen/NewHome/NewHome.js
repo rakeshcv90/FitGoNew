@@ -708,7 +708,7 @@ const NewHome = ({navigation}) => {
       />
       {(getOfferAgreement?.location === 'India' ||
         getOfferAgreement?.location == 'United States') &&
-        enteredUpcomingEvent &&
+       !enteredUpcomingEvent &&
         getPermissionIos && (
           <UpcomingEventModal
             visible={!getPopUpSeen}

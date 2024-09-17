@@ -409,7 +409,7 @@ const UserEspecially = () => {
                       lineHeight:18,
                       color: AppColor.WHITE,
                     }}>
-                  {  "Reach Your Goals Quicker with a \nNutritious Diet"}
+                  {  "Reach your goals quicker with a \nnutritious diet"}
                   </Text>
                 </View>
               </View>

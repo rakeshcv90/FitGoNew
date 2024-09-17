@@ -202,13 +202,13 @@ const MeditationDetails = ({navigation, route}) => {
       </LinearGradient>
     </TouchableOpacity>
   );
-  const emptyComponent = () => {
+  const EmptyComponent = () => {
     return (
       <View
         style={{
-          flex: 1,
           alignSelf: 'center',
-          marginTop: 30
+          marginTop: 30,
+          width:DeviceWidth
         }}>
         <AnimatedLottieView
           source={require('../../Icon/Images/NewImage/NoData.json')}
@@ -330,7 +330,7 @@ const MeditationDetails = ({navigation, route}) => {
             horizontal
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
-            ListEmptyComponent={emptyComponent}
+            ListEmptyComponent={<EmptyComponent/>}
             renderItem={({item, index}) => {
               return (
                 <ListItem title={item} color={colors[index % colors.length]} />
@@ -470,7 +470,7 @@ const MeditationDetails = ({navigation, route}) => {
               data={mindsetExercise}
               showsVerticalScrollIndicator={false}
               keyExtractor={(item, index) => index.toString()}
-              ListEmptyComponent={emptyComponent}
+              ListEmptyComponent={<EmptyComponent/>}
               //  contentInset={{paddingBottom: DeviceHeigth * 0.1}}
               renderItem={({item, index}) => {
                 return (
