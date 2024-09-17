@@ -234,7 +234,7 @@ const UserEspecially = () => {
               lineHeight: 20,
               color: AppColor.PrimaryTextColor,
             }}>
-            Especially for you
+            Especially For You
           </Text>
         </View>
         <View
@@ -331,7 +331,7 @@ const UserEspecially = () => {
                     lineHeight: 17,
                     color: AppColor.WHITE,
                   }}>
-                 Gym Directory
+                  Nearby Gyms
                 </Text>
                 <View
                   style={{

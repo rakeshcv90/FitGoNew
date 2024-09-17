@@ -39,7 +39,6 @@ import {
   setExerciseInTime,
   setExerciseOutTime,
   setVideoLocation,
-  setWorkoutTimeCal,
 } from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
 import LinearGradient from 'react-native-linear-gradient';
@@ -57,6 +56,9 @@ import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import WorkoutsDescription from './WorkoutsDescription';
 import {showMessage} from 'react-native-flash-message';
 import OverExerciseModal from '../../Component/Utilities/OverExercise';
+import Wrapper from '../WorkoutCompleteScreen/Wrapper';
+import NewHeader1 from '../../Component/Headers/NewHeader1';
+import FitIcon from '../../Component/Utilities/FitIcon';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 interface BoxProps {
@@ -66,9 +68,151 @@ interface BoxProps {
   isItemDownload: boolean;
   isSelected: boolean;
   switchButton: boolean;
+  handlePress: Function;
+  handleIconPress: Function;
+  selectedIndex: number;
 }
 
 const format = 'hh:mm:ss';
+
+const Box: FC<BoxProps> = ({
+  item,
+  index,
+  isSelected,
+  switchButton,
+  isItemDownload,
+  downloadProgress,
+  selectedIndex,
+  handleIconPress,
+  handlePress,
+}) => {
+  const time = parseInt(item?.exercise_rest.split(' ')[0]);
+  const showAds = (index + 1) % 9 == 0;
+  return (
+    <>
+      <View
+        style={{
+          borderColor: '#33333314',
+          borderBottomWidth: 1,
+        }}>
+        <TouchableOpacity
+          key={index}
+          onPress={() => {
+            if (isItemDownload || downloadProgress > 0) {
+            } else handlePress(item);
+          }}
+          activeOpacity={switchButton ? 0.8 : 1}
+          style={styles.boxContainer}>
+          <View style={styles.boxImage}>
+            <FastImage
+              // fallback={true}
+              style={{
+                width: '100%',
+                height: '100%',
+                justifyContent: 'center',
+                alignSelf: 'center',
+              }}
+              source={{
+                uri: item?.exercise_image_link,
+                headers: {Authorization: 'someAuthToken'},
+                priority: FastImage.priority.high,
+              }}
+              resizeMode={FastImage.resizeMode.contain}
+              defaultSource={localImage.NOWORKOUT}
+            />
+          </View>
+          <View
+            style={{
+              marginHorizontal: 15,
+              width: DeviceHeigth >= 1024 ? '80%' : '65%',
+              // backgroundColor: 'lightgreen',
+            }}>
+            <Text
+              style={{
+                fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                fontSize: 16,
+                fontWeight: '600',
+                color: AppColor.LITELTEXTCOLOR,
+                lineHeight: 24,
+              }}>
+              {item?.exercise_title}
+            </Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text style={[styles.small, {textTransform: 'capitalize'}]}>
+                {/* {item?.exercise_rest} */}
+                {time > 30 ? Math.floor(time / 60) + ' min' : time + ' sec'}
+              </Text>
+            </View>
+          </View>
+          {switchButton ? (
+            <TouchableOpacity
+              onPress={() => {
+                handleIconPress(item, index);
+              }}>
+              <View
+                style={[
+                  styles.boxIconView,
+                  {
+                    backgroundColor: isSelected ? '#f0013b' : 'white',
+                    borderColor: isSelected ? '#f0013b' : '#33333399',
+                  },
+                ]}>
+                {isSelected && <Font name="check" color="white" />}
+              </View>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              disabled={isItemDownload}
+              onPress={() => {
+                if (isItemDownload || downloadProgress > 0) {
+                } else {
+                  handleIconPress(item, index);
+                }
+              }}>
+              {isItemDownload && downloadProgress <= 5 ? (
+                <ActivityIndicator
+                  color={AppColor.NEW_DARK_RED}
+                  animating={isItemDownload && downloadProgress <= 5}
+                  size={30}
+                />
+              ) : (
+                <CircularProgressBase
+                  value={isItemDownload ? downloadProgress : 0}
+                  radius={14}
+                  activeStrokeColor={AppColor.RED}
+                  inActiveStrokeColor="#33333399"
+                  activeStrokeWidth={2}
+                  inActiveStrokeWidth={2}
+                  maxValue={100}>
+                  <Image
+                    source={localImage.ExercisePlay}
+                    tintColor={selectedIndex != index ? '#565656' : ''}
+                    resizeMode="contain"
+                    style={{
+                      width: 12,
+                      height: 12,
+                      alignSelf: 'center',
+                    }}
+                  />
+                </CircularProgressBase>
+              )}
+            </TouchableOpacity>
+          )}
+        </TouchableOpacity>
+      </View>
+      {/* {getAdsDisplay(index, item)} */}
+      {showAds && (
+        <View
+          style={{
+            alignSelf: 'center',
+            alignItems: 'center',
+          }}>
+          <NativeAddTest type="image" media={false} />
+        </View>
+      )}
+    </>
+  );
+};
 
 const WorkoutCategories = ({navigation, route}: any) => {
   const [item, setItem] = useState();
@@ -89,9 +233,6 @@ const WorkoutCategories = ({navigation, route}: any) => {
   const [start, setStart] = useState(false);
   const [overExerciseVisible, setOverExerciseVisible] = useState(false);
   const dispatch = useDispatch();
-  const getCustttomeTimeCal = useSelector(
-    (state: any) => state.getCustttomeTimeCal,
-  );
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
@@ -115,21 +256,21 @@ const WorkoutCategories = ({navigation, route}: any) => {
     (state: any) => state.getExerciseOutTime,
   );
 
-  useEffect(() => {
-    if (start && getExerciseOutTime == '') {
-      dispatch(setExerciseInTime(moment().format(format)));
-      dispatch(setExerciseOutTime(moment().add(45, 'minutes').format(format)));
-      console.warn('STARTING', moment().format(format), getExerciseOutTime);
-    }
-    if (
-      getExerciseInTime < getExerciseOutTime &&
-      !start &&
-      getExerciseOutTime != ''
-    ) {
-      console.warn('COMPLETEE', moment().format(format), getExerciseOutTime);
-      dispatch(setExerciseInTime(moment().format(format)));
-    }
-  }, [getExerciseInTime, getExerciseOutTime, start]);
+  // useEffect(() => {
+  //   if (start && getExerciseOutTime == '') {
+  //     dispatch(setExerciseInTime(moment().format(format)));
+  //     dispatch(setExerciseOutTime(moment().add(45, 'minutes').format(format)));
+  //     console.warn('STARTING', moment().format(format), getExerciseOutTime);
+  //   }
+  //   if (
+  //     getExerciseInTime < getExerciseOutTime &&
+  //     !start &&
+  //     getExerciseOutTime != ''
+  //   ) {
+  //     console.warn('COMPLETEE', moment().format(format), getExerciseOutTime);
+  //     dispatch(setExerciseInTime(moment().format(format)));
+  //   }
+  // }, [getExerciseInTime, getExerciseOutTime, start]);
 
   function onLoadEnd() {
     setIsLoading(false);
@@ -242,6 +383,8 @@ const WorkoutCategories = ({navigation, route}: any) => {
     return () => backHandler.remove();
   }, []);
   const handleIconPress = (item: any, index: number) => {
+    setSelectedIndex(index);
+    setDownloadProgress(5);
     if (switchButton) {
       handleItems(item, selectedExercise, setSelectedExercise);
     } else {
@@ -265,138 +408,6 @@ const WorkoutCategories = ({navigation, route}: any) => {
       });
     }
   };
-  const Box: FC<BoxProps> = useMemo(
-    () =>
-      ({
-        item,
-        index,
-        isSelected,
-        switchButton,
-        isItemDownload,
-        downloadProgress,
-      }) => {
-        const time = parseInt(item?.exercise_rest.split(' ')[0]);
-        return (
-          <>
-            <View
-              style={{
-                borderColor: '#33333314',
-                borderBottomWidth: 1,
-              }}>
-              <TouchableOpacity
-                key={index}
-                onPress={() => {
-                  if (isItemDownload || downloadProgress > 0) {
-                  } else handlePress(item);
-                }}
-                activeOpacity={switchButton ? 0.8 : 1}
-                style={styles.boxContainer}>
-                <View style={styles.boxImage}>
-                  <FastImage
-                    // fallback={true}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      justifyContent: 'center',
-                      alignSelf: 'center',
-                    }}
-                    source={{
-                      uri: item?.exercise_image_link,
-                      headers: {Authorization: 'someAuthToken'},
-                      priority: FastImage.priority.high,
-                    }}
-                    resizeMode={FastImage.resizeMode.contain}
-                    defaultSource={localImage.NOWORKOUT}
-                  />
-                </View>
-                <View
-                  style={{
-                    marginHorizontal: 15,
-                    width: DeviceHeigth >= 1024 ? '80%' : '65%',
-                    // backgroundColor: 'lightgreen',
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                      fontSize: 16,
-                      fontWeight: '600',
-                      color: AppColor.LITELTEXTCOLOR,
-                      lineHeight: 24,
-                    }}>
-                    {item?.exercise_title}
-                  </Text>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text style={[styles.small, {textTransform: 'capitalize'}]}>
-                      {/* {item?.exercise_rest} */}
-                      {time > 30
-                        ? Math.floor(time / 60) + ' min'
-                        : time + ' sec'}
-                    </Text>
-                  </View>
-                </View>
-                {switchButton ? (
-                  <TouchableOpacity
-                    onPress={() => {
-                      handleIconPress(item, index);
-                    }}>
-                    <View
-                      style={[
-                        styles.boxIconView,
-                        {
-                          backgroundColor: isSelected ? '#f0013b' : 'white',
-                          borderColor: isSelected ? '#f0013b' : '#33333399',
-                        },
-                      ]}>
-                      {isSelected && <Font name="check" color="white" />}
-                    </View>
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    disabled={isItemDownload}
-                    onPress={() => {
-                      if (isItemDownload || downloadProgress > 0) {
-                      } else {
-                        setSelectedIndex(index);
-                        setDownloadProgress(5);
-                        handleIconPress(item, index);
-                      }
-                    }}>
-                    {isItemDownload && downloadProgress <= 5 ? (
-                      <ActivityIndicator
-                        color={AppColor.NEW_DARK_RED}
-                        animating={isItemDownload && downloadProgress <= 5}
-                        size={30}
-                      />
-                    ) : (
-                      <CircularProgressBase
-                        value={isItemDownload ? downloadProgress : 0}
-                        radius={14}
-                        activeStrokeColor={AppColor.RED}
-                        inActiveStrokeColor="#33333399"
-                        activeStrokeWidth={2}
-                        inActiveStrokeWidth={2}
-                        maxValue={100}>
-                        <Image
-                          source={localImage.ExercisePlay}
-                          tintColor={selectedIndex != index ? '#565656' : ''}
-                          resizeMode="contain"
-                          style={{
-                            width: 12,
-                            height: 12,
-                            alignSelf: 'center',
-                          }}
-                        />
-                      </CircularProgressBase>
-                    )}
-                  </TouchableOpacity>
-                )}
-              </TouchableOpacity>
-            </View>
-          </>
-        );
-      },
-    [selectedExercise, switchButton, selectedIndex],
-  );
 
   // const handleBackPress = useCallback(() => {
   //   if (switchButton) {
@@ -524,179 +535,148 @@ const WorkoutCategories = ({navigation, route}: any) => {
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
-      <DietPlanHeader
-        header={
-          switchButton
-            ? `${itemsLength} Exercises selected`
-            : CategoryDetails?.bodypart_title == undefined
-            ? CategoryDetails?.title
-            : CategoryDetails?.bodypart_title
-        }
-        workoutCat={switchButton}
-        backPressCheck={true}
-        shadow
-        onPress={() => {
-          if (downloaded > 0 || downloadProgress > 0) {
-            showMessage({
-              message:
-                'Please wait, downloading in progress. Do not press back.',
-              type: 'info',
-              animationDuration: 500,
-              floating: true,
-              icon: {icon: 'auto', position: 'left'},
-            });
-          } else if (switchButton) {
-            AnalyticsConsole('CL_SE_WC');
-            setSelectedExercise([]);
-            setSwitchButton(false);
-            setItemsLength(0);
-          } else {
-            navigation?.goBack();
+      <Wrapper>
+        <NewHeader1
+          header={
+            switchButton
+              ? `${itemsLength} selected`
+              : CategoryDetails?.bodypart_title == undefined
+              ? CategoryDetails?.title
+              : CategoryDetails?.bodypart_title
           }
-        }}
-        h={
-          Platform.OS == 'ios'
-            ? DeviceHeigth >= 1024
-              ? DeviceWidth * 0.1
-              : DeviceWidth * 0.2
-            : DeviceWidth * 0.15
-        }
-        paddingTop={
-          Platform.OS == 'android'
-            ? DeviceHeigth * 0.035
-            : DeviceHeigth >= 1024
-            ? DeviceHeigth * 0.035
-            : DeviceWidth * 0.05
-        }
-        key={CategoryDetails?.id}
-      />
-      <View style={styles.container}>
-        <View
-          style={{
-            width: '90%',
-            height: 50,
-            alignSelf: 'center',
-            backgroundColor: '#F3F5F5',
-            borderRadius: 6,
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingLeft: 10,
-            // top: -DeviceWidth * 0.05,
-            marginVertical: (DeviceWidth * 0.1) / 8,
-            justifyContent: 'center',
-          }}>
-          <Icons1 name="search" size={18} color={'#333333E5'} />
-          <TextInput
-            placeholder="Search Exercise"
-            placeholderTextColor="#33333380"
-            value={searchValue}
-            onChangeText={text => {
-              setSearchValue(text);
-              searchFunction(text);
-            }}
-            style={styles.inputText}
-          />
-        </View>
-        <View style={{height: (DeviceWidth * 0.1) / 4}} />
-        <FlatList
-          data={filteredExercise}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({item, index}: any) => (
-            <>
-              <Box
-                item={item}
-                index={index}
-                isSelected={selectedExercise.includes(item?.exercise_id)}
-                switchButton={switchButton}
-                isItemDownload={selectedIndex == index}
-                downloadProgress={downloadProgress}
-              />
-              {getAdsDisplay(index, item)}
-            </>
-          )}
-          ListEmptyComponent={emptyComponent}
-          showsVerticalScrollIndicator={false}
-          initialNumToRender={10}
-          maxToRenderPerBatch={10}
-          updateCellsBatchingPeriod={100}
-          removeClippedSubviews={true}
+          backButton
+          workoutCat={switchButton}
+          onBackPress={() => {
+            if (downloaded > 0 || downloadProgress > 0) {
+              showMessage({
+                message:
+                  'Please wait, downloading in progress. Do not press back.',
+                type: 'info',
+                animationDuration: 500,
+                floating: true,
+                icon: {icon: 'auto', position: 'left'},
+              });
+            } else if (switchButton) {
+              AnalyticsConsole('CL_SE_WC');
+              setSelectedExercise([]);
+              setSwitchButton(false);
+              setItemsLength(0);
+            } else {
+              navigation?.goBack();
+            }
+          }}
         />
-        {filteredExercise.length > 0 && (
+        <View style={styles.container}>
           <View
             style={{
-              width: DeviceWidth,
+              width: '90%',
+              height: 50,
+              alignSelf: 'center',
+              backgroundColor: '#F3F5F5',
+              borderRadius: 6,
+              flexDirection: 'row',
               alignItems: 'center',
-              backgroundColor: 'white',
-              height: switchButton ? DeviceHeigth * 0.08 : DeviceHeigth * 0.16,
+              paddingLeft: 10,
+              // top: -DeviceWidth * 0.05,
+              marginVertical: (DeviceWidth * 0.1) / 8,
+              justifyContent: 'center',
             }}>
-            {/* {!switchButton && ( */}
-            <GradientButton
-              // flex={0.01}
-              text={
-                downloaded > 0
-                  ? `Downloading`
-                  : switchButton
-                  ? `Start Exercise  (${itemsLength})`
-                  : 'Start All Exercises'
-              }
-              h={50}
-              colors={['#f0013b', '#f0013b']}
-              textStyle={styles.buttonText}
-              alignSelf
-              bR={6}
-              normalAnimation={downloaded > 0}
-              normalFill={`${100 - downloaded}%`}
-              // bottm={switchButton ? 0 : -5}
-              bottm={switchButton ? 0 : PLATFORM_IOS ? 10 : -5}
-              disabled={downloadProgress > 0}
-              onPress={() => {
-                if (switchButton) {
-                  const finalExercises = exercise.filter((item: any) =>
-                    selectedExercise.includes(item?.exercise_id),
-                  );
-                  if (finalExercises?.length > 0 && selectedIndex == -1) {
-                    AnalyticsConsole('S_SE_WC');
-                    Start(finalExercises);
-                  } else {
-                    showMessage({
-                      message: 'Please select an exercise',
-                      type: 'danger',
-                      animationDuration: 500,
-                      floating: true,
-                      icon: {icon: 'auto', position: 'left'},
-                    });
-                  }
-                } else {
-                  AnalyticsConsole('S_A_WC');
-                  Start(exercise);
-                }
+            <Icons1 name="search" size={18} color={'#333333E5'} />
+            <TextInput
+              placeholder="Search Exercise"
+              placeholderTextColor="#33333380"
+              value={searchValue}
+              onChangeText={text => {
+                setSearchValue(text);
+                searchFunction(text);
               }}
+              style={styles.inputText}
             />
-
-            {!switchButton && (
+          </View>
+          <View style={{height: (DeviceWidth * 0.1) / 4}} />
+          <FlatList
+            data={filteredExercise}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item, index}: any) => {
+              return (
+                <Box
+                  item={item}
+                  index={index}
+                  isSelected={selectedExercise.includes(item?.exercise_id)}
+                  switchButton={switchButton}
+                  isItemDownload={selectedIndex == index}
+                  downloadProgress={downloadProgress}
+                  handleIconPress={handleIconPress}
+                  handlePress={handlePress}
+                  selectedIndex={selectedIndex}
+                />
+              );
+            }}
+            ListEmptyComponent={emptyComponent}
+            showsVerticalScrollIndicator={false}
+            // initialNumToRender={10}
+            // maxToRenderPerBatch={10}
+            // updateCellsBatchingPeriod={100}
+            // removeClippedSubviews={true}
+          />
+          {filteredExercise.length > 0 && (
+            <View
+              style={{
+                width: DeviceWidth,
+                alignItems: 'center',
+                backgroundColor: 'white',
+                height: (DeviceHeigth * 0.16) / 2,
+              }}>
+              {/* {!switchButton && ( */}
               <GradientButton
-                text={`Select Exercise`}
+                // flex={0.01}
+                text={
+                  downloaded > 0
+                    ? `Downloading`
+                    : switchButton
+                    ? `Start Exercise  (${itemsLength})`
+                    : 'Select Exercises'
+                }
                 h={50}
-                colors={[AppColor.WHITE, AppColor.WHITE]}
-                textStyle={[styles.buttonText, {color: '#f0013b'}]}
-                bC="#f0013b"
+                colors={['#f0013b', '#f0013b']}
+                textStyle={styles.buttonText}
                 alignSelf
-                bottm={PLATFORM_IOS ? 5 : 0}
                 bR={6}
-                // bottm={5}
-                disabled={downloadProgress > 0}
+                normalAnimation={downloaded > 0}
+                normalFill={`${100 - downloaded}%`}
+                // bottm={switchButton ? 0 : -5}
+                bottm={PLATFORM_IOS ? 10 : -5}
+                // disabled={switchButton && downloadProgress > 1}
                 onPress={() => {
-                  setDownloadProgress(0);
-                  if (downloadProgress == 0) {
-                    setSelectedIndex(-1);
-                    setSwitchButton(true);
+                  if (switchButton) {
+                    const finalExercises = exercise.filter((item: any) =>
+                      selectedExercise.includes(item?.exercise_id),
+                    );
+                    if (finalExercises?.length > 0 && selectedIndex == -1) {
+                      AnalyticsConsole('S_SE_WC');
+                      Start(finalExercises);
+                    } else {
+                      showMessage({
+                        message: 'Please select an exercise',
+                        type: 'danger',
+                        animationDuration: 500,
+                        floating: true,
+                        icon: {icon: 'auto', position: 'left'},
+                      });
+                    }
+                  } else {
+                    setDownloadProgress(0);
+                    if (downloadProgress == 0) {
+                      setSelectedIndex(-1);
+                      setSwitchButton(true);
+                    }
                   }
                 }}
               />
-            )}
-          </View>
-        )}
-      </View>
+            </View>
+          )}
+        </View>
+      </Wrapper>
       <WorkoutsDescription data={item} open={visible} setOpen={setVisible} />
       <OverExerciseModal
         setOverExerciseVisible={setOverExerciseVisible}

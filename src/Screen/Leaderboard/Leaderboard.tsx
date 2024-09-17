@@ -596,12 +596,7 @@ const Leaderboard = () => {
             />
 
             <ScrollView
-              keyboardDismissMode="interactive"
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{
-                flexGrow: 1,
-                paddingBottom: DeviceHeigth * 0.1,
-              }}
               refreshControl={
                 <RefreshControl
                   refreshing={refresh}

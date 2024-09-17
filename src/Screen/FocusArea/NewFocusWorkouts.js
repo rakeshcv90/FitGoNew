@@ -915,7 +915,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                             fontFamily: Fonts.MONTSERRAT_MEDIUM,
                             color: '#1E1E1E',
                           }}>
-                          {time > 30
+                          {time > 60
                             ? Math.floor(time / 60) + ' min'
                             : time + ' sec'}
                         </Text>
@@ -991,7 +991,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
           <NewButton
             position={'absolute'}
             bottom={10}
-            title={'Start Workouts'}
+            title={'Start Workout'}
             withAnimation
             download={downloaded}
             onPress={() => {

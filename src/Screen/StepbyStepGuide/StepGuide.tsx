@@ -104,34 +104,7 @@ const HeartCom = () => (
 );
 
 const StepGuide = ({navigation}: any) => {
-  const getUserDataDetails = useSelector(
-    (state: any) => state.getUserDataDetails,
-  );
-  const [pastWinners, setPastWinners] = useState([]);
-  useEffect(() => {
-    getPastWinner();
-  }, []);
-
-  const getPastWinner = () => {
-    RequestAPI.makeRequest(
-      'POST',
-      NewAppapi.GET_PAST_WINNERS,
-      {
-        version: VersionNumber.appVersion,
-      },
-      (res: any) => {
-        if (res.error) {
-          setPastWinners([]);
-        }
-        if (res.data) {
-          const past3 = res.data?.data?.filter(
-            (_: any, index: number) => index < 3,
-          );
-          setPastWinners(past3);
-        }
-      },
-    );
-  };
+  const getPastWinner = useSelector((state: any) => state.getPastWinners);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -140,7 +113,7 @@ const StepGuide = ({navigation}: any) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{width: '100%', alignSelf: 'center'}}>
         <TouchableOpacity
-            onPress={() => navigation?.goBack()}
+          onPress={() => navigation?.goBack()}
           style={{
             position: 'absolute',
             top: (DeviceWidth * 0.1) / 2,
@@ -153,7 +126,12 @@ const StepGuide = ({navigation}: any) => {
           <Image
             source={localImage.StepGuidHead}
             resizeMode="contain"
-            style={{width: '60%', height: '50%', marginBottom: 40}}
+            style={{
+              width: '60%',
+              height: '50%',
+              marginBottom: 40,
+              alignSelf: 'center',
+            }}
           />
         </View>
         <View style={styles.mainBox}>
@@ -245,7 +223,7 @@ const StepGuide = ({navigation}: any) => {
               </View>
             </View> */}
             <FitText type="Heading" value="Past Winners" />
-            <WithoutEvent pastWinners={pastWinners} pV={0} noText />
+            <WithoutEvent pastWinners={getPastWinner} pV={0} noText />
             <FitText
               type="SubHeading"
               value="Terms & Conditions"
@@ -263,7 +241,7 @@ const StepGuide = ({navigation}: any) => {
       </ScrollView>
       <View style={styles.btmButton}>
         <GradientButton
-          text="Enter Challenge"
+          text="Join Challenge"
           colors={['#F0013B', '#F0013B']}
           bR={10}
           h={50}
@@ -275,51 +253,51 @@ const StepGuide = ({navigation}: any) => {
         />
       </View>
       <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => {
-            navigation.navigate('Questions')
-          }}
-          style={{
-            //
-            width: 120,
-            height: 56,
-            backgroundColor: '#F7F7F7',
-            flexDirection: 'row',
-            position: 'absolute',
+        activeOpacity={1}
+        onPress={() => {
+          navigation.navigate('Questions');
+        }}
+        style={{
+          //
+          width: 120,
+          height: 56,
+          backgroundColor: '#F7F7F7',
+          flexDirection: 'row',
+          position: 'absolute',
 
-            bottom: 90,
-            right: 15,
-            borderRadius: 16,
-            justifyContent: 'center',
-            alignItems: 'center',
-            shadowColor: 'rgba(0, 0, 0, 1)',
-            ...Platform.select({
-              ios: {
-                shadowColor: 'rgba(0, 0, 0, 1)',
-                shadowOffset: {width: 0, height: 2},
-                shadowOpacity: 0.3,
-                shadowRadius: 3,
-              },
-              android: {
-                elevation: 4,
-              },
-            }),
+          bottom: 90,
+          right: 15,
+          borderRadius: 16,
+          justifyContent: 'center',
+          alignItems: 'center',
+          shadowColor: 'rgba(0, 0, 0, 1)',
+          ...Platform.select({
+            ios: {
+              shadowColor: 'rgba(0, 0, 0, 1)',
+              shadowOffset: {width: 0, height: 2},
+              shadowOpacity: 0.3,
+              shadowRadius: 3,
+            },
+            android: {
+              elevation: 4,
+            },
+          }),
+        }}>
+        <Image
+          source={require('../../Icon/Images/InAppRewards/FAQ.png')}
+          style={{height: 25, width: 25, marginRight: 5}}
+          resizeMode="contain"
+        />
+        <Text
+          style={{
+            fontFamily: Fonts.HELVETICA_BOLD,
+            fontSize: 16,
+            lineHeight: 30,
+            color: AppColor.RED,
           }}>
-          <Image
-            source={require('../../Icon/Images/InAppRewards/FAQ.png')}
-            style={{height: 25, width: 25,marginRight: 5}}
-            resizeMode="contain"
-          />
-          <Text
-            style={{
-              fontFamily: Fonts.HELVETICA_BOLD,
-              fontSize: 16,
-              lineHeight: 30,
-              color: AppColor.RED,
-            }}>
-            FAQs
-          </Text>
-        </TouchableOpacity>
+          FAQs
+        </Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };

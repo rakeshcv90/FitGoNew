@@ -16,9 +16,8 @@ import notifee, {
 } from '@notifee/react-native';
 
 import {DeviceHeigth, DeviceWidth} from './Config';
-import {AppColor} from './Color';
+import {AppColor, PLATFORM_IOS} from './Color';
 import {showMessage} from 'react-native-flash-message';
-import messaging from '@react-native-firebase/messaging';
 import {BlurView} from '@react-native-community/blur';
 
 export const AlarmNotification = async (time: any) => {
@@ -37,21 +36,21 @@ export const AlarmNotification = async (time: any) => {
         pressAction: {
           id: 'default',
         },
-        actions: [
-          {
-            title: 'Add +5',
-            pressAction: {
-              id: 'Plus_Five',
-            },
-          },
-          {
-            title: 'Stop',
-            pressAction: {
-              id: 'Stop',
-            },
-          },
-          // Add more actions as needed
-        ],
+        // actions: [
+        //   {
+        //     title: 'Add +5',
+        //     pressAction: {
+        //       id: 'Plus_Five',
+        //     },
+        //   },
+        //   {
+        //     title: 'Stop',
+        //     pressAction: {
+        //       id: 'Stop',
+        //     },
+        //   },
+        //   // Add more actions as needed
+        // ],
       },
       ios: {
         categoryId: 'Alarm',
@@ -170,10 +169,11 @@ const Reminder = ({
           <View
             style={{
               width: DeviceWidth * 0.8,
-              height: DeviceHeigth * 0.45,
+              height: PLATFORM_IOS ? DeviceHeigth * 0.45 : DeviceHeigth * 0.25,
               backgroundColor: AppColor.WHITE,
               justifyContent: 'center',
               alignItems: 'center',
+              padding: 10,
               borderRadius: 20,
               ...Platform.select({
                 ios: {

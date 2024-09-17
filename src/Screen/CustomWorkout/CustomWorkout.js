@@ -571,7 +571,7 @@ const styles = StyleSheet.create({
   meditionBox: {
     backgroundColor: 'white',
     width: '96%',
-
+    flex: 1,
     alignSelf: 'center',
   },
   buttonStyle: {

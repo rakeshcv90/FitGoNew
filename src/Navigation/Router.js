@@ -91,6 +91,7 @@ import LoadingScreen from '../Component/NewHomeUtilities/LoadingScreen';
 import CardioCompleted from '../Screen/WorkoutCompleteScreen/CardioCompleted';
 import NewStore from '../Screen/Store/NewStore';
 import Products from '../Screen/Store/Products';
+import TestExercise from '../Screen/NewWorkouts/Exercise/TestExercise';
 const Stack = createStackNavigator();
 
 const screenOptions = {

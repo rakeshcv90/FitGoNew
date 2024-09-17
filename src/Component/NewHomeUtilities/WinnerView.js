@@ -6,7 +6,6 @@ import {Image} from 'react-native';
 import {localImage} from '../Image';
 
 const WinnerView = ({totalData}) => {
-  console.log('SDfdsfsdfsdfdsf', totalData[0].name);
   return (
     <View>
       <View style={styles.bannerCard}>
@@ -76,10 +75,10 @@ const WinnerView = ({totalData}) => {
                     source={{uri: totalData[0]?.image_path}}
                     //source={localImage.NContact}
                     style={{
-                      width: DeviceHeigth >= 1024 ? '40%' : '50%',
+                      width: DeviceHeigth >= 1024 ? '40%' : '45%',
                       height: DeviceHeigth >= 1024 ? '65%' : '50%',
                       position: 'absolute',
-                      right: DeviceHeigth >= 1024 ? 80 : 34,
+                      right: DeviceHeigth >= 1024 ? 80 : 40,
                       top: DeviceHeigth >= 1024 ? 13 : 17,
                       zIndex: -1,
                       overflow: 'hidden',

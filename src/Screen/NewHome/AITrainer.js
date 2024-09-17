@@ -308,11 +308,11 @@ const AITrainer = ({navigation}) => {
                                 flexDirection: 'row',
                                 justifyContent: 'center',
                                 alignSelf: 'flex-start',
-                                shadowColor: '#000',
-                                shadowOffset: {width: 0, height: 5},
-                                shadowOpacity: 0.25,
-                                shadowRadius: 3.84,
-                                elevation: 5,
+                                // shadowColor: '#000',
+                                // shadowOffset: {width: 0, height: 5},
+                                // shadowOpacity: 0.25,
+                                // shadowRadius: 3.84,
+                                // elevation: 5,
                               }}>
                               <Image
                                 style={{
@@ -355,14 +355,14 @@ const AITrainer = ({navigation}) => {
                                   borderRadius: 16,
                                   //borderWidth: 1,
                                   // borderColor: '#f4c7c3',
-                                  shadowColor: '#000',
-                                  shadowOffset: {
-                                    width: 0,
-                                    height: 2,
-                                  },
-                                  shadowOpacity: 0.25,
-                                  shadowRadius: 3.84,
-                                  elevation: 5,
+                                  // shadowColor: '#000',
+                                  // shadowOffset: {
+                                  //   width: 0,
+                                  //   height: 2,
+                                  // },
+                                  // shadowOpacity: 0.25,
+                                  // shadowRadius: 3.84,
+                                  // elevation: 5,
                                 }}>
                                 <View
                                   style={{
@@ -430,20 +430,20 @@ const AITrainer = ({navigation}) => {
                           <>
                             <View
                               style={{
-                                width: 250,
+                                maxWidth: 250,
                                 backgroundColor: '#ffffff',
                                 borderRadius: 16,
                                 borderWidth: 1,
                                 borderColor: '#5050501A',
                                 padding: 10,
-                                shadowColor: '#000',
-                                shadowOffset: {
-                                  width: 0,
-                                  height: 2,
-                                },
-                                shadowOpacity: 0.25,
-                                shadowRadius: 3.84,
-                                elevation: 5,
+                                // shadowColor: '#000',
+                                // shadowOffset: {
+                                //   width: 0,
+                                //   height: 2,
+                                // },
+                                // shadowOpacity: 0.25,
+                                // shadowRadius: 3.84,
+                                // elevation: 5,
                               }}>
                               <Text
                                 style={{

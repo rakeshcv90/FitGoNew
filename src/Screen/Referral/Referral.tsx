@@ -286,7 +286,7 @@ const Referral = () => {
             style={{height: '100%', width: '100%'}}
           />
         </View>
-        <Text style={styles.txt1}>Understand how referral works</Text>
+        <Text style={styles.txt1}>Understand how referral works.</Text>
         <Text style={[styles.txt1, {fontSize: 15}]}>Your Rank</Text>
         <ImageBackground
           source={localImage.Referral_Coin_Banner}
@@ -422,8 +422,7 @@ const Referral = () => {
               }}>
               Note:{' '}
             </Text>{' '}
-            You must be in the current event to receive referral benefits. New
-            events start every Monday and end on Friday.
+            You must be in the current event to receive referral benefits. New event starts every Monday and ends on Friday.
           </Text>
         </View>
         <View

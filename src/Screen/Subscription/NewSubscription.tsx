@@ -45,16 +45,17 @@ import TrackPlayer, {
 } from 'react-native-track-player';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import {findKeyInObject} from '../../Component/Utilities/FindkeyinObject';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
-
 
 const NewSubscription = ({navigation, route}: any) => {
   const {upgrade} = route.params;
   const dispatch = useDispatch();
   const getInAppPurchase = useSelector((state: any) => state.getInAppPurchase);
-  const getOfferAgreement = useSelector((state: any) => state.getOfferAgreement);
+  const getOfferAgreement = useSelector(
+    (state: any) => state.getOfferAgreement,
+  );
 
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
@@ -378,7 +379,10 @@ const NewSubscription = ({navigation, route}: any) => {
     }
   };
   const fetchPurchaseHistoryIOS = async (item: any, startDate: any) => {
-    const price: string = findKeyInObject(selected, 'localizedPrice').replace(/\s/g, '')
+    const price: string = findKeyInObject(selected, 'localizedPrice').replace(
+      /\s/g,
+      '',
+    );
     let data = {
       user_id: getUserDataDetails.id,
       transaction_id: item.original_transaction_id,
@@ -752,7 +756,9 @@ const NewSubscription = ({navigation, route}: any) => {
 
           <FitText
             type="Heading"
-            value={` ${PLATFORM_IOS?normalizedPrice: normalizedPrice.split('.')[0]}/month`}
+            value={` ${
+              PLATFORM_IOS ? normalizedPrice : normalizedPrice.split('.')[0]
+            }/month`}
             fontSize={28}
             lineHeight={34}
             marginVertical={5}
@@ -849,11 +855,7 @@ const NewSubscription = ({navigation, route}: any) => {
           <CheckIcon />
           <FitText
             type="normal"
-            value={
-              planName.includes('noob')
-                ? 'With Ads'
-                : 'Fewer Ads'
-            }
+            value={planName.includes('noob') ? 'With Ads' : 'Fewer Ads'}
             color="#333333E5"
             fontFamily={Fonts.MONTSERRAT_MEDIUM}
             marginVertical={3}
@@ -976,199 +978,195 @@ const NewSubscription = ({navigation, route}: any) => {
   };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
-      <StatusBar backgroundColor={AppColor.WHITE} barStyle={'dark-content'}/>
+      <StatusBar backgroundColor={AppColor.WHITE} barStyle={'dark-content'} />
       <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
-        <NewHeader1
-        header="Unlock Challenges"
-          backButton
-        />
-      <View style={{flex: 1, marginHorizontal: 20, marginTop: 10}}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl
-              refreshing={refresh}
-              onRefresh={getUserDetailData}
-              colors={[AppColor.NEW_DARK_RED, AppColor.NEW_DARK_RED]}
-            />
-          }>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: 20,
-            }}>
-            <FitText
-              value="Challenge Packages"
-              type="Heading"
-              fontSize={15}
-              lineHeight={24}
-            />
-            <TouchableOpacity
-              onPress={() => {
-                PLATFORM_IOS
-                  ? restorePurchase()
-                  : Linking.openURL(
-                      'https://play.google.com/store/account/subscriptions',
-                    );
+        <NewHeader1 header="Unlock Challenges" backButton />
+        <View style={{flex: 1, marginHorizontal: 20, marginTop: 10}}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl
+                refreshing={refresh}
+                onRefresh={getUserDetailData}
+                colors={[AppColor.NEW_DARK_RED, AppColor.NEW_DARK_RED]}
+              />
+            }>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: 20,
               }}>
-              <Text
-                style={{
-                  fontWeight: '500',
-                  fontSize: 14,
-                  lineHeight: 20,
-                  fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                  color: '#333333',
-                  textDecorationLine: 'underline',
+              <FitText
+                value="Challenge Packages"
+                type="Heading"
+                fontSize={15}
+                lineHeight={24}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  PLATFORM_IOS
+                    ? restorePurchase()
+                    : Linking.openURL(
+                        'https://play.google.com/store/account/subscriptions',
+                      );
                 }}>
-                {PLATFORM_IOS ? 'Restore Plan' : 'Manage Plan'}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          {sortedSubscriptions && (
-            <Carousel
-              data={sortedSubscriptions}
-              keyExtractor={(_, index) => index.toString()}
-              itemWidth={
-                DeviceHeigth >= 1024 ? DeviceWidth * 0.95 : DeviceWidth * 0.9
-              }
-              sliderWidth={
-                DeviceHeigth >= 1024 ? DeviceWidth * 0.95 : DeviceWidth * 0.9
-              }
-              onBeforeSnapToItem={index => setCurrentSelected(index)}
-              enableSnap
-              activeSlideAlignment="start"
-              firstItem={currentSelected}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              renderItem={({item, index}: any) => RenderItem({item, index})}
-            />
-          )}
-
-          <View
-            style={[
-              styles.tabContainer,
-              {
-                height:
-                  DeviceHeigth >= 1024
-                    ? DeviceHeigth * 0.05
-                    : DeviceHeigth >= 640
-                    ? DeviceHeigth * 0.06
-                    : DeviceHeigth * 0.05,
-              },
-            ]}>
-            {sortedSubscriptions?.map((item: any, index: number) => {
-              return (
-                // <View style={{flex: 1,justifyContent: 'center',alignItems: 'center',}}>
-                <>
-                  {currentSelected == index ? (
-                    <TouchableOpacity
-                      key={index}
-                      onPress={() => {
-                        setCurrentSelected(index);
-                      }}
-                      style={[
-                        styles.tabButton,
-                        {
-                          height:
-                            DeviceHeigth >= 1024
-                              ? DeviceHeigth * 0.05
-                              : DeviceHeigth >= 640
-                              ? DeviceHeigth * 0.06
-                              : DeviceHeigth * 0.05,
-                          backgroundColor:
-                            index == 0
-                              ? AppColor.NEW_SUBS_BLUE
-                              : index == 1
-                              ? AppColor.NEW_SUBS_GREEN
-                              : AppColor.NEW_SUBS_ORANGE,
-                        },
-                      ]}>
-                      <Text
-                        style={{
-                          color: AppColor.WHITE,
-                          fontFamily: Fonts.MONTSERRAT_BOLD,
-                          fontSize: 14,
-                          lineHeight: 14.63,
-                          fontWeight: '600',
-                          marginTop: 5,
-                          textAlign: 'center',
-                        }}>
-                        {index == 0
-                          ? 'Basic'
-                          : index == 1
-                          ? 'Medium'
-                          : 'Premium'}
-                      </Text>
-                    </TouchableOpacity>
-                  ) : (
-                    <TouchableOpacity
-                      key={index}
-                      onPress={() => {
-                        setCurrentSelected(index);
-                      }}
-                      style={[
-                        styles.tabButton,
-                        {
-                          marginVertical: 10,
-                          height:
-                            DeviceHeigth >= 1024
-                              ? DeviceHeigth * 0.05
-                              : DeviceHeigth >= 640
-                              ? DeviceHeigth * 0.06
-                              : DeviceHeigth * 0.05,
-                          // paddingHorizontal: 5,
-                        },
-                      ]}>
-                      <Text
-                        style={{
-                          color: '#121212B2',
-                          opacity: 0.7,
-                          fontSize: 14,
-                          lineHeight: 14.63,
-                          fontWeight: '500',
-                          fontFamily: 'Montserrat-Medium',
-                          marginTop: 5,
-                          textAlign: 'center',
-                        }}>
-                        {index == 0
-                          ? 'Basic'
-                          : index == 1
-                          ? 'Medium'
-                          : 'Premium'}
-                      </Text>
-                    </TouchableOpacity>
-                  )}
-                </>
-              );
-            })}
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: DeviceWidth * 0.9,
-              // backgroundColor: '#f5f5f5',
-              padding: 10,
-              borderRadius: 10,
-            }}>
-            {currentSelected == 2 ? (
-              Platform.OS == 'android' ? (
                 <Text
                   style={{
-                    fontSize: 11,
+                    fontWeight: '500',
+                    fontSize: 14,
+                    lineHeight: 20,
+                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                    color: '#333333',
+                    textDecorationLine: 'underline',
+                  }}>
+                  {PLATFORM_IOS ? 'Restore Plan' : 'Manage Plan'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            {sortedSubscriptions && (
+              <Carousel
+                data={sortedSubscriptions}
+                keyExtractor={(_, index) => index.toString()}
+                itemWidth={
+                  DeviceHeigth >= 1024 ? DeviceWidth * 0.95 : DeviceWidth * 0.9
+                }
+                sliderWidth={
+                  DeviceHeigth >= 1024 ? DeviceWidth * 0.95 : DeviceWidth * 0.9
+                }
+                onBeforeSnapToItem={index => setCurrentSelected(index)}
+                enableSnap
+                activeSlideAlignment="start"
+                firstItem={currentSelected}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                renderItem={({item, index}: any) => RenderItem({item, index})}
+              />
+            )}
+
+            <View
+              style={[
+                styles.tabContainer,
+                {
+                  height:
+                    DeviceHeigth >= 1024
+                      ? DeviceHeigth * 0.05
+                      : DeviceHeigth >= 640
+                      ? DeviceHeigth * 0.06
+                      : DeviceHeigth * 0.05,
+                },
+              ]}>
+              {sortedSubscriptions?.map((item: any, index: number) => {
+                const isSelected = currentSelected == index;
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => {
+                      setCurrentSelected(index);
+                    }}
+                    style={[
+                      styles.tabButton,
+                      {
+                        marginVertical: isSelected ? 0 : 10,
+                        height:
+                          DeviceHeigth >= 1024
+                            ? DeviceHeigth * 0.05
+                            : DeviceHeigth >= 640
+                            ? DeviceHeigth * 0.06
+                            : DeviceHeigth * 0.05,
+                        backgroundColor: isSelected
+                          ? index == 0
+                            ? AppColor.NEW_SUBS_BLUE
+                            : index == 1
+                            ? AppColor.NEW_SUBS_GREEN
+                            : AppColor.NEW_SUBS_ORANGE
+                          : 'transparent',
+                      },
+                    ]}>
+                    <Text
+                      style={{
+                        color: isSelected ? AppColor.WHITE : '#121212B2',
+                        fontFamily: isSelected
+                          ? Fonts.MONTSERRAT_BOLD
+                          : Fonts.MONTSERRAT_MEDIUM,
+                        fontSize: 14,
+                        lineHeight: 14.63,
+                        fontWeight: isSelected ? '600' : '500',
+                        marginTop: 5,
+                        textAlign: 'center',
+                        opacity: isSelected ? 1 : 0.7,
+                      }}>
+                      {index == 0 ? 'Basic' : index == 1 ? 'Medium' : 'Premium'}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: DeviceWidth * 0.9,
+                // backgroundColor: '#f5f5f5',
+                padding: 10,
+                borderRadius: 10,
+              }}>
+              {currentSelected == 2 ? (
+                Platform.OS == 'android' ? (
+                  <Text
+                    style={{
+                      fontSize: 11,
+                      fontWeight: '500',
+                      fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                      lineHeight: 16,
+                      color: '#333333',
+                    }}>
+                    Please NOTE: Enjoy the 3-day free trial then you will be
+                    charged {getPrice(sortedSubscriptions[currentSelected])}{' '}
+                    monthly. You can cancel the subscription before your trial
+                    period ends if you do not want to convert to a paid
+                    subscription. Your subscription will renew automatically
+                    until you cancel the subscription, you can manage or cancel
+                    your subscription anytime from the Google Play Store. If you
+                    are unsure how to cancel a subscription, please visit the
+                    Google Support website. Note that deleting the app does not
+                    cancel your subscription.
+                  </Text>
+                ) : (
+                  <Text
+                    style={{
+                      fontSize: 11,
+                      fontWeight: '500',
+                      fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                      lineHeight: 16,
+                      color: '#333333',
+                    }}>
+                    You will be charged{' '}
+                    {getPrice(sortedSubscriptions[currentSelected])}{' '}
+                    immediately. Your subscription will automatically renew
+                    unless auto-renew is turned off 24 hours before the end of
+                    the current period. You can manage or cancel your
+                    subscription in your iTunes & App Store / Apple ID account
+                    settings anytime. If you are unsure how to cancel a
+                    subscription, please visit the Apple Support Website. Note
+                    that deleting the app does not cancel your subscription.
+                  </Text>
+                )
+              ) : Platform.OS == 'android' ? (
+                <Text
+                  style={{
+                    fontSize: 12,
                     fontWeight: '500',
                     fontFamily: Fonts.MONTSERRAT_MEDIUM,
                     lineHeight: 16,
                     color: '#333333',
                   }}>
-                  Please NOTE: Enjoy the 3-day free trial then you will be
-                  charged {getPrice(sortedSubscriptions[currentSelected])}{' '}
-                  monthly. You can cancel the subscription before your trial
-                  period ends if you do not want to convert to a paid
-                  subscription. Your subscription will renew automatically until
+                  Please NOTE: No Free Trial is available for this plan. You
+                  will be charged{' '}
+                  {getPrice(sortedSubscriptions[currentSelected])} for monthly
+                  immediately. Your subscription will renew automatically until
                   you cancel the subscription, you can manage or cancel your
                   subscription anytime from the Google Play Store. If you are
                   unsure how to cancel a subscription, please visit the Google
@@ -1178,7 +1176,7 @@ const NewSubscription = ({navigation, route}: any) => {
               ) : (
                 <Text
                   style={{
-                    fontSize: 11,
+                    fontSize: 12,
                     fontWeight: '500',
                     fontFamily: Fonts.MONTSERRAT_MEDIUM,
                     lineHeight: 16,
@@ -1194,80 +1192,42 @@ const NewSubscription = ({navigation, route}: any) => {
                   Support Website. Note that deleting the app does not cancel
                   your subscription.
                 </Text>
-              )
-            ) : Platform.OS == 'android' ? (
-              <Text
-                style={{
-                  fontSize: 12,
-                  fontWeight: '500',
-                  fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                  lineHeight: 16,
-                  color: '#333333',
-                }}>
-                Please NOTE: No Free Trial is available for this plan. You will
-                be charged {getPrice(sortedSubscriptions[currentSelected])} for
-                monthly immediately. Your subscription will renew automatically
-                until you cancel the subscription, you can manage or cancel your
-                subscription anytime from the Google Play Store. If you are
-                unsure how to cancel a subscription, please visit the Google
-                Support website. Note that deleting the app does not cancel your
-                subscription.
+              )}
+            </View>
+            <View
+              style={{
+                alignSelf: 'center',
+                width: DeviceWidth * 0.9,
+                paddingBottom: 20,
+                paddingHorizontal: 10,
+              }}>
+              <Text style={styles.policyText}>
+                By continuing you accept our{' '}
+                <Text
+                  onPress={() => {
+                    navigation.navigate('TermaAndCondition', {
+                      title: 'Privacy & Policy',
+                    });
+                  }}
+                  style={styles.policyText1}>
+                  Privacy Policy
+                </Text>{' '}
+                and
+                <Text
+                  style={styles.policyText1}
+                  onPress={() => {
+                    navigation.navigate('TermaAndCondition', {
+                      title: 'Terms & Condition',
+                    });
+                  }}>
+                  {' '}
+                  Terms of use
+                </Text>{' '}
               </Text>
-            ) : (
-              <Text
-                style={{
-                  fontSize: 12,
-                  fontWeight: '500',
-                  fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                  lineHeight: 16,
-                  color: '#333333',
-                }}>
-                You will be charged{' '}
-                {getPrice(sortedSubscriptions[currentSelected])} immediately.
-                Your subscription will automatically renew unless auto-renew is
-                turned off 24 hours before the end of the current period. You
-                can manage or cancel your subscription in your iTunes & App
-                Store / Apple ID account settings anytime. If you are unsure how
-                to cancel a subscription, please visit the Apple Support
-                Website. Note that deleting the app does not cancel your
-                subscription.
-              </Text>
-            )}
-          </View>
-          <View
-            style={{
-              alignSelf: 'center',
-              width: DeviceWidth * 0.9,
-              paddingBottom: 20,
-              paddingHorizontal: 10,
-            }}>
-            <Text style={styles.policyText}>
-              By continuing you accept our{' '}
-              <Text
-                onPress={() => {
-                  navigation.navigate('TermaAndCondition', {
-                    title: 'Privacy & Policy',
-                  });
-                }}
-                style={styles.policyText1}>
-                Privacy Policy
-              </Text>{' '}
-              and
-              <Text
-                style={styles.policyText1}
-                onPress={() => {
-                  navigation.navigate('TermaAndCondition', {
-                    title: 'Terms & Condition',
-                  });
-                }}>
-                {' '}
-                Terms of use
-              </Text>{' '}
-            </Text>
-          </View>
-        </ScrollView>
-      </View>
-      {loading && <ActivityLoader visible={loading} />}
+            </View>
+          </ScrollView>
+        </View>
+        {loading && <ActivityLoader visible={loading} />}
       </Wrapper>
     </SafeAreaView>
   );

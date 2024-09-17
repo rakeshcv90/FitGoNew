@@ -162,11 +162,11 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
             top: -DeviceHeigth * 0.07,
             zIndex: -1,
           }}
-          poster={
-            data?.exercise_image?.includes('https')
-              ? data?.exercise_image
-              : data?.exercise_image_link
-          }
+          // poster={
+          //   data?.exercise_image?.includes('https')
+          //     ? data?.exercise_image
+          //     : data?.exercise_image_link
+          // }
         />
         {/* <FastImage
           fallback={true}

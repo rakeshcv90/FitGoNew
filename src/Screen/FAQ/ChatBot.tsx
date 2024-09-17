@@ -4,6 +4,7 @@ import {
   Linking,
   SafeAreaView,
   ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -21,6 +22,8 @@ import moment from 'moment';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import AnimatedLottieView from 'lottie-react-native';
 import {DeviceHeigth} from '../../Component/Config';
+import NewHeader1 from '../../Component/Headers/NewHeader1';
+import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 
 type TYPE = 'USER' | 'ADMIN';
 
@@ -84,7 +87,7 @@ const ChatBot = ({navigation, route}: any) => {
             alignItems: 'flex-end',
           }}>
           <View style={{marginLeft: 10}}>
-            {getUserDataDetails?.image_path != null ? (
+            {getUserDataDetails?.image_path == null ? (
               <View style={styles.imgContainer}>
                 <View style={styles.textInitialContainer}>
                   <FitText
@@ -256,70 +259,75 @@ const ChatBot = ({navigation, route}: any) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
-      <DietPlanHeader header="Frequently Asked Questions" shadow />
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          flex: 1,
-          justifyContent: 'flex-end',
-        }}>
-        <View
-          style={{
+    <View style={{flex: 1, backgroundColor: AppColor.WHITE}}>
+      <StatusBar backgroundColor="white" barStyle={'dark-content'} />
+      <Wrapper>
+        <NewHeader1 header="Frequently Asked Questions" backButton />
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
             flex: 1,
-            width: '95%',
-            alignSelf: 'center',
             justifyContent: 'flex-end',
-            marginBottom: 20,
           }}>
-          {currentQData.length != 0 && (
-            <>
-              <UserBox />
-              {showLoader && (
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'flex-end',
-                  }}>
-                  <View style={styles.chatImage}>
-                    <Image
-                      resizeMode="contain"
-                      source={localImage.ChatBotImage}
-                      style={{
-                        borderRadius: 15,
-                        height: 15,
-                        width: 15,
-                      }}
-                    />
+          <View
+            style={{
+              flex: 1,
+              width: '95%',
+              alignSelf: 'center',
+              justifyContent: 'flex-end',
+              marginBottom: 20,
+            }}>
+            {currentQData.length != 0 && (
+              <>
+                <UserBox />
+                {showLoader && (
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'flex-end',
+                    }}>
+                    <View style={styles.chatImage}>
+                      <Image
+                        resizeMode="contain"
+                        source={localImage.ChatBotImage}
+                        style={{
+                          borderRadius: 15,
+                          height: 15,
+                          width: 15,
+                        }}
+                      />
+                    </View>
+                    <View style={styles.loaderBox}>
+                      <AnimatedLottieView
+                        source={{
+                          uri: 'https://lottie.host/a48740c2-459a-4b47-9106-7c9020469ac9/1PPt5ehAsa.json',
+                        }} // Replace with your animation file
+                        autoPlay
+                        loop
+                        style={{
+                          width: 45,
+                          height: 45,
+                        }}
+                      />
+                    </View>
                   </View>
-                  <View style={styles.loaderBox}>
-                    <AnimatedLottieView
-                      source={{
-                        uri: 'https://lottie.host/a48740c2-459a-4b47-9106-7c9020469ac9/1PPt5ehAsa.json',
-                      }} // Replace with your animation file
-                      autoPlay
-                      loop
-                      style={{
-                        width: 45,
-                        height: 45,
-                      }}
-                    />
-                  </View>
-                </View>
-              )}
-              {showChatBot && (!answerFalse || !answerTrue) && (
-                <ChatBox answer={true} conditionAnswer={false} />
-              )}
-              {showChatBot2 && (!answerFalse || !answerTrue) && (
-                <ChatBox answer={false} conditionAnswer={false} />
-              )}
-              {answerFalse && <ChatBox answer={false} conditionAnswer={'F'} />}
-              {answerTrue && <ChatBox answer={false} conditionAnswer={'T'} />}
-            </>
-          )}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+                )}
+                {showChatBot && (!answerFalse || !answerTrue) && (
+                  <ChatBox answer={true} conditionAnswer={false} />
+                )}
+                {showChatBot2 && (!answerFalse || !answerTrue) && (
+                  <ChatBox answer={false} conditionAnswer={false} />
+                )}
+                {answerFalse && (
+                  <ChatBox answer={false} conditionAnswer={'F'} />
+                )}
+                {answerTrue && <ChatBox answer={false} conditionAnswer={'T'} />}
+              </>
+            )}
+          </View>
+        </ScrollView>
+      </Wrapper>
+    </View>
   );
 };
 

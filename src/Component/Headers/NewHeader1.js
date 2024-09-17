@@ -5,6 +5,7 @@ import {ArrowLeft} from '../Utilities/Arrows/Arrow';
 import {localImage} from '../Image';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
+import FitIcon from '../Utilities/FitIcon';
 const NewHeader1 = ({
   header,
   backButton,
@@ -16,7 +17,8 @@ const NewHeader1 = ({
   materialIconName,
   IconComponent,
   fillColor,
-  headerStyle
+  headerStyle,
+  workoutCat,
 }) => {
   const navigation = useNavigation();
   return (
@@ -30,10 +32,16 @@ const NewHeader1 = ({
               navigation.goBack();
             })
           }>
-          <ArrowLeft fillColor={fillColor??AppColor.BLACK} />
+          {workoutCat ? (
+            <FitIcon type='MaterialCommunityIcons' name={'close'} size={25} color={AppColor.INPUTTEXTCOLOR} />
+          ) : (
+            <ArrowLeft fillColor={fillColor ?? AppColor.BLACK} />
+          )}
         </TouchableOpacity>
       )}
-      {header && <Text style={headerStyle?? styles.headerStyle}>{header}</Text>}
+      {header && (
+        <Text style={headerStyle ?? styles.headerStyle}>{header}</Text>
+      )}
       {icon && (
         <TouchableOpacity onPress={onIconPress} style={styles.iconStyle}>
           {iconType == 'icon' ? (
@@ -62,7 +70,7 @@ const styles = StyleSheet.create({
     color: AppColor.BLACK,
     fontFamily: Fonts.HELVETICA_BOLD,
     fontSize: 20,
-    textTransform: 'capitalize'
+    textTransform: 'capitalize',
   },
   backButtonStyle: {
     position: 'absolute',

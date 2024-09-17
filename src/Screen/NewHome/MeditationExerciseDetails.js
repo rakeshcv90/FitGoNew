@@ -228,10 +228,14 @@ const MeditationExerciseDetails = ({navigation, route}) => {
                 style={{
                   width: 60,
                   height: 60,
-                  borderRadius: 120 / 2,
+                  borderRadius: 60 / 2,
                   alignItems: 'center',
                   alignSelf: 'center',
                   justifyContent: 'center',
+                  padding: 5,
+                  backgroundColor: '#FFFFFF33',
+                  borderWidth: 1,
+                  borderColor: '#FFFFFF33',
                 }}
                 onPress={async () => {
                   togglePlayback(playbackState);
@@ -243,6 +247,7 @@ const MeditationExerciseDetails = ({navigation, route}) => {
                     name={'play'}
                     size={30}
                     color={AppColor.WHITE}
+                    mL={4}
                   />
                 ) : (
                   <FitIcon
@@ -250,6 +255,7 @@ const MeditationExerciseDetails = ({navigation, route}) => {
                     name={'pause'}
                     size={30}
                     color={AppColor.WHITE}
+                    mL={4}
                   />
                 )}
               </TouchableOpacity>

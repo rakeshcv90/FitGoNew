@@ -448,6 +448,12 @@ export const setExerciseOutTime=data=>{
       payload:data
     }
 }
+  export const setPastWinners=data=>{
+    return{
+      type:types.PAST_WINNERS,
+      payload:data
+    }
+}
 export const setPermissionIos=data=>{
   return{
     type:types.PERMISSION_IOS,

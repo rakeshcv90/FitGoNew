@@ -75,12 +75,12 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
   console.log('BACK', remoteMessage.data);
   NotificationType(remoteMessage.data)
 });
-notifee.onBackgroundEvent(async ({type, detail}) => {
-  TriggerButtons(detail, type);
-});
-notifee.onForegroundEvent(async ({type, detail}) => {
-  TriggerButtons(detail, type);
-});
+// notifee.onBackgroundEvent(async ({type, detail}) => {
+//   TriggerButtons(detail, type);
+// });
+// notifee.onForegroundEvent(async ({type, detail}) => {
+//   TriggerButtons(detail, type);
+// });
 const TriggerButtons = async (detail, type) => {
   const {notification, pressAction} = detail;
   NotificationType(notification?.data)
@@ -107,27 +107,25 @@ const TriggerButtons = async (detail, type) => {
     // Add 5 minutes to the current time
     currentTime.setMinutes(currentTime.getMinutes() + 5);
     AlarmNotification(currentTime);
-  } else {
-    console.log('OPEN NOTIFICATION', pressAction);
-  }
+  } 
 };
 
-notifee.setNotificationCategories([
-  {
-    id: 'Alarm',
-    actions: [
-      {
-        id: 'Plus_Five',
-        title: 'Add +5',
-      },
-      {
-        id: 'Stop',
-        title: 'Stop',
-        destructive: true,
-      },
-    ],
-  },
-]);
+// notifee.setNotificationCategories([
+//   {
+//     id: 'Alarm',
+//     actions: [
+//       {
+//         id: 'Plus_Five',
+//         title: 'Add +5',
+//       },
+//       {
+//         id: 'Stop',
+//         title: 'Stop',
+//         destructive: true,
+//       },
+//     ],
+//   },
+// ]);
 
 const removeHtmlTags = str => {
   if (!str || typeof str !== 'string') return '';

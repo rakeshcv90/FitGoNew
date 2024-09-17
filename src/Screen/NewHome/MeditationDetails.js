@@ -207,6 +207,8 @@ const MeditationDetails = ({navigation, route}) => {
       <View
         style={{
           flex: 1,
+          alignSelf: 'center',
+          marginTop: 30
         }}>
         <AnimatedLottieView
           source={require('../../Icon/Images/NewImage/NoData.json')}
@@ -215,8 +217,8 @@ const MeditationDetails = ({navigation, route}) => {
           loop
           resizeMode="contain"
           style={{
-            width: DeviceWidth * 0.3,
-            height: DeviceHeigth * 0.15,
+            width: DeviceWidth * 0.6,
+            height: DeviceHeigth * 0.3,
             alignSelf: 'center',
           }}
         />
@@ -555,7 +557,7 @@ const MeditationDetails = ({navigation, route}) => {
                                 }}>
                                 {downloaded > 0 && downloaded != 100
                                   ? 'Downloading ...'
-                                  : '25 Min'}
+                                  : item?.exercise_mindset_time}
                               </Text>
                             </View>
                           </View>

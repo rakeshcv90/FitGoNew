@@ -33,12 +33,18 @@ import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 
 const WorkoutHistory = () => {
-  const [selectedDay, setSelectedDay] = useState((moment().day() + 6) % 7);
   const [coins, setCoins] = useState({});
   const [screenObject, setScreenObject] = useState({});
   const [tooltipVisible, settooltipVisible] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [loaded1, setLoaded1] = useState(false);
+  const getPurchaseHistory = useSelector(state => state?.getPurchaseHistory);
+  const Sat = getPurchaseHistory?.currentDay == 6;
+  const Sun = getPurchaseHistory?.currentDay == 0;
+  const [selectedDay, setSelectedDay] = useState(() => {
+    if (Sat || Sun) return 4;
+    return (moment().day() + 6) % 7;
+  });
   const WeekArrayWithEvent = Array(5)
     .fill(0)
     .map(
@@ -61,7 +67,7 @@ const WorkoutHistory = () => {
     setLoaded(true);
     try {
       const res = await axios(
-        `${NewAppapi.GET_HISTORY}?user_id=${getUserDataDetails?.id} & day=${WeekArrayWithEvent[selectedDay]}`,
+        `${NewAppapi.GET_HISTORY}?user_id=${getUserDataDetails?.id} & day=${day}`,
       );
       if (res?.data) {
         setLoaded1(false);
