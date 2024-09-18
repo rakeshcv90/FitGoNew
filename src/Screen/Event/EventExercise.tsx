@@ -60,6 +60,7 @@ import FitIcon from '../../Component/Utilities/FitIcon';
 import OverExerciseModal from '../../Component/Utilities/OverExercise';
 import {ArrowLeft} from '../../Component/Utilities/Arrows/Arrow';
 import CircleProgress from '../../Component/Utilities/ProgressCircle';
+import useInterstitialAd from '../../Component/Ads/Interstitial';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -123,7 +124,7 @@ const EventExercise = ({navigation, route}: any) => {
   // const [isLoading, setIsLoading] = useState(true);
   const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
   const allWorkoutData = useSelector((state: any) => state.allWorkoutData);
-  const getScreenAwake = useSelector(state => state);
+  const getScreenAwake = useSelector((state: any) => state.getScreenAwake);
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
@@ -147,7 +148,7 @@ const EventExercise = ({navigation, route}: any) => {
   );
   const [addClosed, setAddClosed] = useState(false);
   const {initInterstitial, showInterstitialAd} =
-    NewInterstitialAd(setAddClosed);
+    useInterstitialAd({setAddClosed});
   const [seconds, setSeconds] = useState(
     parseInt(allExercise[number]?.exercise_rest.split(' ')[0]),
   );

@@ -47,6 +47,7 @@ import TrackPlayer, {
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {CountryCurrencies} from '../../Component/Utilities/CountryCurrencies';
 
 const UpcomingEvent = ({navigation, route}: any) => {
   const {eventType} = route?.params;
@@ -314,6 +315,11 @@ const UpcomingEvent = ({navigation, route}: any) => {
       ? getPurchaseHistory?.event_start_date_upcoming
       : getPurchaseHistory?.event_start_date_current;
 
+  const currency =
+    getOfferAgreement?.location != ''
+      ? CountryCurrencies[getOfferAgreement?.location]
+      : '';
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
       <StatusBar
@@ -513,7 +519,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
               color={AppColor.NEW_GREY_TEXT}
               fontFamily={Fonts.MONTSERRAT_MEDIUM}
               fontWeight="600"
-              />
+            />
 
             {getPurchaseHistory?.plan != null &&
             getPurchaseHistory?.used_plan < getPurchaseHistory?.allow_usage &&
@@ -602,7 +608,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
                   }}>
                   <FitText
                     type="Heading"
-                    value={`₹${getPurchaseHistory?.plan_value}/month`}
+                    value={`${currency}${getPurchaseHistory?.plan_value}/month`}
                     fontSize={28}
                     lineHeight={34}
                     marginVertical={5}
