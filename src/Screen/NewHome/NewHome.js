@@ -128,7 +128,7 @@ const NewHome = ({navigation}) => {
     if (isFocused) {
       getAllChallangeAndAllExerciseData();
       getLeaderboardDataAPI();
-
+      allWorkoutApi()
       enteredCurrentEvent && getEarnedCoins();
     }
   }, [isFocused]);
@@ -165,6 +165,39 @@ const NewHome = ({navigation}) => {
 
   const shimmerValue = useSharedValue(0);
 
+  const allWorkoutApi = async () => {
+    try {
+      const payload = new FormData();
+      payload.append('id', getUserDataDetails?.id);
+
+      payload.append('version', VersionNumber.appVersion);
+      const res = await axios({
+        url: NewAppapi.ALL_WORKOUTS,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: payload,
+      });
+
+      if (res?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: res?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (res?.data) {
+        dispatch(setAllWorkoutData(res?.data));
+      } else {
+        // dispatch(setAllWorkoutData([]));
+      }
+    } catch (error) {
+      console.error(error, 'customWorkoutDataApiError');
+      // dispatch(setAllWorkoutData([]));
+    }
+  };
   // Animated style for shimmer effect
   const shimmerStyle = useAnimatedStyle(() => ({
     transform: [{translateX: shimmerValue.value * 10}],
@@ -709,7 +742,7 @@ const NewHome = ({navigation}) => {
             enteredUpcomingEvent={enteredUpcomingEvent}
           />
         )}
-        <View style={{marginTop: 8}}>
+        <View style={{marginVertical: 8}}>
           <PastWinnersComponent
             pastWinners={getPastWinners}
             navigation={navigation}

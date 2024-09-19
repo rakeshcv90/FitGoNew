@@ -361,7 +361,7 @@ const UserEspecially = () => {
             width: '100%',
             flexDirection: 'row',
             justifyContent: 'space-between',
-           top:Platform.OS=='android'?-15:0
+           top:Platform.OS=='android'?-25:-10
           }}>
           <TouchableOpacity
             activeOpacity={0.7}
