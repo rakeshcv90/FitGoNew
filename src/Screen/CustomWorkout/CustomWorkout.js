@@ -57,11 +57,11 @@ const CustomWorkout = ({navigation}) => {
   const isFocused = useIsFocused();
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
-  useEffect(() => {
-    if (isFocused) {
-      getAllChallangeAndAllExerciseData();
-    }
-  }, [isFocused]);
+  // useEffect(() => {
+  //   if (isFocused) {
+  //     getAllChallangeAndAllExerciseData();
+  //   }
+  // }, [isFocused]);
   const askPermissionForLibrary = async permission => {
     const resultLib = await request(permission);
 
@@ -374,35 +374,35 @@ const CustomWorkout = ({navigation}) => {
     }
   };
 
-  const getAllChallangeAndAllExerciseData = async () => {
-    let responseData = 0;
-    if (Object.keys(getUserDataDetails).length > 0) {
-      try {
-        responseData = await axios.get(
-          `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
-        );
-        dispatch(setChallengesData(responseData.data.challenge_data));
-        dispatch(setAllExercise(responseData.data.data));
-      } catch (error) {
-        console.log('GET-USER-Challange and AllExerciseData DATA', error);
-        dispatch(setChallengesData([]));
-        dispatch(setAllExercise([]));
-      }
-    } else {
-      try {
-        responseData = await axios.get(
-          `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}`,
-        );
-        dispatch(setChallengesData(responseData.data.challenge_data));
-        dispatch(setAllExercise(responseData.data.data));
-      } catch (error) {
-        dispatch(setChallengesData([]));
-        dispatch(setAllExercise([]));
+  // const getAllChallangeAndAllExerciseData = async () => {
+  //   let responseData = 0;
+  //   if (Object.keys(getUserDataDetails).length > 0) {
+  //     try {
+  //       responseData = await axios.get(
+  //         `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
+  //       );
+  //       dispatch(setChallengesData(responseData.data.challenge_data));
+  //       dispatch(setAllExercise(responseData.data.data));
+  //     } catch (error) {
+  //       console.log('GET-USER-Challange and AllExerciseData DATA', error);
+  //       dispatch(setChallengesData([]));
+  //       dispatch(setAllExercise([]));
+  //     }
+  //   } else {
+  //     try {
+  //       responseData = await axios.get(
+  //         `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}`,
+  //       );
+  //       dispatch(setChallengesData(responseData.data.challenge_data));
+  //       dispatch(setAllExercise(responseData.data.data));
+  //     } catch (error) {
+  //       dispatch(setChallengesData([]));
+  //       dispatch(setAllExercise([]));
 
-        console.log('GET-USER-Challange and AllExerciseData DATA', error);
-      }
-    }
-  };
+  //       console.log('GET-USER-Challange and AllExerciseData DATA', error);
+  //     }
+  //   }
+  // };
 
   return (
     <>

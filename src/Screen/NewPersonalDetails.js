@@ -316,6 +316,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                         colorText={false}
                         placeholder="Full Name"
                         label="Full Name"
+                        
                       />
                     </View>
                     <View
@@ -338,6 +339,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                       style={{
                         marginTop: DeviceHeigth * 0.02,
                         marginLeft: 10,
+                        marginBottom:10
                       }}>
                       <InputText
                         errors={errors.gender}
@@ -402,6 +404,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                             marginTop: DeviceHeigth * 0.02,
                             marginLeft: 10,
                             paddingBottom: DeviceHeigth * 0.05,
+                            marginBottom:10
                           }}>
                           <InputText
                             errors={errors.targetWeight}
@@ -519,7 +522,7 @@ const NewPersonalDetails = ({route, navigation}) => {
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: 'blue',
   },
   dropdown: {
     height: 55,

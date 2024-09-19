@@ -31,8 +31,6 @@ import GradientButton from '../Component/GradientButton';
 
 import {localImage} from '../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
-import HomeNew from '../Screen/NewHome/HomeNew';
-import Profile from '../Screen/NewHome/Profile';
 import {ClipPath, Defs, Path, Polygon, Rect, Svg} from 'react-native-svg';
 import NewProfile from '../Screen/NewProfile';
 import {AnalyticsConsole} from '../Component/AnalyticsConsole';

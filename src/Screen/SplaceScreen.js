@@ -353,9 +353,6 @@ const SplaceScreen = ({navigation, route}) => {
       }
     } catch (error) {
       console.log('all_in_one_api_error', error);
-      dispatch(Setmealdata([]));
-      dispatch(setCompleteProfileData([]));
-      dispatch(setStoreData([]));
       getAllChallangeAndAllExerciseData();
     }
   };
@@ -462,8 +459,6 @@ const SplaceScreen = ({navigation, route}) => {
         dispatch(setAllExercise(responseData.data.data));
       } catch (error) {
         console.log('GET-USER-Challange and AllExerciseData DATA', error);
-        dispatch(setChallengesData([]));
-        dispatch(setAllExercise([]));
       }
     } else {
       try {
@@ -473,8 +468,7 @@ const SplaceScreen = ({navigation, route}) => {
         dispatch(setChallengesData(responseData.data.challenge_data));
         dispatch(setAllExercise(responseData.data.data));
       } catch (error) {
-        dispatch(setChallengesData([]));
-        dispatch(setAllExercise([]));
+
         //  loadScreen();
         console.log('GET-USER-Challange and AllExerciseData DATA', error);
       }

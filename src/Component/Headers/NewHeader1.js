@@ -1,6 +1,6 @@
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
-import {AppColor, Fonts} from '../Color';
+import {AppColor, Fonts, PLATFORM_IOS} from '../Color';
 import {ArrowLeft} from '../Utilities/Arrows/Arrow';
 import {localImage} from '../Image';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -61,7 +61,7 @@ const NewHeader1 = ({
 };
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 10,
+    marginVertical:PLATFORM_IOS? 13 : 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

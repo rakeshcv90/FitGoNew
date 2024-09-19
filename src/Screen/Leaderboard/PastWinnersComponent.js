@@ -1,7 +1,7 @@
 import {View, Text, StyleSheet, Platform, Image} from 'react-native';
 import React from 'react';
 import {DeviceWidth} from '../../Component/Config';
-import {AppColor, Fonts} from '../../Component/Color';
+import {AppColor, Fonts, PLATFORM_IOS} from '../../Component/Color';
 import NewButton from '../../Component/NewButton';
 const PastWinnersComponent = ({pastWinners, navigation}) => {
   const handleButtonPress = () => {
@@ -9,10 +9,10 @@ const PastWinnersComponent = ({pastWinners, navigation}) => {
       pastWinners: pastWinners,
     });
   };
-  if (pastWinners.length <= 0) return;
+  if (pastWinners?.length <= 0) return;
   return (
     <View style={styles.container}>
-      <View>
+      <View style={{height: 40}}>
         {pastWinners?.slice(0, 4)?.map((item, index) => (
           <View style={[styles.imageView, {left: index * 25}]}>
             {index == 3 ? (
@@ -44,8 +44,6 @@ const PastWinnersComponent = ({pastWinners, navigation}) => {
       <NewButton
         ButtonWidth={DeviceWidth * 0.42}
         pV={6}
-        mV={13}
-        alignSelf={'flex-end'}
         title={'View Past Winners'}
         buttonColor={'#E9ECEF'}
         titleColor={'#343A40'}
@@ -62,6 +60,7 @@ const styles = StyleSheet.create({
     backgroundColor: AppColor.WHITE,
     borderRadius: 12,
     paddingHorizontal: 8,
+    paddingVertical: 5,
     ...Platform.select({
       ios: {
         //shadowColor: '#000000',
@@ -73,9 +72,12 @@ const styles = StyleSheet.create({
         elevation: 3,
       },
     }),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignContent: 'center'
   },
   imageView: {
-    height: 40,
+    height: '100%',
     width: 40,
     borderWidth: 1.5,
     borderRadius: 100,
@@ -85,7 +87,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: '#DBEAFE',
     borderColor: AppColor.WHITE,
-    top: 13,
+    // top: PLATFORM_IOS ? 5 : 13,
   },
 });
 export default PastWinnersComponent;

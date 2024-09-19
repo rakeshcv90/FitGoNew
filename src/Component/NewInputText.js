@@ -9,18 +9,24 @@ const NewInputText = ({errors, touched, colorText, ...props}) => {
   const [isEditable, setEditable] = useState(false);
   const inputRef = useRef(null);
 
-  const handleIconPress = () => {
-    setEditable(prev => {
-      const newEditableState = !prev;
-      if (!prev) {
-        setTimeout(() => {
-          inputRef.current?.focus();
-        }, 0);
-      }
-      return newEditableState;
-    });
-  };
+  // const handleIconPress = () => {
+  //   setEditable(prev => {
+  //     const newEditableState = !prev;
+  //     if (!prev) {
+  //       setTimeout(() => {
+  //         inputRef.current?.focus();
+  //       }, 0);
+  //     }
+  //     return newEditableState;
+  //   });
+  // };
 
+  const handleIconPress=()=>{
+    setEditable(true);
+          setTimeout(() => {
+          inputRef.current?.focus();
+        }, 50);
+  }
   return (
     <View style={styles.container}>
       <View style={styles.input}>

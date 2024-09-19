@@ -25,6 +25,7 @@ import {Slider} from '@miblanchard/react-native-slider';
 const AppleStepCounter = () => {
   const dispatch = useDispatch();
   const getPedomterData = useSelector(state => state.getPedomterData);
+  const getPopUpSeen = useSelector(state => state.getPopUpSeen);
   const [steps, setSteps] = useState(0);
   const stepsRef = useRef(steps);
   const [Calories, setCalories] = useState(0);

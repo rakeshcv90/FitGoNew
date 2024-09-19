@@ -33,9 +33,9 @@ const PastWinner = ({route}) => {
     outputRange: ['90%', '100%'],
     extrapolate: 'clamp',
   });
-  console.log(getPurchaseHistory);
+  
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <StatusBar
         backgroundColor={AppColor.Background_New}
         barStyle={'dark-content'}
@@ -51,7 +51,6 @@ const PastWinner = ({route}) => {
           style={{
             width: '100%',
             height: '100%',
-            marginTop: DeviceHeigth >= 1024 ? -30 : -10,
             backgroundColor: AppColor.WHITE,
           }}
           nestedScrollEnabled>
@@ -60,8 +59,8 @@ const PastWinner = ({route}) => {
             end={{x: 1, y: 1}}
             colors={['#D900AE', '#6C00A3']}
             style={{width: '100%', height: '100%'}}>
-            {!enteredCurrentEvent ||
-              (!enteredUpcomingEvent && (
+            {(!enteredCurrentEvent ||
+              !enteredUpcomingEvent) && (
                 <>
                   <View
                     style={{
@@ -234,7 +233,7 @@ const PastWinner = ({route}) => {
                     />
                   </TouchableOpacity>
                 </>
-              ))}
+              )}
             <View
               style={{
                 width: '100%',
@@ -352,7 +351,7 @@ const PastWinner = ({route}) => {
           </LinearGradient>
         </ScrollView>
       </Wrapper>
-    </SafeAreaView>
+    </View>
   );
 };
 var styles = StyleSheet.create({

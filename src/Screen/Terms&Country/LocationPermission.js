@@ -50,7 +50,8 @@ const getCurrentLocation = () => {
         };
         getApiKey()
           .then(res => {
-            getCountryFromCoordinates(coords, res?.data[0]?.api_key)
+            console.log('resss',res)
+            getCountryFromCoordinates(coords,res?.data[0]?.api_url, res?.data[0]?.api_key)
               .then(response => {
                 resolve(response);
               })
@@ -82,15 +83,17 @@ const getApiKey = async () => {
     return null;
   }
 };
-const getCountryFromCoordinates = async (Coords, apikey) => {
+const getCountryFromCoordinates = async (Coords, apiUrl,apikey) => {
   try {
     const response = await axios.get(
-      'https://maps.googleapis.com/maps/api/geocode/json',
+      apiUrl,
       {
         params: {
           latlng: `${Coords.lat},${Coords.lng}`,
-          key: apikey,
         },
+        headers:{
+          'x-rapidapi-key':apikey
+        }
       },
     );
     // Extract country from the response
@@ -98,6 +101,7 @@ const getCountryFromCoordinates = async (Coords, apikey) => {
     const countryComponent = addressComponents.find(component =>
       component.types.includes('country'),
     );
+    console.log(countryComponent)
     const countryLongName = countryComponent
       ? countryComponent.long_name
       : null;

@@ -44,7 +44,7 @@ const FadeText = ({navigation}: any) => {
 
   const handleClick = () => {
     if (messages[currentMessageIndex] == 'How to join!') {
-      navigation.navigate('IntroVideo', {type: 'home'});
+      navigation.navigate('StepGuide');
     } else {
       navigation.navigate('Questions', {screenName: 'Home'});
     }

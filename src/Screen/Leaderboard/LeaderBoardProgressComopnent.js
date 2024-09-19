@@ -103,7 +103,7 @@ const LeaderBoardProgressComopnent = ({
                   : coins[weekArray[index]]}
               </Text>
             </View>
-            <View style={{marginVertical: 10, flexDirection: 'row'}}>
+            <View style={{marginVertical: 10,}}>
               <Image
                 source={
                   nullCondition(index)

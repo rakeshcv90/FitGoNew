@@ -41,7 +41,7 @@ import NewHeader1 from '../../Component/Headers/NewHeader1';
 // const apiKey = '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';
 const systemMessage = {
   role: 'system',
-  content: `You are a Gym Traineer and you give response to uswho are  only related Gym Traineer, how to do Workouts,
+  content: `You are a Gym Traineer and you give response to us who are  only related Gym Traineer, how to do Workouts,
    what diet have to take`,
 };
 const AITrainer = ({navigation}) => {
@@ -147,10 +147,10 @@ const AITrainer = ({navigation}) => {
       sender: 'user',
     };
     const newMessages = [...senderMessage, newMessage];
-
-    processMessageToChatGPT(newMessages, newMessage);
+console.log(newMessages)
+    processMessageToChatGPT(newMessages);
   };
-  const processMessageToChatGPT = async chatMessages => {
+  const processMessageToChatGPT = async (chatMessages) => {
     let apiMessages = chatMessages.map(messageObject => {
       let role = '';
       if (messageObject.sender == 'ChatGPT') {
@@ -178,7 +178,7 @@ const AITrainer = ({navigation}) => {
         sender: 'ChatGpt',
       },
     ]);
-
+console.log("GPT BEFORE",[systemMessage, ...apiMessages])
     const options = {
       method: 'POST',
       url: 'https://open-ai21.p.rapidapi.com/conversationgpt35',
@@ -203,7 +203,7 @@ const AITrainer = ({navigation}) => {
 
     try {
       const response = await axios.request(options);
-
+console.log("AFTER GPT",response.data.result)
       setsenderMessage([
         ...chatMessages,
         {

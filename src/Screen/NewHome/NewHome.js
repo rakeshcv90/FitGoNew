@@ -79,6 +79,7 @@ import Reanimated, {
 import WinnerView from '../../Component/NewHomeUtilities/WinnerView';
 import NewBanner from '../../Component/NewHomeUtilities/NewBanner';
 import LeaderBoardProgressComopnent from '../Leaderboard/LeaderBoardProgressComopnent';
+import PastWinnersComponent from '../Leaderboard/PastWinnersComponent';
 
 const WeekArrayWithEvent = Array(5)
   .fill(0)
@@ -120,6 +121,9 @@ const NewHome = ({navigation}) => {
   const getPopUpSeen = useSelector(state => state?.getPopUpSeen);
   const getPermissionIos = useSelector(state => state?.getPermissionIos);
   const getWeeklyPlansData = useSelector(state => state?.getWeeklyPlansData);
+  const getEquipmentExercise = useSelector(
+    state => state?.getEquipmentExercise,
+  );
   useEffect(() => {
     if (isFocused) {
       getAllChallangeAndAllExerciseData();
@@ -129,6 +133,7 @@ const NewHome = ({navigation}) => {
     }
   }, [isFocused]);
   useEffect(() => {
+    getWeeklyAPI();
     const timer = setTimeout(() => {
       setShowRewardModal(getRewardModalStatus);
     }, 3000);
@@ -171,7 +176,34 @@ const NewHome = ({navigation}) => {
       false,
     );
   }, []);
-
+  const getWeeklyAPI = async () => {
+    try {
+      const res = await axios(`${NewAppapi.NEW_WEEKDAY_EXERCISE_API}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          version: VersionNumber.appVersion,
+          user_id: getUserDataDetails?.id,
+          equipment: getEquipmentExercise == 1 ? 'no' : 'yes',
+        },
+      });
+      if (res.data?.msg == 'User not exist.') {
+        showMessage({
+          message: res?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else {
+        dispatch(setWeeklyPlansData(res?.data));
+      }
+    } catch (error) {
+      console.error(error.response, 'DaysAPIERror');
+    }
+  };
   const getEarnedCoins = async () => {
     // const url =
     //   'https://fitme.cvinfotechserver.com/adserver/public/api/test_exercise_points_day';
@@ -677,9 +709,12 @@ const NewHome = ({navigation}) => {
             enteredUpcomingEvent={enteredUpcomingEvent}
           />
         )}
-
-        <WithoutEvent pastWinners={getPastWinners || []} />
-
+        <View style={{marginTop: 8}}>
+          <PastWinnersComponent
+            pastWinners={getPastWinners}
+            navigation={navigation}
+          />
+        </View>
         {currentChallenge?.length > 0 && (
           <WorkoutChallengeZone day={day} currentChallenge={currentChallenge} />
         )}
@@ -708,7 +743,7 @@ const NewHome = ({navigation}) => {
       />
       {(getOfferAgreement?.location === 'India' ||
         getOfferAgreement?.location == 'United States') &&
-       !enteredUpcomingEvent &&
+        !enteredUpcomingEvent &&
         getPermissionIos && (
           <UpcomingEventModal
             visible={!getPopUpSeen}

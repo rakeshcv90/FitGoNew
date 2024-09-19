@@ -23,7 +23,7 @@ const LeaderBoardTopComponent = ({data, totalData, listData}) => {
   useEffect(() => {
     setTimeout(() => {
       increaseBarHeight();
-    }, 1500);
+    }, 1000);
   }, []);
   const increaseBarHeight = () => {
     //bar1
@@ -61,7 +61,7 @@ const LeaderBoardTopComponent = ({data, totalData, listData}) => {
   }));
   const LeaderBoardList = ({item}) => {
     const myId = getUserDataDetails?.id == item?.id;
-    if (item?.length <= 0) return;
+    if (item && item?.length <= 0) return;
     return (
       <View
         style={[
@@ -281,9 +281,9 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   textBackground: {
-    width: 70,
-    height: 70,
-    borderRadius: 70 / 2,
+    width: 75,
+    height: 75,
+    borderRadius: 75 / 2,
     backgroundColor: '#DBEAFE',
     justifyContent: 'center',
     alignItems: 'center',

@@ -187,7 +187,6 @@ const MyPlans = ({navigation}: any) => {
 
   useEffect(() => {
     getWeeklyAPI();
-    console.log('called');
   }, [workoutPrepared]);
   useFocusEffect(
     React.useCallback(() => {

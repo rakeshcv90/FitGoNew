@@ -622,7 +622,7 @@ const NewProfile = ({navigation}) => {
                 alignItems: 'center',
                 padding: 5,
                 width: '40%',
-                paddingVertical: 7,
+                paddingVertical: 5,
               }}
               onPress={() => {
                 Delete();
