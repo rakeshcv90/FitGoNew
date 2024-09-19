@@ -71,8 +71,6 @@ const NewProfile = ({navigation}) => {
   const avatarRef = React.createRef();
   const [isEnabled, setIsEnabled] = useState(false);
   const [PhotoUploaded, setPhotoUploaded] = useState(true);
-  const {getUserDataDetails, isAlarmEnabled, getSoundOffOn, getScreenAwake} =
-    useSelector(state => state);
   const dispatch = useDispatch();
   const [UpdateScreenVisibility, setUpadteScreenVisibilty] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -81,6 +79,9 @@ const NewProfile = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [ratingVisibilty, setRatingVisibilty] = useState(false);
   const getOfferAgreement = useSelector(state => state.getOfferAgreement);
+  const getUserDataDetails = useSelector(state => state.getUserDataDetails);
+  const getSoundOffOn = useSelector(state => state.getSoundOffOn);
+  const getScreenAwake = useSelector(state => state.getScreenAwake);
   const setAlarmIsEnabled = data => {
     dispatch(setIsAlarmEnabled(data));
   };
@@ -175,7 +176,7 @@ const NewProfile = ({navigation}) => {
     } else if (id == 7) {
       AnalyticsConsole(`T_n_CBUTTON`);
       navigation.navigate('TermaAndCondition', {
-        title: 'Terms & Condition',
+        title: 'Terms & Conditions',
       });
     } else if (id == 8) {
       AnalyticsConsole(`APP_RATING_BUTTON`);

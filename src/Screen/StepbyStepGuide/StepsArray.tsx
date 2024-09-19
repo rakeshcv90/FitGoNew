@@ -26,7 +26,7 @@ export const StepsArray = [
   {
     id: 3,
     heading: `Weekly Workout Plan`,
-    text: `Start your 7 day plan to win exciting prize`,
+    text: `Start your 7 day plan to win exciting prize.`,
     image: require('../../Icon/Images/InAppRewards/StepGuide3.png'),
     bold: '',
   },

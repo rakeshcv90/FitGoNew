@@ -555,7 +555,7 @@ const MeditationDetails = ({navigation, route}) => {
                                   ]}
                                   resizeMode="cover"></Image>
                               </TouchableOpacity>
-                              <Text
+                              {/* <Text
                                 style={{
                                   color: AppColor.WHITE,
                                   fontFamily: 'Poppins',
@@ -568,7 +568,7 @@ const MeditationDetails = ({navigation, route}) => {
                                 {downloaded > 0 && downloaded != 100
                                   ? 'Downloading ...'
                                   : item?.exercise_mindset_time}
-                              </Text>
+                              </Text> */}
                             </View>
                           </View>
                         </LinearGradient>

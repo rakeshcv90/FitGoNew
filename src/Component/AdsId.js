@@ -26,6 +26,7 @@ export const ADS_IDs = [                                      // Device_IDs
   '1dad2e8c8b9c8232', // Manoj Lala
   '35c64759de0db5f8', //rakesh phone
   '8d54921a7c6b740f', //rakesh phone'
+  '9c105cf5d167e9ca', // Vivo Coordinator
 ];
 export const ADS_IOS = [                                        // SOCIAL_IDs
   '001477.ab2010ce7baf4388bddca64e18eb7c5b.0652',               // Apple Ipad

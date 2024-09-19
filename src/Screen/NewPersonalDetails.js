@@ -39,6 +39,7 @@ import ActivityLoader from '../Component/ActivityLoader';
 import {showMessage} from 'react-native-flash-message';
 import {AnalyticsConsole} from '../Component/AnalyticsConsole';
 import NewInputText from '../Component/NewInputText';
+import NewButton from '../Component/NewButton';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -204,7 +205,7 @@ const NewPersonalDetails = ({route, navigation}) => {
           injury: getUserDataDetails?.injury,
           weight: getUserDataDetails?.weight,
           target_weight: values.targetWeight,
-          email:values.email,
+          email: values.email,
           // focusarea:
           //   values.focuseAres.length > 0
           //     ? values.focuseAres.join(',')
@@ -240,7 +241,7 @@ const NewPersonalDetails = ({route, navigation}) => {
 
         setForLoading(false);
       } else {
-        console.log('message-------->',dataItem?.data?.msg)
+        console.log('message-------->', dataItem?.data?.msg);
         showMessage({
           message: dataItem?.data?.msg,
           floating: true,
@@ -298,6 +299,7 @@ const NewPersonalDetails = ({route, navigation}) => {
           handleBlur,
           errors,
           touched,
+          dirty,
           setFieldValue,
         }) => (
           <>
@@ -766,7 +768,13 @@ const NewPersonalDetails = ({route, navigation}) => {
 
                 justifyContent: 'center',
               }}>
-              <Button buttonText={'Update Profile'} onPresh={handleSubmit} />
+              <NewButton
+                title={'Update Profile'}
+                onPress={handleSubmit}
+                disabled={!dirty}
+                ButtonWidth={DeviceWidth * 0.6}
+                buttonColor={dirty ? AppColor.RED : '#33333380'}
+              />
             </View>
           </>
         )}

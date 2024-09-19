@@ -62,6 +62,7 @@ import FitText from '../../../Component/Utilities/FitText';
 import {StatusBar} from 'react-native';
 import {ArrowLeft} from '../../../Component/Utilities/Arrows/Arrow';
 import CircleProgress from '../../../Component/Utilities/ProgressCircle';
+import useInterstitialAd from '../../../Component/Ads/Interstitial';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -122,7 +123,7 @@ const Exercise = ({navigation, route}: any) => {
   const [isLoading, setIsLoading] = useState(true);
   const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
   const allWorkoutData = useSelector((state: any) => state.allWorkoutData);
-  const getScreenAwake = useSelector(state => state);
+  const getScreenAwake = useSelector((state: any) => state.getScreenAwake);
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
@@ -140,7 +141,8 @@ const Exercise = ({navigation, route}: any) => {
   );
   const [addClosed, setAddClosed] = useState(false);
   const {initInterstitial, showInterstitialAd} =
-    NewInterstitialAd(setAddClosed);
+  useInterstitialAd({setAddClosed});
+  const showAd = MyInterstitialAd()
   const [seconds, setSeconds] = useState(
     parseInt(allExercise[number]?.exercise_rest.split(' ')[0]),
   );
@@ -201,7 +203,7 @@ const Exercise = ({navigation, route}: any) => {
     };
   }, []);
   useEffect(() => {
-    initInterstitial();
+    // initInterstitial();
     const initTts = async () => {
       const ttsStatus = await Tts.getInitStatus();
       if (!ttsStatus.isInitialized) {
@@ -233,7 +235,8 @@ const Exercise = ({navigation, route}: any) => {
       // console.log('END', seconds);
       playTimerRef.current = setTimeout(() => {
         if (restStart) {
-          if (timer === 0 && number != 0) {
+          if (timer == 0 && number != 0) {
+            setShowSet(true);
             setCurrentSet(1);
             setRestStart(false);
             Tts.stop();
@@ -251,7 +254,7 @@ const Exercise = ({navigation, route}: any) => {
               ? Platform.Version != 34 && setupPlayer()
               : setupPlayer();
             StartAnimation();
-          } else if (timer === 0 && number == 0) {
+          } else if (timer == 0 && number == 0) {
             // if (number == allExercise?.length - 1) return;
             setRestStart(false);
             setShowSet(true);
@@ -322,9 +325,6 @@ const Exercise = ({navigation, route}: any) => {
               type == 'focus' || type == 'bodypart'
                 ? postSingleExerciseAPI(number)
                 : postCurrentExerciseAPI(number);
-              let checkAdsShow = AddCountFunction();
-              if (checkAdsShow == true) {
-                showInterstitialAd();
                 navigation.navigate('SaveDayExercise', {
                   data,
                   day,
@@ -332,15 +332,6 @@ const Exercise = ({navigation, route}: any) => {
                   type,
                   challenge,
                 });
-              } else {
-                navigation.navigate('SaveDayExercise', {
-                  data,
-                  day,
-                  allExercise,
-                  type,
-                  challenge,
-                });
-              }
             } else if (
               seconds == 0 &&
               number <= allExercise?.length - 1 &&
@@ -361,22 +352,6 @@ const Exercise = ({navigation, route}: any) => {
               clearTimeout(playTimerRef.current);
               StartAnimation();
             } else if (seconds == 0 && number < allExercise?.length - 1) {
-              //   console.log('NUMBER', number);
-              //   setCurrentSet(0);
-              //   const index = allExercise?.findIndex(
-              //     (item: any) =>
-              //       item?.exercise_id == allExercise[number]?.exercise_id,
-              //   );
-              //   handleExerciseChange(allExercise[index + 1]?.exercise_title);
-              //   setNumber(index + 1);
-              //   setRestStart(true);
-              //   !addClosed && showInterstitialAd();
-              //   if (addClosed) {
-              //     ProgressRef.current?.play();
-              //     setPause(false);
-              //     setAddClosed(false);
-              //   }
-              // }
               !addClosed && showInterstitialAd();
               if (addClosed) {
                 ProgressRef.current?.play();
@@ -400,10 +375,7 @@ const Exercise = ({navigation, route}: any) => {
               type == 'focus' || type == 'bodypart'
                 ? postSingleExerciseAPI(number)
                 : postCurrentExerciseAPI(number);
-              let checkAdsShow = AddCountFunction();
               clearTimeout(playTimerRef.current);
-              if (checkAdsShow == true) {
-                showInterstitialAd();
                 navigation.navigate('SaveDayExercise', {
                   data,
                   day,
@@ -411,15 +383,7 @@ const Exercise = ({navigation, route}: any) => {
                   type,
                   challenge,
                 });
-              } else {
-                navigation.navigate('SaveDayExercise', {
-                  data,
-                  day,
-                  allExercise,
-                  type,
-                  challenge,
-                });
-              }
+              
             } else if (seconds == 0 && number <= allExercise?.length - 1) {
               animatedProgress.setValue(0);
               setPlayW(0);
@@ -913,8 +877,8 @@ const Exercise = ({navigation, route}: any) => {
                       setSkip(skip + 1);
                       clearTimeout(playTimerRef.current);
                       setTimer(0);
-                      setDemoW(0);
-                      timerProgress.setValue(0);
+                      // setDemoW(0);
+                      // timerProgress.setValue(0);
                     }}>
                     <Image
                       source={require('../../../Icon/Images/InAppRewards/SkipButton.png')}
@@ -939,7 +903,6 @@ const Exercise = ({navigation, route}: any) => {
           </>
         ) : (
           <>
-            {showSet && (
               <Animated.Text
                 style={{
                   color: AppColor.RED,
@@ -956,7 +919,7 @@ const Exercise = ({navigation, route}: any) => {
                 }}>
                 SET {currentSet}
               </Animated.Text>
-            )}
+            
 
             <View
               style={{

@@ -195,7 +195,7 @@ const Workouts = ({navigation}: any) => {
       id: 238,
       title: 'Upper Body',
       image: require('../../Icon/Images/NewImage2/uperBody.png'),
-   
+
       searchCriteria: ['Chest', 'Back', 'Shoulders', 'Arms'],
       searchCriteriaRedux: getUperBodyFilOption,
     },
@@ -458,7 +458,7 @@ const Workouts = ({navigation}: any) => {
     return (
       <View
         style={{
-          // flex: 1,
+          flex: 1,
           justifyContent: 'center',
           alignItems: 'center',
           alignSelf: 'center',
@@ -669,350 +669,361 @@ const Workouts = ({navigation}: any) => {
   return (
     <>
       <View style={styles.container}>
-      <Wrapper styles={{backgroundColor:AppColor.WHITE}}>
-        <NewHeader1 header={'Workouts'}/>
-      <FlatList
-          data={[1, 2, 3, 4]}
-          showsVerticalScrollIndicator={false}
-          renderItem={({item, index}: any) => {
-            return (
-              <View
-                style={{
-                  width: '100%',
-                  //backgroundColor:'red'
-                }}>
-                {index == 0 && (
-                  <>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        width: '92%',
-                        alignSelf: 'center',
-
-                        justifyContent: 'space-between',
-                      }}>
-                      <Text
+        <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
+          <NewHeader1 header={'Workouts'} />
+          <FlatList
+            data={[1, 2, 3, 4]}
+            showsVerticalScrollIndicator={false}
+            renderItem={({item, index}: any) => {
+              return (
+                <View
+                  style={{
+                    width: '100%',
+                    //backgroundColor:'red'
+                  }}>
+                  {index == 0 && (
+                    <>
+                      <View
                         style={{
-                          color: AppColor.HEADERTEXTCOLOR,
-                          fontFamily: Fonts.MONTSERRAT_BOLD,
-                          fontWeight: '600',
-                          lineHeight: 30,
-                          fontSize: 18,
-                          alignItems: 'center',
-                          justifyContent: 'flex-start',
+                          flexDirection: 'row',
+                          width: '92%',
+                          alignSelf: 'center',
+
+                          justifyContent: 'space-between',
                         }}>
-                        Body Type
-                      </Text>
-                    </View>
-                    <View style={[styles.meditionBox]}>
-                      <FlatList
-                        data={focuseArea}
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        keyExtractor={(item: any, index: number) =>
-                          index.toString()
-                        }
-                        renderItem={({item, index}: any) => {
-                          return (
-                            <>
-                              <TouchableOpacity
-                                activeOpacity={0.5}
-                                onPress={() => {
-                                  getbodyPartWorkout(item);
-                                }}
-                                style={{
-                                  paddingBottom: 10,
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  alignSelf: 'center',
-                                  marginLeft:
-                                    index == 0 ? DeviceWidth * 0.06 : 10,
-                                  marginRight:
-                                    index == focuseArea?.length - 1
-                                      ? DeviceWidth * 0.06
-                                      : 10,
-                                }}>
-                                <View
+                        <Text
+                          style={{
+                            color: AppColor.HEADERTEXTCOLOR,
+                            fontFamily: Fonts.MONTSERRAT_BOLD,
+                            fontWeight: '600',
+                            lineHeight: 30,
+                            fontSize: 18,
+                            alignItems: 'center',
+                            justifyContent: 'flex-start',
+                          }}>
+                          Body Type
+                        </Text>
+                      </View>
+                      <View style={[styles.meditionBox]}>
+                        <FlatList
+                          data={focuseArea}
+                          horizontal
+                          showsHorizontalScrollIndicator={false}
+                          keyExtractor={(item: any, index: number) =>
+                            index.toString()
+                          }
+                          renderItem={({item, index}: any) => {
+                            return (
+                              <>
+                                <TouchableOpacity
+                                  activeOpacity={0.5}
+                                  onPress={() => {
+                                    getbodyPartWorkout(item);
+                                  }}
                                   style={{
-                                    width: 80,
-                                    height: 80,
-                                    borderRadius: 40,
-                                    backgroundColor: '#FFFFFF',
-                                    borderColor: '#fff',
-                                    borderWidth: 1,
-                                    marginVertical: DeviceHeigth * 0.015,
+                                    paddingBottom: 10,
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     alignSelf: 'center',
-                                    padding: 7,
-                                    shadowColor: 'grey',
-                                    ...Platform.select({
-                                      ios: {
-                                        //shadowColor: '#000000',
-                                        shadowOffset: {width: 0, height: 2},
-                                        shadowOpacity: 0.2,
-                                        shadowRadius: 4,
-                                      },
-                                      android: {
-                                        elevation: 3,
-                                      },
-                                    }),
+                                    marginLeft:
+                                      index == 0 ? DeviceWidth * 0.06 : 10,
+                                    marginRight:
+                                      index == focuseArea?.length - 1
+                                        ? DeviceWidth * 0.06
+                                        : 10,
                                   }}>
-                                  <Image
-                                    source={item.image}
-                                    // onLoad={() => setImageLoad(false)}
-                                    defaultSource={localImage.NOWORKOUT}
+                                  <View
                                     style={{
-                                      width: '100%',
-                                      height: '100%',
-                                      justifyContent: 'center',
+                                      width: 80,
+                                      height: 80,
                                       borderRadius: 40,
+                                      backgroundColor: '#FFFFFF',
+                                      borderColor: '#fff',
+                                      borderWidth: 1,
+                                      marginVertical: DeviceHeigth * 0.015,
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
                                       alignSelf: 'center',
-                                    }}
-                                    resizeMode="contain"
-                                  />
-                                </View>
+                                      padding: 7,
+                                      shadowColor: 'grey',
+                                      ...Platform.select({
+                                        ios: {
+                                          //shadowColor: '#000000',
+                                          shadowOffset: {width: 0, height: 2},
+                                          shadowOpacity: 0.2,
+                                          shadowRadius: 4,
+                                        },
+                                        android: {
+                                          elevation: 3,
+                                        },
+                                      }),
+                                    }}>
+                                    <Image
+                                      source={item.image}
+                                      // onLoad={() => setImageLoad(false)}
+                                      defaultSource={localImage.NOWORKOUT}
+                                      style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        justifyContent: 'center',
+                                        borderRadius: 40,
+                                        alignSelf: 'center',
+                                      }}
+                                      resizeMode="contain"
+                                    />
+                                  </View>
 
-                                <Text
-                                  style={{
-                                    color: '#434343',
-                                    fontSize: 15,
-                                    fontWeight: '500',
-                                    lineHeight: 25,
-                                    top: -8,
-                                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                                  }}>
-                                  {item.title}
-                                </Text>
-                              </TouchableOpacity>
-                            </>
-                          );
-                        }}
-                        initialNumToRender={10}
-                        maxToRenderPerBatch={10}
-                        updateCellsBatchingPeriod={100}
-                        removeClippedSubviews={true}
-                      />
-                    </View>
-                  </>
-                )}
-                {index == 1 && (
-                  <>
-                    <View
-                      style={{
-                        width: '92%',
-                        alignSelf: 'center',
-                        // marginVertical: DeviceHeigth * 0.02,
-                      }}>
-                      <Text
+                                  <Text
+                                    style={{
+                                      color: '#434343',
+                                      fontSize: 15,
+                                      fontWeight: '500',
+                                      lineHeight: 25,
+                                      top: -8,
+                                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                                    }}>
+                                    {item.title}
+                                  </Text>
+                                </TouchableOpacity>
+                              </>
+                            );
+                          }}
+                          initialNumToRender={10}
+                          maxToRenderPerBatch={10}
+                          updateCellsBatchingPeriod={100}
+                          removeClippedSubviews={true}
+                        />
+                      </View>
+                    </>
+                  )}
+                  {index == 1 && (
+                    <>
+                      <View
                         style={{
-                          color: AppColor.HEADERTEXTCOLOR,
-                          fontFamily: Fonts.MONTSERRAT_BOLD,
-                          fontWeight: '600',
-                          lineHeight: 30,
-                          fontSize: 18,
-                          alignItems: 'center',
-                          justifyContent: 'flex-start',
+                          width: '92%',
+                          alignSelf: 'center',
+                          // marginVertical: DeviceHeigth * 0.02,
                         }}>
-                        Custom Made
-                      </Text>
-                    </View>
-
-                    <LinearGradient
-                      start={{x: 1, y: 0}}
-                      end={{x: 0, y: 1}}
-                      colors={['#379CBE', '#81CAF1', '#81CAF1']}
-                      style={{
-                        width: '92%',
-
-                        borderRadius: 20,
-                        marginVertical: 15,
-                        paddingVertical: 15,
-                        justifyContent: 'center',
-                        alignSelf: 'center',
-                      }}>
-                      <TouchableOpacity
-                        activeOpacity={0.8}
-                        onPress={() => {
-                          AnalyticsConsole(`CustomWrk_FR_WRK`);
-                          let checkAdsShow = AddCountFunction();
-                          if (checkAdsShow == true) {
-                            showInterstitialAd();
-                            navigation.navigate('CustomWorkout', {
-                              routeName: 'Beginner',
-                            });
-                          } else {
-                            navigation.navigate('CustomWorkout', {
-                              routeName: 'Beginner',
-                            });
-                          }
-                        }}
-                        style={
-                          {
-                            //  backgroundColor: AppColor.WHITE,
-                          }
-                        }>
-                        <View
+                        <Text
                           style={{
-                            flexDirection: 'row',
+                            color: AppColor.HEADERTEXTCOLOR,
+                            fontFamily: Fonts.MONTSERRAT_BOLD,
+                            fontWeight: '600',
+                            lineHeight: 30,
+                            fontSize: 18,
                             alignItems: 'center',
-                            justifyContent: 'space-between',
+                            justifyContent: 'flex-start',
                           }}>
+                          Custom Made
+                        </Text>
+                      </View>
+
+                      <LinearGradient
+                        start={{x: 1, y: 0}}
+                        end={{x: 0, y: 1}}
+                        colors={['#379CBE', '#81CAF1', '#81CAF1']}
+                        style={{
+                          width: '92%',
+
+                          borderRadius: 20,
+                          marginVertical: 15,
+                          paddingVertical: 15,
+                          justifyContent: 'center',
+                          alignSelf: 'center',
+                        }}>
+                        <TouchableOpacity
+                          activeOpacity={0.8}
+                          onPress={() => {
+                            AnalyticsConsole(`CustomWrk_FR_WRK`);
+                            let checkAdsShow = AddCountFunction();
+                            if (checkAdsShow == true) {
+                              showInterstitialAd();
+                              navigation.navigate('CustomWorkout', {
+                                routeName: 'Beginner',
+                              });
+                            } else {
+                              navigation.navigate('CustomWorkout', {
+                                routeName: 'Beginner',
+                              });
+                            }
+                          }}
+                          style={
+                            {
+                              //  backgroundColor: AppColor.WHITE,
+                            }
+                          }>
                           <View
                             style={{
-                              marginHorizontal:
-                                Platform.OS == 'android'
-                                  ? DeviceWidth * 0.03
-                                  : DeviceHeigth >= 1024
-                                  ? DeviceWidth * 0.03
-                                  : DeviceWidth * 0.02,
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}>
-                            <Text
+                            <View
                               style={{
-                                fontSize: 20,
-                                color: AppColor.WHITE,
-                                lineHeight: 30,
-                                fontWeight: '600',
-                                fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                                marginHorizontal:
+                                  Platform.OS == 'android'
+                                    ? DeviceWidth * 0.03
+                                    : DeviceHeigth >= 1024
+                                    ? DeviceWidth * 0.03
+                                    : DeviceWidth * 0.02,
                               }}>
-                              Your workouts
-                            </Text>
-                            <Text
-                              style={{
-                                fontSize: 14,
-                                color: AppColor.WHITE,
+                              <Text
+                                style={{
+                                  fontSize: 20,
+                                  color: AppColor.WHITE,
+                                  lineHeight: 30,
+                                  fontWeight: '600',
+                                  fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                                }}>
+                                Your workouts
+                              </Text>
+                              <Text
+                                style={{
+                                  fontSize: 14,
+                                  color: AppColor.WHITE,
 
-                                fontWeight: '500',
-                                fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                              }}>{`Create your custom plans`}</Text>
+                                  fontWeight: '500',
+                                  fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                                }}>{`Create your custom plans`}</Text>
+                            </View>
+                            <Image
+                              source={localImage.NewWorkout}
+                              style={{
+                                width: DeviceWidth * 0.3,
+                                height: 70,
+                                //backgroundColor: 'red',
+                              }}
+                              resizeMode="contain"
+                            />
                           </View>
-                          <Image
-                            source={localImage.NewWorkout}
-                            style={{
-                              width: DeviceWidth * 0.3,
-                              height: 70,
-                              //backgroundColor: 'red',
-                            }}
-                            resizeMode="contain"
+                        </TouchableOpacity>
+                      </LinearGradient>
+                    </>
+                  )}
+                  {index == 2 && (
+                    <>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          width: '92%',
+                          alignSelf: 'center',
+                          marginVertical: DeviceHeigth * 0.0,
+                          justifyContent: 'space-between',
+                        }}>
+                        <Text
+                          style={{
+                            color: AppColor.HEADERTEXTCOLOR,
+                            fontFamily: Fonts.MONTSERRAT_BOLD,
+                            fontWeight: '600',
+                            lineHeight: 30,
+                            fontSize: 18,
+                            alignItems: 'center',
+                            justifyContent: 'flex-start',
+                          }}>
+                          Workout Categories
+                        </Text>
+                      </View>
+                      {currentCategories?.length > 0 ? (
+                        <>
+                          <View
+                            style={[styles.meditionBox, {marginVertical: 5}]}>
+                            <FlatList
+                              data={currentCategories.slice(0, 4)}
+                              horizontal
+                              showsHorizontalScrollIndicator={false}
+                              keyExtractor={(item: any, index: number) =>
+                                index.toString()
+                              }
+                              renderItem={renderItem}
+                              ListEmptyComponent={emptyComponent}
+                              initialNumToRender={10}
+                              maxToRenderPerBatch={10}
+                              updateCellsBatchingPeriod={100}
+                              removeClippedSubviews={true}
+                            />
+                          </View>
+                          <View
+                            style={[
+                              styles.meditionBox,
+                              {alignItems: 'center', top: -10},
+                            ]}>
+                            <FlatList
+                              data={currentCategories.slice(4)}
+                              horizontal
+                              showsHorizontalScrollIndicator={false}
+                              keyExtractor={(item: any, index: number) =>
+                                index.toString()
+                              }
+                              renderItem={renderItem}
+                              ListEmptyComponent={emptyComponent}
+                              initialNumToRender={10}
+                              maxToRenderPerBatch={10}
+                              updateCellsBatchingPeriod={100}
+                              removeClippedSubviews={true}
+                            />
+                          </View>
+                        </>
+                      ) : (
+                        emptyComponent()
+                      )}
+                    </>
+                  )}
+                  {index == 3 && (
+                    <>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          width: '92%',
+                          alignSelf: 'center',
+                          marginVertical: DeviceHeigth * 0.02,
+                          justifyContent: 'space-between',
+                        }}>
+                        <Text
+                          style={{
+                            color: AppColor.HEADERTEXTCOLOR,
+                            fontFamily: Fonts.MONTSERRAT_BOLD,
+                            fontWeight: '600',
+                            lineHeight: 30,
+                            fontSize: 18,
+                            alignItems: 'center',
+                            justifyContent: 'flex-start',
+                          }}>
+                          Workout Challenges
+                        </Text>
+                      </View>
+                      {getChallengesData?.length > 0 ? (
+                        <View
+                          style={[
+                            styles.meditionBox,
+                            {
+                              marginVertical: -DeviceHeigth * 0.015,
+                              alignItems: 'center',
+                            },
+                          ]}>
+                          <FlatList
+                            data={getChallengesData}
+                            showsHorizontalScrollIndicator={false}
+                            keyExtractor={(item: any, index: number) =>
+                              index.toString()
+                            }
+                            renderItem={renderItem1}
+                            ListEmptyComponent={emptyComponent}
+                            initialNumToRender={10}
+                            maxToRenderPerBatch={10}
+                            updateCellsBatchingPeriod={100}
+                            removeClippedSubviews={true}
                           />
                         </View>
-                      </TouchableOpacity>
-                    </LinearGradient>
-                  </>
-                )}
-                {index == 2 && (
-                  <>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        width: '92%',
-                        alignSelf: 'center',
-                        marginVertical: DeviceHeigth * 0.0,
-                        justifyContent: 'space-between',
-                      }}>
-                      <Text
-                        style={{
-                          color: AppColor.HEADERTEXTCOLOR,
-                          fontFamily: Fonts.MONTSERRAT_BOLD,
-                          fontWeight: '600',
-                          lineHeight: 30,
-                          fontSize: 18,
-                          alignItems: 'center',
-                          justifyContent: 'flex-start',
-                        }}>
-                        Workout Categories
-                      </Text>
-                    </View>
-                    <View style={[styles.meditionBox, {marginVertical: 5}]}>
-                      <FlatList
-                        data={currentCategories.slice(0, 4)}
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        keyExtractor={(item: any, index: number) =>
-                          index.toString()
-                        }
-                        renderItem={renderItem}
-                        ListEmptyComponent={emptyComponent}
-                        initialNumToRender={10}
-                        maxToRenderPerBatch={10}
-                        updateCellsBatchingPeriod={100}
-                        removeClippedSubviews={true}
-                      />
-                    </View>
-                    <View
-                      style={[
-                        styles.meditionBox,
-                        {alignItems: 'center', top: -10},
-                      ]}>
-                      <FlatList
-                        data={currentCategories.slice(4)}
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        keyExtractor={(item: any, index: number) =>
-                          index.toString()
-                        }
-                        renderItem={renderItem}
-                        ListEmptyComponent={emptyComponent}
-                        initialNumToRender={10}
-                        maxToRenderPerBatch={10}
-                        updateCellsBatchingPeriod={100}
-                        removeClippedSubviews={true}
-                      />
-                    </View>
-                  </>
-                )}
-                {index == 3 && (
-                  <>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        width: '92%',
-                        alignSelf: 'center',
-                        marginVertical: DeviceHeigth * 0.02,
-                        justifyContent: 'space-between',
-                      }}>
-                      <Text
-                        style={{
-                          color: AppColor.HEADERTEXTCOLOR,
-                          fontFamily: Fonts.MONTSERRAT_BOLD,
-                          fontWeight: '600',
-                          lineHeight: 30,
-                          fontSize: 18,
-                          alignItems: 'center',
-                          justifyContent: 'flex-start',
-                        }}>
-                        Workout Challenges
-                      </Text>
-                    </View>
-                    <View
-                      style={[
-                        styles.meditionBox,
-                        {
-                          marginVertical: -DeviceHeigth * 0.015,
-                          alignItems: 'center',
-                        },
-                      ]}>
-                      <FlatList
-                        data={getChallengesData}
-                        showsHorizontalScrollIndicator={false}
-                        keyExtractor={(item: any, index: number) =>
-                          index.toString()
-                        }
-                        renderItem={renderItem1}
-                        ListEmptyComponent={emptyComponent}
-                        initialNumToRender={10}
-                        maxToRenderPerBatch={10}
-                        updateCellsBatchingPeriod={100}
-                        removeClippedSubviews={true}
-                      />
-                    </View>
-                  </>
-                )}
-              </View>
-            );
-          }}
-        />
-      </Wrapper>
+                      ) : (
+                        emptyComponent()
+                      )}
+                    </>
+                  )}
+                </View>
+              );
+            }}
+          />
+        </Wrapper>
       </View>
     </>
   );

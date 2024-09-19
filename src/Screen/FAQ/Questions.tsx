@@ -10,7 +10,7 @@ import React, {useMemo} from 'react';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import FitText from '../../Component/Utilities/FitText';
 import {QuestionsArray, QuestionsArrayType} from './QuestionsArray';
-import {AppColor, PLATFORM_IOS} from '../../Component/Color';
+import {AppColor, Fonts, PLATFORM_IOS} from '../../Component/Color';
 import {navigationRef} from '../../../App';
 import FitIcon from '../../Component/Utilities/FitIcon';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
@@ -76,7 +76,15 @@ const Questions = ({route, navigation}: any) => {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
       <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
-        <NewHeader1 header="Frequently Asked Questions" backButton />
+        <NewHeader1
+          header="FAQs"
+          headerStyle={{
+            color: AppColor.BLACK,
+            fontFamily: Fonts.HELVETICA_BOLD,
+            fontSize: 20,
+          }}
+          backButton
+        />
         <View
           style={{
             width: '95%',

@@ -106,9 +106,6 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-    
-
-   
       {/* <Stack.Screen name="SplaceNew" component={SplaceNew} /> */}
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
       <Stack.Screen
@@ -143,14 +140,18 @@ export const LoginStack = () => {
       <Stack.Screen name="WorkoutDays" component={WorkoutDays} />
       <Stack.Screen name="OneDay" component={OneDay} />
       <Stack.Screen name="Exercise" component={Exercise} />
-      <Stack.Screen name="SaveDayExercise" component={SaveDayExercise} />
+      <Stack.Screen
+        name="SaveDayExercise"
+        component={SaveDayExercise}
+        options={{detachPreviousScreen: true}}
+      />
       <Stack.Screen name="DayRewards" component={DayRewards} />
       <Stack.Screen name="Meals" component={Meals} />
       <Stack.Screen name="MealDetails" component={MealDetails} />
       <Stack.Screen name="Store" component={NewStore} />
       <Stack.Screen name="Products" component={Products} />
       <Stack.Screen name="MeditationDetails" component={MeditationDetails} />
-      <Stack.Screen name='Breathe' component={Breathe}/>
+      <Stack.Screen name="Breathe" component={Breathe} />
       <Stack.Screen
         name="MeditationExerciseDetails"
         component={MeditationExerciseDetails}
@@ -212,7 +213,11 @@ export const LoginStack = () => {
         component={WorkoutCompleted}
         options={{detachPreviousScreen: true}}
       />
-      <Stack.Screen name="CardioCompleted" component={CardioCompleted} />
+      <Stack.Screen
+        name="CardioCompleted"
+        component={CardioCompleted}
+        options={{detachPreviousScreen: true}}
+      />
     </Stack.Navigator>
   );
 };

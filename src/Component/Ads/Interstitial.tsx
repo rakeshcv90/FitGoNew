@@ -52,9 +52,10 @@ class Interstitial {
     });
 
     this.interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {
-      this.interstitialAd?.load(); // Load a new ad after it's closed
+      // this.interstitialAd?.load(); // Load a new ad after it's closed
       this.addClosed();
       console.log('Ad Closed');
+      this.adLoaded = false; // Reset to prevent showing the same ad again
     });
 
     this.interstitialAd.addAdEventListener(AdEventType.ERROR, error => {
@@ -71,7 +72,8 @@ class Interstitial {
       this.adLoaded = false; // Reset to prevent showing the same ad again
     } else {
       console.log('Ad not loaded yet');
-      this.addClosed()
+      this.adLoaded = false; // Reset to prevent showing the same ad again
+      // this.addClosed()
     }
   };
 }

@@ -22,6 +22,7 @@ import HTMLRender from 'react-native-render-html';
 import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
 import moment from 'moment';
+import { ArrowLeft } from '../../Component/Utilities/Arrows/Arrow';
 
 const MealDetails = ({route, navigation}) => {
   const getStoreVideoLoc = useSelector(state => state.getStoreVideoLoc);
@@ -81,20 +82,15 @@ const MealDetails = ({route, navigation}) => {
           style={{
             position: 'absolute',
             top: DeviceHeigth * 0.05,
-            width: 32,
+            width: 32 * 1.5,
             height: 32,
-            backgroundColor: '#F7F8F8',
+            // backgroundColor: '#F7F8F8',
             borderRadius: 10,
             alignItems: 'center',
             justifyContent: 'center',
             left: 10,
           }}>
-          <Icons
-            name="chevron-right"
-            size={25}
-            color={'#000'}
-            style={{transform: [{rotateY: '180deg'}]}}
-          />
+          <ArrowLeft fillColor={AppColor.WHITE} />
         </TouchableOpacity>
         <View
           style={{

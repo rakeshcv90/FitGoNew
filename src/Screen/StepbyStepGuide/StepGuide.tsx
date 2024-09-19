@@ -42,7 +42,8 @@ const StepItems = ({item, index}: StepItem) => {
         // justifyContent: 'space-between',
         alignItems: 'center',
         width: '100%',
-        marginVertical: 20,
+        marginTop: 20,
+        marginBottom: index + 1 == StepsArray.length ? 0 : 20,
         // backgroundColor: 'red',
         paddingHorizontal: 10,
       }}>
@@ -156,11 +157,11 @@ const StepGuide = ({navigation}: any) => {
             {StepsArray.map((item: StepsArrayType, index: number) => (
               <StepItems item={item} index={index} />
             ))}
-            <FitText
+            {/* <FitText
               type="Heading"
               value="Unleash your Fitness Star"
               textAlign="center"
-            />
+            /> */}
             <HeartCom />
             {/* <FitText
               type="normal"

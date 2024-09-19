@@ -723,10 +723,10 @@ const NewSubscription = ({navigation, route}: any) => {
           lineHeight={24}
           value={
             planName.includes('noob')
-              ? 'Basic plan'
+              ? 'Basic Plan'
               : planName.includes('pro')
-              ? 'Medium plan'
-              : 'Premium plan'
+              ? 'Medium Plan'
+              : 'Premium Plan'
           }
           marginVertical={5}
         />
@@ -1165,9 +1165,9 @@ const NewSubscription = ({navigation, route}: any) => {
                   }}>
                   Please NOTE: No Free Trial is available for this plan. You
                   will be charged{' '}
-                  {getPrice(sortedSubscriptions[currentSelected])} for monthly
+                  {getPrice(sortedSubscriptions[currentSelected])} for monthly plan
                   immediately. Your subscription will renew automatically until
-                  you cancel the subscription, you can manage or cancel your
+                  you cancel the subscription. You can manage or cancel your
                   subscription anytime from the Google Play Store. If you are
                   unsure how to cancel a subscription, please visit the Google
                   Support website. Note that deleting the app does not cancel
