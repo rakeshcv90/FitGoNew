@@ -170,11 +170,9 @@ const OfferPage = ({navigation, route}) => {
           user_id: getUserDataDetails?.id,
         },
       });
+      setLoaded(true);
       if (response?.data?.status == true) {
         setCardioStatus(true);
-        setLoaded(true);
-      } else {
-        setLoaded(true);
       }
     } catch (error) {
       console.log('error caridio status api ', error);
@@ -368,13 +366,9 @@ const OfferPage = ({navigation, route}) => {
             coinTextColor={AppColor.YELLOW}
             isactive={!cardioStatus}
             onPress={() => handleStart()}
-            withAnimation={
-              !cardioStatus
-            }
+            withAnimation={!cardioStatus}
             downloaded={downloaded}
-            buttonText={
-              cardioStatus ? `Completed` : 'Start now'
-            }
+            buttonText={cardioStatus ? `Completed` : 'Start now'}
             showRightArrow={!cardioStatus}
           />
           <OfferCards
@@ -391,8 +385,8 @@ const OfferPage = ({navigation, route}) => {
           />
           <OfferCards
             imgSource={localImage.breathe_banner}
-            header={'Breathe in and out'}
-            text1={'Breathe in and out'}
+            header={'Breathing Session'}
+            text1={'Breathing Session'}
             text1Color={AppColor.WHITE}
             text2={'Join the Breathing session & earn bonus FitCoins'}
             text3={`${breatheCoins} coins`}
@@ -407,9 +401,7 @@ const OfferPage = ({navigation, route}) => {
             onPress={() => {
               navigation.navigate('Breathe', {type: 'OfferPage'});
             }}
-            showRightArrow={
-              breatheStatus && !breatheCompleteStatus
-            }
+            showRightArrow={breatheStatus && !breatheCompleteStatus}
           />
         </ScrollView>
       ) : (

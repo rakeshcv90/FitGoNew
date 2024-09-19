@@ -15,7 +15,7 @@ import {Linking} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {setRatingTrack} from './ThemeRedux/Actions';
 const RatingModal = ({getVisibility,setModalVisibilty}) => {
-  const [rating, setRating] = useState(3);
+  const [rating, setRating] = useState(5);
   const getRatingStatus=useSelector(state=>state?.getRatingStatus);
   const [visibiltity,setVisibility]=useState(getRatingStatus)
   const dispatch = useDispatch();
@@ -56,8 +56,8 @@ const RatingModal = ({getVisibility,setModalVisibilty}) => {
       startCount: 5,
     },
   ];
-  const [getImage, setImage] = useState(dataArray[2]?.img);
-  const [getTxt2, setTxt2] = useState(dataArray[2]?.txt2);
+  const [getImage, setImage] = useState(dataArray[4]?.img);
+  const [getTxt2, setTxt2] = useState(dataArray[4]?.txt2);
   const star = [1, 2, 3, 4, 5];
   const handleRating = index => {
     setRating(index + 1);

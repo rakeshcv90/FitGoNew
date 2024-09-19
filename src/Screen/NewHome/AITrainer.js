@@ -41,7 +41,7 @@ import NewHeader1 from '../../Component/Headers/NewHeader1';
 // const apiKey = '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';
 const systemMessage = {
   role: 'system',
-  content: `You are a Gym Traineer and you give response to uswho are  only related Gym Traineer, how to do Workouts,
+  content: `You are a Gym Traineer and you give response to us who are  only related Gym Traineer, how to do Workouts,
    what diet have to take`,
 };
 const AITrainer = ({navigation}) => {
@@ -112,7 +112,6 @@ const AITrainer = ({navigation}) => {
       });
       return false;
     } else {
-      console.log('sdfsdfsdfdsf', getRerwardCount);
       if (getRerwardCount < 5) {
         dispatch(setRewardedCount(getRerwardCount + 1));
         handleSend(searchText);
@@ -141,72 +140,6 @@ const AITrainer = ({navigation}) => {
         );
       }
     }
-    // else if (reward == 1) {
-    //   handleSend(searchText);
-    //   setSearchText('');
-    // } else {
-    //   // handleSend(searchText);
-    //   if (getPurchaseHistory.length > 0) {
-    //     if (
-    //       getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-    //     ) {
-    //       handleSend(searchText);
-    //       setSearchText('');
-    //     } else {
-    //       if (reward == 1) {
-    //         handleSend(searchText);
-    //         setSearchText('');
-    //       } else {
-    //         Alert.alert(
-    //           'Questions Limit Reached!',
-    //           'Do you want to Continue Asking Questions? Watch Ads or Upgrade your Subscription',
-    //           [
-    //             {
-    //               text: 'No',
-    //               onPress: () => console.log('Cancel Pressed'),
-    //               style: 'Yes',
-    //             },
-    //             {
-    //               text: 'Yes',
-    //               onPress: () => {
-    //                 MyRewardedAd(setreward).load();
-    //               },
-    //             },
-    //           ],
-    //           {
-    //             cancelable: false,
-    //           },
-    //         );
-    //       }
-    //     }
-    //   } else {
-    //     if (reward == 1) {
-    //       handleSend(searchText);
-    //       setSearchText('');
-    //     } else {
-    //       Alert.alert(
-    //         'Questions Limit Reached!',
-    //         'Do you want to Continue Asking Questions? Watch Ads or Upgrade your Subscription',
-    //         [
-    //           {
-    //             text: 'No',
-    //             onPress: () => console.log('Cancel Pressed'),
-    //             style: 'Yes',
-    //           },
-    //           {
-    //             text: 'Yes',
-    //             onPress: () => {
-    //               MyRewardedAd(setreward).load();
-    //             },
-    //           },
-    //         ],
-    //         {
-    //           cancelable: false,
-    //         },
-    //       );
-    //     }
-    //   }
-    // }
   };
   const handleSend = async data => {
     const newMessage = {
@@ -214,10 +147,10 @@ const AITrainer = ({navigation}) => {
       sender: 'user',
     };
     const newMessages = [...senderMessage, newMessage];
-
-    processMessageToChatGPT(newMessages, newMessage);
+console.log(newMessages)
+    processMessageToChatGPT(newMessages);
   };
-  const processMessageToChatGPT = async chatMessages => {
+  const processMessageToChatGPT = async (chatMessages) => {
     let apiMessages = chatMessages.map(messageObject => {
       let role = '';
       if (messageObject.sender == 'ChatGPT') {
@@ -245,7 +178,7 @@ const AITrainer = ({navigation}) => {
         sender: 'ChatGpt',
       },
     ]);
-
+console.log("GPT BEFORE",[systemMessage, ...apiMessages])
     const options = {
       method: 'POST',
       url: 'https://open-ai21.p.rapidapi.com/conversationgpt35',
@@ -270,7 +203,7 @@ const AITrainer = ({navigation}) => {
 
     try {
       const response = await axios.request(options);
-
+console.log("AFTER GPT",response.data.result)
       setsenderMessage([
         ...chatMessages,
         {
@@ -294,62 +227,8 @@ const AITrainer = ({navigation}) => {
     } catch (error) {
       console.error(error);
     }
-    // try {
-    //   const response = await axios.post(
-    //     'https://api.openai.com/v1/chat/completions',
-    //     apiRequestBody,
-    //     {
-    //       // headers: {
-    //       //   Authorization: `Bearer ${apiKey}`,
-    //       //   'Content-Type': 'application/json',
-    //       // },
-    //       'content-type': 'application/json',
-    //       'X-RapidAPI-Key': 'SIGN-UP-FOR-KEY',
-    //       'X-RapidAPI-Host': 'open-ai21.p.rapidapi.com',
-    //     },
-    //   );
-
-    //   const data = response.data;
-
-    //   // setsenderMessage([
-    //   //   ...chatMessages,
-    //   //   {
-    //   //     message: data.choices[0].message.content,
-    //   //     sender: 'ChatGpt',
-    //   //   },
-    //   // ]);
-
-    //   // dispatch(
-    //   //   SetAIMessageHistory([
-    //   //     ...getAIMessageHistory,
-
-    //   //     ...chatMessages,
-    //   //     {
-    //   //       message: data.choices[0].message.content,
-    //   //       sender: 'ChatGpt',
-    //   //     },
-    //   //   ]),
-    //   // );
-
-    //   setSearchText('');
-    // } catch (error) {
-    //   console.error('Error fetching data:', error);
-    // }
   };
-  // const bannerAdsDisplay = () => {
-  //   if (getPurchaseHistory.length > 0) {
-  //     if (
-  //       getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-  //     ) {
-  //       return null;
-  //     } else {
-  //       return <BannerAdd bannerAdId={bannerAdId} />;
-  //     }
-  //   } else {
-  //     return <BannerAdd bannerAdId={bannerAdId} />;
-  //   }
-  // };
-
+  console.log('senderMessage====>',senderMessage)
   const handleBackPress = useCallback(() => {
     Tts.stop();
     return false; // Allow default back behavior when switchButton is false
@@ -373,32 +252,10 @@ const AITrainer = ({navigation}) => {
             navigation.goBack();
           }}
           backButton
+          icon
+          iconSource={localImage.ChatHistory}
+          onIconPress={()=>navigation.navigate('AIMessageHistory')}
         />
-        {getAIMessageHistory?.length > 0 && (
-          <TouchableOpacity
-            style={{
-              width: 25,
-              height: 25,
-              justifyContent: 'flex-end',
-              alignSelf: 'flex-end',
-              top: -DeviceHeigth * 0.065,
-              marginHorizontal: DeviceWidth * 0.03,
-            }}
-            onPress={() => {
-              navigation.navigate('AIMessageHistory');
-            }}>
-            <Image
-              resizeMode="contain"
-              source={localImage.ChatHistory}
-              style={{
-                width: 25,
-                height: 25,
-                justifyContent: 'flex-end',
-                alignSelf: 'flex-end',
-              }}
-            />
-          </TouchableOpacity>
-        )}
         <KeyboardAvoidingView
           behavior={Platform.OS == 'ios' ? 'padding' : undefined}
           contentContainerStyle={{flexGrow: 1}}
@@ -459,12 +316,12 @@ const AITrainer = ({navigation}) => {
                               }}>
                               <Image
                                 style={{
-                                  width: 40,
-                                  height: 40,
+                                  width: 35,
+                                  height: 35,
                                   marginHorizontal: 15,
                                 }}
                                 resizeMode="contain"
-                                source={localImage.Noimage}
+                                source={require('../../Icon/Images/NewImage2/mary.png')}
                               />
                               <AnimatedLottieView
                                 source={{
@@ -601,7 +458,7 @@ const AITrainer = ({navigation}) => {
                               </Text>
                             </View>
                             <Image
-                              resizeMode="contain"
+                              resizeMode="cover"
                               // source={localImage.User}
                               source={
                                 getUserDataDetails?.image_path == null

@@ -48,7 +48,7 @@ const DietPlatTabBar = ({navigation}) => {
     },
     {
       id: 2,
-      title: 'Nonveg',
+      title: 'Non-Veg',
       ima: require('../Icon/Images/InAppRewards/Nonveg.png'),
     },
   ];

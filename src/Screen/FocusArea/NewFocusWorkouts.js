@@ -33,6 +33,7 @@ import {CircularProgressBase} from 'react-native-circular-progress-indicator';
 import {
   setCoreCount,
   setCoreFilOpt,
+  setEquipmentExercise,
   setExerciseInTime,
   setExerciseOutTime,
   setLowerBodyCount,
@@ -82,6 +83,11 @@ const NewFocusWorkouts = ({route, navigation}) => {
   const [searchFilterList, setSearchFilterList] = useState([]);
   const [start, setStart] = useState(false);
   const [overExerciseVisible, setOverExerciseVisible] = useState(false);
+  const [adujstedExerciseList, SetAdjustedExerciseList] = useState([]);
+  const getEquipmentExercise = useSelector(
+    state => state?.getEquipmentExercise,
+  );
+
   const dispatch = useDispatch();
   const uperBody = [
     {
@@ -109,6 +115,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
       exCount: getExerciseCount?.exCount4 ?? 0,
     },
   ];
+
   const lowerBody = [
     {
       id: 1,
@@ -143,6 +150,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
       exCount: getExerciseCount?.exCount2 ?? 0,
     },
   ];
+
   useEffect(() => {
     // delay for smooth animation
     setTimeout(() => {
@@ -163,9 +171,9 @@ const NewFocusWorkouts = ({route, navigation}) => {
   // automatic filter when user comes to this screen
   useEffect(() => {
     if (searchCriteriaRedux?.length == 0) {
-      filterExercises(exerciseData, searchCriteria);
+      filterExercises(exerciseData, searchCriteria, getEquipmentExercise);
     } else {
-      filterExercises(exerciseData, searchCriteriaRedux);
+      filterExercises(exerciseData, searchCriteriaRedux, getEquipmentExercise);
     }
   }, []);
 
@@ -195,25 +203,38 @@ const NewFocusWorkouts = ({route, navigation}) => {
     setSelectedIndex(-1);
   }, [isFocused]);
 
-  const filterExercises = (exercises, filterCriteria) => {
+  const filterExercises = (exercises, filterCriteria, adjust) => {
     let modifiedFilter = [...filterCriteria]; // Create a copy of filterCriteria
     if (filterCriteria.length === 0) {
       setFilterList(exercises); // Set filter list to all exercises if no criteria
     } else {
+      // Handle 'Arms' replacement logic
       if (modifiedFilter.includes('Arms')) {
         modifiedFilter = modifiedFilter.filter(item => item !== 'Arms'); // Remove 'Arms'
-        modifiedFilter.push('Biceps', 'Triceps', 'Forearms'); // Add 'Biceps', 'Triceps', 'Forearms'
+        modifiedFilter.push('Biceps', 'Triceps', 'Forearms'); // Add specific muscles
       }
+
       // Check if 'Shoulders' is being added and remove 'Arms' if necessary
       if (modifiedFilter.includes('Shoulders')) {
         modifiedFilter = modifiedFilter.filter(item => item !== 'Arms');
       }
 
-      setFilterList(
-        exercises.filter(exercise =>
-          modifiedFilter.includes(exercise.exercise_bodypart),
-        ),
+      // Define the equipment filter logic
+      const exerciseCat = exerciseEquip => {
+        if (adjust === 0) {
+          return exerciseEquip !== 'No Equipment'; // Exclude 'No Equipment' exercises if selected equipment
+        }
+        return exerciseEquip === 'No Equipment'; // Include only 'No Equipment' exercises otherwise
+      };
+
+      // Apply filter based on body part and equipment
+      const filteredList = exercises.filter(
+        exercise =>
+          modifiedFilter.includes(exercise.exercise_bodypart) &&
+          exerciseCat(exercise?.exercise_equipment),
       );
+      dispatch(setEquipmentExercise(adjust));
+      setFilterList(filteredList); // Update the filter list with the filtered results
     }
 
     const focusedPart = route?.params?.focusedPart;
@@ -260,16 +281,15 @@ const NewFocusWorkouts = ({route, navigation}) => {
 
   const getNativeAdsDisplay = () => {
     if (getPurchaseHistory?.plan != null) {
-        return (
-          <View
-            style={{
-              alignSelf: 'center',
-              alignItems: 'center',
-            }}>
-            <NativeAddTest type="image" media={false} />
-          </View>
-        );
-      
+      return (
+        <View
+          style={{
+            alignSelf: 'center',
+            alignItems: 'center',
+          }}>
+          <NativeAddTest type="image" media={false} />
+        </View>
+      );
     } else {
       return (
         <View
@@ -306,6 +326,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
         return searchCriteria;
       }
     };
+    const [adjustSelected, setAdjustSelelcted] = useState(getEquipmentExercise);
     const [filterCritera, setFilterCriteria] = useState(
       determineFilterCriteria(
         route,
@@ -330,16 +351,27 @@ const NewFocusWorkouts = ({route, navigation}) => {
       const sortedArr2 = [...arr2].sort();
       return sortedArr1.every((value, index) => value === sortedArr2[index]);
     };
-    const isFilterChanged = !arraysAreEqual(
-      filterCritera,
-      determineFilterCriteria(
-        route,
-        getUperBodyFilOption,
-        getLowerBodyFilOpt,
-        getCoreFiltOpt,
-        searchCriteria,
-      ),
-    );
+    const isFilterChanged =
+      !arraysAreEqual(
+        filterCritera,
+        determineFilterCriteria(
+          route,
+          getUperBodyFilOption,
+          getLowerBodyFilOpt,
+          getCoreFiltOpt,
+          searchCriteria,
+        ),
+      ) || adjustSelected !== getEquipmentExercise; // extra condition for adjust change detection
+    const adjustArray = [
+      {
+        image: localImage.Workout,
+        text: 'With Equipment',
+      },
+      {
+        image: require('../../Icon/Images/NewHome/WithoutEquipment.png'),
+        text: 'Without Equipment',
+      },
+    ];
     return (
       <>
         <RBSheet
@@ -357,23 +389,23 @@ const NewFocusWorkouts = ({route, navigation}) => {
               height:
                 route?.params?.focusedPart == 'Upper Body'
                   ? DeviceHeigth >= 1024
-                    ? DeviceHeigth * 0.45
+                    ? DeviceHeigth * 0.58
                     : DeviceHeigth >= 856
-                    ? DeviceHeigth * 0.55
+                    ? DeviceHeigth * 0.68
                     : DeviceHeigth <= 667
                     ? DeviceHeigth <= 625
-                      ? DeviceHeigth * 0.75
-                      : DeviceHeigth * 0.7
-                    : DeviceHeigth * 0.58
+                      ? DeviceHeigth * 0.88
+                      : DeviceHeigth * 0.83
+                    : DeviceHeigth * 0.71
                   : DeviceHeigth >= 1024
-                  ? DeviceHeigth * 0.32
+                  ? DeviceHeigth * 0.45
                   : DeviceHeigth >= 856
-                  ? DeviceHeigth * 0.4
+                  ? DeviceHeigth * 0.53
                   : DeviceHeigth <= 667
                   ? DeviceHeigth <= 625
-                    ? DeviceHeigth * 0.55
-                    : DeviceHeigth * 0.5
-                  : DeviceHeigth * 0.42,
+                    ? DeviceHeigth * 0.68
+                    : DeviceHeigth * 0.63
+                  : DeviceHeigth * 0.55,
             },
             draggableIcon: {
               width: 80,
@@ -528,18 +560,6 @@ const NewFocusWorkouts = ({route, navigation}) => {
                             }}>
                             {item.title}
                           </Text>
-                          <Text
-                            style={{
-                              color: '#333333CC',
-                              fontSize: 14,
-                              fontWeight: '500',
-                              lineHeight: 20,
-
-                              textAlign: 'center',
-                              fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                            }}>
-                            Exercise x {item.exCount}
-                          </Text>
                         </View>
                         <Icon
                           name={
@@ -577,6 +597,75 @@ const NewFocusWorkouts = ({route, navigation}) => {
               }}
             />
             <View style={{width: DeviceWidth * 0.9, alignSelf: 'center'}}>
+              <Text
+                style={{
+                  color: AppColor.BLACK,
+                  fontFamily: Fonts.HELVETICA_BOLD,
+                  fontSize: 16,
+                  marginBottom: 16,
+                }}>
+                Adjust
+              </Text>
+              <TouchableOpacity
+                activeOpacity={1}
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: 15,
+                }}
+                onPress={() => setAdjustSelelcted(prev => (prev == 0 ? 1 : 0))}>
+                {adjustArray.map((item, index) => (
+                  <View
+                    style={{
+                      width: DeviceWidth / 2.3,
+                      backgroundColor: '#F9F9F9',
+                      borderRadius: 10,
+                      borderWidth: 1.5,
+                      borderColor:
+                        adjustSelected == index ? AppColor.RED : '#F9F9F9',
+                    }}>
+                    <Image
+                      source={item.image}
+                      style={{
+                        width: 35,
+                        height: 35,
+                        alignSelf: 'center',
+                        marginTop: 12,
+                      }}
+                      tintColor={
+                        adjustSelected == index
+                          ? AppColor.RED
+                          : AppColor.SecondaryTextColor
+                      }
+                    />
+                    <Text
+                      style={{
+                        textAlign: 'center',
+                        color: AppColor.BLACK,
+                        fontFamily: Fonts.HELVETICA_BOLD,
+                        marginBottom: 12,
+                        marginTop: 4,
+                      }}>
+                      {item.text}
+                    </Text>
+                    <Icon
+                      style={{position: 'absolute', right: 12, top: 10}}
+                      name={
+                        adjustSelected == index
+                          ? 'check-circle'
+                          : 'checkbox-blank-circle-outline'
+                      }
+                      size={25}
+                      color={
+                        adjustSelected == index
+                          ? AppColor.RED
+                          : AppColor.SecondaryTextColor
+                      }
+                    />
+                  </View>
+                ))}
+              </TouchableOpacity>
               <TouchableOpacity
                 style={{
                   width: 150,
@@ -596,7 +685,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                   filterCritera.length === 0 || !isFilterChanged
                     ? console.log('clicked')
                     : AnalyticsConsole('RCL_BS_FW');
-                  filterExercises(exerciseData, filterCritera);
+                  filterExercises(exerciseData, filterCritera, adjustSelected);
                   handleFilterVisibilty();
                 }}>
                 <Text
@@ -780,40 +869,6 @@ const NewFocusWorkouts = ({route, navigation}) => {
             icon={route?.params?.focusedPart == 'Full Body' ? false : true}
             backButton
           />
-          {/* <DietPlanHeader
-          SearchButton={
-            route?.params?.focusedPart == 'Full Body' ? false : true
-          }
-          shadow
-          backPressCheck={true}
-          onPress={() => {
-            if (downloaded > 0) {
-              showMessage({
-                message:
-                  'Please wait, downloading in progress. Do not press back.',
-                type: 'info',
-                animationDuration: 500,
-                floating: true,
-                icon: {icon: 'auto', position: 'left'},
-              });
-            } else {
-              navigation?.goBack();
-            }
-          }}
-          onPressImage={() => {
-            AnalyticsConsole('O_BS_FW');
-            if (route?.params?.focusedPart == 'Upper Body') {
-              refStandard.current.open();
-            } else if (route?.params?.focusedPart == 'Lower Body') {
-              refStandard.current.open();
-            } else if (route?.params?.focusedPart == 'Core') {
-              refStandard.current.open();
-            } else {
-              refStandard.current.close();
-            }
-          }}
-          source={require('../../Icon/Images/NewImage2/filter.png')}
-        /> */}
           <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
           <View
             style={{
@@ -969,7 +1024,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                         </TouchableOpacity>
                       )}
                     </TouchableOpacity>
-                    {index !== exerciseData.length - 1 && (
+                    {index !== filterList.length - 1 && (
                       <View
                         style={{
                           width: '100%',

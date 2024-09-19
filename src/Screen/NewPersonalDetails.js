@@ -39,6 +39,8 @@ import ActivityLoader from '../Component/ActivityLoader';
 import {showMessage} from 'react-native-flash-message';
 import {AnalyticsConsole} from '../Component/AnalyticsConsole';
 import NewInputText from '../Component/NewInputText';
+import Wrapper from './WorkoutCompleteScreen/Wrapper';
+import NewHeader1 from '../Component/Headers/NewHeader1';
 import NewButton from '../Component/NewButton';
 
 const validationSchema = Yup.object().shape({
@@ -206,11 +208,6 @@ const NewPersonalDetails = ({route, navigation}) => {
           weight: getUserDataDetails?.weight,
           target_weight: values.targetWeight,
           email: values.email,
-          // focusarea:
-          //   values.focuseAres.length > 0
-          //     ? values.focuseAres.join(',')
-          //     : getUserDataDetails.focus_area,
-
           gender: values.gender,
           experience: getUserDataDetails.experience,
           workout_plans: values.workout_plans,
@@ -227,7 +224,6 @@ const NewPersonalDetails = ({route, navigation}) => {
 
         setForLoading(false);
         dispatch(setUserProfileData(dataItem.data.profile));
-        // dispatch(setCustomWorkoutData(dataItem?.data.allworkouts));
       } else if (
         dataItem?.data?.msg == 'Please update the app to the latest version.'
       ) {
@@ -266,56 +262,55 @@ const NewPersonalDetails = ({route, navigation}) => {
 
   return (
     <View style={styles.Container}>
-      <NewHeader header={'Details'} backButton />
-      <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      {forLoading ? <ActivityLoader /> : ''}
+      {forLoading ? <ActivityLoader /> : null}
+      <Wrapper>
+        <NewHeader1 header={'Details'} backButton />
+        <Formik
+          initialValues={{
+            name: getUserDataDetails?.name,
+            email: getUserDataDetails?.email,
+            gender: getUserDataDetails?.gender,
+            experience: getUserDataDetails?.experience,
+            workout_plans:
+              getUserDataDetails?.workout_plans == 'AppCreated'
+                ? 'Workout Created by Us'
+                : 'Custom Workout',
+            goal: getUserDataDetails?.goal_title,
+            // injury: getUserDataDetails?.injury,
 
-      <Formik
-        initialValues={{
-          name: getUserDataDetails?.name,
-          email: getUserDataDetails?.email,
-          gender: getUserDataDetails?.gender,
-          experience: getUserDataDetails?.experience,
-          workout_plans:
-            getUserDataDetails?.workout_plans == 'AppCreated'
-              ? 'Workout Created by Us'
-              : 'Custom Workout',
-          goal: getUserDataDetails?.goal_title,
-          // injury: getUserDataDetails?.injury,
-
-          targetWeight: getUserDataDetails?.target_weight,
-          equipment: getUserDataDetails?.equipment,
-          focuseAres: [],
-          workPlace: getUserDataDetails?.workoutarea,
-        }}
-        onSubmit={(values, action) => {
-          handleFormSubmit(values, action);
-        }}
-        validationSchema={validationSchema}>
-        {({
-          values,
-          handleChange,
-          handleSubmit,
-          handleBlur,
-          errors,
-          touched,
-          dirty,
-          setFieldValue,
-        }) => (
-          <>
-            <View style={{flex: 8.5}}>
-              <ScrollView
-                keyboardDismissMode="interactive"
-                showsVerticalScrollIndicator={false}
-                keyboardShouldPersistTaps="handled">
-                <KeyboardAvoidingView
-                  behavior={Platform.OS == 'ios' ? 'padding' : undefined}>
-                  <View
-                    style={{
-                      paddingTop: 5,
-                      marginLeft: 10,
-                    }}>
-                    {/* <InputText
+            targetWeight: getUserDataDetails?.target_weight,
+            equipment: getUserDataDetails?.equipment,
+            focuseAres: [],
+            workPlace: getUserDataDetails?.workoutarea,
+          }}
+          onSubmit={(values, action) => {
+            handleFormSubmit(values, action);
+          }}
+          validationSchema={validationSchema}>
+          {({
+            values,
+            handleChange,
+            handleSubmit,
+            handleBlur,
+            errors,
+            touched,
+            dirty,
+            setFieldValue,
+          }) => (
+            <>
+              <View style={{flex: 8.5}}>
+                <ScrollView
+                  keyboardDismissMode="interactive"
+                  showsVerticalScrollIndicator={false}
+                  keyboardShouldPersistTaps="handled">
+                  <KeyboardAvoidingView
+                    behavior={Platform.OS == 'ios' ? 'padding' : undefined}>
+                    <View
+                      style={{
+                        paddingTop: 5,
+                        marginLeft: 10,
+                      }}>
+                      {/* <InputText
                       errors={errors.name}
                       ref={inputRef}
                       touched={touched.name}
@@ -353,240 +348,67 @@ const NewPersonalDetails = ({route, navigation}) => {
                       editable={isEditible}
                       placeholder="Full Name"
                     /> */}
-                    <NewInputText
-                      errors={errors.name}
-                      touched={touched.name}
-                      value={values.name}
-                      onBlur={handleBlur('name')}
-                      onChangeText={handleChange('name')}
-                      colorText={false}
-                      placeholder="Full Name"
-                      label="Full Name"
-                    />
-                  </View>
-                  <View
-                    style={{
-                      marginTop: DeviceHeigth * 0.02,
-                      marginLeft: 10,
-                    }}>
-                    <InputText
-                      errors={errors.email}
-                      touched={touched.email}
-                      onBlur={handleBlur('email')}
-                      value={values.email}
-                      onChangeText={handleChange('email')}
-                      label="Email"
-                      placeholder="Enter Email id"
-                      editable={Platform.OS == 'ios' ? true : false}
-                    />
-                  </View>
-                  <View
-                    style={{
-                      marginTop: DeviceHeigth * 0.02,
-                      marginLeft: 10,
-                    }}>
-                    <InputText
-                      errors={errors.gender}
-                      touched={touched.gender}
-                      onBlur={handleBlur('gender')}
-                      value={values.gender}
-                      onChangeText={handleChange('gender')}
-                      label="Gender"
-                      placeholder={getUserDataDetails?.gender}
-                      editable={false}
-                    />
-                  </View>
-                  <View
-                    style={{
-                      marginTop: DeviceHeigth * 0.02,
-                      marginLeft: 10,
-                      marginBottom: 10,
-                    }}>
-                    <InputText
-                      errors={errors.experience}
-                      touched={touched.experience}
-                      onBlur={handleBlur('experience')}
-                      value={values.experience}
-                      onChangeText={handleChange('experience')}
-                      label="Fitness Level"
-                      placeholder={getUserDataDetails?.experience}
-                      editable={false}
-                    />
-                  </View>
-                  {values.experience == 'Beginner' && (
-                    <>
-                      <View
-                        style={{
-                          marginTop: DeviceHeigth * 0.02,
-
-                          alignItems: 'center',
-                        }}>
-                        {renderLabel('Fitness Goal')}
-
-                        <Dropdown
-                          style={[styles.dropdown]}
-                          placeholderStyle={styles.placeholderStyle}
-                          itemTextStyle={{color: AppColor.BLACK}}
-                          selectedTextStyle={styles.selectedTextStyle}
-                          data={goalsData}
-                          labelField="goal_title"
-                          valueField="goal_title"
-                          placeholder={getUserDataDetails?.goal_title}
-                          value={values.goal}
-                          onFocus={() => setIsFocus(true)}
-                          onBlur={() => setIsFocus(false)}
-                          onChange={item => {
-                            setFieldValue('goal', item.goal_title);
-                          }}
-                        />
-                      </View>
-                      {/* <View
-                        style={{
-                          marginTop: DeviceHeigth * 0.02,
-
-                          alignItems: 'center',
-                        }}>
-                        {renderLabel('Injuries In Body Part')}
-                        <Dropdown
-                          style={[styles.dropdown]}
-                          placeholderStyle={styles.placeholderStyle}
-                          selectedTextStyle={styles.selectedTextStyle}
-                          itemTextStyle={{color: AppColor.BLACK}}
-                          data={injury}
-                          labelField="injury_title"
-                          valueField="injury_title"
-                          placeholder={getUserDataDetails?.injury}
-                          value={values.injury}
-                          onFocus={() => setIsFocus(true)}
-                          onBlur={() => setIsFocus(false)}
-                          onChange={item => {
-                            setFieldValue('injury', item.injury_title);
-                          }}
-                        />
-                      </View> */}
-
-                      <View
-                        style={{
-                          marginTop: DeviceHeigth * 0.02,
-                          marginLeft: 10,
-                          paddingBottom: DeviceHeigth * 0.05,
-                        }}>
-                        <InputText
-                          errors={errors.targetWeight}
-                          touched={touched.targetWeight}
-                          value={values.targetWeight}
-                          onBlur={handleBlur('targetWeight')}
-                          onChangeText={handleChange('targetWeight')}
-                          label="Target Weight"
-                          placeholder="Target Weight"
-                        />
-                      </View>
-                      {/* <View
-                        style={{
-                          marginTop: DeviceHeigth * 0.02,
-
-                          alignItems: 'center',
-                        }}>
-                        {renderLabel('Choose Your Type')}
-
-                        <Dropdown
-                          style={[styles.dropdown]}
-                          placeholderStyle={styles.placeholderStyle}
-                          selectedTextStyle={styles.selectedTextStyle}
-                          itemTextStyle={{color: AppColor.BLACK}}
-                          data={equipment}
-                          labelField="label"
-                          valueField="value"
-                          placeholder={getUserDataDetails?.equipment}
-                          value={values.equipment}
-                          onFocus={() => setIsFocus(true)}
-                          onBlur={() => setIsFocus(false)}
-                          onChange={item => {
-                            setFieldValue('equipment', item.value);
-                          }}
-                        />
-                      </View> */}
-                      {/* <View
-                        style={{
-                          marginTop: DeviceHeigth * 0.02,
-
-                          alignItems: 'center',
-                        }}>
-                        {renderLabel('Focus Area')}
-                        <MultiSelect
-                          style={[styles.dropdown]}
-                          placeholderStyle={styles.placeholderStyle}
-                          selectedTextStyle={styles.selectedTextStyle}
-                          itemTextStyle={{color: AppColor.BLACK}}
-                          data={focusarea}
-                          labelField="label"
-                          valueField="value"
-                          placeholder={getUserDataDetails?.focusarea_title}
-                          value={values.focuseAres}
-                          onFocus={() => setIsFocus(true)}
-                          onBlur={() => setIsFocus(false)}
-                          onChange={item => {
-                            setFieldValue('focuseAres', item);
-                          }}
-                          selectedStyle={styles.selectedStyle}
-                        />
-                      </View> */}
-                      {/* <View
-                        style={{
-                          marginTop: DeviceHeigth * 0.02,
-
-                          alignItems: 'center',
-                        }}>
-                        {renderLabel('Comfort Place')}
-                        <Dropdown
-                          style={[styles.dropdown]}
-                          placeholderStyle={styles.placeholderStyle}
-                          selectedTextStyle={styles.selectedTextStyle}
-                          itemTextStyle={{color: AppColor.BLACK}}
-                          data={workoutarea}
-                          labelField="workoutarea_title"
-                          valueField="workoutarea_title"
-                          placeholder={getUserDataDetails?.workoutarea}
-                          value={values.workPlace}
-                          onFocus={() => setIsFocus(true)}
-                          onBlur={() => setIsFocus(false)}
-                          onChange={item => {
-                            setFieldValue('workPlace', item.workoutarea_title);
-                          }}
-                        />
-                      </View> */}
-                    </>
-                  )}
-                  {values.experience == 'Experienced' && (
+                      <NewInputText
+                        errors={errors.name}
+                        touched={touched.name}
+                        value={values.name}
+                        onBlur={handleBlur('name')}
+                        onChangeText={handleChange('name')}
+                        colorText={false}
+                        placeholder="Full Name"
+                        label="Full Name"
+                      />
+                    </View>
                     <View
                       style={{
                         marginTop: DeviceHeigth * 0.02,
-
-                        alignItems: 'center',
+                        marginLeft: 10,
                       }}>
-                      {renderLabel('Workout Plan')}
-
-                      <Dropdown
-                        style={[styles.dropdown]}
-                        placeholderStyle={styles.placeholderStyle}
-                        selectedTextStyle={styles.selectedTextStyle}
-                        itemTextStyle={{color: AppColor.BLACK}}
-                        data={workout_plans}
-                        labelField="label"
-                        valueField="label"
-                        placeholder={getUserDataDetails?.workout_plans}
-                        value={values.workout_plans}
-                        onFocus={() => setIsFocus(true)}
-                        onBlur={() => setIsFocus(false)}
-                        onChange={item => {
-                          setFieldValue('workout_plans', item.value);
-                        }}
+                      <InputText
+                        errors={errors.email}
+                        touched={touched.email}
+                        onBlur={handleBlur('email')}
+                        value={values.email}
+                        onChangeText={handleChange('email')}
+                        label="Email"
+                        placeholder="Enter Email id"
+                        editable={Platform.OS == 'ios' ? true : false}
                       />
                     </View>
-                  )}
-
-                  {values.workout_plans == 'AppCreated' &&
-                    values.experience == 'Experienced' && (
+                    <View
+                      style={{
+                        marginTop: DeviceHeigth * 0.02,
+                        marginLeft: 10,
+                      }}>
+                      <InputText
+                        errors={errors.gender}
+                        touched={touched.gender}
+                        onBlur={handleBlur('gender')}
+                        value={values.gender}
+                        onChangeText={handleChange('gender')}
+                        label="Gender"
+                        placeholder={getUserDataDetails?.gender}
+                        editable={false}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        marginTop: DeviceHeigth * 0.02,
+                        marginLeft: 10,
+                        marginBottom: 10,
+                      }}>
+                      <InputText
+                        errors={errors.experience}
+                        touched={touched.experience}
+                        onBlur={handleBlur('experience')}
+                        value={values.experience}
+                        onChangeText={handleChange('experience')}
+                        label="Fitness Level"
+                        placeholder={getUserDataDetails?.experience}
+                        editable={false}
+                      />
+                    </View>
+                    {values.experience == 'Beginner' && (
                       <>
                         <View
                           style={{
@@ -604,11 +426,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                             data={goalsData}
                             labelField="goal_title"
                             valueField="goal_title"
-                            placeholder={
-                              getUserDataDetails?.goal_title == null
-                                ? 'Select Fitness Goal'
-                                : getUserDataDetails?.goal_title
-                            }
+                            placeholder={getUserDataDetails?.goal_title}
                             value={values.goal}
                             onFocus={() => setIsFocus(true)}
                             onBlur={() => setIsFocus(false)}
@@ -617,175 +435,136 @@ const NewPersonalDetails = ({route, navigation}) => {
                             }}
                           />
                         </View>
-                        {/* <View
-                          style={{
-                            marginTop: DeviceHeigth * 0.02,
-
-                            alignItems: 'center',
-                          }}>
-                          {renderLabel('Injuries In Body Part')}
-                          <Dropdown
-                            style={[styles.dropdown]}
-                            placeholderStyle={styles.placeholderStyle}
-                            selectedTextStyle={styles.selectedTextStyle}
-                            itemTextStyle={{color: AppColor.BLACK}}
-                            data={injury}
-                            labelField="injury_title"
-                            valueField="injury_title"
-                            placeholder={
-                              getUserDataDetails?.injury == 'null'
-                                ? 'Select Injuries'
-                                : getUserDataDetails?.injury
-                            }
-                            value={values.injury}
-                            onFocus={() => setIsFocus(true)}
-                            onBlur={() => setIsFocus(false)}
-                            onChange={item => {
-                              setFieldValue('injury', item.injury_title);
-                            }}
-                          />
-                        </View> */}
-
                         <View
                           style={{
                             marginTop: DeviceHeigth * 0.02,
                             marginLeft: 10,
                             paddingBottom: DeviceHeigth * 0.05,
+                            marginBottom: 10,
                           }}>
                           <InputText
                             errors={errors.targetWeight}
                             touched={touched.targetWeight}
-                            value={
-                              values?.targetWeight == 'undefined'
-                                ? 0
-                                : values?.targetWeight
-                            }
+                            value={values.targetWeight}
                             onBlur={handleBlur('targetWeight')}
                             onChangeText={handleChange('targetWeight')}
                             label="Target Weight"
-                            keyboardType="number-pad"
                             placeholder="Target Weight"
                           />
                         </View>
-                        {/* <View
-                          style={{
-                            marginTop: DeviceHeigth * 0.02,
-
-                            alignItems: 'center',
-                          }}>
-                          {renderLabel('Choose Your Type')}
-
-                          <Dropdown
-                            style={[styles.dropdown]}
-                            placeholderStyle={styles.placeholderStyle}
-                            selectedTextStyle={styles.selectedTextStyle}
-                            itemTextStyle={{color: AppColor.BLACK}}
-                            data={equipment}
-                            labelField="label"
-                            valueField="value"
-                            placeholder={
-                              getUserDataDetails?.equipment == 'undefined'
-                                ? 'Choose Your Type'
-                                : getUserDataDetails?.equipment
-                            }
-                            value={values.equipment}
-                            onFocus={() => setIsFocus(true)}
-                            onBlur={() => setIsFocus(false)}
-                            onChange={item => {
-                              setFieldValue('equipment', item.value);
-                            }}
-                          />
-                        </View> */}
-
-                        {/* <View
-                          style={{
-                            marginTop: DeviceHeigth * 0.02,
-
-                            alignItems: 'center',
-                          }}>
-                          {renderLabel('Focus Area')}
-                          <MultiSelect
-                            style={[styles.dropdown]}
-                            placeholderStyle={styles.placeholderStyle}
-                            selectedTextStyle={styles.selectedTextStyle}
-                            itemTextStyle={{color: AppColor.BLACK}}
-                            data={focusarea}
-                            labelField="label"
-                            valueField="value"
-                            placeholder={
-                              getUserDataDetails?.focusarea_title == null
-                                ? 'Select Focus Area'
-                                : getUserDataDetails?.focusarea_title
-                            }
-                            value={values.focuseAres}
-                            onFocus={() => setIsFocus(true)}
-                            onBlur={() => setIsFocus(false)}
-                            onChange={item => {
-                              setFieldValue('focuseAres', item);
-                            }}
-                            selectedStyle={styles.selectedStyle}
-                          />
-                        </View> */}
-                        {/* <View
-                          style={{
-                            marginTop: DeviceHeigth * 0.02,
-
-                            alignItems: 'center',
-                          }}>
-                          {renderLabel('Comfort Place')}
-                          <Dropdown
-                            style={[styles.dropdown]}
-                            placeholderStyle={styles.placeholderStyle}
-                            selectedTextStyle={styles.selectedTextStyle}
-                            itemTextStyle={{color: AppColor.BLACK}}
-                            data={workoutarea}
-                            labelField="workoutarea_title"
-                            valueField="workoutarea_title"
-                            placeholder={
-                              getUserDataDetails?.workoutarea == 'null'
-                                ? 'Select Comfort Place'
-                                : getUserDataDetails?.workoutarea
-                            }
-                            value={values.workPlace}
-                            onFocus={() => setIsFocus(true)}
-                            onBlur={() => setIsFocus(false)}
-                            onChange={item => {
-                              setFieldValue(
-                                'workPlace',
-                                item.workoutarea_title,
-                              );
-                            }}
-                          />
-                        </View> */}
                       </>
                     )}
-                </KeyboardAvoidingView>
-              </ScrollView>
-            </View>
-            <View
-              style={{
-                flex: 1.5,
+                    {values.experience == 'Experienced' && (
+                      <View
+                        style={{
+                          marginTop: DeviceHeigth * 0.02,
 
-                justifyContent: 'center',
-              }}>
-              <NewButton
-                title={'Update Profile'}
-                onPress={handleSubmit}
-                disabled={!dirty}
-                ButtonWidth={DeviceWidth * 0.6}
-                buttonColor={dirty ? AppColor.RED : '#33333380'}
-              />
-            </View>
-          </>
-        )}
-      </Formik>
+                          alignItems: 'center',
+                        }}>
+                        {renderLabel('Workout Plan')}
+
+                        <Dropdown
+                          style={[styles.dropdown]}
+                          placeholderStyle={styles.placeholderStyle}
+                          selectedTextStyle={styles.selectedTextStyle}
+                          itemTextStyle={{color: AppColor.BLACK}}
+                          data={workout_plans}
+                          labelField="label"
+                          valueField="label"
+                          placeholder={getUserDataDetails?.workout_plans}
+                          value={values.workout_plans}
+                          onFocus={() => setIsFocus(true)}
+                          onBlur={() => setIsFocus(false)}
+                          onChange={item => {
+                            setFieldValue('workout_plans', item.value);
+                          }}
+                        />
+                      </View>
+                    )}
+
+                    {values.workout_plans == 'AppCreated' &&
+                      values.experience == 'Experienced' && (
+                        <>
+                          <View
+                            style={{
+                              marginTop: DeviceHeigth * 0.02,
+
+                              alignItems: 'center',
+                            }}>
+                            {renderLabel('Fitness Goal')}
+
+                            <Dropdown
+                              style={[styles.dropdown]}
+                              placeholderStyle={styles.placeholderStyle}
+                              itemTextStyle={{color: AppColor.BLACK}}
+                              selectedTextStyle={styles.selectedTextStyle}
+                              data={goalsData}
+                              labelField="goal_title"
+                              valueField="goal_title"
+                              placeholder={
+                                getUserDataDetails?.goal_title == null
+                                  ? 'Select Fitness Goal'
+                                  : getUserDataDetails?.goal_title
+                              }
+                              value={values.goal}
+                              onFocus={() => setIsFocus(true)}
+                              onBlur={() => setIsFocus(false)}
+                              onChange={item => {
+                                setFieldValue('goal', item.goal_title);
+                              }}
+                            />
+                          </View>
+                          <View
+                            style={{
+                              marginTop: DeviceHeigth * 0.02,
+                              marginLeft: 10,
+                              paddingBottom: DeviceHeigth * 0.05,
+                            }}>
+                            <InputText
+                              errors={errors.targetWeight}
+                              touched={touched.targetWeight}
+                              value={
+                                values?.targetWeight == 'undefined'
+                                  ? 0
+                                  : values?.targetWeight
+                              }
+                              onBlur={handleBlur('targetWeight')}
+                              onChangeText={handleChange('targetWeight')}
+                              label="Target Weight"
+                              keyboardType="number-pad"
+                              placeholder="Target Weight"
+                            />
+                          </View>
+                        </>
+                      )}
+                  </KeyboardAvoidingView>
+                </ScrollView>
+              </View>
+              <View
+                style={{
+                  flex: 1.5,
+
+                  justifyContent: 'center',
+                }}>
+                <NewButton
+                  title={'Update Profile'}
+                  onPress={handleSubmit}
+                  disabled={!dirty}
+                  ButtonWidth={DeviceWidth * 0.6}
+                  buttonColor={dirty ? AppColor.RED : '#33333380'}
+                />
+              </View>
+            </>
+          )}
+        </Formik>
+      </Wrapper>
     </View>
   );
 };
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: 'blue',
   },
   dropdown: {
     height: 55,

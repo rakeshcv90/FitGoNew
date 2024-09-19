@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import React, {useEffect, useRef, useState, useCallback} from 'react';
-import {AppColor, Fonts} from '../../Component/Color';
+import {AppColor, Fonts, PLATFORM_IOS} from '../../Component/Color';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {localImage} from '../../Component/Image';
 import {useDispatch, useSelector} from 'react-redux';
@@ -34,10 +34,11 @@ import {
   setIsAlarmEnabled,
   Setmealdata,
   setOfferAgreement,
+  setPermissionIos,
   setPlanType,
+  setPopUpSeen,
   setPurchaseHistory,
   setRewardModal,
-  setRewardPopUp,
   setStoreData,
   setUserProfileData,
   setWeeklyPlansData,
@@ -77,6 +78,8 @@ import Reanimated, {
 } from 'react-native-reanimated';
 import WinnerView from '../../Component/NewHomeUtilities/WinnerView';
 import NewBanner from '../../Component/NewHomeUtilities/NewBanner';
+import LeaderBoardProgressComopnent from '../Leaderboard/LeaderBoardProgressComopnent';
+import PastWinnersComponent from '../Leaderboard/PastWinnersComponent';
 
 const WeekArrayWithEvent = Array(5)
   .fill(0)
@@ -96,7 +99,6 @@ const NewHome = ({navigation}) => {
     state => state?.enteredUpcomingEvent,
   );
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
-  const getPopUpFreuqency = useSelector(state => state?.getPopUpFreuqency);
   const fitCoins = useSelector(state => state.fitCoins);
   const [locationP1, setLocationP1] = useState(false);
   const [currentChallenge, setCurrentChallenge] = useState([]);
@@ -116,7 +118,12 @@ const NewHome = ({navigation}) => {
   const [myRank, setMyRank] = useState(0);
   const [coins, setCoins] = useState({});
   const [winnerAnnounce, setWinnerAnnounce] = useState();
-
+  const getPopUpSeen = useSelector(state => state?.getPopUpSeen);
+  const getPermissionIos = useSelector(state => state?.getPermissionIos);
+  const getWeeklyPlansData = useSelector(state => state?.getWeeklyPlansData);
+  const getEquipmentExercise = useSelector(
+    state => state?.getEquipmentExercise,
+  );
   useEffect(() => {
     if (isFocused) {
       getAllChallangeAndAllExerciseData();
@@ -126,12 +133,19 @@ const NewHome = ({navigation}) => {
     }
   }, [isFocused]);
   useEffect(() => {
+    getWeeklyAPI();
     const timer = setTimeout(() => {
       setShowRewardModal(getRewardModalStatus);
     }, 3000);
     return () => clearTimeout(timer);
   }, []);
-
+  useEffect(() => {
+    setTimeout(() => {
+      if (Platform.OS == 'android' && !getPopUpSeen) {
+        dispatch(setPermissionIos(true));
+      }
+    }, 1000);
+  }, []);
   useEffect(() => {
     if (!isAlarmEnabled) {
       notifee.getTriggerNotificationIds().then(res => console.log(res, 'ISDA'));
@@ -155,7 +169,6 @@ const NewHome = ({navigation}) => {
   const shimmerStyle = useAnimatedStyle(() => ({
     transform: [{translateX: shimmerValue.value * 10}],
   }));
-
   useEffect(() => {
     shimmerValue.value = withRepeat(
       withTiming(100, {duration: 1500}),
@@ -163,7 +176,34 @@ const NewHome = ({navigation}) => {
       false,
     );
   }, []);
-
+  const getWeeklyAPI = async () => {
+    try {
+      const res = await axios(`${NewAppapi.NEW_WEEKDAY_EXERCISE_API}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          version: VersionNumber.appVersion,
+          user_id: getUserDataDetails?.id,
+          equipment: getEquipmentExercise == 1 ? 'no' : 'yes',
+        },
+      });
+      if (res.data?.msg == 'User not exist.') {
+        showMessage({
+          message: res?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else {
+        dispatch(setWeeklyPlansData(res?.data));
+      }
+    } catch (error) {
+      console.error(error.response, 'DaysAPIERror');
+    }
+  };
   const getEarnedCoins = async () => {
     // const url =
     //   'https://fitme.cvinfotechserver.com/adserver/public/api/test_exercise_points_day';
@@ -513,7 +553,8 @@ const NewHome = ({navigation}) => {
                     style={{height: 20, width: 20}}
                     resizeMode="contain"
                   />
-                  <Text style={styles.cointxt}>
+                  <Text
+                    style={[styles.cointxt, {color: AppColor.orangeColor1}]}>
                     {fitCoins <= 0 ? 0 : fitCoins}
                   </Text>
                 </TouchableOpacity>
@@ -648,7 +689,15 @@ const NewHome = ({navigation}) => {
         {winnerAnnounce?.winner_announced == true ? (
           <WinnerView totalData={totalData} />
         ) : enteredCurrentEvent ? (
-          (Sat || Sun) != true && <MyChallenge coins={coins} />
+          (Sat || Sun) != true && (
+            <LeaderBoardProgressComopnent
+              coins={coins}
+              weekArray={WeekArrayWithEvent}
+              getPurchaseHistory={getPurchaseHistory}
+              getWeeklyPlansData={getWeeklyPlansData}
+              navigation={navigation}
+            />
+          )
         ) : (
           <NewBanner
             purchaseHistory={getPurchaseHistory}
@@ -660,9 +709,12 @@ const NewHome = ({navigation}) => {
             enteredUpcomingEvent={enteredUpcomingEvent}
           />
         )}
-
-        <WithoutEvent pastWinners={getPastWinners || []} />
-
+        <View style={{marginTop: 8}}>
+          <PastWinnersComponent
+            pastWinners={getPastWinners}
+            navigation={navigation}
+          />
+        </View>
         {currentChallenge?.length > 0 && (
           <WorkoutChallengeZone day={day} currentChallenge={currentChallenge} />
         )}
@@ -689,16 +741,18 @@ const NewHome = ({navigation}) => {
 
         // }}
       />
-      {/* {getOfferAgreement?.location === 'India' ||
-      getOfferAgreement?.location == 'United States' ? (
-        (getPopUpFreuqency == 6 || getPopUpFreuqency % 5 == 0) &&
-        !enteredUpcomingEvent ? (
+      {(getOfferAgreement?.location === 'India' ||
+        getOfferAgreement?.location == 'United States') &&
+        !enteredUpcomingEvent &&
+        getPermissionIos && (
           <UpcomingEventModal
-            visible={true}
+            visible={!getPopUpSeen}
             onConfirm={() => {
               AnalyticsConsole('U_E');
               if (getPurchaseHistory) {
                 if (getPurchaseHistory.plan === 'noob') {
+                  dispatch(setPopUpSeen(true));
+                  dispatch(setPermissionIos(false));
                   navigation?.navigate('NewSubscription', {upgrade: true});
                   showMessage({
                     message:
@@ -708,31 +762,33 @@ const NewHome = ({navigation}) => {
                     floating: true,
                     icon: {icon: 'auto', position: 'left'},
                   });
-                  dispatch(setRewardPopUp(1));
                 } else if (
                   getPurchaseHistory.plan !== 'noob' &&
                   getPurchaseHistory.used_plan < getPurchaseHistory.allow_usage
                 ) {
+                  dispatch(setPopUpSeen(true));
+                  dispatch(setPermissionIos(false));
                   navigation?.navigate('UpcomingEvent', {
                     eventType: 'upcoming',
                   });
-                  dispatch(setRewardPopUp(1));
                 } else {
+                  dispatch(setPopUpSeen(true));
+                  dispatch(setPermissionIos(false));
                   navigation?.navigate('NewSubscription', {upgrade: true});
-                  dispatch(setRewardPopUp(1));
                 }
               } else {
+                dispatch(setPopUpSeen(true));
+                dispatch(setPermissionIos(false));
                 navigation?.navigate('NewSubscription', {upgrade: true});
-                dispatch(setRewardPopUp(1));
               }
             }}
             onCancel={() => {
               AnalyticsConsole('JNC_D_B');
-              dispatch(setRewardPopUp(1));
+              dispatch(setPopUpSeen(true));
+              dispatch(setPermissionIos(false));
             }}
           />
-        ) : null
-      ) : null} */}
+        )}
       <LocationPermissionModal
         locationP={locationP1}
         setLocationP={setLocationP1}

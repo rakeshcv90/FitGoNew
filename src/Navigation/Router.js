@@ -2,22 +2,17 @@ import React from 'react';
 import SplaceScreen from '../Screen/SplaceScreen';
 import TermaAndCondition from '../Screen/TermaAndCondition';
 import Yourself from '../Screen/Yourself/Index';
-
 import Gender from '../Screen/Yourself/Gender';
-
 import Height from '../Screen/Yourself/Height';
 import Weight from '../Screen/Yourself/Weight';
 import IntroductionScreen1 from '../Screen/Introduction/IntroductionScreen1';
 import IntroductionScreen2 from '../Screen/Introduction/IntroductionScreen2';
 import IntroductionScreen3 from '../Screen/Introduction/IntroductionScreen3';
 import LogSignUp from '../Screen/LogSignUp';
-
 import NewPersonalDetails from '../Screen/NewPersonalDetails';
-
 import Age from '../Screen/Yourself/Age';
 import Goal from '../Screen/Yourself/Goal';
 import LoadData from '../Screen/Yourself/LoadData';
-
 import BottomTab from './BottomTab';
 import WorkoutDescription from '../Screen/NewWorkouts/WorkoutsDescription';
 import WorkoutDays from '../Screen/NewWorkouts/WorkoutDays';
@@ -25,19 +20,15 @@ import OneDay from '../Screen/NewWorkouts/OneDay';
 import Exercise from '../Screen/NewWorkouts/Exercise/Exercise';
 import SaveDayExercise from '../Screen/NewWorkouts/Exercise/SaveDayExercise';
 import DayRewards from '../Screen/NewWorkouts/Exercise/DayRewards';
-
 import Meals from '../Screen/NewHome/Meals';
 import MealDetails from '../Screen/NewHome/MealDetails';
 import MeditationDetails from '../Screen/NewHome/MeditationDetails';
 import MeditationExerciseDetails from '../Screen/NewHome/MeditationExerciseDetails';
 import AITrainer from '../Screen/NewHome/AITrainer';
 import AIMessageHistory from '../Screen/NewHome/AIMessageHistory';
-
 import NewMonthlyAchievement from '../Screen/NewHome/NewMonthlyAchievement';
-
 import {createStackNavigator} from '@react-navigation/stack';
 import StoreScreen from '../Screen/NewHome/StoreScreen';
-
 import CustomWorkout from '../Screen/CustomWorkout/CustomWorkout';
 import CustomWorkoutDetails from '../Screen/CustomWorkout/CustomWorkoutDetails';
 import CreateWorkout from '../Screen/CustomWorkout/CreateWorkout';
@@ -51,7 +42,6 @@ import WorkoutDetail from '../Screen/CustomWorkout/WorkoutDetail';
 import PredictionScreen from '../Screen/Yourself/PredictionScreen';
 import GymListing from '../Screen/GymListing/GymListing';
 import Trainer from '../Screen/NewHome/Trainer';
-import HomeNew from '../Screen/NewHome/HomeNew';
 import LetsStart from '../Screen/LetsStart';
 import NewFocusWorkouts from '../Screen/FocusArea/NewFocusWorkouts';
 
@@ -176,7 +166,6 @@ export const LoginStack = () => {
       <Stack.Screen name="WorkoutDetail" component={WorkoutDetail} />
       <Stack.Screen name="GymListing" component={GymListing} />
       <Stack.Screen name="Trainer" component={Trainer} />
-      <Stack.Screen name="Home" component={HomeNew} />
       <Stack.Screen name="LetsStart" component={LetsStart} />
       <Stack.Screen name="NewFocusWorkouts" component={NewFocusWorkouts} />
       <Stack.Screen name="WorkoutCategories" component={WorkoutCategories} />

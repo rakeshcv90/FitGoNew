@@ -27,8 +27,6 @@ import VersionNumber from 'react-native-version-number';
 import {
   setAllExercise,
   setChallengesData,
-  setPopUpSeen,
-  setRewardPopUp,
 } from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
@@ -59,28 +57,11 @@ const CustomWorkout = ({navigation}) => {
   const isFocused = useIsFocused();
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
-  const getPopUpSeen = useSelector(state => state?.getPopUpSeen);
-  const getPopUpFreuqency = useSelector(state => state?.getPopUpFreuqency);
-  const getOfferAgreement = useSelector(state => state?.getOfferAgreement);
-  const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
-  const enteredUpcomingEvent = useSelector(
-    state => state?.enteredUpcomingEvent,
-  );
-  useEffect(() => {
-    if (isFocused) {
-      setTimeout(() => {
-        if (
-          (!enteredCurrentEvent && !enteredUpcomingEvent) ||
-          (!enteredUpcomingEvent && enteredCurrentEvent)
-        ) {
-          dispatch(setRewardPopUp(getPopUpFreuqency + 1));
-        }
-      }, 1000);
-
-      // getAllExerciseData();
-      getAllChallangeAndAllExerciseData();
-    }
-  }, [isFocused]);
+  // useEffect(() => {
+  //   if (isFocused) {
+  //     getAllChallangeAndAllExerciseData();
+  //   }
+  // }, [isFocused]);
   const askPermissionForLibrary = async permission => {
     const resultLib = await request(permission);
 
@@ -232,16 +213,15 @@ const CustomWorkout = ({navigation}) => {
   };
   const getNativeAdsDisplay = () => {
     if (getPurchaseHistory?.plan != null) {
-        return (
-          <View
-            style={{
-              alignSelf: 'center',
-              alignItems: 'center',
-            }}>
-            <NativeAddTest type="image" media={false} />
-          </View>
-        );
-      
+      return (
+        <View
+          style={{
+            alignSelf: 'center',
+            alignItems: 'center',
+          }}>
+          <NativeAddTest type="image" media={false} />
+        </View>
+      );
     } else {
       return (
         <View
@@ -394,35 +374,35 @@ const CustomWorkout = ({navigation}) => {
     }
   };
 
-  const getAllChallangeAndAllExerciseData = async () => {
-    let responseData = 0;
-    if (Object.keys(getUserDataDetails).length > 0) {
-      try {
-        responseData = await axios.get(
-          `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
-        );
-        dispatch(setChallengesData(responseData.data.challenge_data));
-        dispatch(setAllExercise(responseData.data.data));
-      } catch (error) {
-        console.log('GET-USER-Challange and AllExerciseData DATA', error);
-        dispatch(setChallengesData([]));
-        dispatch(setAllExercise([]));
-      }
-    } else {
-      try {
-        responseData = await axios.get(
-          `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}`,
-        );
-        dispatch(setChallengesData(responseData.data.challenge_data));
-        dispatch(setAllExercise(responseData.data.data));
-      } catch (error) {
-        dispatch(setChallengesData([]));
-        dispatch(setAllExercise([]));
+  // const getAllChallangeAndAllExerciseData = async () => {
+  //   let responseData = 0;
+  //   if (Object.keys(getUserDataDetails).length > 0) {
+  //     try {
+  //       responseData = await axios.get(
+  //         `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
+  //       );
+  //       dispatch(setChallengesData(responseData.data.challenge_data));
+  //       dispatch(setAllExercise(responseData.data.data));
+  //     } catch (error) {
+  //       console.log('GET-USER-Challange and AllExerciseData DATA', error);
+  //       dispatch(setChallengesData([]));
+  //       dispatch(setAllExercise([]));
+  //     }
+  //   } else {
+  //     try {
+  //       responseData = await axios.get(
+  //         `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}`,
+  //       );
+  //       dispatch(setChallengesData(responseData.data.challenge_data));
+  //       dispatch(setAllExercise(responseData.data.data));
+  //     } catch (error) {
+  //       dispatch(setChallengesData([]));
+  //       dispatch(setAllExercise([]));
 
-        console.log('GET-USER-Challange and AllExerciseData DATA', error);
-      }
-    }
-  };
+  //       console.log('GET-USER-Challange and AllExerciseData DATA', error);
+  //     }
+  //   }
+  // };
 
   return (
     <>
@@ -466,7 +446,6 @@ const CustomWorkout = ({navigation}) => {
         onRequestClose={() => {
           setIsCustomWorkout(!isCustomWorkout);
         }}>
-        {/* <BlurView style={styles.modalContainer} blurType="light" blurAmount={1}> */}
         <TouchableOpacity
           style={{
             flex: 1,
@@ -474,7 +453,6 @@ const CustomWorkout = ({navigation}) => {
             backgroundColor: 'rgba(0,0,0,.5)',
           }}
           activeOpacity={1}
-          // onPress={() => setIsCustomWorkout(false)}
         >
           <View
             style={{
@@ -579,42 +557,8 @@ const CustomWorkout = ({navigation}) => {
             </View>
           </View>
         </TouchableOpacity>
-        {/* </BlurView> */}
       </Modal>
       <BannerAdd bannerAdId={bannerAdId} />
-      {getOfferAgreement?.location === 'India' ||
-      getOfferAgreement?.location == 'United States' ? (
-        getPopUpFreuqency == 5 || getPopUpFreuqency % 4 == 0 ? (
-          <UpcomingEventModal
-            visible={true}
-            onConfirm={() => {
-              if (getPurchaseHistory?.plan != null) {
-                if (
-                  getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
-                ) {
-                  AnalyticsConsole('UP_D_B');
-                  navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
-                  dispatch(setRewardPopUp(1));
-                } else {
-                  AnalyticsConsole('PP_D_B');
-                  navigation.navigate('NewSubscription', {upgrade: false});
-                  dispatch(setRewardPopUp(1));
-                }
-              } else {
-                AnalyticsConsole('PP_D_B');
-                // navigation.navigate('NewSubscription', {upgrade: false});
-                navigation?.navigate('StepGuide');
-                dispatch(setRewardPopUp(1));
-              }
-            }}
-            onCancel={() => {
-              AnalyticsConsole('JNC_D_B');
-              dispatch(setRewardPopUp(1));
-            }}
-          />
-        ) : null
-      ) : null}
-      {/* {bannerAdsDisplay()} */}
     </>
   );
 };
@@ -631,8 +575,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   buttonStyle: {
-    width: 180,
+    // width: 180,
     height: 40,
+    paddingHorizontal: 8,
     borderRadius: 7,
     justifyContent: 'center',
     flexDirection: 'row',

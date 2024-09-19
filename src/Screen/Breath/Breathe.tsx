@@ -421,7 +421,7 @@ const Breathe = ({navigation, route}) => {
   const BackButton = () => {
     return (
       <TouchableOpacity
-        style={{marginTop:getStatusBarHeight(), marginLeft: 16}}
+        style={{marginTop: getStatusBarHeight(), marginLeft: 16}}
         onPress={handleBack}>
         <ArrowLeft fillColor={AppColor.WHITE} />
       </TouchableOpacity>
@@ -468,10 +468,14 @@ const Breathe = ({navigation, route}) => {
       </View>
     );
   });
-  
+
   return (
     <View style={styles.container1}>
-      <StatusBar backgroundColor={AppColor.BLACK} barStyle={'light-content'} translucent={false}/>
+      <StatusBar
+        backgroundColor={AppColor.BLACK}
+        barStyle={'light-content'}
+        translucent={false}
+      />
       <BackButton />
       <Animated.View
         style={[

@@ -54,6 +54,7 @@ import FitIcon from '../Component/Utilities/FitIcon';
 import Wrapper from './WorkoutCompleteScreen/Wrapper';
 import Header from '../Component/Header';
 import NewHeader1 from '../Component/Headers/NewHeader1';
+import NewButton from '../Component/NewButton';
 const NewProfile = ({navigation}) => {
   useEffect(() => {
     notifee.getTriggerNotifications().then(res => {
@@ -153,17 +154,16 @@ const NewProfile = ({navigation}) => {
   };
   const openMailApp = () => {
     Linking.openURL(
-      'mailto:aessikarwar03@gmail.com?subject=Feedback&body=Hello%20there!',
+      'mailto:thefitnessandworkout@gmail.com?subject=Feedback&body=Hello%20there!',
     );
   };
   const HandleButtons = (id, value) => {
     if (id == 3) {
       navigation.navigate('Questions', {screenName: 'Home'});
-    } 
+    }
     if (id == 4) {
       navigation.navigate('NewMonthlyAchievement');
-    } 
-    else if (id == 5) {
+    } else if (id == 5) {
       analytics().logEvent(
         `CV_FITME_CLICKED_ON_${value?.text1?.replace(' ', '_')}`,
       );
@@ -171,7 +171,7 @@ const NewProfile = ({navigation}) => {
     } else if (id == 6) {
       AnalyticsConsole(`PRIVACY_BUTTON`);
       navigation.navigate('TermaAndCondition', {
-        title: 'Privacy & Policy',
+        title: 'Privacy policy',
       });
     } else if (id == 7) {
       AnalyticsConsole(`T_n_CBUTTON`);
@@ -332,7 +332,7 @@ const NewProfile = ({navigation}) => {
         });
         if (ProfileData?.data) {
           showMessage({
-            message: 'Profile photo update successfully',
+            message: 'Profile photo updated successfully',
             type: 'success',
             animationDuration: 500,
 
@@ -355,45 +355,6 @@ const NewProfile = ({navigation}) => {
         console.log('UpdateProfileError', error);
       }
     };
-    const askPermissionForCamera = async permission => {
-      const result = await request(permission);
-
-      if (result == 'granted') {
-        try {
-          const resultCamera = await launchCamera({
-            mediaType: 'photo',
-            quality: 1,
-            maxWidth: 500,
-            maxHeight: 400,
-          });
-
-          if (resultCamera) {
-            setUserAvatar(resultCamera.assets[0]);
-            setModalImageUploaded(true);
-          }
-        } catch (error) {
-          console.log('CameraimageError', error);
-        }
-      } else if (result == 'blocked') {
-        Alert.alert(
-          'Permission Required',
-          'To use the camera feature ,Please enable camera access in settings',
-          [
-            {
-              text: 'cancel',
-              style: 'cancel',
-            },
-            {
-              text: 'Open settings',
-              onPress: openSettings,
-            },
-          ],
-          {cancelable: false},
-        );
-      } else {
-        console.log('error occured');
-      }
-    };
     const askPermissionForLibrary = async permission => {
       const resultLib = await request(permission);
 
@@ -401,7 +362,7 @@ const NewProfile = ({navigation}) => {
         try {
           const resultLibrary = await launchImageLibrary({
             mediaType: 'photo',
-            quality: 0.5,
+            quality: 0.7,
             maxWidth: 300,
             maxHeight: 200,
           });
@@ -433,6 +394,29 @@ const NewProfile = ({navigation}) => {
         console.log('Galaey error occured');
       }
     };
+    const handleUploadButton = () => {
+      if (modalImageUploaded) {
+        AnalyticsConsole(`UPLOAD_IMAGE`);
+        UploadImage(userAvatar)
+          .then(() => {
+            getUserDetailDataApi(getUserDataDetails?.id);
+          })
+          .catch(err => {
+            console.log('some error', err);
+          });
+      } else {
+        AnalyticsConsole(`OPEN_GALLERY`);
+        if (Platform.OS == 'ios') {
+          askPermissionForLibrary(PERMISSIONS.IOS.PHOTO_LIBRARY);
+        } else {
+          askPermissionForLibrary(
+            Platform.Version >= 33
+              ? PERMISSIONS.ANDROID.READ_MEDIA_IMAGES
+              : PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+          );
+        }
+      }
+    };
     return (
       <View
         style={{
@@ -460,7 +444,6 @@ const NewProfile = ({navigation}) => {
                 position: 'absolute',
                 borderTopLeftRadius: 20,
                 borderTopRightRadius: 20,
-                alignItems: 'center',
                 borderWidth: 1,
                 borderColor: 'lightgray',
                 bottom: 0,
@@ -476,23 +459,13 @@ const NewProfile = ({navigation}) => {
                   },
                 }),
               }}>
-              <View
-                style={[
-                  styles.closeButton,
-                  ,
-                  {
-                    width: (DeviceWidth * 85) / 100,
-                    marginTop: 8,
-                    backgroundColor: 'fff',
-                  },
-                ]}>
-                <TouchableOpacity
-                  onPress={() => {
-                    setUpadteScreenVisibilty(false);
-                  }}>
-                  <Icon name="close" size={27} color={'#000'} />
-                </TouchableOpacity>
-              </View>
+              <Text style={styles.text1}>Upload Photos</Text>
+              <Icon
+                name="close"
+                size={25}
+                color={AppColor.BLACK}
+                style={{position: 'absolute', right: 16, top: 16}}
+              />
               <Image
                 defaultSource={localImage.avt}
                 source={
@@ -504,101 +477,21 @@ const NewProfile = ({navigation}) => {
                 }
                 style={styles.Icon}
               />
-              <View
-                style={{
-                  justifyContent: 'space-around',
-                  alignItems: 'center',
-                  flexDirection: 'row',
-                  width: (DeviceWidth * 80) / 100,
-                  height: (DeviceHeigth * 10) / 100,
-                  marginBottom: 2,
-                  // borderWidth:1
-                }}>
-                <TouchableOpacity
-                  style={styles.cameraButton}
-                  onPress={() => {
-                    AnalyticsConsole(`OPEN_CAMERA`);
-                    if (Platform.OS == 'ios') {
-                      askPermissionForCamera(PERMISSIONS.IOS.CAMERA);
-                    } else {
-                      askPermissionForCamera(PERMISSIONS.ANDROID.CAMERA);
-                    }
-                  }}>
-                  <Icon name="camera" size={30} color="#000" />
-                  <Text style={{color: '#000'}}>Camera</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.cameraButton}
-                  onPress={() => {
-                    AnalyticsConsole(`OPEN_GALLERY`);
-                    if (Platform.OS == 'ios') {
-                      askPermissionForLibrary(PERMISSIONS.IOS.PHOTO_LIBRARY);
-                    } else {
-                      askPermissionForLibrary(
-                        Platform.Version >= 33
-                          ? PERMISSIONS.ANDROID.READ_MEDIA_IMAGES
-                          : PermissionsAndroid.PERMISSIONS
-                              .READ_EXTERNAL_STORAGE,
-                      );
-                    }
-                  }}>
-                  <Icon name="camera-image" size={30} color={'#000'} />
-                  <Text style={{color: '#000'}}>Gallery</Text>
-                </TouchableOpacity>
-              </View>
-              {IsimgUploaded ? (
-                <>
-                  {modalImageUploaded ? (
-                    <TouchableOpacity
-                      style={{
-                        width: DeviceWidth * 0.4,
-                        height: (DeviceHeigth * 4) / 100,
-                        backgroundColor: AppColor.RED,
-                        justifyContent: 'center',
-                        borderRadius: 20,
-                        alignItems: 'center',
-                        margin: 5,
-                      }}
-                      onPress={() => {
-                        AnalyticsConsole(`UPLOAD_IMAGE`);
-                        setImguploaded(false);
-                        UploadImage(userAvatar)
-                          .then(() => {
-                            getUserDetailDataApi(getUserDataDetails?.id);
-                          })
-                          .catch(err => {
-                            console.log('some error', err);
-                          });
-                      }}>
-                      <Text style={[styles.cameraText]}>Upload Image</Text>
-                    </TouchableOpacity>
-                  ) : (
-                    <TouchableOpacity
-                      style={{
-                        width: DeviceWidth * 0.4,
-                        height: (DeviceHeigth * 3) / 100,
-                        backgroundColor: 'rgba(0,0,0,0.7)',
-                        justifyContent: 'center',
-                        borderRadius: 20,
-                        alignItems: 'center',
-                        margin: 5,
-                      }}
-                      onPress={() => {
-                        showMessage({
-                          message: 'Please insert an Image first',
-                          floating: true,
-                          type: 'danger',
-                          animationDuration: 750,
-                          icon: {icon: 'none', position: 'left'},
-                        });
-                      }}>
-                      <Text style={[styles.cameraText]}>Upload Image</Text>
-                    </TouchableOpacity>
-                  )}
-                </>
-              ) : (
-                <ActivityIndicator color={AppColor.RED} size={35} />
-              )}
+            </View>
+            <View style={{position: 'absolute', bottom: 15}}>
+              <View style={styles.border} />
+              <NewButton
+                ButtonWidth={DeviceWidth * 0.5}
+                pV={8}
+                buttonColor={AppColor.PrimaryTextColor}
+                fontFamily={Fonts.HELVETICA_BOLD}
+                title={
+                  modalImageUploaded
+                    ? 'Change Profile Photo'
+                    : 'Select Photo'
+                }
+                onPress={handleUploadButton}
+              />
             </View>
           </View>
         </Modal>
@@ -730,7 +623,7 @@ const NewProfile = ({navigation}) => {
                 alignItems: 'center',
                 padding: 5,
                 width: '40%',
-                paddingVertical: 7,
+                paddingVertical: 5,
               }}
               onPress={() => {
                 Delete();
@@ -754,69 +647,105 @@ const NewProfile = ({navigation}) => {
   };
   return (
     <View style={styles.Container}>
-    <Wrapper styles={{backgroundColor:AppColor.WHITE}}>
-     <NewHeader1 header={'Profile'}/>
-    <View style={styles.ProfileContainer}>
-        <View style={[styles.profileView, {}]}>
-          <Image
-            source={
-              getUserDataDetails.image_path == null
-                ? localImage.avt
-                : {uri: getUserDataDetails.image_path}
-            }
-            style={styles.img}
-            onLoad={() => setIsLoading(false)}
-            resizeMode="cover"
-          />
-          <TouchableOpacity
-            style={styles.pen}
-            onPress={() => setUpadteScreenVisibilty(true)}
-            activeOpacity={0.5}>
+      <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
+        <NewHeader1 header={'Profile'} />
+        <View style={styles.ProfileContainer}>
+          <View style={[styles.profileView, {}]}>
             <Image
-              source={localImage.NewPen}
-              style={{height: 17, width: 15}}
-              resizeMode="contain"
+              source={
+                getUserDataDetails.image_path == null
+                  ? localImage.avt
+                  : {uri: getUserDataDetails.image_path}
+              }
+              style={styles.img}
+              onLoad={() => setIsLoading(false)}
+              resizeMode="cover"
             />
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.pen}
+              onPress={() => setUpadteScreenVisibilty(true)}
+              activeOpacity={0.5}>
+              <Image
+                source={localImage.NewPen}
+                style={{height: 17, width: 15}}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={{marginLeft: 15}}>
+            <Text
+              style={{
+                fontFamily: Fonts.MONTSERRAT_BOLD,
+                color: AppColor.BLACK,
+                fontSize: 20,
+              }}>
+              {getUserDataDetails?.name == null
+                ? 'Guest'
+                : getUserDataDetails?.name}
+            </Text>
+            <Text
+              style={{
+                fontFamily: Fonts.MONTSERRAT_REGULAR,
+                color: AppColor.BLACK,
+                fontSize: 14,
+                fontWeight: '500',
+                maxWidth: DeviceWidth * 0.65,
+              }}>
+              {getUserDataDetails?.email == null
+                ? 'guest@gmail.com'
+                : getUserDataDetails?.email}
+            </Text>
+          </View>
         </View>
-        <View style={{marginLeft: 15}}>
-          <Text
-            style={{
-              fontFamily: Fonts.MONTSERRAT_BOLD,
-              color: AppColor.BLACK,
-              fontSize: 20,
-            }}>
-            {getUserDataDetails?.name == null
-              ? 'Guest'
-              : getUserDataDetails?.name}
-          </Text>
-          <Text
-            style={{
-              fontFamily: Fonts.MONTSERRAT_REGULAR,
-              color: AppColor.BLACK,
-              fontSize: 14,
-              fontWeight: '500',
-              maxWidth: DeviceWidth * 0.65,
-            }}>
-            {getUserDataDetails?.email == null
-              ? 'guest@gmail.com'
-              : getUserDataDetails?.email}
-          </Text>
-        </View>
-      </View>
-      <View style={styles.card}>
-        {getUserDataDetails.email != null
-          ? CardData?.map((v, i) => {
-              if (
-                (getOfferAgreement?.location != 'India' && getOfferAgreement?.location!='United States') &&
-                v.txt == 'Subscription'
-              )
-                return;
-              return (
+        <View style={styles.card}>
+          {getUserDataDetails.email != null
+            ? CardData?.map((v, i) => {
+                if (
+                  getOfferAgreement?.location != 'India' &&
+                  getOfferAgreement?.location != 'United States' &&
+                  v.txt == 'Subscription'
+                )
+                  return;
+                return (
+                  <TouchableOpacity
+                    key={i}
+                    style={{justifyContent: 'center', alignItems: 'center'}}
+                    onPress={() => handleCardDataPress(v.id)}>
+                    <Image
+                      source={v.img}
+                      style={{height: 35, width: 35}}
+                      resizeMode="contain"
+                    />
+                    <Text
+                      style={{
+                        textAlign: 'center',
+                        fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                        fontWeight: '600',
+                        marginTop: 10,
+                        color: AppColor.BLACK,
+                      }}>
+                      {v.txt}
+                    </Text>
+                    {v.txt1 == 'Invalid date' ? null : (
+                      <Text
+                        style={{
+                          textAlign: 'center',
+                          fontFamily: Fonts.MONTSERRAT_REGULAR,
+                          fontWeight: '500',
+                          marginTop: 6,
+                          color: AppColor.RED1,
+                        }}>
+                        {v.txt1}
+                      </Text>
+                    )}
+                  </TouchableOpacity>
+                );
+              })
+            : CardData1?.map((v, i) => (
                 <TouchableOpacity
                   key={i}
                   style={{justifyContent: 'center', alignItems: 'center'}}
-                  onPress={() => handleCardDataPress(v.id)}>
+                  onPress={() => handleCardDataPress1(v.id)}>
                   <Image
                     source={v.img}
                     style={{height: 35, width: 35}}
@@ -839,214 +768,179 @@ const NewProfile = ({navigation}) => {
                         fontFamily: Fonts.MONTSERRAT_REGULAR,
                         fontWeight: '500',
                         marginTop: 6,
-                        color: AppColor.RED1,
+                        color: '#f0013b',
                       }}>
                       {v.txt1}
                     </Text>
                   )}
                 </TouchableOpacity>
-              );
-            })
-          : CardData1?.map((v, i) => (
-              <TouchableOpacity
+              ))}
+        </View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{marginBottom: DeviceHeigth * 0.025}}>
+          <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
+            {ListData.slice(0, 2).map((v, i) => (
+              <View
                 key={i}
-                style={{justifyContent: 'center', alignItems: 'center'}}
-                onPress={() => handleCardDataPress1(v.id)}>
-                <Image
-                  source={v.img}
-                  style={{height: 35, width: 35}}
-                  resizeMode="contain"
-                />
-                <Text
-                  style={{
-                    textAlign: 'center',
-                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                    fontWeight: '600',
-                    marginTop: 10,
-                    color: AppColor.BLACK,
-                  }}>
-                  {v.txt}
-                </Text>
-                {v.txt1 == 'Invalid date' ? null : (
+                style={{
+                  flexDirection: 'row',
+                  marginVertical: 10,
+                  justifyContent: 'space-between',
+                }}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Image
+                    source={v.img}
+                    style={{height: 35, width: 35}}
+                    resizeMode="contain"
+                  />
                   <Text
                     style={{
-                      textAlign: 'center',
-                      fontFamily: Fonts.MONTSERRAT_REGULAR,
-                      fontWeight: '500',
-                      marginTop: 6,
-                      color: '#f0013b',
+                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                      fontSize: 16,
+                      marginLeft: 10,
+                      color: AppColor.BLACK,
                     }}>
-                    {v.txt1}
+                    {v.txt}
                   </Text>
-                )}
-              </TouchableOpacity>
+                </View>
+                <View style={{alignSelf: 'center'}}>
+                  {v.id == 1 ? (
+                    <Switch
+                      value={getSoundOffOn}
+                      onValueChange={text => {
+                        AnalyticsConsole(`SOUND_ON_OFF`);
+
+                        if (text == true) {
+                          showMessage({
+                            message: 'Sound unmuted',
+                            type: 'success',
+                            animationDuration: 500,
+                            floating: true,
+                            icon: {icon: 'auto', position: 'left'},
+                          });
+                        } else {
+                          showMessage({
+                            message: 'Sound muted',
+                            animationDuration: 500,
+                            type: 'danger',
+                            floating: true,
+                            icon: {icon: 'auto', position: 'left'},
+                          });
+                        }
+
+                        dispatch(setSoundOnOff(text));
+                      }}
+                      disabled={false}
+                      circleSize={19}
+                      barHeight={21}
+                      circleBorderWidth={0.1}
+                      renderActiveText={false}
+                      renderInActiveText={false}
+                      switchLeftPx={2}
+                      switchRightPx={2}
+                      switchWidthMultiplier={2.2}
+                      switchBorderRadius={30}
+                      backgroundActive={'#FFE3E3'}
+                      backgroundInactive={AppColor.GRAY2}
+                      circleActiveColor={'#f0013b'}
+                      circleInActiveColor={AppColor.WHITE}
+                      changeValueImmediately={true}
+                      outerCircleStyle={{color: '#f0013b'}}
+                    />
+                  ) : (
+                    <Switch
+                      value={getScreenAwake}
+                      onValueChange={text => {
+                        AnalyticsConsole(`DISPLAY_ALWAYS_ON`);
+                        if (text == true) {
+                          showMessage({
+                            message: 'Display Always on',
+                            type: 'success',
+                            animationDuration: 500,
+                            floating: true,
+                            icon: {icon: 'auto', position: 'left'},
+                          });
+                          dispatch(setScreenAwake(true));
+                        } else {
+                          showMessage({
+                            message: 'Display Always Off',
+                            animationDuration: 500,
+                            type: 'danger',
+                            floating: true,
+                            icon: {icon: 'auto', position: 'left'},
+                          });
+                          dispatch(setScreenAwake(false));
+                        }
+                      }}
+                      disabled={false}
+                      circleSize={19}
+                      barHeight={21}
+                      circleBorderWidth={0.1}
+                      renderActiveText={false}
+                      renderInActiveText={false}
+                      switchLeftPx={2}
+                      switchRightPx={2}
+                      switchWidthMultiplier={2.2}
+                      switchBorderRadius={30}
+                      backgroundActive={'#FFE3E3'}
+                      backgroundInactive={AppColor.GRAY2}
+                      circleActiveColor={'#f0013b'}
+                      circleInActiveColor={AppColor.WHITE}
+                      changeValueImmediately={true}
+                      outerCircleStyle={{color: '#f0013b'}}
+                    />
+                  )}
+                </View>
+              </View>
             ))}
-      </View>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={{marginBottom: DeviceHeigth * 0.025}}>
-        <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
-          {ListData.slice(0, 2).map((v, i) => (
-            <View
-              key={i}
+          </View>
+          <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
+            <Text
               style={{
-                flexDirection: 'row',
+                fontFamily: Fonts.MONTSERRAT_BOLD,
+                fontSize: 18,
                 marginVertical: 10,
-                justifyContent: 'space-between',
+                color: AppColor.BLACK,
               }}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              Others
+            </Text>
+          </View>
+          <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
+            {ListData.slice(2).map((v, i) => (
+              <TouchableOpacity
+                key={i}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginVertical: 10,
+                }}
+                onPress={() => HandleButtons(v.id, v.txt)}>
                 <Image
                   source={v.img}
                   style={{height: 35, width: 35}}
                   resizeMode="contain"
                 />
-                <Text
-                  style={{
-                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                    fontSize: 16,
-                    marginLeft: 10,
-                    color: AppColor.BLACK,
-                  }}>
-                  {v.txt}
-                </Text>
-              </View>
-              <View style={{alignSelf: 'center'}}>
-                {v.id == 1 ? (
-                  <Switch
-                    value={getSoundOffOn}
-                    onValueChange={text => {
-                      AnalyticsConsole(`SOUND_ON_OFF`);
-
-                      if (text == true) {
-                        showMessage({
-                          message: 'Sound unmuted',
-                          type: 'success',
-                          animationDuration: 500,
-                          floating: true,
-                          icon: {icon: 'auto', position: 'left'},
-                        });
-                      } else {
-                        showMessage({
-                          message: 'Sound muted',
-                          animationDuration: 500,
-                          type: 'danger',
-                          floating: true,
-                          icon: {icon: 'auto', position: 'left'},
-                        });
-                      }
-
-                      dispatch(setSoundOnOff(text));
-                    }}
-                    disabled={false}
-                    circleSize={19}
-                    barHeight={21}
-                    circleBorderWidth={0.1}
-                    renderActiveText={false}
-                    renderInActiveText={false}
-                    switchLeftPx={2}
-                    switchRightPx={2}
-                    switchWidthMultiplier={2.2}
-                    switchBorderRadius={30}
-                    backgroundActive={'#FFE3E3'}
-                    backgroundInactive={AppColor.GRAY2}
-                    circleActiveColor={'#f0013b'}
-                    circleInActiveColor={AppColor.WHITE}
-                    changeValueImmediately={true}
-                    outerCircleStyle={{color: '#f0013b'}}
-                  />
-                ) : (
-                  <Switch
-                    value={getScreenAwake}
-                    onValueChange={text => {
-                      AnalyticsConsole(`DISPLAY_ALWAYS_ON`);
-                      if (text == true) {
-                        showMessage({
-                          message: 'Display Always on',
-                          type: 'success',
-                          animationDuration: 500,
-                          floating: true,
-                          icon: {icon: 'auto', position: 'left'},
-                        });
-                        dispatch(setScreenAwake(true));
-                      } else {
-                        showMessage({
-                          message: 'Display Always Off',
-                          animationDuration: 500,
-                          type: 'danger',
-                          floating: true,
-                          icon: {icon: 'auto', position: 'left'},
-                        });
-                        dispatch(setScreenAwake(false));
-                      }
-                    }}
-                    disabled={false}
-                    circleSize={19}
-                    barHeight={21}
-                    circleBorderWidth={0.1}
-                    renderActiveText={false}
-                    renderInActiveText={false}
-                    switchLeftPx={2}
-                    switchRightPx={2}
-                    switchWidthMultiplier={2.2}
-                    switchBorderRadius={30}
-                    backgroundActive={'#FFE3E3'}
-                    backgroundInactive={AppColor.GRAY2}
-                    circleActiveColor={'#f0013b'}
-                    circleInActiveColor={AppColor.WHITE}
-                    changeValueImmediately={true}
-                    outerCircleStyle={{color: '#f0013b'}}
-                  />
-                )}
-              </View>
-            </View>
-          ))}
-        </View>
-        <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
-          <Text
-            style={{
-              fontFamily: Fonts.MONTSERRAT_BOLD,
-              fontSize: 18,
-              marginVertical: 10,
-              color: AppColor.BLACK,
-            }}>
-            Others
-          </Text>
-        </View>
-        <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
-          {ListData.slice(2).map((v, i) => (
-            <TouchableOpacity
-              key={i}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginVertical: 10,
-              }}
-              onPress={() => HandleButtons(v.id, v.txt)}>
-              <Image
-                source={v.img}
-                style={{height: 35, width: 35}}
-                resizeMode="contain"
-              />
-              <Text style={styles.ListText}>{v.txt}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-        <Reminder
-          visible={visible}
-          setVisible={setVisible}
-          setAlarmIsEnabled={setAlarmIsEnabled}
-          setNotificationTimer={setNotificationTimer}
-        />
-      </ScrollView>
-      {UpdateScreenVisibility ? <UpdateProfileModal /> : null}
-      {ratingVisibilty ? (
-        <RatingModal
-          setModalVisibilty={setRatingVisibilty}
-          getVisibility={ratingVisibilty}
-        />
-      ) : null}
-      <DeleteAccount />
-    </Wrapper>
+                <Text style={styles.ListText}>{v.txt}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <Reminder
+            visible={visible}
+            setVisible={setVisible}
+            setAlarmIsEnabled={setAlarmIsEnabled}
+            setNotificationTimer={setNotificationTimer}
+          />
+        </ScrollView>
+        {UpdateScreenVisibility ? <UpdateProfileModal /> : null}
+        {ratingVisibilty ? (
+          <RatingModal
+            setModalVisibilty={setRatingVisibilty}
+            getVisibility={ratingVisibilty}
+          />
+        ) : null}
+        <DeleteAccount />
+      </Wrapper>
     </View>
   );
 };
@@ -1128,13 +1022,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   Icon: {
-    width: 120,
-    height: 120,
-    borderRadius: 120 / 2,
+    width: 160,
+    height: 160,
+    borderRadius: 160 / 2,
     overflow: 'hidden',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
+    alignSelf: 'center',
+    marginTop: 15,
   },
   cameraButton: {
     margin: 20,
@@ -1150,6 +1043,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     // Semi-transparent background
+  },
+  text1: {
+    color: AppColor.BLACK,
+    fontFamily: Fonts.HELVETICA_BOLD,
+    fontSize: 18,
+    marginLeft: 16,
+    marginTop: 16,
+  },
+  border: {
+    height: 0,
+    width: DeviceWidth,
+    borderWidth: 0.3,
+    borderColor: AppColor.GRAY1,
+    marginBottom: 15,
   },
   modalContent1: {
     padding: 20,

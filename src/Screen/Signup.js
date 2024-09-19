@@ -1351,27 +1351,7 @@ const Signup = ({navigation}) => {
                         style={{marginBottom: -1}}
                       />
                     }
-                    // right={
-                    //   <TextInput.Icon
-                    //     icon={() => (
-                    //       <TouchableOpacity
-                    //       style={{borderWidth:1}}
-                    //         onPress={() => {
-                    //           setShowPassword(!showPassword);
-                    //         }}>
-                    //         <Image
-                    //           source={
-                    //             showPassword ? localImage.EYE : localImage.EYE1
-                    //           }
-                    //           style={{width: 22, height: 22,}}
-                    //           resizeMode="contain"
-                    //           tintColor="#ADA4A5"
-                    //         />
-                    //       </TouchableOpacity>
-                    //     )}
-                    //     style={{marginTop: 14}}
-                    //   />
-                    // }
+                  
                     left={
                       <TextInput.Icon
                         icon={() => (
@@ -1407,28 +1387,7 @@ const Signup = ({navigation}) => {
                         style={{marginBottom: -1}}
                       />
                     }
-                    // right={
-                    //   <TextInput.Icon
-                    //     icon={() => (
-                    //       <TouchableOpacity
-                    //         onPress={() => {
-                    //           setIsvisiblepassword(!isVisiblepassword);
-                    //         }}>
-                    //         <Image
-                    //           source={
-                    //             isVisiblepassword
-                    //               ? localImage.EYE
-                    //               : localImage.EYE1
-                    //           }
-                    //           style={{width: 22, height: 22}}
-                    //           resizeMode="contain"
-                    //           tintColor="#ADA4A5"
-                    //         />
-                    //       </TouchableOpacity>
-                    //     )}
-                    //     style={{marginTop: 14}}
-                    //   />
-                    // }
+                 
                     left={
                       <TextInput.Icon
                         icon={() => (
@@ -1445,72 +1404,9 @@ const Signup = ({navigation}) => {
                     secureTextEntry={isVisiblepassword ? true : false}
                   />
                 </View>
-                {/* <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    width: '85%',
-                    alignSelf: 'center',
-                    paddingRight: DeviceWidth * 0.08,
-                    marginTop: DeviceHeigth * 0.02,
-                  }}>
-                  <TouchableOpacity onPress={() => setChecked(!checked)}>
-                    {checked ? (
-                      <Icons
-                        name="checkbox-marked"
-                        size={30}
-                        style={{
-                          marginVertical: 15,
-                          marginRight: 10,
-                        }}
-                        color={AppColor.CHECKBOXCOLOR}
-                      />
-                    ) : (
-                      <Icons
-                        name="checkbox-blank-outline"
-                        size={30}
-                        style={{
-                          marginVertical: 15,
-                          marginRight: 10,
-                        }}
-                        color={AppColor.CHECKBOXCOLOR}
-                      />
-                    )}
-                  </TouchableOpacity>
-                  <View>
-                    <Text style={styles.policyText}>
-                      By continuing you accept our{' '}
-                      <Text
-                        onPress={() => {
-                          navigationRef.navigate('TermaAndCondition', {
-                            title: 'Privacy & Policy',
-                          });
-                        }}
-                        style={styles.policyText1}>
-                        Privacy Policy
-                      </Text>{' '}
-                      and
-                      <Text
-                        style={styles.policyText1}
-                        onPress={() => {
-                          navigationRef.navigate('TermaAndCondition', {
-                            title: 'Terms & Condition',
-                          });
-                        }}>
-                        {' '}
-                        Terms of use
-                      </Text>{' '}
-                    </Text>
-                  </View>
-                </View> */}
                 <View style={{marginTop: DeviceHeigth * 0.05}}>
                   <Button buttonText={'Register'} onPresh={handleSubmit} />
-                  {/* <Button
-                    buttonText={'Register'}
-                    onPresh={() => {
-                      setVerifyVisible(true);
-                    }}
-                  /> */}
+                 
                 </View>
               </>
             )}

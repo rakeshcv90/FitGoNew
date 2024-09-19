@@ -345,7 +345,11 @@ const WorkoutCategories = ({navigation, route}: any) => {
     const searchArray = exercise.filter((item: any) =>
       item?.exercise_title.toLowerCase().includes(text.toLowerCase()),
     );
-    setFilteredExercise(searchArray);
+    if (searchArray.length > 0) {
+      setFilteredExercise(searchArray);
+    } else {
+      setFilteredExercise(categoryExercise);
+    }
   };
 
   const Start = (exercise: Array<any>) => {

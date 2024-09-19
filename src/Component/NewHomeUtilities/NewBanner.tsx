@@ -78,7 +78,7 @@ const NewBanner = ({
       ]);
     }
   }, [enteredCurrentEvent, enteredUpcomingEvent, getBanners]);
-console.log("PRINTs",)
+
   const getReqBanner = useCallback(
     (BArray: Array<BannerArrayType>) => {
       if (enteredCurrentEvent) {

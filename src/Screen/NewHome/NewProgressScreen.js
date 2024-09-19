@@ -441,7 +441,7 @@ const NewProgressScreen = ({navigation}) => {
 
   const openMailApp = () => {
     Linking.openURL(
-      'mailto:aessikarwar03@gmail.com?subject=Feedback&body=Hello%20there!',
+      'mailto:thefitnessandworkout@gmail.com?subject=Feedback&body=Hello%20there!',
     );
   };
   return (

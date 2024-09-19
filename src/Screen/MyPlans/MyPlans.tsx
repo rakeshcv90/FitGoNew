@@ -187,7 +187,6 @@ const MyPlans = ({navigation}: any) => {
 
   useEffect(() => {
     getWeeklyAPI();
-    console.log('called');
   }, [workoutPrepared]);
   useFocusEffect(
     React.useCallback(() => {
@@ -1221,7 +1220,8 @@ const MyPlans = ({navigation}: any) => {
                     style={{height: 20, width: 20}}
                     resizeMode="contain"
                   />
-                  <Text style={styles.cointxt}>
+                  <Text
+                    style={[styles.cointxt, {color: AppColor.orangeColor1}]}>
                     {fitCoins <= 0 ? 0 : fitCoins}
                   </Text>
                 </TouchableOpacity>

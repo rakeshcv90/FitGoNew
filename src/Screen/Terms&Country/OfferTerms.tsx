@@ -40,16 +40,6 @@ import {useSelector, useDispatch} from 'react-redux';
 import {BlurView} from '@react-native-community/blur';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
-const radioData = [
-  {
-    id: 1,
-    title: 'English',
-  },
-  {
-    id: 2,
-    title: 'Hindi',
-  },
-];
 const OfferTerms = ({navigation, route}: any) => {
   const dispatch = useDispatch();
   const [language, setLanguage] = useState('English');

@@ -28,8 +28,8 @@ import {
   BMImodal,
   CaloriesActionReport,
 } from '../../Component/BmiComponent';
-import { useFocusEffect } from '@react-navigation/native';
-import { red } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
+import {useFocusEffect} from '@react-navigation/native';
+import {red} from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 const NewMonthlyAchievement = ({navigation}) => {
   const [getDate, setDate] = useState(moment().format('YYYY-MM-DD'));
@@ -67,7 +67,7 @@ const NewMonthlyAchievement = ({navigation}) => {
       } else if (res) {
         setIsLoaded(true);
         setApiData(res.data.data);
-        console.log('apicall',res.data)
+        console.log('apicall', res.data);
         const Calories = res?.data?.data?.map(value =>
           parseInt(value?.exercise_calories),
         );
@@ -128,7 +128,7 @@ const NewMonthlyAchievement = ({navigation}) => {
   return (
     <SafeAreaView style={styles.Container}>
       {/* <NewHeader header={'Report'} backButton={true}/> */}
-      <NewHeader1 backButton header={'Report'}/>
+      <NewHeader1 backButton header={'Report'} />
       <ScrollView showsVerticalScrollIndicator={false}>
         {getBmi?.Bmi ? (
           <View>
@@ -195,7 +195,7 @@ const NewMonthlyAchievement = ({navigation}) => {
               <Text
                 style={{
                   fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                  color: AppColor.BLACK,
+                  color: AppColor.BoldText,
                   fontSize: 16,
                 }}>
                 BMI (kg/m²)
@@ -215,7 +215,7 @@ const NewMonthlyAchievement = ({navigation}) => {
           </View>
         )}
         <View>
-          <View style={[styles.View4,{marginVertical:5}]}>
+          <View style={[styles.View4, {marginVertical: 5}]}>
             <Text
               style={[
                 styles.txt1,
@@ -243,6 +243,15 @@ const NewMonthlyAchievement = ({navigation}) => {
                   color: '#f0013b',
                   endingDay: true,
                   textColor: AppColor.WHITE,
+                },
+                [moment().format('YYYY-MM-DD')]: {
+                  marked: true,
+                  startingDay: true,
+                  selected:true,
+                  color:AppColor.GRAAY6,
+                  endingDay: true,
+                  textColor: AppColor.WHITE,
+                  selectedDotColor:AppColor.RED
                 },
               }}
               style={[

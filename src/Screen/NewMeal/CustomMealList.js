@@ -460,15 +460,21 @@ const CustomMealList = ({navigation, route}) => {
             'Content-Type': 'multipart/form-data',
           },
         });
-
-        if (res.data.msg == 'diet inserted successfully.') {
+        if (res.data.msg == 'diet updated successfully.') {
+          showMessage({
+            message: 'Recipe added successfully',
+            type: 'success',
+            animationDuration: 500,
+            floating: true,
+            icon: {icon: 'auto', position: 'left'},
+          });
           getUserDetailData();
         } else {
           getUserDetailData();
         }
       } catch (error) {
         setForLoading(false);
-        console.log('XCVxcxvxcvcxvxcvcx', error);
+       
         showMessage({
           message: 'Something went wrong please try again!',
           type: 'danger',

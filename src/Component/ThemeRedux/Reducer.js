@@ -61,7 +61,6 @@ const intialState = {
   winnerAnnounced: false,
   getBanners: {},
   getEditedDayExercise: {},
-  getPopUpFreuqency: 0,
   getPopUpSeen: false,
   hindiLanguage: false,
   getDynamicPopUpvalues: {},
@@ -76,6 +75,7 @@ const intialState = {
   getExerciseInTime: '',
   getExerciseOutTime: '',
   getEquipmentExercise: 1,
+  getPermissionIos: false,
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -348,11 +348,6 @@ const ThemeReducer = (state = intialState, action) => {
         ...state,
         winnerAnnounced: action.payload,
       };
-    case types.TRACK_REWARDPOPUP:
-      return {
-        ...state,
-        getPopUpFreuqency: action.payload,
-      };
     case types.POPUPSEEN:
       return {
         ...state,
@@ -427,6 +422,11 @@ const ThemeReducer = (state = intialState, action) => {
       return {
         ...state,
         getDeviceID: action.payload,
+      };
+    case types.PERMISSION_IOS:
+      return {
+        ...state,
+        getPermissionIos: action.payload,
       };
     case types.PAST_WINNERS:
       return {

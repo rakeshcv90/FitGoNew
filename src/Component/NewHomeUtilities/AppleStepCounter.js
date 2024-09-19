@@ -17,7 +17,7 @@ import AppleHealthKit, {EventType} from 'react-native-health';
 import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import analytics from '@react-native-firebase/analytics';
-import {setPedomterData} from '../ThemeRedux/Actions';
+import {setPedomterData, setPermissionIos} from '../ThemeRedux/Actions';
 import {BlurView} from '@react-native-community/blur';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Slider} from '@miblanchard/react-native-slider';
@@ -25,6 +25,7 @@ import {Slider} from '@miblanchard/react-native-slider';
 const AppleStepCounter = () => {
   const dispatch = useDispatch();
   const getPedomterData = useSelector(state => state.getPedomterData);
+  const getPopUpSeen = useSelector(state => state.getPopUpSeen);
   const [steps, setSteps] = useState(0);
   const stepsRef = useRef(steps);
   const [Calories, setCalories] = useState(0);
@@ -62,6 +63,9 @@ const AppleStepCounter = () => {
         };
         if (err) {
           console.log('error initializing Healthkit: ', err);
+          if (!getPopUpSeen) {
+            dispatch(setPermissionIos(true));
+          }
         } else if (available == true) {
           AppleHealthKit.initHealthKit(permissions, error => {
             Promise.resolve(
@@ -69,7 +73,17 @@ const AppleStepCounter = () => {
             );
             if (error) {
               console.log('[ERROR] Cannot grant permissions!', error);
+              if (!getPopUpSeen) {
+                dispatch(setPermissionIos(true));
+              }
             } else {
+              if (!getPopUpSeen) {
+                setTimeout(() => {
+                  if (!getPopUpSeen) {
+                    dispatch(setPermissionIos(true));
+                  }
+                }, 1500);
+              }
               new NativeEventEmitter(NativeModules.AppleHealthKit).addListener(
                 // adding a listner here to record whenever new Steps will be sent from healthkit
                 'healthKit:StepCount:new',
@@ -250,7 +264,6 @@ const AppleStepCounter = () => {
     const [Calories_Visible, setCalories_Visible] = useState(false);
 
     const HandleSave = () => {
-      console.log('fhgfgfgf', Steps_Goal, Distance_Goal, Calories_Goal);
       setStepGoalProfile(Steps_Goal);
       setDistanceGoalProfile(Distance_Goal);
       setCaloriesGoalProfile(Calories_Goal);

@@ -8,240 +8,94 @@ import {useSelector} from 'react-redux';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {Image} from 'react-native';
 import {localImage} from '../../Component/Image';
+import NewHeader1 from '../../Component/Headers/NewHeader1';
+import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 
 const AIMessageHistory = () => {
   const {getAIMessageHistory} = useSelector(state => state);
   const [senderMessage, setsenderMessage] = useState(getAIMessageHistory);
-
+   const getUserDataDetails=useSelector(state=>state?.getUserDataDetails)
   const flatListRef = useRef(null);
   return (
     <View style={styles.container}>
-   
-      <NewHeader header={'AI Message History'} backButton={true} />
-    
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      <ScrollView
-        style={{flexGrow: 1}}
-        ref={flatListRef}
-        onContentSizeChange={() =>
-          flatListRef.current.scrollToEnd({animated: true})
-        }
-        onLayout={() => flatListRef.current.scrollToEnd({animated: true})}
-      
-        keyboardDismissMode="interactive"
-        keyboardShouldPersistTaps="always"
-        showsVerticalScrollIndicator={false}>
-        <FlatList
-          data={senderMessage}
-          keyExtractor={(item, index) => index.toString()}
-          contentContainerStyle={{paddingBottom: DeviceHeigth*0.05}}
-          renderItem={({item, index}) => {
-       
-            return (
-              <>
-                <View
-                  style={
-                    item.sender == 'ChatGpt'
-                      ? styles.messageContainer
-                      : styles.messageContainer1
-                  }>
-                  {item.sender == 'ChatGpt' ? (
-                    <>
-                      <Image
-                        resizeMode="contain"
-                        source={localImage.Boot}
-                        style={{
-                          width: 35,
-                          height: 35,
-                          justifyContent: 'flex-end',
-                          alignSelf: 'flex-end',
-                          marginHorizontal: 5,
-                        }}
-                      />
-                      <View
-                        style={{
-                          width: 250,
-                          backgroundColor: '#fff',
-                          borderRadius: 16,
-                          borderWidth: 1,
-                          borderColor: '#f4c7c3',
-                          shadowColor: '#000',
-                          shadowOffset: {
-                            width: 0,
-                            height: 2,
-                          },
-                          shadowOpacity: 0.25,
-                          shadowRadius: 3.84,
-                          elevation: 5,
-                        }}>
+      <Wrapper>
+        <NewHeader1 header={'AI Message History'} backButton={true} />
+        <ScrollView
+          style={{flexGrow: 1}}
+          ref={flatListRef}
+          onContentSizeChange={() =>
+            flatListRef.current.scrollToEnd({animated: true})
+          }
+          onLayout={() => flatListRef.current.scrollToEnd({animated: true})}
+          keyboardDismissMode="interactive"
+          keyboardShouldPersistTaps="always"
+          showsVerticalScrollIndicator={false}>
+          <FlatList
+            data={senderMessage}
+            keyExtractor={(item, index) => index.toString()}
+            contentContainerStyle={{paddingBottom: DeviceHeigth * 0.05}}
+            renderItem={({item, index}) => {
+              return (
+                <>
+                  <View
+                    style={
+                      item.sender == 'ChatGpt'
+                        ? styles.messageContainer
+                        : styles.messageContainer1
+                    }>
+                    {item.sender == 'ChatGpt' ? (
+                      <>
+                        <Image
+                          resizeMode="contain"
+                          source={localImage.Boot}
+                          style={{
+                            width: 35,
+                            height: 35,
+                            justifyContent: 'flex-end',
+                            alignSelf: 'flex-end',
+                            marginHorizontal: 5,
+                          }}
+                        />
                         <View
                           style={{
                             width: 250,
-
+                            backgroundColor: '#fff',
                             borderRadius: 16,
-                            borderColor: '#f4c7c3',
                             borderWidth: 1,
-                            backgroundColor: '#9410001A',
-                            padding: 10,
-                          }}>
-                          <Text
-                            style={{
-                              fontFamily: 'Poppins',
-                              fontWeight: '400',
-                              fontSize: 12,
-                              lineHeight: 15,
-                              color: AppColor.LITELTEXTCOLOR,
-                            }}>
-                            {item.message}
-                          </Text>
-                        </View>
-                      </View>
-                    </>
-                  ) : (
-                    <>
-                      <View
-                        style={{
-                          width: 250,
-                          backgroundColor: '#ffffff',
-                          borderRadius: 16,
-                          borderWidth: 1,
-                          borderColor: '#5050501A',
-                          padding: 10,
-                          shadowColor: '#000',
-                          shadowOffset: {
-                            width: 0,
-                            height: 2,
-                          },
-                          shadowOpacity: 0.25,
-                          shadowRadius: 3.84,
-                          elevation: 5,
-                        }}>
-                        <Text
-                          style={{
-                            fontFamily: 'Poppins',
-                            fontWeight: '400',
-                            fontSize: 12,
-                            lineHeight: 15,
-                            marginHorizontal: 5,
-                            color: AppColor.LITELTEXTCOLOR,
-                          }}>
-                          {item.message}
-                        </Text>
-                      </View>
-                      <Image
-                        resizeMode="contain"
-                        source={localImage.User}
-                        style={{
-                          width: 30,
-                          height: 30,
-                          justifyContent: 'flex-end',
-                          alignSelf: 'flex-end',
-                        }}
-                      />
-                    </>
-                  )}
-                </View>
-                {/* <View
-                  style={
-                    item.sender == 'ChatGpt'
-                      ? item.message == 'test'
-                        ? styles.messageContainer3
-                        : styles.messageContainer
-                      : styles.messageContainer1
-                  }>
-                  <View
-                    style={
-                      item.message == 'test'
-                        ? styles.messageBubble1
-                        : styles.messageBubble
-                    }>
-                    {item.sender == 'ChatGpt' ? (
-                      item.message == 'test' ? (
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            alignSelf: 'flex-start',
+                            borderColor: '#f4c7c3',
                             shadowColor: '#000',
-                            shadowOffset: {width: 0, height: 5},
+                            shadowOffset: {
+                              width: 0,
+                              height: 2,
+                            },
                             shadowOpacity: 0.25,
                             shadowRadius: 3.84,
                             elevation: 5,
                           }}>
-                          <Image
-                            style={{
-                              width: 40,
-                              height: 40,
-                              marginHorizontal: 15,
-                            }}
-                            resizeMode="contain"
-                            source={localImage.Boot}
-                          />
-                          <AnimatedLottieView
-                            source={{
-                              uri: 'https://lottie.host/a48740c2-459a-4b47-9106-7c9020469ac9/1PPt5ehAsa.json',
-                            }} // Replace with your animation file
-                            autoPlay
-                            loop
-                            style={{
-                              width: 45,
-                              height: 45,
-                            }}
-                          />
-                        </View>
-                      ) : (
-                        <>
-                          <Image
-                            resizeMode="contain"
-                            source={localImage.Boot}
-                            style={{
-                              width: 35,
-                              height: 35,
-                              justifyContent: 'flex-end',
-                              alignSelf: 'flex-end',
-                              marginHorizontal: 5,
-                            }}
-                          />
                           <View
                             style={{
                               width: 250,
-                              backgroundColor: '#fff',
-                              borderRadius: 16,
-                              borderWidth: 1,
-                              borderColor: '#f4c7c3',
-                              shadowColor: '#000',
-                              shadowOffset: {
-                                width: 0,
-                                height: 2,
-                              },
-                              shadowOpacity: 0.25,
-                              shadowRadius: 3.84,
-                              elevation: 5,
-                            }}>
-                            <View
-                              style={{
-                                width: 250,
 
-                                borderRadius: 16,
-                                borderColor: '#f4c7c3',
-                                borderWidth: 1,
-                                backgroundColor: '#9410001A',
-                                padding: 10,
+                              borderRadius: 16,
+                              borderColor: '#f4c7c3',
+                              borderWidth: 1,
+                              backgroundColor: '#9410001A',
+                              padding: 10,
+                            }}>
+                            <Text
+                              style={{
+                                fontFamily: 'Poppins',
+                                fontWeight: '400',
+                                fontSize: 12,
+                                lineHeight: 15,
+                                color: AppColor.LITELTEXTCOLOR,
                               }}>
-                              <Text
-                                style={{
-                                  fontFamily: 'Poppins',
-                                  fontWeight: '400',
-                                  fontSize: 12,
-                                  lineHeight: 15,
-                                  color: AppColor.LITELTEXTCOLOR,
-                                }}>
-                                {item.message}
-                              </Text>
-                            </View>
+                              {item.message}
+                            </Text>
                           </View>
-                        </>
-                      )
+                        </View>
+                      </>
                     ) : (
                       <>
                         <View
@@ -274,11 +128,17 @@ const AIMessageHistory = () => {
                           </Text>
                         </View>
                         <Image
-                          resizeMode="contain"
-                          source={localImage.User}
+                          resizeMode="cover"
+                          source={
+                            getUserDataDetails?.image_path == null
+                              ? localImage.User
+                              : {uri: getUserDataDetails?.image_path}
+                          }
                           style={{
                             width: 30,
                             height: 30,
+                            borderRadius: 30 / 2,
+                            marginHorizontal: 5,
                             justifyContent: 'flex-end',
                             alignSelf: 'flex-end',
                           }}
@@ -286,16 +146,16 @@ const AIMessageHistory = () => {
                       </>
                     )}
                   </View>
-                </View> */}
-              </>
-            );
-          }}
-          initialNumToRender={10}
-          maxToRenderPerBatch={10}
-          updateCellsBatchingPeriod={100}
-          removeClippedSubviews={true}
-        />
-      </ScrollView>
+                </>
+              );
+            }}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            updateCellsBatchingPeriod={100}
+            removeClippedSubviews={true}
+          />
+        </ScrollView>
+      </Wrapper>
     </View>
   );
 };
@@ -317,17 +177,17 @@ var styles = StyleSheet.create({
   },
   messageContainer3: {
     flexDirection: 'row',
-    marginTop:20
+    marginTop: 20,
   },
   messageContainer: {
     flexDirection: 'row',
-    marginTop:20
+    marginTop: 20,
   },
   messageContainer1: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignSelf: 'flex-end',
-    marginTop:10
+    marginTop: 10,
   },
   messageBubble1: {
     alignItems: 'flex-start',

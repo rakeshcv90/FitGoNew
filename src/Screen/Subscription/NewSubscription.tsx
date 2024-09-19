@@ -838,7 +838,7 @@ const NewSubscription = ({navigation, route}: any) => {
           <CheckIcon />
           <FitText
             type="normal"
-            value="Unlocked 150+ Exercises"
+            value="Unlock 150+ Exercises"
             color="#333333E5"
             fontFamily={Fonts.MONTSERRAT_MEDIUM}
             marginVertical={3}

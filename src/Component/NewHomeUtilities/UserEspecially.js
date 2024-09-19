@@ -268,17 +268,17 @@ const UserEspecially = () => {
                 style={{
                   width: '100%',
                   height: '100%',
-                  paddingVertical: DeviceWidth * 0.05,
-                  paddingHorizontal: DeviceWidth * 0.03,
+                  paddingVertical: DeviceWidth * 0.07,
+                  paddingLeft: DeviceWidth * 0.04,
                 }}>
                 <Text
                   style={{
                     fontFamily: Fonts.HELVETICA_BOLD,
-                    fontSize: 14,
+                    fontSize: 15,
                     lineHeight: 17,
                     color: AppColor.WHITE,
                   }}>
-                  Custom workout
+                  Custom Made
                 </Text>
                 <View
                   style={{
@@ -290,8 +290,9 @@ const UserEspecially = () => {
                     style={{
                       fontFamily: Fonts.HELVETICA_REGULAR,
                       fontSize: 13,
-                      lineHeight: 16,
+                      lineHeight: 20,
                       color: AppColor.WHITE,
+
                     }}>
                     Create your own workout
                   </Text>
@@ -320,13 +321,13 @@ const UserEspecially = () => {
                 style={{
                   width: '100%',
                   height: '100%',
-                  paddingVertical: DeviceWidth * 0.05,
-                  paddingHorizontal: DeviceWidth * 0.03,
+                  paddingVertical: DeviceWidth * 0.07,
+                  paddingLeft: DeviceWidth * 0.04,
                 }}>
                 <Text
                   style={{
                     fontFamily: Fonts.HELVETICA_BOLD,
-                    fontSize: 14,
+                    fontSize: 15,
                     lineHeight: 17,
                     color: AppColor.WHITE,
                   }}>
@@ -342,20 +343,14 @@ const UserEspecially = () => {
                     style={{
                       fontFamily: Fonts.HELVETICA_REGULAR,
                       fontSize: 13,
-                      lineHeight: 16,
+                      lineHeight: 20,
                       color: AppColor.WHITE,
                     }}>
-                    Gyms near your
+                    Discover fitness centers close to you
                   </Text>
-                  <Text
-                    style={{
-                      fontFamily: Fonts.HELVETICA_REGULAR,
-                      fontSize: 13,
-                      lineHeight: 16,
-                      color: AppColor.WHITE,
-                    }}>
-                    location
-                  </Text>
+                 
+                 
+                
                 </View>
               </View>
             </ImageBackground>
@@ -389,13 +384,13 @@ const UserEspecially = () => {
                 style={{
                   width: '100%',
                   height: '100%',
-                  paddingVertical: DeviceWidth * 0.05,
-                  paddingHorizontal: DeviceWidth * 0.03,
+                  paddingVertical: DeviceWidth * 0.07,
+                  paddingLeft: DeviceWidth * 0.04,
                 }}>
                 <Text
                   style={{
                     fontFamily: Fonts.HELVETICA_BOLD,
-                    fontSize: 14,
+                    fontSize: 15,
                     lineHeight: 17,
                     color: AppColor.WHITE,
                   }}>
@@ -411,20 +406,11 @@ const UserEspecially = () => {
                     style={{
                       fontFamily: Fonts.HELVETICA_REGULAR,
                       fontSize: 13,
-                      lineHeight: 16,
+                      lineHeight:18,
                       color: AppColor.WHITE,
                     }}>
-                    Reach your goals quicker with a nutritious diet
+                  {  "Reach your goals quicker with a \nnutritious diet"}
                   </Text>
-                  {/* <Text
-                    style={{
-                      fontFamily: Fonts.HELVETICA_REGULAR,
-                      fontSize: 13,
-                      lineHeight: 16,
-                      color: AppColor.WHITE,
-                    }}>
-                    Nutritious Diet
-                  </Text> */}
                 </View>
               </View>
             </ImageBackground>
@@ -449,13 +435,13 @@ const UserEspecially = () => {
                 style={{
                   width: '100%',
                   height: '100%',
-                  paddingVertical: DeviceWidth * 0.05,
-                  paddingHorizontal: DeviceWidth * 0.03,
+                  paddingVertical: DeviceWidth * 0.07,
+                  paddingLeft: DeviceWidth * 0.04,
                 }}>
                 <Text
                   style={{
                     fontFamily: Fonts.HELVETICA_BOLD,
-                    fontSize: 14,
+                    fontSize: 15,
                     lineHeight: 17,
                     color: AppColor.WHITE,
                   }}>
@@ -471,20 +457,12 @@ const UserEspecially = () => {
                     style={{
                       fontFamily: Fonts.HELVETICA_REGULAR,
                       fontSize: 13,
-                      lineHeight: 16,
+                      lineHeight: 18,
                       color: AppColor.WHITE,
                     }}>
-                    Quality over quantity
+                    Explore top-tier fitness essentials
                   </Text>
-                  <Text
-                    style={{
-                      fontFamily: Fonts.HELVETICA_REGULAR,
-                      fontSize: 13,
-                      lineHeight: 16,
-                      color: AppColor.WHITE,
-                    }}>
-                    for optimal health benefits
-                  </Text>
+                  
                 </View>
               </View>
             </ImageBackground>

@@ -38,7 +38,7 @@ const NativeAddTest = ({media, type}) => {
   const IsTesting = __DEV__ ? true : PLATFORM_IOS
     ? getUserDataDetails?.social_id != null &&
       ADS_IOS.includes(getUserDataDetails?.social_id)
-    : DeviceID != '' && ADS_IDs.includes(DeviceID);
+    : DeviceID != '' && ADS_IDs.includes(DeviceID)
 
   const onAdFailedToLoad = event => {
     setError(true);

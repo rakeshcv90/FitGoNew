@@ -64,6 +64,13 @@ export const AppColor = {
   LIGHT_RED:'#FEF2F2',
   DARK_YELLOW: '#FEC40C',
   LIGHT_YELLOW: '#FFE696',
+  GOLD:'#EAB308',
+  BAR1COLOR:'#EFEFEF',
+  BAR2COLOR:'#FFEBC2',
+  BAR3COLOR:'#DFCFCC',
+  GOLD1:'#FF9100',
+  GOLD2:'#FFD54F'
+
 };
 export const Fonts = {
   MONTSERRAT_BOLD: 'Montserrat-Bold',
@@ -75,3 +82,4 @@ export const Fonts = {
 };
 
 export const PLATFORM_IOS = Platform.OS == 'ios';
+
