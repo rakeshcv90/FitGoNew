@@ -76,6 +76,7 @@ const Leaderboard = () => {
   const [coins, setCoins] = useState({});
   const [winnerData, setWinnerData] = useState();
   const getBanners = useSelector((state: any) => state?.getBanners);
+  const enteredUpcomingEvent = useSelector((state: any) => state?.enteredUpcomingEvent);
   const enteredCurrentEvent = useSelector(
     (state: any) => state?.enteredCurrentEvent,
   );
@@ -630,7 +631,7 @@ const Leaderboard = () => {
                     navigation={navigation}
                   />
                 ) : null
-              ) : (
+              ) : enteredUpcomingEvent ? null : (
                 <View
                   style={{
                     width: '95%',

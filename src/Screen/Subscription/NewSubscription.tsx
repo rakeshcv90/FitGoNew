@@ -887,11 +887,7 @@ const NewSubscription = ({navigation, route}: any) => {
                   : AppColor.WHITE,
             },
           ]}
-          bC={
-            planName.includes('noob') || planName.includes('pro')
-              ? color
-              : AppColor.WHITE
-          }
+          bC={color}
           alignSelf
           bR={6}
           w={DeviceWidth * 0.8}
@@ -1165,13 +1161,13 @@ const NewSubscription = ({navigation, route}: any) => {
                   }}>
                   Please NOTE: No Free Trial is available for this plan. You
                   will be charged{' '}
-                  {getPrice(sortedSubscriptions[currentSelected])} for monthly plan
-                  immediately. Your subscription will renew automatically until
-                  you cancel the subscription. You can manage or cancel your
-                  subscription anytime from the Google Play Store. If you are
-                  unsure how to cancel a subscription, please visit the Google
-                  Support website. Note that deleting the app does not cancel
-                  your subscription.
+                  {getPrice(sortedSubscriptions[currentSelected])} for monthly
+                  plan immediately. Your subscription will renew automatically
+                  until you cancel the subscription. You can manage or cancel
+                  your subscription anytime from the Google Play Store. If you
+                  are unsure how to cancel a subscription, please visit the
+                  Google Support website. Note that deleting the app does not
+                  cancel your subscription.
                 </Text>
               ) : (
                 <Text
