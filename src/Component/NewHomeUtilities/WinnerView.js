@@ -71,7 +71,7 @@ const WinnerView = ({totalData}) => {
                   </View>
                 ) : (
                   <Image
-                    resizeMode={DeviceHeigth >= 1024 ? 'stretch' : 'contain'}
+                    resizeMode={'cover'}
                     source={{uri: totalData[0]?.image_path}}
                     //source={localImage.NContact}
                     style={{
@@ -82,6 +82,7 @@ const WinnerView = ({totalData}) => {
                       top: DeviceHeigth >= 1024 ? 13 : 17,
                       zIndex: -1,
                       overflow: 'hidden',
+                      borderRadius: 100
                     }}
                   />
                 )}

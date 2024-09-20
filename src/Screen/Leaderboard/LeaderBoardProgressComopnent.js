@@ -1,6 +1,6 @@
 import {View, Text, StyleSheet, Platform, Image} from 'react-native';
 import React, {useCallback} from 'react';
-import {DeviceWidth} from '../../Component/Config';
+import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {AppColor, Fonts} from '../../Component/Color';
 import NewButton from '../../Component/NewButton';
 
@@ -122,7 +122,7 @@ const LeaderBoardProgressComopnent = ({
                   style={[
                     styles.horizontalLine,
                     {
-                      width: '110%',
+                      width: DeviceHeigth >= 1024 ? '230%' : '110%',
                       backgroundColor:
                         missedCondition(index) || completeCondition(index)
                           ? AppColor.NEW_GREEN

@@ -26,9 +26,7 @@ import axios from 'axios';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import moment from 'moment';
 import NativeAddTest from '../../Component/NativeAddTest';
-import {
-  setVideoLocation,
-} from '../../Component/ThemeRedux/Actions';
+import {setVideoLocation} from '../../Component/ThemeRedux/Actions';
 import RNFetchBlob from 'rn-fetch-blob';
 import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
@@ -208,7 +206,7 @@ const MeditationDetails = ({navigation, route}) => {
         style={{
           alignSelf: 'center',
           marginTop: 30,
-          width:DeviceWidth
+          width: DeviceWidth,
         }}>
         <AnimatedLottieView
           source={require('../../Icon/Images/NewImage/NoData.json')}
@@ -330,7 +328,7 @@ const MeditationDetails = ({navigation, route}) => {
             horizontal
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
-            ListEmptyComponent={<EmptyComponent/>}
+            ListEmptyComponent={<EmptyComponent />}
             renderItem={({item, index}) => {
               return (
                 <ListItem title={item} color={colors[index % colors.length]} />
@@ -470,7 +468,7 @@ const MeditationDetails = ({navigation, route}) => {
               data={mindsetExercise}
               showsVerticalScrollIndicator={false}
               keyExtractor={(item, index) => index.toString()}
-              ListEmptyComponent={<EmptyComponent/>}
+              ListEmptyComponent={<EmptyComponent />}
               //  contentInset={{paddingBottom: DeviceHeigth * 0.1}}
               renderItem={({item, index}) => {
                 return (
@@ -505,7 +503,16 @@ const MeditationDetails = ({navigation, route}) => {
                             'transparent',
                           ]}
                           style={[styles.box, styles.grad]}>
-                          <View style={{width: '50%', padding: 10}}>
+                          <View
+                            style={{
+                              width: '100%',
+                              padding: 10,
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                              bottom: 0,
+                              position: 'absolute',
+                            }}>
                             <Text
                               style={{
                                 color: AppColor.WHITE,
@@ -516,50 +523,29 @@ const MeditationDetails = ({navigation, route}) => {
                               }}>
                               {item.exercise_mindset_title}
                             </Text>
-                            <View
-                              style={{
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                marginTop: DeviceHeigth * 0.02,
+                            <TouchableOpacity
+                              // disabled={downloaded > 0 && downloaded != 100}
+                              onPress={() => {
+                                navigation.navigate(
+                                  'MeditationExerciseDetails',
+                                  {
+                                    item: item,
+                                    name: selectedTitle,
+                                  },
+                                );
                               }}>
-                              <TouchableOpacity
-                                // disabled={downloaded > 0 && downloaded != 100}
-                                onPress={() => {
-                                  navigation.navigate(
-                                    'MeditationExerciseDetails',
-                                    {
-                                      item: item,
-                                      name: selectedTitle,
-                                    },
-                                  );
-                                }}>
-                                <Image
-                                  source={localImage.Play2}
-                                  style={[
-                                    styles.img,
-                                    {
-                                      height: 60,
-                                      width: 60,
-                                      left: -12,
-                                    },
-                                  ]}
-                                  resizeMode="cover"></Image>
-                              </TouchableOpacity>
-                              {/* <Text
-                                style={{
-                                  color: AppColor.WHITE,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: '700',
-                                  lineHeight: 21,
-                                  fontSize: 14,
-                                  left: -12,
-                                  bottom: 4,
-                                }}>
-                                {downloaded > 0 && downloaded != 100
-                                  ? 'Downloading ...'
-                                  : item?.exercise_mindset_time}
-                              </Text> */}
-                            </View>
+                              <Image
+                                source={localImage.Play2}
+                                style={[
+                                  styles.img,
+                                  {
+                                    height: 60,
+                                    width: 60,
+                                    left: -12,
+                                  },
+                                ]}
+                                resizeMode="cover"></Image>
+                            </TouchableOpacity>
                           </View>
                         </LinearGradient>
                       </ImageBackground>

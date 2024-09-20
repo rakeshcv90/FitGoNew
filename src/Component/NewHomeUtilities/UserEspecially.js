@@ -398,7 +398,7 @@ const UserEspecially = () => {
                 </Text>
                 <View
                   style={{
-                    width: '90%',
+                    width: '70%',
                     height: '100%',
                     marginVertical: 10,
                   }}>
@@ -409,7 +409,7 @@ const UserEspecially = () => {
                       lineHeight:18,
                       color: AppColor.WHITE,
                     }}>
-                  {  "Reach your goals quicker with a \nnutritious diet"}
+                  {  "Reach your goals quicker with a nutritious diet"}
                   </Text>
                 </View>
               </View>

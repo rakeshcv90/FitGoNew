@@ -174,6 +174,17 @@ const NewSubscription = ({navigation, route}: any) => {
     await TrackPlayer.reset();
   };
   const restorePurchase = async () => {
+    if(getPurchaseHistory?.plan != ''){
+      showMessage({
+        message: 'You already have an active subscription.',
+        type: 'danger',
+        animationDuration: 500,
+
+        floating: true,
+        // icon: {icon: 'auto', position: 'left'},
+      });
+      return
+    }
     setForLoading(true);
     try {
       const purchases = await RNIap.getAvailablePurchases();

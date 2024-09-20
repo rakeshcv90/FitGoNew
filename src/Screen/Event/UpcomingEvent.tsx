@@ -677,7 +677,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
                   />
                   <FitText
                     type="normal"
-                    value="Unlocked 150+ Exercises"
+                    value="Unlock 150+ Exercises"
                     color="#333333E5"
                     marginVertical={3}
                   />

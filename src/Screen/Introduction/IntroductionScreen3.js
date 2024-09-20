@@ -112,7 +112,7 @@ const IntroductionScreen3 = ({navigation}) => {
             fontWeight: '700',
             color: AppColor.RED,
           }}>
-          {hindiLanguage ? 'साप्ताहिक पुरस्कार' : 'Weekly Rewards'}
+          {hindiLanguage ? 'सुकून की साँस लें!' : 'Weekly Rewards'}
         </Text>
 
         <Text
@@ -126,8 +126,7 @@ const IntroductionScreen3 = ({navigation}) => {
             marginTop: 16,
           }}>
           {hindiLanguage
-            ? `सप्ताह के अंत तक चैलेंज पूरा करें और रोमांचक पुरस्कार प्राप्त करें। चाहे आप एक शुरुआती हों या फिटनेस प्रेमी, हमारे चैलेंज आपको प्रेरित और पुरस्कृत करने के लिए डिज़ाइन किए गए हैं। इसे न चूकें! हर सोमवार, एक नया चैलेंज शुरू होता है।
-`
+            ? `शांति पाएं इस हलचल भरी दुनिया में हमारी शांतिदायक ब्रीदिंग एक्सरसाइज और माइंडफुल मेडिटेशन सेशन के साथ। तनाव कम करें, मूड बेहतर करें और हमारे गाइडेड सेशन्स के साथ अपनी फोकस क्षमता बढ़ाएं। एक गहरी साँस लें और एक शांत, स्वस्थ जीवन का आनंद उठाएं!`
             : `Complete the challenge by the end of the week and receive exciting rewards. Whether you’re a beginner or a fitness legend, our challenges are designed to keep you motivated and rewarded. Don’t miss out! Every Monday, a new challenge begins.`}
         </Text>
       </View>

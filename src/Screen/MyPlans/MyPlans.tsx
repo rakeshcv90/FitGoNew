@@ -1151,7 +1151,7 @@ const MyPlans = ({navigation}: any) => {
                   lineHeight: 19,
                   color: AppColor.PrimaryTextColor,
                 }}>
-                Week Challenge
+                Weekly Challenge
               </Text>
             </View>
             <View

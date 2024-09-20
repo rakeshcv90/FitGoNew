@@ -112,7 +112,7 @@ const IntroductionScreen2 = ({navigation, route}) => {
             color: AppColor.RED,
           }}>
           {hindiLanguage
-            ? 'खुद को शीर्ष पर ले जाएं'
+            ? 'फिट रहें, इनाम पाएं!'
             : 'Take Yourself to the Top'}
         </Text>
 
@@ -127,7 +127,7 @@ const IntroductionScreen2 = ({navigation, route}) => {
             marginTop: 16,
           }}>
           {hindiLanguage
-            ? `रैंकों में ऊपर उठें और अपनी निष्ठा को प्रदर्शित करें। सिक्के इकट्ठा करें, नए फिटनेस मुकाम हासिल करें, और लीडरबोर्ड के शीर्ष पर अपनी जगह बनाएं। आपकी शीर्ष तक की यात्रा अब शुरू होती है!`
+            ? `हमारे रोमांचक फिटनेस चैलेंजेस में हिस्सा लें और अपनी सीमाओं को चुनौती दें! लीडरबोर्ड पर चढ़ें, और अपनी मेहनत को शानदार इनामों में बदलते हुए देखें।`
             : `Rise through the ranks and showcase your dedication. Collect coins, achieve new fitness heights, and take your place at the top of the leaderboard. Your journey to the top starts now!`}
         </Text>
       </View>

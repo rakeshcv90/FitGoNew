@@ -1,7 +1,7 @@
 import {View, Text, ScrollView, FlatList} from 'react-native';
 import React, {useRef, useState} from 'react';
 import {StyleSheet} from 'react-native';
-import {AppColor} from '../../Component/Color';
+import {AppColor, Fonts} from '../../Component/Color';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {StatusBar} from 'react-native';
 import {useSelector} from 'react-redux';
@@ -14,13 +14,21 @@ import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 const AIMessageHistory = () => {
   const {getAIMessageHistory} = useSelector(state => state);
   const [senderMessage, setsenderMessage] = useState(getAIMessageHistory);
-   const getUserDataDetails=useSelector(state=>state?.getUserDataDetails)
+  const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
   const flatListRef = useRef(null);
   return (
     <View style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <Wrapper>
-        <NewHeader1 header={'AI Message History'} backButton={true} />
+        <NewHeader1
+          headerStyle={{
+            color: AppColor.BLACK,
+            fontFamily: Fonts.HELVETICA_BOLD,
+            fontSize: 20,
+          }}
+          header={'AI Message History'}
+          backButton={true}
+        />
         <ScrollView
           style={{flexGrow: 1}}
           ref={flatListRef}
@@ -100,7 +108,7 @@ const AIMessageHistory = () => {
                       <>
                         <View
                           style={{
-                            width: 250,
+                            // width: 250,
                             backgroundColor: '#ffffff',
                             borderRadius: 16,
                             borderWidth: 1,

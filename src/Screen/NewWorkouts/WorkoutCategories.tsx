@@ -492,7 +492,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
                       />
                     ) : (
                       <CircularProgressBase
-                        value={isItemDownload ? downloadProgress : 0}
+                        value={isItemDownload && downloadProgress > 5 ? downloadProgress : 0}
                         radius={14}
                         activeStrokeColor={AppColor.RED}
                         inActiveStrokeColor="#33333399"
@@ -530,7 +530,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
       },
     [switchButton, selectedExercise, downloadProgress],
   );
-console.log('object')
+  
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
       <Wrapper>
@@ -545,7 +545,7 @@ console.log('object')
           backButton
           workoutCat={switchButton}
           onBackPress={() => {
-            if (downloaded > 0 || downloadProgress > 0) {
+            if (downloaded > 0 || (downloadProgress > 0 && switchButton)) {
               showMessage({
                 message:
                   'Please wait, downloading in progress. Do not press back.',
@@ -557,6 +557,7 @@ console.log('object')
             } else if (switchButton) {
               AnalyticsConsole('CL_SE_WC');
               setSelectedExercise([]);
+              setSelectedIndex(-1)
               setSwitchButton(false);
               setItemsLength(0);
               setDownloadProgress(6)

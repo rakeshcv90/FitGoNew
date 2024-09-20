@@ -159,7 +159,7 @@ const Login = ({navigation}) => {
         'User does not exist with provided Google social credentials'
       ) {
         showMessage({
-          message: 'This email id is not registered. SignUp to continue.',
+          message: 'This email id is not registered. Sign Up to continue.',
           type: 'danger',
           animationDuration: 1000,
           floating: true,

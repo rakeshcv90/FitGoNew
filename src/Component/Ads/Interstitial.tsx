@@ -11,6 +11,7 @@ import {
   interstitialAdIdTest,
 } from '../AdsId';
 import React, {useEffect, useRef} from 'react';
+import { useSelector } from 'react-redux';
 
 
 interface Props {
@@ -18,22 +19,16 @@ interface Props {
   }
 
 
-const DeviceID = store.getState().getDeviceID;
-const getUserDataDetails: any = store.getState().getUserDataDetails;
-const IsTesting = __DEV__
-  ? true
-  : PLATFORM_IOS
-  ? getUserDataDetails?.social_id != null &&
-    ADS_IOS.includes(getUserDataDetails?.social_id)
-  : DeviceID != '' && ADS_IDs.includes(DeviceID);
 
 class Interstitial {
   private interstitialAd: InterstitialAd | null = null;
   private adLoaded = false; // Global variable to track ad loading status
   private addClosed: Function // Callback for ad closed state
+  private isTesting = false
 
-  constructor(addClosed: Function) {
+  constructor(addClosed: Function, isTesting: boolean) {
     this.addClosed = addClosed;
+    this.isTesting = isTesting
   }
 
   initInterstitial = async () => {
@@ -42,7 +37,7 @@ class Interstitial {
 
     console.log('Ad INIT CHECK');
     this.interstitialAd = InterstitialAd.createForAdRequest(
-      IsTesting ? interstitialAdIdTest : interstitialAdId,
+      this.isTesting ? interstitialAdIdTest : interstitialAdId,
       {},
     );
 
@@ -81,13 +76,18 @@ class Interstitial {
 
 const useInterstitialAd = ({setAddClosed}: Props) => {
   const interstitialRef = useRef<Interstitial | null>(null);
-
+  const DeviceID = useSelector((state: any) => state.getDeviceID);
+  const getUserDataDetails = useSelector((state: any) => state.getDeviceID);
+  const IsTesting = PLATFORM_IOS
+    ? getUserDataDetails?.social_id != null &&
+      ADS_IOS.includes(getUserDataDetails?.social_id)
+    : DeviceID != '' && ADS_IDs.includes(DeviceID);
   const addClosed = () => {
     setAddClosed(true)
   }
 
   useEffect(() => {
-    interstitialRef.current = new Interstitial(addClosed);
+    interstitialRef.current = new Interstitial(addClosed, IsTesting);
   }, []);
 
   const initInterstitial = () => {

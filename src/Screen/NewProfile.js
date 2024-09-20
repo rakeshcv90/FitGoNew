@@ -465,6 +465,9 @@ const NewProfile = ({navigation}) => {
                 size={25}
                 color={AppColor.BLACK}
                 style={{position: 'absolute', right: 16, top: 16}}
+                onPress={() => {
+                  setUpadteScreenVisibilty(false);
+                }}
               />
               <Image
                 defaultSource={localImage.avt}

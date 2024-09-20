@@ -98,13 +98,13 @@ const Signup = ({navigation}) => {
     password: Yup.string()
       .matches(
         PasswordRegex,
-        'Password must contain 1 Upper-Case letter, 1 Lower-Case letter, 1 Digit, 1 Special Character(@,$,-,^,&, !), and the length must be at least 8 characters',
+        'Password must contain 1 Upper-Case letter, 1 Lower-Case letter, 1 Digit, 1 Special Character (@,$,-,^,&, !) and the length must be at least 8 characters.',
       )
       .required('Password is Required'),
     repeat_password: Yup.string()
       .matches(
         PasswordRegex,
-        'Password must contain 1 Upper-Case letter, 1 Lower-Case letter, 1 Digit, 1 Special Character(@,$,-,^,&, !), and the length must be at least 8 characters',
+        'Password must contain 1 Upper-Case letter, 1 Lower-Case letter, 1 Digit, 1 Special Character (@,$,-,^,&, !) and the length must be at least 8 characters.',
       )
       .required('Confirm Password is Required')
       .oneOf([Yup.ref('password')], 'Confirm password does not match'),
