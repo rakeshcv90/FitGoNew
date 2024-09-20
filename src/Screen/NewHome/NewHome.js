@@ -27,49 +27,33 @@ import {
   setBanners,
   setChallengesData,
   setCompleteProfileData,
-  setCustomWorkoutData,
-  setEnteredCurrentEvent,
-  setEnteredUpcomingEvent,
   setFitCoins,
   setIsAlarmEnabled,
   Setmealdata,
-  setOfferAgreement,
   setPermissionIos,
-  setPlanType,
   setPopUpSeen,
-  setPurchaseHistory,
   setRewardModal,
   setStoreData,
-  setUserProfileData,
   setWeeklyPlansData,
   setWinnerAnnounced,
-  setWorkoutTimeCal,
 } from '../../Component/ThemeRedux/Actions';
 import {useIsFocused} from '@react-navigation/native';
 import AppleStepCounter from '../../Component/NewHomeUtilities/AppleStepCounter';
 import UserEspecially from '../../Component/NewHomeUtilities/UserEspecially';
 import axios from 'axios';
-
-import WithoutEvent from '../../Component/NewHomeUtilities/WithoutEvent';
 import FocuseMind from '../../Component/NewHomeUtilities/FocuseMind';
-import FitnessInstructor from '../../Component/NewHomeUtilities/FitnessInstructor';
 import InviteFriends from '../../Component/NewHomeUtilities/InviteFriends';
 import RewardModal from '../../Component/Utilities/RewardModal';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import {AlarmNotification} from '../../Component/Reminder';
 import notifee from '@notifee/react-native';
-
 import UpcomingEventModal from '../../Component/Utilities/UpcomingEventModal';
 import {showMessage} from 'react-native-flash-message';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
 import {LocationPermissionModal} from '../../Component/Utilities/LocationPermission';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import {Marquee} from '@animatereactnative/marquee';
-import MyChallenge from '../../Component/NewHomeUtilities/MyChallenge';
-import {RequestAPI} from '../../Component/Utilities/RequestAPI';
 import moment from 'moment';
-
 import Reanimated, {
   useAnimatedStyle,
   useSharedValue,
@@ -121,6 +105,7 @@ const NewHome = ({navigation}) => {
   const getPopUpSeen = useSelector(state => state?.getPopUpSeen);
   const getPermissionIos = useSelector(state => state?.getPermissionIos);
   const getWeeklyPlansData = useSelector(state => state?.getWeeklyPlansData);
+  const allWorkoutData = useSelector(state => state?.allWorkoutData);
   const getEquipmentExercise = useSelector(
     state => state?.getEquipmentExercise,
   );
@@ -128,7 +113,7 @@ const NewHome = ({navigation}) => {
     if (isFocused) {
       getAllChallangeAndAllExerciseData();
       getLeaderboardDataAPI();
-      allWorkoutApi()
+      Object.keys(allWorkoutData)?.length <= 1 && allWorkoutApi();
       enteredCurrentEvent && getEarnedCoins();
     }
   }, [isFocused]);
@@ -191,11 +176,9 @@ const NewHome = ({navigation}) => {
       } else if (res?.data) {
         dispatch(setAllWorkoutData(res?.data));
       } else {
-        // dispatch(setAllWorkoutData([]));
       }
     } catch (error) {
       console.error(error, 'customWorkoutDataApiError');
-      // dispatch(setAllWorkoutData([]));
     }
   };
   // Animated style for shimmer effect
@@ -743,6 +726,17 @@ const NewHome = ({navigation}) => {
           />
         )}
         <View style={{marginVertical: 8}}>
+          <Text
+            style={{
+              color: AppColor.BLACK,
+              width: DeviceWidth * 0.95,
+              alignSelf: 'center',
+              fontFamily: Fonts.HELVETICA_BOLD,
+              fontSize: 16,
+              marginBottom: 8,
+            }}>
+            Past Winners
+          </Text>
           <PastWinnersComponent
             pastWinners={getPastWinners}
             navigation={navigation}

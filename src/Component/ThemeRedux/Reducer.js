@@ -13,7 +13,7 @@ const intialState = {
   mindSetData: [],
   getHealthData: [],
   currentWorkoutData: [],
-  allWorkoutData: [],
+  allWorkoutData: {},
   mindsetConsent: false,
   showLogout: 0,
   mealData: [],

@@ -1,7 +1,7 @@
 import React from 'react';
 import SplaceScreen from '../Screen/SplaceScreen';
 import TermaAndCondition from '../Screen/TermaAndCondition';
-import Yourself from '../Screen/Yourself/Index';
+import Yourself from '../Screen/Yourself/index';
 import Gender from '../Screen/Yourself/Gender';
 import Height from '../Screen/Yourself/Height';
 import Weight from '../Screen/Yourself/Weight';
@@ -70,18 +70,14 @@ import CardioExercise from '../Screen/Event/CardioExercise';
 import Questions from '../Screen/FAQ/Questions';
 import ChatBot from '../Screen/FAQ/ChatBot';
 import StepGuide from '../Screen/StepbyStepGuide/StepGuide';
-
 import Breathe from '../Screen/Breath/Breathe';
 import WorkoutHistory from '../Screen/WorkoutHistory/WorkoutHistory';
 import OfferPage from '../Screen/OfferScreen/OfferPage';
 import WorkoutCompleted from '../Screen/WorkoutCompleteScreen/WorkoutCompleted';
-import NewHome from '../Screen/NewHome/NewHome';
 import PastWinner from '../Screen/NewHome/PastWinner';
-import LoadingScreen from '../Component/NewHomeUtilities/LoadingScreen';
 import CardioCompleted from '../Screen/WorkoutCompleteScreen/CardioCompleted';
 import NewStore from '../Screen/Store/NewStore';
 import Products from '../Screen/Store/Products';
-import TestExercise from '../Screen/NewWorkouts/Exercise/TestExercise';
 const Stack = createStackNavigator();
 
 const screenOptions = {
