@@ -267,5 +267,6 @@ export const localImage = {
   cautionLottie:require('../Icon/Images/InAppRewards/cautionLottie.json'),
   celebrationAnimation:require('../Icon/Images/InAppRewards/celebration.json'),
   celebrationTrophy:require('../Icon/Images/InAppRewards/celebrationTrophy.png'),
-  startCorner1:require('../Icon/Images/InAppRewards/starCorner1.png')
+  startCorner1:require('../Icon/Images/InAppRewards/starCorner1.png'),
+  rankImage:require('../Icon/Images/InAppRewards/rankImage.png')
 };

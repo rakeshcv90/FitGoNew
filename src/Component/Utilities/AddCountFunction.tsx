@@ -31,6 +31,6 @@ export const AddCountFunction = () => {
     else if (getPurchaseHistory?.plan == 'noob')
       return countAds(getFitmeMealAdsCount, dispatch, setFitmeMealAdsCount, 3);
   } else {
-    return countAds(getFitmeMealAdsCount, dispatch, setFitmeMealAdsCount, 3);
+    return countAds(getFitmeMealAdsCount, dispatch, setFitmeMealAdsCount, 2);
   }
 };

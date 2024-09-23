@@ -141,7 +141,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                   navigation.navigate(route.name);
                 }
               } else {
-                if (getFitmeAdsCount < count) {
+                if (getFitmeAdsCount < 2) {
                   Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
                   Dispatch(setOpenAdsCount(getOpenAdsCount + 1));
                   navigation.navigate(route.name);

@@ -76,7 +76,7 @@ const EditCustomWorkout = ({navigation, route}) => {
     () =>
       ({item, index}) => {
         const isSelected = selectedItems?.includes(item?.exercise_id);
-
+        const time = parseInt(item?.exercise_rest.split(' ')[0]);
         return (
           <>
             <TouchableOpacity
@@ -138,28 +138,16 @@ const EditCustomWorkout = ({navigation, route}) => {
                     {item?.exercise_title}
                   </Text>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text
-                      style={{
-                        fontSize: 12,
-                        fontWeight: '700',
-                        color: '#202020',
-                        lineHeight: 30,
-
-                        fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                      }}>
-                      {'Time : '}
-                      <Text
-                        style={{
-                          fontSize: 12,
-                          fontWeight: '600',
-                          color: '#202020',
-                          lineHeight: 30,
-
-                          fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                        }}>
-                        {' '}
-                        {item?.exercise_rest}
-                      </Text>
+                    <Text style={styles.txt2}>
+                      {'Time - ' +
+                        '1 x ' +
+                        (time > 60
+                          ? Math.floor(time / 60) + ' min'
+                          : time + ' sec')}{' '}
+                      |{' '}
+                    </Text>
+                    <Text style={styles.txt2}>
+                      {'Set - ' + item?.exercise_sets}
                     </Text>
                   </View>
                 </View>
@@ -566,6 +554,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  txt2: {
+    fontSize: 13,
+    fontWeight: '400',
+    lineHeight: 25,
+    // opacity: 0.7,
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    color: '#1E1E1E',
   },
 });
 export default EditCustomWorkout;

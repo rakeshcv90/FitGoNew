@@ -18,7 +18,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 const FadeText = ({navigation}: any) => {
-  const messages = ['How to join!', 'FAQ'];
+  const messages = ['How to join?', 'FAQ'];
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const fadeAnim = useSharedValue(0);
 
@@ -43,7 +43,7 @@ const FadeText = ({navigation}: any) => {
   }));
 
   const handleClick = () => {
-    if (messages[currentMessageIndex] == 'How to join!') {
+    if (messages[currentMessageIndex] == 'How to join?') {
       navigation.navigate('StepGuide');
     } else {
       navigation.navigate('Questions', {screenName: 'Home'});
