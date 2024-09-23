@@ -384,7 +384,7 @@ const OneDay = ({navigation, route}: any) => {
                 marginHorizontal: 20,
               }}>
               <View>
-                <Text style={[styles.small, {fontSize: 14}]}>
+                <Text style={styles.small2}>
                   {item?.exercise_title}
                 </Text>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -887,6 +887,13 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: AppColor.LITELTEXTCOLOR,
     lineHeight: 30,
+  },
+  small2: {
+    fontSize: 15,
+    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+    fontWeight: '400',
+    lineHeight: 25,
+    color: '#434343',
   },
   box: {
     width: '100%',

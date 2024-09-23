@@ -40,7 +40,7 @@ export const ExerciseComponetWithoutEvents = ({
             </View>
           </View>
           <NewButton
-            title={'Start'}
+            title={'Start Workout'}
             onPress={onPress}
             withAnimation={overExerciseVisible}
             download={download}
@@ -262,7 +262,7 @@ export const ExerciseComponentWithEvent = ({
           </View>
           {day == WeekArray[currentDay] ? (
             <NewButton
-              title={'Start'}
+              title={'Start Workout'}
               onPress={onPress}
               withAnimation={overExerciseVisible}
               download={download}

@@ -465,6 +465,7 @@ const SplaceScreen = ({navigation, route}) => {
         responseData = await axios.get(
           `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}`,
         );
+        console.log("EXERCISEASAS",responseData)
         dispatch(setChallengesData(responseData.data.challenge_data));
         dispatch(setAllExercise(responseData.data.data));
       } catch (error) {

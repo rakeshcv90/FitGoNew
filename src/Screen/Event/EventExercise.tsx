@@ -381,6 +381,8 @@ const EventExercise = ({navigation, route}: any) => {
                 );
                 handleExerciseChange(allExercise[index + 1]?.exercise_title);
                 setNumber(index + 1);
+                setTimer(10)
+                setDemoW(0)
                 setRestStart(true);
                 setAddClosed(false);
               }
@@ -427,6 +429,8 @@ const EventExercise = ({navigation, route}: any) => {
                 );
                 handleExerciseChange(allExercise[index + 1]?.exercise_title);
                 setNumber(index + 1);
+                setTimer(10)
+                setDemoW(0)
                 setRestStart(true);
                 setAddClosed(false);
               }
@@ -915,6 +919,8 @@ const EventExercise = ({navigation, route}: any) => {
                       setSkip(skip + 1);
                       clearTimeout(playTimerRef.current);
                       setTimer(0);
+                      setDemoW(0);
+                      timerProgress.setValue(0);
                     }}>
                     <Image
                       source={require('../../Icon/Images/InAppRewards/SkipButton.png')}

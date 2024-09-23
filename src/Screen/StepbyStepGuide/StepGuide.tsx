@@ -106,6 +106,7 @@ const HeartCom = () => (
 
 const StepGuide = ({navigation}: any) => {
   const getPastWinner = useSelector((state: any) => state.getPastWinners);
+  const enteredCurrentEvent = useSelector((state: any) => state.enteredCurrentEvent);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -248,7 +249,13 @@ const StepGuide = ({navigation}: any) => {
           h={50}
           onPress={() => {
             AnalyticsConsole('STEP_Sub');
-            navigation?.navigate('NewSubscription', {upgrade: true});
+            if (enteredCurrentEvent) {
+              navigation.navigate('UpcomingEvent', {
+                eventType: 'upcoming',
+              });
+            } else {
+              navigation?.navigate('NewSubscription', {upgrade: true});
+            }
           }}
           alignSelf
         />

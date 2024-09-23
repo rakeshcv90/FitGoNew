@@ -174,7 +174,7 @@ const Referral = () => {
               DeviceHeigth >= 1024 ? DeviceHeigth * 0.11 : DeviceHeigth * 0.1,
           },
         ]}>
-        <View style={{top: DeviceHeigth >= 1024 ? -5 : 0}}>
+        <View style={{top: DeviceHeigth >= 1024 ? -5 : -5}}>
           {getUserDataDetails?.image_path == null ? (
             <View style={styles.textImage}>
               <Text

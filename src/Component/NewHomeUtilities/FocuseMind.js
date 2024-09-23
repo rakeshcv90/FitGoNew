@@ -105,12 +105,14 @@ const FocuseMind = () => {
           <Text
             style={{
               textAlign: 'center',
-              fontSize: 13,
 
               fontFamily: Fonts.HELVETICA_REGULAR,
 
-              lineHeight: 15,
               color: AppColor.PrimaryTextColor,
+              fontSize: 15,
+              fontWeight: '500',
+              lineHeight: 25,
+              textTransform: 'capitalize',
             }}>
             {title?.workout_mindset_title}
           </Text>

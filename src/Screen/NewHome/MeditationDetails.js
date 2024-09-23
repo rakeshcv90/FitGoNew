@@ -237,6 +237,7 @@ const MeditationDetails = ({navigation, route}) => {
             style={{
               alignSelf: 'center',
               alignItems: 'center',
+              marginVertical: 10,
 
               //  top: DeviceHeigth * 0.1,
             }}>
@@ -250,6 +251,7 @@ const MeditationDetails = ({navigation, route}) => {
           style={{
             alignSelf: 'center',
             alignItems: 'center',
+            marginVertical: 10,
 
             //top: DeviceHeigth * 0.1,
           }}>
@@ -463,7 +465,7 @@ const MeditationDetails = ({navigation, route}) => {
               updateCellsBatchingPeriod={100}
               removeClippedSubviews={true}
             />
-          ) : (
+          ) : mindsetExercise.length > 0 ? (
             <FlatList
               data={mindsetExercise}
               showsVerticalScrollIndicator={false}
@@ -559,6 +561,8 @@ const MeditationDetails = ({navigation, route}) => {
               updateCellsBatchingPeriod={100}
               removeClippedSubviews={true}
             />
+          ) : (
+            <EmptyComponent />
           )}
         </View>
       </Wrapper>

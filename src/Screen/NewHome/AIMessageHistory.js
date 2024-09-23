@@ -56,7 +56,7 @@ const AIMessageHistory = () => {
                       <>
                         <Image
                           resizeMode="contain"
-                          source={localImage.Boot}
+                          source={require('../../Icon/Images/NewImage2/mary.png')}
                           style={{
                             width: 35,
                             height: 35,

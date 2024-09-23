@@ -655,7 +655,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
                       />
                       <FitText
                         type="normal"
-                        value="3 day free trial"
+                        value="3 days free trial"
                         color="#333333E5"
                         marginVertical={3}
                       />

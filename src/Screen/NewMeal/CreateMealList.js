@@ -19,7 +19,7 @@ const CreateMealList = ({navigation}) => {
           flex: 9,
 
           alignSelf: 'center',
-          alignItems: 'center',
+          // alignItems: 'center',
           justifyContent: 'center',
           marginVertical: DeviceHeigth * 0.02,
         }}>

@@ -362,6 +362,8 @@ const Exercise = ({navigation, route}: any) => {
                 );
                 handleExerciseChange(allExercise[index + 1]?.exercise_title);
                 setNumber(index + 1);
+                setTimer(10)
+                setDemoW(0)
                 setRestStart(true);
                 setAddClosed(false);
               }
@@ -398,6 +400,8 @@ const Exercise = ({navigation, route}: any) => {
                 );
                 handleExerciseChange(allExercise[index + 1]?.exercise_title);
                 setNumber(index + 1);
+                setTimer(10)
+                setDemoW(0)
                 setRestStart(true);
                 setAddClosed(false);
               }

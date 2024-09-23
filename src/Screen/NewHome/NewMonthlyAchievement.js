@@ -195,7 +195,7 @@ const NewMonthlyAchievement = ({navigation}) => {
               <Text
                 style={{
                   fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                  color: AppColor.BoldText,
+                  color: AppColor.BLACK,
                   fontSize: 16,
                 }}>
                 BMI (kg/m²)

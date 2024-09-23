@@ -239,7 +239,7 @@ const EditCustomWorkout = ({navigation, route}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-        getCustomWorkout();
+        
         getUserDetailData();
       } else {
         setForLoading(false);
@@ -261,33 +261,6 @@ const EditCustomWorkout = ({navigation, route}) => {
         floating: true,
         icon: {icon: 'auto', position: 'left'},
       });
-    }
-  };
-  const getCustomWorkout = async () => {
-    try {
-      const data = await axios.get(
-        `${NewAppapi.GET_USER_CUSTOM_WORKOUT}?user_id=${getUserDataDetails?.id}`,
-      );
-
-      if (data?.data?.msg != 'data not found.') {
-        setForLoading(false);
-
-        dispatch(setCustomWorkoutData(data?.data?.data));
-        navigation.navigate('CustomWorkout');
-      } else {
-        dispatch(setCustomWorkoutData([]));
-      }
-    } catch (error) {
-      setForLoading(false);
-      showMessage({
-        message: 'Something went wrong pleasr try again',
-        type: 'danger',
-        animationDuration: 500,
-        floating: true,
-        icon: {icon: 'auto', position: 'left'},
-      });
-      console.log('Custom Workout Error', error);
-      dispatch(setCustomWorkoutData([]));
     }
   };
   const getUserDetailData = async () => {

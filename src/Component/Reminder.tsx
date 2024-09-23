@@ -106,12 +106,12 @@ const Reminder = ({
 
     selectedTime.setHours(selectedHours);
     selectedTime.setMinutes(selectedMinutes);
-    const minimumTime = new Date(currentTime.getTime() + 2 * 60 * 1000); // 2 minutes in milliseconds
+    const minimumTime = new Date(currentTime.getTime() + 5 * 60 * 1000); // 2 minutes in milliseconds
     const minimumSelectedTime = new Date(selectedTime.getTime()); // 2 minutes in milliseconds
     // Check if selected time is less than minimum time
     if (minimumSelectedTime <= minimumTime) {
       showMessage({
-        message: 'Reminder time should be at more 2 minutes from Current time',
+        message: 'Reminder time should be at more 5 minutes from Current time',
         type: 'info', // You might want to change 'success' to 'error' for a clearer message
         animationDuration: 500,
         floating: true,

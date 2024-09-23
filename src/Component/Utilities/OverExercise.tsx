@@ -23,7 +23,7 @@ type OverExerciseType = {
   setOverExerciseVisible: Function;
   handleBreakButton: Function | any;
   loader?: boolean;
-  closeExtrFunction?: Function | any
+  closeExtrFunction?: Function | any;
 };
 
 const format = 'hh:mm:ss';
@@ -33,12 +33,12 @@ const OverExerciseModal = ({
   overExerciseVisible,
   handleBreakButton,
   loader,
-  closeExtrFunction
+  closeExtrFunction,
 }: OverExerciseType) => {
   const dispatch = useDispatch();
 
   const close = () => {
-   closeExtrFunction && closeExtrFunction()
+    closeExtrFunction && closeExtrFunction();
     setOverExerciseVisible(false);
     dispatch(setExerciseInTime(''));
     dispatch(setExerciseOutTime(''));
@@ -97,7 +97,10 @@ const OverExerciseModal = ({
               marginTop: 10,
             }}>
             <TouchableOpacity
-              onPress={handleBreakButton}
+              onPress={() => {
+                setOverExerciseVisible(false);
+                handleBreakButton();
+              }}
               style={{
                 width: '90%',
                 borderRadius: 10,

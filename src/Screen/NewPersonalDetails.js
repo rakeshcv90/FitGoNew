@@ -379,6 +379,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                       style={{
                         marginTop: DeviceHeigth * 0.02,
                         marginLeft: 10,
+                        marginBottom: 10,
                       }}>
                       <InputText
                         errors={errors.gender}
@@ -391,7 +392,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                         editable={false}
                       />
                     </View>
-                    <View
+                    {/* <View
                       style={{
                         marginTop: DeviceHeigth * 0.02,
                         marginLeft: 10,
@@ -407,7 +408,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                         placeholder={getUserDataDetails?.experience}
                         editable={false}
                       />
-                    </View>
+                    </View> */}
                     {values.experience == 'Beginner' && (
                       <>
                         <View

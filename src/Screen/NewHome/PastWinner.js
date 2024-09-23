@@ -186,7 +186,7 @@ const PastWinner = ({route}) => {
                             eventType: 'upcoming',
                           });
                         } else {
-                          navigation.navigate('UpcomingEvent', {eventType: ''});
+                          navigation.navigate('UpcomingEvent', {eventType: 'current'});
                         }
                       } else {
                         navigation.navigate('StepGuide');

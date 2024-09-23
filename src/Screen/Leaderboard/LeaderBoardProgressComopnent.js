@@ -147,7 +147,7 @@ const LeaderBoardProgressComopnent = ({
         ))}
       </View>
       <NewButton
-        title={'Start Task'}
+        title={'Start Workout'}
         ButtonWidth={DeviceWidth * 0.35}
         pV={8}
         mV={8}

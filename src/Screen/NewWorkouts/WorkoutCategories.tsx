@@ -625,7 +625,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
                   downloaded > 0
                     ? `Downloading`
                     : switchButton
-                    ? `Start Exercise  (${itemsLength})`
+                    ? `Start Workout`
                     : 'Select Exercises'
                 }
                 h={50}

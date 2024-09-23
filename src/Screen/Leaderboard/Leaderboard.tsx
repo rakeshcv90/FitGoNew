@@ -712,7 +712,7 @@ const Leaderboard = () => {
                     <TouchableOpacity
                       activeOpacity={0.8}
                       onPress={() => {
-                        if (enteredCurrentEvent) {
+                        if (getPurchaseHistory?.plan != '') {
                           navigation.navigate('UpcomingEvent', {
                             eventType: 'upcoming',
                           });
