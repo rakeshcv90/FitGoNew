@@ -254,7 +254,7 @@ const PastWinner = ({route}) => {
                           alignItems: 'center',
                         }}>
                         <Image
-                          source={localImage.Gold}
+                          source={localImage.rankImage}
                           style={{
                             width: 35,
                             height: 35,
