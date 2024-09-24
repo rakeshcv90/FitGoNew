@@ -67,7 +67,7 @@ const WorkoutHistory = () => {
     setLoaded(true);
     try {
       const res = await axios(
-        `${NewAppapi.GET_HISTORY}?user_id=${getUserDataDetails?.id} & day=${day}`,
+        `https://fitme.cvinfotechserver.com/adserver/public/api/testa_coin_deduction_rec?user_id=${getUserDataDetails?.id} & day=${day}`, // change the url in live build
       );
       if (res?.data) {
         setLoaded1(false);

@@ -23,7 +23,7 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import AnimatedLottieView from 'lottie-react-native';
 import FastImage from 'react-native-fast-image';
 import {localImage} from '../../Component/Image';
 import Button from '../../Component/Button';
@@ -79,7 +79,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
   const [item, setitem] = useState();
   const [downloaded, setDownloade] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState(-1);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState();
   const [searchFilterList, setSearchFilterList] = useState([]);
   const [start, setStart] = useState(false);
   const [overExerciseVisible, setOverExerciseVisible] = useState(false);
@@ -830,6 +830,28 @@ const NewFocusWorkouts = ({route, navigation}) => {
     );
     return () => backHandler.remove();
   }, []);
+  const EmptyComponent = () => {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <AnimatedLottieView
+          source={require('../../Icon/Images/NewImage/NoData.json')}
+          speed={2}
+          autoPlay
+          loop
+          resizeMode="contain"
+          style={{
+            width: DeviceWidth * 0.5,
+            height: DeviceHeigth * 0.6,
+          }}
+        />
+      </View>
+    );
+  };
   return (
     <>
       <View style={styles.container}>
@@ -898,13 +920,12 @@ const NewFocusWorkouts = ({route, navigation}) => {
 
           <View style={styles.contentContainer}>
             <FlatList
-              data={
-                searchFilterList?.length > 0 ? searchFilterList : filterList
-              }
+              data={!!searchQuery ? searchFilterList : filterList}
               contentContainerStyle={{paddingBottom: DeviceHeigth * 0.1}}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
               keyExtractor={item => item?.exercise_id.toString()}
+              ListEmptyComponent={<EmptyComponent />}
               renderItem={({item, index}) => {
                 const time = parseInt(item?.exercise_rest.split(' ')[0]);
                 return (
@@ -1044,25 +1065,19 @@ const NewFocusWorkouts = ({route, navigation}) => {
               // removeClippedSubviews={true}
             />
           </View>
-          <NewButton
-            position={'absolute'}
-            bottom={10}
-            title={'Start Workout'}
-            withAnimation
-            download={downloaded}
-            onPress={() => {
-              if (selectedIndex == -1) Start(filterList);
-            }}
-          />
-          {/* <NewButton2
-          withAnimation
-          position={'absolute'}
-          bottom={10}
-          download={downloaded}
-          onPress={() => {
-            if (selectedIndex == -1) Start(filterList);
-          }}
-        /> */}
+          {!!searchQuery && (searchFilterList?.length <= 0) ? null : (
+            <NewButton
+              position={'absolute'}
+              bottom={10}
+              title={'Start Workout'}
+              withAnimation
+              download={downloaded}
+              onPress={() => {
+                if (selectedIndex == -1) Start(filterList);
+              }}
+            />
+          )}
+
 
           <BottomSheet />
 
@@ -1189,6 +1204,6 @@ const styles = StyleSheet.create({
     // opacity: 0.7,
     fontFamily: Fonts.MONTSERRAT_MEDIUM,
     color: '#1E1E1E',
-  }
+  },
 });
 export default NewFocusWorkouts;
