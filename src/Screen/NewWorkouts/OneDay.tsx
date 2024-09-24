@@ -683,7 +683,7 @@ const OneDay = ({navigation, route}: any) => {
   return (
     <View style={{flex: 1, backgroundColor: AppColor.WHITE}}>
       <StatusBar
-        barStyle={'dark-content'}
+        barStyle={'light-content'}
         translucent={true}
         backgroundColor={'transparent'}
       />

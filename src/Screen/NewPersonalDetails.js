@@ -357,6 +357,8 @@ const NewPersonalDetails = ({route, navigation}) => {
                         colorText={false}
                         placeholder="Full Name"
                         label="Full Name"
+                        isEditable={isEditible}
+                        setEditable={setEditable}
                       />
                     </View>
                     <View

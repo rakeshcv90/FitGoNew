@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   TextInput,
   ActivityIndicator,
+  VirtualizedList,
 } from 'react-native';
 import React, {
   FC,
@@ -80,7 +81,6 @@ const WorkoutCategories = ({navigation, route}: any) => {
   const [isLoading, setIsLoading] = useState(true);
   const [switchButton, setSwitchButton] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState<Array<any>>([]);
-  const [errorMessage, setErrorMessage] = useState(null);
   const [downloaded, setDownloade] = useState<number>(0);
   const [visible, setVisible] = useState(false);
   const [itemsLength, setItemsLength] = useState(0);
@@ -128,18 +128,6 @@ const WorkoutCategories = ({navigation, route}: any) => {
   //   }
   // }, [getExerciseInTime, getExerciseOutTime, start]);
 
-  function onLoadEnd() {
-    setIsLoading(false);
-  }
-
-  function onError() {
-    setIsLoading(false);
-    setErrorMessage(null);
-  }
-  function onLoadStart() {
-    setIsLoading(true);
-    setErrorMessage(null);
-  }
   const sanitizeFileName = (fileName: string) => {
     fileName = fileName.replace(/\s+/g, '_');
     return fileName;
@@ -530,6 +518,14 @@ const WorkoutCategories = ({navigation, route}: any) => {
       },
     [switchButton, selectedExercise, downloadProgress],
   );
+  const getItem = (data: [], index: number) => {
+    return data[index];
+  };
+  
+  const getItemCount = (data: []) => {
+    return data.length;
+  };
+  
   
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
@@ -594,9 +590,12 @@ const WorkoutCategories = ({navigation, route}: any) => {
             />
           </View>
           <View style={{height: (DeviceWidth * 0.1) / 4}} />
-          <FlatList
+          <VirtualizedList
             data={filteredExercise}
             keyExtractor={(item, index) => index.toString()}
+            getItem={getItem}
+            getItemCount={getItemCount}
+            initialNumToRender={10}
             renderItem={({item, index}: any) => {
               return (
                 <Box

@@ -112,7 +112,7 @@ const IntroductionScreen3 = ({navigation}) => {
             fontWeight: '700',
             color: AppColor.RED,
           }}>
-          {hindiLanguage ? 'सुकून की साँस लें!' : 'Weekly Rewards'}
+          {hindiLanguage ? 'सुकून की साँस लें!' : 'Breathe In, Stress Out!'}
         </Text>
 
         <Text
@@ -127,7 +127,7 @@ const IntroductionScreen3 = ({navigation}) => {
           }}>
           {hindiLanguage
             ? `शांति पाएं इस हलचल भरी दुनिया में हमारी शांतिदायक ब्रीदिंग एक्सरसाइज और माइंडफुल मेडिटेशन सेशन के साथ। तनाव कम करें, मूड बेहतर करें और हमारे गाइडेड सेशन्स के साथ अपनी फोकस क्षमता बढ़ाएं। एक गहरी साँस लें और एक शांत, स्वस्थ जीवन का आनंद उठाएं!`
-            : `Complete the challenge by the end of the week and receive exciting rewards. Whether you’re a beginner or a fitness legend, our challenges are designed to keep you motivated and rewarded. Don’t miss out! Every Monday, a new challenge begins.`}
+            : `Find your peace amidst the chaos with calming breathing exercises and mindful meditation sessions. Reduce stress, boost your mood, and enhance your focus with our guided sessions. Take a deep breath and unlock a calmer, healthier you!`}
         </Text>
       </View>
 

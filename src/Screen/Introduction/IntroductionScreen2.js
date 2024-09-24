@@ -113,7 +113,7 @@ const IntroductionScreen2 = ({navigation, route}) => {
           }}>
           {hindiLanguage
             ? 'फिट रहें, इनाम पाएं!'
-            : 'Take Yourself to the Top'}
+            : 'Earn While You Burn!'}
         </Text>
 
         <Text
@@ -128,7 +128,7 @@ const IntroductionScreen2 = ({navigation, route}) => {
           }}>
           {hindiLanguage
             ? `हमारे रोमांचक फिटनेस चैलेंजेस में हिस्सा लें और अपनी सीमाओं को चुनौती दें! लीडरबोर्ड पर चढ़ें, और अपनी मेहनत को शानदार इनामों में बदलते हुए देखें।`
-            : `Rise through the ranks and showcase your dedication. Collect coins, achieve new fitness heights, and take your place at the top of the leaderboard. Your journey to the top starts now!`}
+            : `Join our thrilling fitness challenges and push your limits! Climb to the top of the leaderboard, and watch as your hard work transforms into exciting rewards.`}
         </Text>
       </View>
 

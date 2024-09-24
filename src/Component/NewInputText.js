@@ -5,8 +5,14 @@ import {DeviceWidth} from './Config';
 import {localImage} from './Image';
 import {AppColor} from './Color';
 
-const NewInputText = ({errors, touched, colorText, ...props}) => {
-  const [isEditable, setEditable] = useState(false);
+const NewInputText = ({
+  errors,
+  touched,
+  colorText,
+  isEditable,
+  setEditable,
+  ...props
+}) => {
   const inputRef = useRef(null);
 
   // const handleIconPress = () => {
@@ -21,12 +27,12 @@ const NewInputText = ({errors, touched, colorText, ...props}) => {
   //   });
   // };
 
-  const handleIconPress=()=>{
-    setEditable(true);
-          setTimeout(() => {
-          inputRef.current?.focus();
-        }, 50);
-  }
+  const handleIconPress = () => {
+    setEditable(!isEditable);
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 50);
+  };
   return (
     <View style={styles.container}>
       <View style={styles.input}>
@@ -88,7 +94,7 @@ const styles = {
   container: {
     width: '95%',
     justifyContent: 'center',
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   input: {
     width: DeviceWidth * 0.9,

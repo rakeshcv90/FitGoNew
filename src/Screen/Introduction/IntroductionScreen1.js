@@ -111,7 +111,7 @@ const IntroductionScreen1 = ({navigation}) => {
             fontWeight: '700',
             color: AppColor.RED,
           }}>
-          {hindiLanguage ? 'अपना फिटनेस का सफर खुद तय करें!' : 'Get Healthy, Get Wealthy'}
+          {hindiLanguage ? 'अपना फिटनेस का सफर खुद तय करें!' : 'Get Fit, Your Way!'}
         </Text>
 
         <Text
@@ -126,7 +126,7 @@ const IntroductionScreen1 = ({navigation}) => {
           }}>
           {hindiLanguage
             ? `अपनी परफेक्ट वर्कआउट रूटीन डिजाइन करें! विभिन्न एक्सरसाइज में से चुनें, अपने लक्ष्य के अनुसार प्लान कस्टमाइज़ करें, और अपनी लाइफस्टाइल के अनुसार वर्कआउट का आनंद लें। अपने फिटनेस गोल्स को अपने तरीके से हासिल करें!`
-            : `Why just get fit when you can also earn rewards? Participate in our fitness challenge, stay committed, and watch as your hard work turns into amazing rewards. It's time to make your pocket as healthy as your body!`}
+            : `Design your perfect workout routine! Choose from various exercises, customize your plan based on your goals, and enjoy workouts that fit your lifestyle. Achieve your fitness goals on your terms!`}
         </Text>
       </View>
       <View

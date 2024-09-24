@@ -450,10 +450,11 @@ const SplaceScreen = ({navigation, route}) => {
   };
   const getAllChallangeAndAllExerciseData = async () => {
     let responseData = 0;
+    const url ='https://fitme.cvinfotechserver.com/adserver/public/api/testa_all_user_with_condition'
     if (Object.keys(getUserDataDetails).length > 0) {
       try {
         responseData = await axios.get(
-          `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
+          `${url}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
         );
         dispatch(setChallengesData(responseData.data.challenge_data));
         dispatch(setAllExercise(responseData.data.data));
@@ -463,7 +464,7 @@ const SplaceScreen = ({navigation, route}) => {
     } else {
       try {
         responseData = await axios.get(
-          `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}`,
+          `${url}?version=${VersionNumber.appVersion}`,
         );
         console.log("EXERCISEASAS",responseData)
         dispatch(setChallengesData(responseData.data.challenge_data));
