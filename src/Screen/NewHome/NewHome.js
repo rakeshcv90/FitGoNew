@@ -95,6 +95,7 @@ const NewHome = ({navigation}) => {
     state => state?.getRewardModalStatus,
   );
   const getPastWinners = useSelector(state => state?.getPastWinners);
+  const getAllExercise = useSelector(state => state?.getAllExercise);
   const [showRewardModal, setShowRewardModal] = useState(false);
 
   const Sat = getPurchaseHistory?.currentDay == 6;
@@ -111,7 +112,7 @@ const NewHome = ({navigation}) => {
   );
   useEffect(() => {
     if (isFocused) {
-      getAllChallangeAndAllExerciseData();
+     getAllExercise?.length <= 0 && getAllChallangeAndAllExerciseData();
       getLeaderboardDataAPI();
       Object.keys(allWorkoutData)?.length <= 1 && allWorkoutApi();
       enteredCurrentEvent && getEarnedCoins();
@@ -345,6 +346,7 @@ const NewHome = ({navigation}) => {
       const responseData = await axios.get(
         `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
       );
+      console.log("DATSADASDASD",responseData.data)
       dispatch(setChallengesData(responseData.data.challenge_data));
       const challenge = responseData?.data?.challenge_data?.filter(
         item => item?.status == 'active',
@@ -352,7 +354,7 @@ const NewHome = ({navigation}) => {
 
       setCurrentChallenge(challenge);
       getCurrentDayAPI(challenge);
-      // dispatch(setAllExercise(responseData.data.data));
+      dispatch(setAllExercise(responseData.data.data));
     } catch (error) {
       console.log('GET-USER-Challange and AllExerciseData DATA', error);
       // dispatch(setChallengesData([]));

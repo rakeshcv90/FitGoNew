@@ -35,7 +35,7 @@ const NativeAddTest = ({media, type}) => {
   const DeviceID = useSelector(state => state.getDeviceID);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   
-  const IsTesting = __DEV__ ? true : PLATFORM_IOS
+  const IsTesting = PLATFORM_IOS
     ? getUserDataDetails?.social_id != null &&
       ADS_IOS.includes(getUserDataDetails?.social_id)
     : DeviceID != '' && ADS_IDs.includes(DeviceID)

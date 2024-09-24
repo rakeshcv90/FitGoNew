@@ -815,7 +815,7 @@ const MyPlans = ({navigation}: any) => {
                 marginVertical: 10,
               }}>
               {getEquipmentExercise == 1
-                ? `Would you like to switch your  workouts with equipments`
+                ? `Would you like to switch to workouts with equipment or continue with the workouts without equipment?`
                 : `Comfortable working out with equipment or would you like to switch to without equipment workouts?`}
             </Text>
             <TouchableOpacity
@@ -1075,7 +1075,7 @@ const MyPlans = ({navigation}: any) => {
                     lineHeight: 20,
                     color: AppColor.PrimaryTextColor,
                   }}>
-                  Congratulation!
+                  Congratulations!
                 </Text>
                 <Text
                   style={{

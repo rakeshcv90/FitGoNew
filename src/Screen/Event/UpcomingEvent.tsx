@@ -585,10 +585,10 @@ const UpcomingEvent = ({navigation, route}: any) => {
                   lineHeight={24}
                   value={
                     getPurchaseHistory?.plan == 'noob'
-                      ? 'Basic plan'
+                      ? 'Basic Plan'
                       : getPurchaseHistory?.plan == 'pro'
-                      ? 'Medium plan'
-                      : 'Premium plan'
+                      ? 'Medium Plan'
+                      : 'Premium Plan'
                   }
                   marginVertical={5}
                   color={

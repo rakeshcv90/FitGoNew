@@ -460,7 +460,7 @@ const Referral = () => {
                 Register
               </Text>
               <Text style={[styles.line, {marginLeft: 12}]}>
-                When your friend register only then you can earn
+                When your friend registers for the event only then you can
                 <Text
                   style={{color: AppColor.RED, fontFamily: 'Helvetica-Bold'}}>
                   {' '}
@@ -492,7 +492,7 @@ const Referral = () => {
             }}
           /> */}
           <Text style={[styles.line, {marginLeft: 5}]}>
-            When your friend register and join event you’ll earn
+            When your friend registers and join the event then you’ll earn
             <Text style={{color: AppColor.RED, fontFamily: 'Helvetica-Bold'}}>
               {' '}
               {referralData?.event_register?.fit_coins -

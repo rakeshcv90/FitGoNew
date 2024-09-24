@@ -232,7 +232,7 @@ const StepGuide = ({navigation}: any) => {
               marginVertical={10}
               onPress={() => {
                 navigation.navigate('TermaAndCondition', {
-                  title: 'Terms & Condition',
+                  title: 'Terms & Conditions',
                 });
               }}
               textAlign="center"

@@ -252,7 +252,7 @@ console.log("AFTER GPT",response.data.result)
             navigation.goBack();
           }}
           backButton
-          icon
+          icon={getAIMessageHistory?.length > 0}
           iconSource={localImage.ChatHistory}
           onIconPress={()=>navigation.navigate('AIMessageHistory')}
         />

@@ -55,7 +55,7 @@ const OfferCards = React.memo(
             <Text style={[styles.text4, {color: coinTextColor}]}>{text3}</Text>
           </View>
           <NewButton
-            title={buttonText ?? 'Start now'}
+            title={buttonText ?? 'Start Now'}
             svgArrowRight={showRightArrow??true}
             svgArrowColor={AppColor.WHITE}
             iconColor={AppColor.WHITE}

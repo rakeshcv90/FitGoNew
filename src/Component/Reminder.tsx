@@ -111,7 +111,7 @@ const Reminder = ({
     // Check if selected time is less than minimum time
     if (minimumSelectedTime <= minimumTime) {
       showMessage({
-        message: 'Reminder time should be at more 5 minutes from Current time',
+        message: 'Reminder time should be atleast 5 minutes ahead of the current time.',
         type: 'info', // You might want to change 'success' to 'error' for a clearer message
         animationDuration: 500,
         floating: true,

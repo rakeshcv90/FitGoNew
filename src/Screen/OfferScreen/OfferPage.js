@@ -368,7 +368,7 @@ const OfferPage = ({navigation, route}) => {
             onPress={() => handleStart()}
             withAnimation={!cardioStatus}
             downloaded={downloaded}
-            buttonText={cardioStatus ? `Completed` : 'Start now'}
+            buttonText={cardioStatus ? `Completed` : 'Start Now'}
             showRightArrow={!cardioStatus}
           />
           <OfferCards
@@ -381,7 +381,7 @@ const OfferPage = ({navigation, route}) => {
             coinTextColor={AppColor.BLACK}
             onPress={() => navigation.navigate('Referral')}
             isactive={true}
-            buttonText={'Refer now'}
+            buttonText={'Refer Now'}
           />
           <OfferCards
             imgSource={localImage.breathe_banner}
@@ -395,7 +395,7 @@ const OfferPage = ({navigation, route}) => {
             isactive={breatheStatus && !breatheCompleteStatus}
             buttonText={
               breatheStatus && !breatheCompleteStatus
-                ? 'Start now'
+                ? 'Start Now'
                 : upComingTime
             }
             onPress={() => {

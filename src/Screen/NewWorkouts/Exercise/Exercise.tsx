@@ -335,8 +335,7 @@ const Exercise = ({navigation, route}: any) => {
             } else if (
               seconds == 0 &&
               number <= allExercise?.length - 1 &&
-              currentSet < allExercise[number]?.exercise_sets &&
-              !showSet
+              currentSet < allExercise[number]?.exercise_sets 
             ) {
               animatedProgress.setValue(0);
               setPlayW(0);
@@ -1059,12 +1058,12 @@ const Exercise = ({navigation, route}: any) => {
                   onPress={() => {
                     if (number == 0) return;
                     setPrevious(previous + 1);
-                    setShowSet(true);
                     setCurrentSet(1);
                     setPause(false);
-                    animatedProgress.setValue(0);
-                    setPlayW(0);
                     clearTimeout(playTimerRef.current);
+                    setTimeout(() =>{
+                      animatedProgress.setValue(0);
+                      setPlayW(0);
                     const index = allExercise?.findIndex(
                       (item: any) =>
                         item?.exercise_id == allExercise[number]?.exercise_id,
@@ -1078,6 +1077,8 @@ const Exercise = ({navigation, route}: any) => {
                         allExercise[index - 1]?.exercise_rest.split(' ')[0],
                       ),
                     );
+                    StartAnimation()
+                  },1500)
                   }}>
                   <FitIcon
                     name="skip-previous"
@@ -1110,7 +1111,6 @@ const Exercise = ({navigation, route}: any) => {
                   onPress={() => {
                     setNext(next + 1);
                     setPause(!pause);
-                    setShowSet(true);
                     setCurrentSet(1);
                     setPause(false);
                     clearTimeout(playTimerRef.current);
@@ -1133,6 +1133,7 @@ const Exercise = ({navigation, route}: any) => {
                           allExercise[index + 1]?.exercise_rest.split(' ')[0],
                         ),
                       );
+                      StartAnimation()
                     }, 1500);
                   }}>
                   <FitIcon

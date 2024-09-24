@@ -459,7 +459,7 @@ const NewProfile = ({navigation}) => {
                   },
                 }),
               }}>
-              <Text style={styles.text1}>Upload Photos</Text>
+              <Text style={styles.text1}>Upload Photo</Text>
               <Icon
                 name="close"
                 size={25}
@@ -816,7 +816,7 @@ const NewProfile = ({navigation}) => {
 
                         if (text == true) {
                           showMessage({
-                            message: 'Sound unmuted',
+                            message: 'Sound unmuted.',
                             type: 'success',
                             animationDuration: 500,
                             floating: true,
@@ -824,7 +824,7 @@ const NewProfile = ({navigation}) => {
                           });
                         } else {
                           showMessage({
-                            message: 'Sound muted',
+                            message: 'Sound muted.',
                             animationDuration: 500,
                             type: 'danger',
                             floating: true,
@@ -858,7 +858,7 @@ const NewProfile = ({navigation}) => {
                         AnalyticsConsole(`DISPLAY_ALWAYS_ON`);
                         if (text == true) {
                           showMessage({
-                            message: 'Display Always on',
+                            message: 'Display always on.',
                             type: 'success',
                             animationDuration: 500,
                             floating: true,
@@ -867,7 +867,7 @@ const NewProfile = ({navigation}) => {
                           dispatch(setScreenAwake(true));
                         } else {
                           showMessage({
-                            message: 'Display Always Off',
+                            message: 'Display always off.',
                             animationDuration: 500,
                             type: 'danger',
                             floating: true,

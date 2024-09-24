@@ -26,9 +26,7 @@ import {PLATFORM_IOS} from './Color';
 
 const DeviceID = store.getState().getDeviceID;
 const getUserDataDetails = store.getState().getUserDataDetails;
-const IsTesting = __DEV__
-  ? true
-  : PLATFORM_IOS
+const IsTesting = PLATFORM_IOS
   ? getUserDataDetails?.social_id != null &&
     ADS_IOS.includes(getUserDataDetails?.social_id)
   : DeviceID != '' && ADS_IDs.includes(DeviceID);
