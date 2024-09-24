@@ -8,7 +8,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {AppColor, Fonts} from '../../Component/Color';
-import {useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {Text} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {localImage} from '../../Component/Image';
@@ -313,4 +313,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-export default LeaderBoardTopComponent;
+export default React.memo(LeaderBoardTopComponent);

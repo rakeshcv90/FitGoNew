@@ -346,7 +346,7 @@ const NewHome = ({navigation}) => {
       const responseData = await axios.get(
         `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
       );
-      console.log("DATSADASDASD",responseData.data)
+      
       dispatch(setChallengesData(responseData.data.challenge_data));
       const challenge = responseData?.data?.challenge_data?.filter(
         item => item?.status == 'active',
