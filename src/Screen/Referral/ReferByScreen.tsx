@@ -166,16 +166,17 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (res.data?.msg == 'referral used') {
-        setCodeStatus('Code already used');
-        setText('Try Again');
         shake();
         showMessage({
-          message: 'You cannot use this referral code.',
+          message:
+            'This device has already used a referral code to claim the benefits.',
           type: 'danger',
           animationDuration: 1000,
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
+        setVisible(false);
+        navigationRef?.navigate('Yourself');
       } else {
         setText('Try Again');
       }
