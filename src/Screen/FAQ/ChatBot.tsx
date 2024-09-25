@@ -117,7 +117,7 @@ const ChatBot = ({navigation, route}: any) => {
           <View
             style={[
               styles.userBox,
-              {width: DeviceHeigth >= 1024 ? '50%' : '70%'},
+              {width: DeviceHeigth >= 1024 ? '50%' : '72%'},
             ]}>
             <FitText
               type="normal"
@@ -174,7 +174,7 @@ const ChatBot = ({navigation, route}: any) => {
           <View
             style={[
               styles.chatBox,
-              {width: DeviceHeigth >= 1024 ? '50%' : '70%'},
+              {width: DeviceHeigth >= 1024 ? '50%' : '72%'},
             ]}>
             <FitText
               type="normal"
