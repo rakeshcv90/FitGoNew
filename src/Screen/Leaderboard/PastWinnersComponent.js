@@ -21,7 +21,7 @@ const PastWinnersComponent = ({pastWinners, navigation}) => {
                   fontFamily: Fonts.HELVETICA_BOLD,
                   color: AppColor.BLACK,
                 }}>
-                +{pastWinners?.length}
+                +{pastWinners?.length - 3}
               </Text>
             ) : item?.image != null ? (
               <Image
@@ -61,17 +61,17 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingHorizontal: 8,
     paddingVertical: 5,
-    ...Platform.select({
-      ios: {
-        //shadowColor: '#000000',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
+    // ...Platform.select({
+    //   ios: {
+    //     //shadowColor: '#000000',
+    //     shadowOffset: {width: 0, height: 2},
+    //     shadowOpacity: 0.2,
+    //     shadowRadius: 4,
+    //   },
+    //   android: {
+    //     elevation: 3,
+    //   },
+    // }),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignContent: 'center'

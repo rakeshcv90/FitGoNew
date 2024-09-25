@@ -1213,7 +1213,7 @@ const NewSubscription = ({navigation, route}: any) => {
                 <Text
                   onPress={() => {
                     navigation.navigate('TermaAndCondition', {
-                      title: 'Privacy & Policy',
+                      title: 'Privacy Policy',
                     });
                   }}
                   style={styles.policyText1}>
@@ -1224,7 +1224,7 @@ const NewSubscription = ({navigation, route}: any) => {
                   style={styles.policyText1}
                   onPress={() => {
                     navigation.navigate('TermaAndCondition', {
-                      title: 'Terms & Condition',
+                      title: 'Terms & Conditions',
                     });
                   }}>
                   {' '}

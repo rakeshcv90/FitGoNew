@@ -119,7 +119,7 @@ export const WeekTabWithEvents = ({
 }) => {
   const sameDay = day == WeekArray[selectedDay];
   return (
-    <View style={{alignItems: 'center'}}>
+    <View key={dayIndex} style={{alignItems: 'center'}}>
       <Text style={[styles.labelStyle]}>{day.substring(0, 3)}</Text>
       <TouchableOpacity
         style={[

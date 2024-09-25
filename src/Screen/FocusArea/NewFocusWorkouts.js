@@ -164,7 +164,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
       } else if (route?.params?.focusedPart == 'Core' && getCoreCount == 0) {
         refStandard.current.open();
       } else {
-        refStandard.current.close();
+        refStandard.current.open();
       }
     }, 1000);
   }, [route]);
@@ -206,7 +206,20 @@ const NewFocusWorkouts = ({route, navigation}) => {
   const filterExercises = (exercises, filterCriteria, adjust) => {
     let modifiedFilter = [...filterCriteria]; // Create a copy of filterCriteria
     if (filterCriteria.length === 0) {
-      setFilterList(exercises); // Set filter list to all exercises if no criteria
+      // Define the equipment filter logic
+      const exerciseCat = exerciseEquip => {
+        if (adjust === 0) {
+          return exerciseEquip !== 'No Equipment'; // Exclude 'No Equipment' exercises if selected equipment
+        }
+        return exerciseEquip === 'No Equipment'; // Include only 'No Equipment' exercises otherwise
+      };
+
+      // Apply filter based on body part and equipment
+      const filteredList = exercises.filter(exercise =>
+        exerciseCat(exercise?.exercise_equipment),
+      );
+      dispatch(setEquipmentExercise(adjust));
+      setFilterList(filteredList); // Update the filter list with the filtered results
     } else {
       // Handle 'Arms' replacement logic
       if (modifiedFilter.includes('Arms')) {
@@ -372,6 +385,9 @@ const NewFocusWorkouts = ({route, navigation}) => {
         text: 'Without Equipment',
       },
     ];
+    const isFullBody = route?.params?.focusedPart == 'Full Body';
+    const checkFullHeight = isFullBody ? DeviceHeigth * 0.15 : 0;
+
     return (
       <>
         <RBSheet
@@ -389,22 +405,22 @@ const NewFocusWorkouts = ({route, navigation}) => {
               height:
                 route?.params?.focusedPart == 'Upper Body'
                   ? DeviceHeigth >= 1024
-                    ? DeviceHeigth * 0.58
+                    ? DeviceHeigth * 0.58 - checkFullHeight
                     : DeviceHeigth >= 856
-                    ? DeviceHeigth * 0.68
+                    ? DeviceHeigth * 0.68 - checkFullHeight
                     : DeviceHeigth <= 667
                     ? DeviceHeigth <= 625
-                      ? DeviceHeigth * 0.88
-                      : DeviceHeigth * 0.83
-                    : DeviceHeigth * 0.71
+                      ? DeviceHeigth * 0.88 - checkFullHeight
+                      : DeviceHeigth * 0.83 - checkFullHeight
+                    : DeviceHeigth * 0.71 - checkFullHeight
                   : DeviceHeigth >= 1024
-                  ? DeviceHeigth * 0.45
+                  ? DeviceHeigth * 0.45 - checkFullHeight
                   : DeviceHeigth >= 856
-                  ? DeviceHeigth * 0.53
+                  ? DeviceHeigth * 0.53 - checkFullHeight
                   : DeviceHeigth <= 667
                   ? DeviceHeigth <= 625
-                    ? DeviceHeigth * 0.68
-                    : DeviceHeigth * 0.63
+                    ? DeviceHeigth * 0.68 - checkFullHeight
+                    : DeviceHeigth * 0.63 - checkFullHeight
                   : DeviceHeigth * 0.55,
             },
             draggableIcon: {
@@ -462,19 +478,21 @@ const NewFocusWorkouts = ({route, navigation}) => {
                 alignSelf: 'center',
               }}
             />
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: '600',
-                lineHeight: 24,
-                fontFamily: Fonts.MONTSERRAT_BOLD,
-                color: '#1E1E1E',
+            {!isFullBody && (
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: '600',
+                  lineHeight: 24,
+                  fontFamily: Fonts.MONTSERRAT_BOLD,
+                  color: '#1E1E1E',
 
-                width: DeviceWidth * 0.9,
-                alignSelf: 'center',
-              }}>
-              {route?.params?.focusedPart}
-            </Text>
+                  width: DeviceWidth * 0.9,
+                  alignSelf: 'center',
+                }}>
+                {route?.params?.focusedPart}
+              </Text>
+            )}
             <View
               style={{
                 //height: DeviceHeigth * 0.35,
@@ -586,16 +604,18 @@ const NewFocusWorkouts = ({route, navigation}) => {
                 removeClippedSubviews={true}
               />
             </View>
-            <View
-              style={{
-                width: DeviceWidth,
-                height: 1,
-                backgroundColor: '#1E1E1E',
-                opacity: 0.2,
-                marginVertical: 10,
-                alignSelf: 'center',
-              }}
-            />
+            {!isFullBody && (
+              <View
+                style={{
+                  width: DeviceWidth,
+                  height: 1,
+                  backgroundColor: '#1E1E1E',
+                  opacity: 0.2,
+                  marginVertical: 10,
+                  alignSelf: 'center',
+                }}
+              />
+            )}
             <View style={{width: DeviceWidth * 0.9, alignSelf: 'center'}}>
               <Text
                 style={{
@@ -675,16 +695,10 @@ const NewFocusWorkouts = ({route, navigation}) => {
                   alignSelf: 'flex-end',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  opacity:
-                    filterCritera.length === 0 || !isFilterChanged ? 0.6 : 1,
+                  opacity: !isFilterChanged ? 0.6 : 1,
                 }}
-                disabled={
-                  filterCritera.length === 0 || !isFilterChanged ? true : false
-                }
+                disabled={!isFilterChanged ? true : false}
                 onPress={() => {
-                  filterCritera.length === 0 || !isFilterChanged
-                    ? console.log('clicked')
-                    : AnalyticsConsole('RCL_BS_FW');
                   filterExercises(exerciseData, filterCritera, adjustSelected);
                   handleFilterVisibilty();
                 }}>
@@ -878,17 +892,9 @@ const NewFocusWorkouts = ({route, navigation}) => {
             }}
             onIconPress={() => {
               AnalyticsConsole('O_BS_FW');
-              if (route?.params?.focusedPart == 'Upper Body') {
-                refStandard.current.open();
-              } else if (route?.params?.focusedPart == 'Lower Body') {
-                refStandard.current.open();
-              } else if (route?.params?.focusedPart == 'Core') {
-                refStandard.current.open();
-              } else {
-                refStandard.current.close();
-              }
+              refStandard.current.open();
             }}
-            icon={route?.params?.focusedPart == 'Full Body' ? false : true}
+            icon
             backButton
           />
           <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -1065,7 +1071,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
               // removeClippedSubviews={true}
             />
           </View>
-          {!!searchQuery && (searchFilterList?.length <= 0) ? null : (
+          {!!searchQuery && searchFilterList?.length <= 0 ? null : (
             <NewButton
               position={'absolute'}
               bottom={10}
@@ -1077,7 +1083,6 @@ const NewFocusWorkouts = ({route, navigation}) => {
               }}
             />
           )}
-
 
           <BottomSheet />
 

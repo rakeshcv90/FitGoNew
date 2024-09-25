@@ -816,7 +816,7 @@ const MyPlans = ({navigation}: any) => {
               }}>
               {getEquipmentExercise == 1
                 ? `Would you like to switch to workouts with equipment or continue with the workouts without equipment?`
-                : `Comfortable working out with equipment or would you like to switch to without equipment workouts?`}
+                : `Would you like to switch to without equipment workouts?`}
             </Text>
             <TouchableOpacity
               // onPress={() => {

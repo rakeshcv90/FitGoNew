@@ -135,39 +135,24 @@ const SaveDayExercise = ({navigation, route}: any) => {
       navigation.navigate('WorkoutDays', {data, challenge});
     }
   };
+
   const getAllChallangeAndAllExerciseData = async () => {
-    setLoader(true);
-    let responseData = 0;
-    if (Object.keys(getUserDataDetails).length > 0) {
-      try {
-        responseData = await axios.get(
-          `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
-        );
-        setLoader(false);
+    const url =
+      'https://fitme.cvinfotechserver.com/adserver/public/api/testa_all_user_with_condition';
+    try {
+      const responseData = await axios.get(
+        // `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
+        `${url}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
+      );
+
+      if (responseData.data?.msg != 'user id is required') {
         dispatch(setChallengesData(responseData.data.challenge_data));
         dispatch(setAllExercise(responseData.data.data));
-        navigation.navigate('WorkoutDays', {data, challenge});
-      } catch (error) {
-        setLoader(false);
-        console.log('GET-USER-Challange and AllExerciseData DATA', error);
-        dispatch(setChallengesData([]));
-        dispatch(setAllExercise([]));
-        navigation.navigate('WorkoutDays', {data, challenge});
       }
-    } else {
-      try {
-        responseData = await axios.get(
-          `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}`,
-        );
-        setLoader(false);
-        dispatch(setChallengesData(responseData.data.challenge_data));
-        dispatch(setAllExercise(responseData.data.data));
-      } catch (error) {
-        dispatch(setChallengesData([]));
-        dispatch(setAllExercise([]));
-        setLoader(false);
-        console.log('GET-USER-Challange and AllExerciseData DATA', error);
-      }
+    } catch (error) {
+      console.log('GET-USER-Challange and AllExerciseData DATA', error);
+      // dispatch(setChallengesData([]));
+      // dispatch(setAllExercise([]));
     }
   };
   let categoryExercise: Array<any> = [];

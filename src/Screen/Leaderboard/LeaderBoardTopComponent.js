@@ -213,16 +213,16 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    ...Platform.select({
-      ios: {
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
+    // ...Platform.select({
+    //   ios: {
+    //     shadowOffset: {width: 0, height: 2},
+    //     shadowOpacity: 0.2,
+    //     shadowRadius: 4,
+    //   },
+    //   android: {
+    //     elevation: 2,
+    //   },
+    // }),
   },
   animationWrapper: {
     flexDirection: 'row',
@@ -273,17 +273,18 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.HELVETICA_REGULAR,
   },
   Icon: {
-    width: 75,
-    height: 75,
-    borderRadius: 75 / 2,
+    width: 80,
+    height: 80,
+    borderRadius: 80 / 2,
     overflow: 'hidden',
     alignSelf: 'center',
     marginBottom: 15,
   },
   textBackground: {
-    width: 75,
-    height: 75,
-    borderRadius: 75 / 2,
+    marginBottom: 15,
+    width: 80,
+    height: 80,
+    borderRadius: 80 / 2,
     backgroundColor: '#DBEAFE',
     justifyContent: 'center',
     alignItems: 'center',

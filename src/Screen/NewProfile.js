@@ -171,7 +171,7 @@ const NewProfile = ({navigation}) => {
     } else if (id == 6) {
       AnalyticsConsole(`PRIVACY_BUTTON`);
       navigation.navigate('TermaAndCondition', {
-        title: 'Privacy policy',
+        title: 'Privacy Policy',
       });
     } else if (id == 7) {
       AnalyticsConsole(`T_n_CBUTTON`);

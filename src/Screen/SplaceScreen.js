@@ -101,7 +101,7 @@ const SplaceScreen = ({navigation, route}) => {
     getPlanData();
     allWorkoutApi();
     getPastWinner();
-     dispatch(setPopUpSeen(false))
+    dispatch(setPopUpSeen(false));
     dispatch(setFitmeAdsCount(0));
   }, []);
   useEffect(() => {
@@ -349,11 +349,10 @@ const SplaceScreen = ({navigation, route}) => {
         dispatch(Setmealdata(responseData?.data?.diets));
         dispatch(setStoreData(responseData?.data?.types));
         dispatch(setCompleteProfileData(responseData?.data?.additional_data));
-        getAllChallangeAndAllExerciseData();
       }
     } catch (error) {
       console.log('all_in_one_api_error', error);
-      getAllChallangeAndAllExerciseData();
+      // getAllChallangeAndAllExerciseData();
     }
   };
   // download image
@@ -441,6 +440,7 @@ const SplaceScreen = ({navigation, route}) => {
             setPlanType,
           );
         }
+        getAllChallangeAndAllExerciseData();
       }
     } catch (error) {
       console.log('GET-USER-DATA splaceScreen', error);
@@ -449,31 +449,18 @@ const SplaceScreen = ({navigation, route}) => {
     }
   };
   const getAllChallangeAndAllExerciseData = async () => {
-    let responseData = 0;
-    const url ='https://fitme.cvinfotechserver.com/adserver/public/api/testa_all_user_with_condition'
-    if (Object.keys(getUserDataDetails).length > 0) {
-      try {
-        responseData = await axios.get(
-          `${url}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
-        );
+    const url =
+      'https://fitme.cvinfotechserver.com/adserver/public/api/testa_all_user_with_condition';
+    try {
+      const responseData = await axios.get(
+        `${url}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
+      );
+      if (responseData.data?.msg != 'user id is required') {
         dispatch(setChallengesData(responseData.data.challenge_data));
         dispatch(setAllExercise(responseData.data.data));
-      } catch (error) {
-        console.log('GET-USER-Challange and AllExerciseData DATA', error);
       }
-    } else {
-      try {
-        responseData = await axios.get(
-          `${url}?version=${VersionNumber.appVersion}`,
-        );
-        console.log("EXERCISEASAS",responseData)
-        dispatch(setChallengesData(responseData.data.challenge_data));
-        dispatch(setAllExercise(responseData.data.data));
-      } catch (error) {
-
-        //  loadScreen();
-        console.log('GET-USER-Challange and AllExerciseData DATA', error);
-      }
+    } catch (error) {
+      console.log('GET-USER-Challange and AllExerciseData DATA', error);
     }
   };
   return (

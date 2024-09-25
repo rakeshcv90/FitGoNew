@@ -71,6 +71,7 @@ export const ExerciseComponetWithoutEvents = ({
               width: DeviceWidth * 0.9,
               alignSelf: 'center',
             }}
+            keyExtractor={(item)=> item?.exercise_id?.toString()}
             renderItem={({item, index}) => {
               const time = parseInt(item?.exercise_rest.split(' ')[0]);
               return (
@@ -293,6 +294,7 @@ export const ExerciseComponentWithEvent = ({
               alignSelf: 'center',
               // marginBottom: DeviceHeigth * 0.35,
             }}
+            keyExtractor={(item)=> item?.exercise_id?.toString()}
             renderItem={({item, index}) => {
               const time = parseInt(item?.exercise_rest.split(' ')[0]);
               return (

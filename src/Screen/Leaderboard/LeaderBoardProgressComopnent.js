@@ -167,16 +167,16 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderRadius: 12,
     alignSelf: 'center',
-    ...Platform.select({
-      ios: {
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
+    // ...Platform.select({
+    //   ios: {
+    //     shadowOffset: {width: 0, height: 2},
+    //     shadowOpacity: 0.2,
+    //     shadowRadius: 4,
+    //   },
+    //   android: {
+    //     elevation: 2,
+    //   },
+    // }),
   },
   progressText: {
     color: AppColor.BLACK,

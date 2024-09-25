@@ -226,7 +226,7 @@ const StepGuide = ({navigation}: any) => {
             </View> */}
             <FitText type="Heading" value="Past Winners" />
             <WithoutEvent pastWinners={getPastWinner} pV={0} noText />
-            <FitText
+            {/* <FitText
               type="SubHeading"
               value="Terms & Conditions"
               marginVertical={10}
@@ -237,7 +237,7 @@ const StepGuide = ({navigation}: any) => {
               }}
               textAlign="center"
               textDecorationLine="underline"
-            />
+            /> */}
           </View>
         </View>
       </ScrollView>

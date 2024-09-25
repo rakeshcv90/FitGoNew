@@ -61,6 +61,7 @@ import OverExerciseModal from '../../Component/Utilities/OverExercise';
 import {ArrowLeft} from '../../Component/Utilities/Arrows/Arrow';
 import CircleProgress from '../../Component/Utilities/ProgressCircle';
 import useInterstitialAd from '../../Component/Ads/Interstitial';
+import FitToggle from '../../Component/Utilities/FitToggle';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -147,8 +148,9 @@ const EventExercise = ({navigation, route}: any) => {
     (state: any) => state.getPurchaseHistory,
   );
   const [addClosed, setAddClosed] = useState(false);
-  const {initInterstitial, showInterstitialAd} =
-    useInterstitialAd({setAddClosed});
+  const {initInterstitial, showInterstitialAd} = useInterstitialAd({
+    setAddClosed,
+  });
   const [seconds, setSeconds] = useState(
     parseInt(allExercise[number]?.exercise_rest.split(' ')[0]),
   );
@@ -231,8 +233,20 @@ const EventExercise = ({navigation, route}: any) => {
   const PauseAudio = async (playbackState: any) => {
     await TrackPlayer.reset();
   };
+  let speaking = false;
+
   const SPEAK = (words: string) => {
-    getSoundOffOn && Tts.speak(words);
+    if (!speaking && getSoundOffOn) {
+      speaking = true;
+      Tts.speak(words, {
+        onDone: () => {
+          speaking = false; // Reset flag when TTS finishes speaking
+        },
+        onCancel: () => {
+          speaking = false; // Reset flag if speaking is cancelled
+        },
+      });
+    }
   };
   const dispatch = useDispatch();
   useEffect(() => {
@@ -381,8 +395,8 @@ const EventExercise = ({navigation, route}: any) => {
                 );
                 handleExerciseChange(allExercise[index + 1]?.exercise_title);
                 setNumber(index + 1);
-                setTimer(10)
-                setDemoW(0)
+                setTimer(10);
+                setDemoW(0);
                 setRestStart(true);
                 setAddClosed(false);
               }
@@ -429,8 +443,8 @@ const EventExercise = ({navigation, route}: any) => {
                 );
                 handleExerciseChange(allExercise[index + 1]?.exercise_title);
                 setNumber(index + 1);
-                setTimer(10)
-                setDemoW(0)
+                setTimer(10);
+                setDemoW(0);
                 setRestStart(true);
                 setAddClosed(false);
               }
@@ -726,7 +740,7 @@ const EventExercise = ({navigation, route}: any) => {
   };
 
   const StartAnimation = () => {
-    // console.log(opacity, 'opacity');
+    console.log(opacity, 'opacity');
     // Define the animation sequence
     Animated.sequence([
       // Fade in and scale up
@@ -945,24 +959,22 @@ const EventExercise = ({navigation, route}: any) => {
           </>
         ) : (
           <>
-            {showSet && (
-              <Animated.Text
-                style={{
-                  color: AppColor.RED,
-                  fontSize: 30,
-                  position: 'absolute',
-                  fontFamily: Fonts.MONTSERRAT_BOLD,
-                  lineHeight: 40,
-                  fontWeight: 'bold',
-                  top: DeviceHeigth * 0.4,
-                  alignSelf: 'center',
-                  zIndex: 1,
-                  opacity: opacity,
-                  transform: [{scale}, {translateY}],
-                }}>
-                SET {currentSet}
-              </Animated.Text>
-            )}
+            <Animated.Text
+              style={{
+                color: AppColor.RED,
+                fontSize: 30,
+                position: 'absolute',
+                fontFamily: Fonts.MONTSERRAT_BOLD,
+                lineHeight: 40,
+                fontWeight: 'bold',
+                top: DeviceHeigth * 0.4,
+                alignSelf: 'center',
+                zIndex: 1,
+                opacity: opacity,
+                transform: [{scale}, {translateY}],
+              }}>
+              SET {currentSet}
+            </Animated.Text>
 
             <View
               style={{
@@ -1196,34 +1208,21 @@ const EventExercise = ({navigation, route}: any) => {
                   justifyContent: 'space-between',
                   alignItems: 'center',
                 }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    dispatch(setSoundOnOff(!getSoundOffOn));
-                  }}
-                  style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginVertical: 5,
-                    flexDirection: 'row',
-                    paddingLeft: 5,
-                  }}>
-                  <Image
-                    source={
-                      !getSoundOffOn
-                        ? require('../../Icon/Images/InAppRewards/SoundOn.png')
-                        : require('../../Icon/Images/InAppRewards/SoundOff.png')
-                    }
-                    style={{width: 15, height: 15}}
-                    resizeMode="contain"
-                  />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}>
+                  <FitToggle value={getSoundOffOn} />
                   <FitText
                     type="normal"
-                    value={getSoundOffOn ? ' Sound Off' : ' Sound On'}
+                    value={!getSoundOffOn ? ' Sound Off' : ' Sound On'}
                     color="#6B7280"
                     fontFamily={Fonts.HELVETICA_REGULAR}
                     lineHeight={30}
                   />
-                </TouchableOpacity>
+                  </View>
                 <TouchableOpacity
                   onPress={() => {
                     setOpen(true);

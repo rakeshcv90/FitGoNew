@@ -420,7 +420,7 @@ const EditCustomWorkout = ({navigation, route}) => {
               paddingLeft: 15,
               paddingRight: 15,
               height: 40,
-              borderRadius: 30,
+              borderRadius: 10,
               justifyContent: 'center',
               alignItems: 'center',
               position: 'absolute',
@@ -431,7 +431,7 @@ const EditCustomWorkout = ({navigation, route}) => {
             <TouchableOpacity
               style={{
                 paddingVertical: 6,
-                borderRadius: 30,
+                borderRadius: 10,
                 justifyContent: 'center',
                 alignItems: 'center',
                 flexDirection: 'row',

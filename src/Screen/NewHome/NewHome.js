@@ -342,19 +342,24 @@ const NewHome = ({navigation}) => {
   };
 
   const getAllChallangeAndAllExerciseData = async () => {
+    const url =
+      'https://fitme.cvinfotechserver.com/adserver/public/api/testa_all_user_with_condition';
     try {
       const responseData = await axios.get(
-        `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
-      );
-      
-      dispatch(setChallengesData(responseData.data.challenge_data));
-      const challenge = responseData?.data?.challenge_data?.filter(
-        item => item?.status == 'active',
+        // `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
+        `${url}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
       );
 
-      setCurrentChallenge(challenge);
-      getCurrentDayAPI(challenge);
-      dispatch(setAllExercise(responseData.data.data));
+      if (responseData.data?.msg != 'user id is required') {
+        dispatch(setChallengesData(responseData.data.challenge_data));
+        const challenge = responseData?.data?.challenge_data?.filter(
+          item => item?.status == 'active',
+        );
+
+        setCurrentChallenge(challenge);
+        getCurrentDayAPI(challenge);
+        dispatch(setAllExercise(responseData.data.data));
+      }
     } catch (error) {
       console.log('GET-USER-Challange and AllExerciseData DATA', error);
       // dispatch(setChallengesData([]));

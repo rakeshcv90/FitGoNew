@@ -52,6 +52,7 @@ const StreakModal = ({streakDays, setVisible, WeekArray, missedDay,visible}) => 
             }}>
             {Array.from({length: 5}).map((v, i) => (
               <ImageBackground
+              key={i}
                 source={
                   streakDays[WeekArray[i]] > 0
                     ? localImage.greenStreak

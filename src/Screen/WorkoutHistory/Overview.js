@@ -50,7 +50,7 @@ const Overview = ({data}) => {
           />
           <TextComponent
             t1={'Duration'}
-            t2={`${isNaN(data?.duration) ? 0 : data?.duration}Min`}
+            t2={`${isNaN(data?.duration) ? 0 : data?.duration} min`}
             color={AppColor.YELLOW}
           />
         </View>

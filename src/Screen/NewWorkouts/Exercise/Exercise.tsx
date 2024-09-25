@@ -63,6 +63,7 @@ import {StatusBar} from 'react-native';
 import {ArrowLeft} from '../../../Component/Utilities/Arrows/Arrow';
 import CircleProgress from '../../../Component/Utilities/ProgressCircle';
 import useInterstitialAd from '../../../Component/Ads/Interstitial';
+import FitToggle from '../../../Component/Utilities/FitToggle';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -225,8 +226,21 @@ const Exercise = ({navigation, route}: any) => {
   const PauseAudio = async (playbackState: any) => {
     await TrackPlayer.reset();
   };
+ 
+  let speaking = false;
+
   const SPEAK = (words: string) => {
-    getSoundOffOn && Tts.speak(words);
+    if (!speaking && getSoundOffOn) {
+      speaking = true;
+      Tts.speak(words, {
+        onDone: () => {
+          speaking = false; // Reset flag when TTS finishes speaking
+        },
+        onCancel: () => {
+          speaking = false; // Reset flag if speaking is cancelled
+        },
+      });
+    }
   };
   const dispatch = useDispatch();
 
@@ -720,7 +734,6 @@ const Exercise = ({navigation, route}: any) => {
         useNativeDriver: true,
       }),
     ]).start(() => {
-      setShowSet(false);
       opacity.setValue(0);
       scale.setValue(1);
       translateY.setValue(0);
@@ -1161,34 +1174,21 @@ const Exercise = ({navigation, route}: any) => {
                     alignItems: 'center',
                     width: DeviceHeigth >= 1024 ? '50%' : '70%',
                   }}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      dispatch(setSoundOnOff(!getSoundOffOn));
-                    }}
+                  <View
                     style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginVertical: 5,
                       flexDirection: 'row',
-                      paddingLeft: 5,
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
                     }}>
-                    <Image
-                      source={
-                        !getSoundOffOn
-                          ? require('../../../Icon/Images/InAppRewards/SoundOn.png')
-                          : require('../../../Icon/Images/InAppRewards/SoundOff.png')
-                      }
-                      style={{width: 15, height: 15}}
-                      resizeMode="contain"
-                    />
-                    <FitText
-                      type="normal"
-                      value={getSoundOffOn ? ' Sound Off' : ' Sound On'}
-                      color="#6B7280"
-                      fontFamily={Fonts.HELVETICA_REGULAR}
-                      lineHeight={30}
-                    />
-                  </TouchableOpacity>
+                      <FitToggle value={getSoundOffOn} />
+                      <FitText
+                        type="normal"
+                        value={!getSoundOffOn ? ' Sound Off' : ' Sound On'}
+                        color="#6B7280"
+                        fontFamily={Fonts.HELVETICA_REGULAR}
+                        lineHeight={30}
+                      />
+                      </View>
                   <View
                     style={{
                       backgroundColor: '#6B7280',

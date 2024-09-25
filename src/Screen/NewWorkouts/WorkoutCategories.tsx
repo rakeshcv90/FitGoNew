@@ -37,6 +37,7 @@ import {
   useIsFocused,
 } from '@react-navigation/native';
 import {
+  setEquipmentExercise,
   setExerciseInTime,
   setExerciseOutTime,
   setVideoLocation,
@@ -60,6 +61,7 @@ import OverExerciseModal from '../../Component/Utilities/OverExercise';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import FitIcon from '../../Component/Utilities/FitIcon';
+import RBSheet from 'react-native-raw-bottom-sheet';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 interface BoxProps {
@@ -89,8 +91,10 @@ const WorkoutCategories = ({navigation, route}: any) => {
   const [start, setStart] = useState(false);
   const [overExerciseVisible, setOverExerciseVisible] = useState(false);
   const dispatch = useDispatch();
-  const getUserDataDetails = useSelector(
-    (state: any) => state.getUserDataDetails,
+
+  const refStandard = useRef();
+  const getEquipmentExercise = useSelector(
+    (state: any) => state.getEquipmentExercise,
   );
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
@@ -98,8 +102,9 @@ const WorkoutCategories = ({navigation, route}: any) => {
   const downloadProgressRef = useRef(0);
   const isFocused = useIsFocused();
   useEffect(() => {
-    setExercise(categoryExercise);
-    setFilteredExercise(categoryExercise);
+    // setExercise(categoryExercise);
+    // setFilteredExercise(categoryExercise);
+    filterExercises(getEquipmentExercise)
     setDownloadProgress(0);
     setDownloade(0);
     setSelectedIndex(-1);
@@ -333,11 +338,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
     const searchArray = exercise.filter((item: any) =>
       item?.exercise_title.toLowerCase().includes(text.toLowerCase()),
     );
-    if (searchArray.length > 0) {
-      setFilteredExercise(searchArray);
-    } else {
-      setFilteredExercise(categoryExercise);
-    }
+    setFilteredExercise(searchArray);
   };
 
   const Start = (exercise: Array<any>) => {
@@ -480,7 +481,11 @@ const WorkoutCategories = ({navigation, route}: any) => {
                       />
                     ) : (
                       <CircularProgressBase
-                        value={isItemDownload && downloadProgress > 5 ? downloadProgress : 0}
+                        value={
+                          isItemDownload && downloadProgress > 5
+                            ? downloadProgress
+                            : 0
+                        }
                         radius={14}
                         activeStrokeColor={AppColor.RED}
                         inActiveStrokeColor="#33333399"
@@ -521,12 +526,215 @@ const WorkoutCategories = ({navigation, route}: any) => {
   const getItem = (data: [], index: number) => {
     return data[index];
   };
-  
+
   const getItemCount = (data: []) => {
     return data.length;
   };
-  
-  
+
+  const filterExercises = (adjust: number) => {
+    // Define the equipment filter logic
+    const exerciseCat = (exerciseEquip: string) => {
+      if (adjust === 0) {
+        return exerciseEquip !== 'No Equipment'; // Exclude 'No Equipment' exercises if selected equipment
+      }
+      return exerciseEquip === 'No Equipment'; // Include only 'No Equipment' exercises otherwise
+    };
+    const modifiedExercise = categoryExercise.filter((item: any) =>
+      exerciseCat(item?.exercise_equipment),
+    );
+    dispatch(setEquipmentExercise(adjust));
+    setExercise(modifiedExercise);
+    setFilteredExercise(modifiedExercise);
+  };
+  const BottomSheet = () => {
+    const [adjustSelected, setAdjustSelelcted] = useState(getEquipmentExercise);
+    const isFilterChanged = adjustSelected !== getEquipmentExercise; // extra condition for adjust change detection
+    const adjustArray = [
+      {
+        image: localImage.Workout,
+        text: 'With Equipment',
+      },
+      {
+        image: require('../../Icon/Images/NewHome/WithoutEquipment.png'),
+        text: 'Without Equipment',
+      },
+    ];
+    return (
+      <>
+        <RBSheet
+          ref={refStandard}
+          // draggable
+          closeOnPressMask={false}
+          customModalProps={{
+            animationType: 'slide',
+            statusBarTranslucent: true,
+          }}
+          customStyles={{
+            container: {
+              borderTopLeftRadius: 10,
+              borderTopRightRadius: 10,
+              height:
+                DeviceHeigth >= 1024
+                  ? DeviceHeigth * 0.28
+                  : DeviceHeigth >= 856
+                  ? DeviceHeigth * 0.38
+                  : DeviceHeigth <= 667
+                  ? DeviceHeigth <= 625
+                    ? DeviceHeigth * 0.58
+                    : DeviceHeigth * 0.53
+                  : DeviceHeigth * 0.53,
+            },
+            draggableIcon: {
+              width: 80,
+            },
+          }}>
+          <View style={styles.listContainer}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                width: DeviceWidth * 0.9,
+                alignSelf: 'center',
+                alignItems: 'center',
+                // top: -10,
+              }}>
+              <View />
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: '600',
+                  lineHeight: 24,
+                  fontFamily: Fonts.MONTSERRAT_BOLD,
+                  color: '#1E1E1E',
+                  marginLeft: DeviceWidth * 0.06,
+                }}>
+                Filter
+              </Text>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() => {
+                  AnalyticsConsole('CL_BS_FW');
+                  // handleFilterVisibilty();
+                  refStandard.current?.close();
+                }}>
+                <Icons name={'close'} size={24} color={AppColor.BLACK} />
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                width: DeviceWidth,
+                height: 1,
+                backgroundColor: '#1E1E1E',
+                opacity: 0.2,
+                marginVertical: 16,
+                alignSelf: 'center',
+              }}
+            />
+            <View style={{width: DeviceWidth * 0.9, alignSelf: 'center'}}>
+              <Text
+                style={{
+                  color: AppColor.BLACK,
+                  fontFamily: Fonts.HELVETICA_BOLD,
+                  fontSize: 16,
+                  marginBottom: 16,
+                }}>
+                Adjust
+              </Text>
+              <TouchableOpacity
+                activeOpacity={1}
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: 15,
+                }}
+                onPress={() => setAdjustSelelcted(prev => (prev == 0 ? 1 : 0))}>
+                {adjustArray.map((item, index) => (
+                  <View
+                    style={{
+                      width: DeviceWidth / 2.3,
+                      backgroundColor: '#F9F9F9',
+                      borderRadius: 10,
+                      borderWidth: 1.5,
+                      borderColor:
+                        adjustSelected == index ? AppColor.RED : '#F9F9F9',
+                    }}>
+                    <Image
+                      source={item.image}
+                      style={{
+                        width: 35,
+                        height: 35,
+                        alignSelf: 'center',
+                        marginTop: 12,
+                      }}
+                      tintColor={
+                        adjustSelected == index
+                          ? AppColor.RED
+                          : AppColor.SecondaryTextColor
+                      }
+                    />
+                    <Text
+                      style={{
+                        textAlign: 'center',
+                        color: AppColor.BLACK,
+                        fontFamily: Fonts.HELVETICA_BOLD,
+                        marginBottom: 12,
+                        marginTop: 4,
+                      }}>
+                      {item.text}
+                    </Text>
+                    <Icons
+                      style={{position: 'absolute', right: 12, top: 10}}
+                      name={
+                        adjustSelected == index
+                          ? 'check-circle'
+                          : 'checkbox-blank-circle-outline'
+                      }
+                      size={25}
+                      color={
+                        adjustSelected == index
+                          ? AppColor.RED
+                          : AppColor.SecondaryTextColor
+                      }
+                    />
+                  </View>
+                ))}
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  width: 150,
+                  height: 50,
+                  backgroundColor: AppColor.RED,
+                  borderRadius: 6,
+                  alignSelf: 'flex-end',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  opacity: !isFilterChanged ? 0.6 : 1,
+                }}
+                disabled={!isFilterChanged ? true : false}
+                onPress={() => {
+                  filterExercises(adjustSelected);
+                }}>
+                <Text
+                  style={{
+                    color: '#FFFFFF',
+                    fontSize: 14,
+                    fontWeight: '500',
+                    lineHeight: 20,
+
+                    textAlign: 'center',
+                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                  }}>
+                  Show Result
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </RBSheet>
+      </>
+    );
+  };
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
       <Wrapper>
@@ -553,14 +761,20 @@ const WorkoutCategories = ({navigation, route}: any) => {
             } else if (switchButton) {
               AnalyticsConsole('CL_SE_WC');
               setSelectedExercise([]);
-              setSelectedIndex(-1)
+              setSelectedIndex(-1);
               setSwitchButton(false);
               setItemsLength(0);
-              setDownloadProgress(6)
+              setDownloadProgress(6);
             } else {
               navigation?.goBack();
             }
           }}
+          onIconPress={() => {
+            AnalyticsConsole('O_BS_FW');
+            refStandard.current.open();
+          }}
+          icon
+          iconSource={require('../../Icon/Images/NewImage2/filter.png')}
         />
         <View style={styles.container}>
           <View
@@ -670,6 +884,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
         setOverExerciseVisible={setOverExerciseVisible}
         overExerciseVisible={overExerciseVisible}
       />
+      <BottomSheet />
     </SafeAreaView>
   );
 };
@@ -745,6 +960,11 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontFamily: 'Montserrat',
     color: '#000',
+  },
+  listContainer: {
+    flex: 1,
+    padding: 10,
+    borderRadius: 20,
   },
 });
 export default WorkoutCategories;

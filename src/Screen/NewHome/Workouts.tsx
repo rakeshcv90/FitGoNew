@@ -77,7 +77,7 @@ const Workouts = ({navigation}: any) => {
       id: 230,
       title: 'Quick Fit',
       image: require('../../Icon/Images/WorkoutCategories/Quick_Fit.png'),
-      category: 'Cardio/Abs/Legs/Fourarms/Biceps/Triceps',
+      category: 'Cardio',
     },
     {
       id: 231,
@@ -89,7 +89,7 @@ const Workouts = ({navigation}: any) => {
       id: 232,
       title: 'Flex flow',
       image: require('../../Icon/Images/WorkoutCategories/Flex_Flow.png'),
-      category: 'Cardio/Abs',
+      category: 'Biceps/Triceps/Fourarms',
     },
     {
       id: 233,
@@ -107,7 +107,7 @@ const Workouts = ({navigation}: any) => {
       id: 235,
       title: 'warrior workout',
       image: require('../../Icon/Images/WorkoutCategories/Warrior_Workout.png'),
-      category: 'Chest/Back/Shoulders/Legs',
+      category: 'Shoulders/Legs',
     },
     {
       id: 236,
@@ -119,7 +119,7 @@ const Workouts = ({navigation}: any) => {
       id: 237,
       title: 'Beach Ready',
       image: require('../../Icon/Images/WorkoutCategories/Beach_Ready.png'),
-      category: 'Abs/Chest/Legs',
+      category: 'Abs/Chest',
     },
   ];
 
@@ -128,7 +128,7 @@ const Workouts = ({navigation}: any) => {
       id: 230,
       title: 'Cardio Queen',
       image: require('../../Icon/Images/WorkoutCategories/Cardio_Queen.png'),
-      category: 'Cardio/Legs/Abs',
+      category: 'Cardio/Abs',
     },
     {
       id: 231,
@@ -146,19 +146,19 @@ const Workouts = ({navigation}: any) => {
       id: 233,
       title: 'Tummy Toners',
       image: require('../../Icon/Images/WorkoutCategories/Tummy_Toning.png'),
-      category: 'Abs/Back/Legs/Cardio',
+      category: 'Abs/Cardio',
     },
     {
       id: 234,
       title: 'Total Body Blitz',
       image: require('../../Icon/Images/WorkoutCategories/Total_Body_Blitz.png'),
-      category: '',
+      category: 'Chest/Back/Fourarms/Biceps/Triceps/Legs',
     },
     {
       id: 235,
       title: 'Strong her',
       image: require('../../Icon/Images/WorkoutCategories/Strong_Her.png'),
-      category: 'Chest/Back/Abs/Fourarms/Biceps/Triceps',
+      category: 'Chest/Fourarms/Biceps/Triceps',
     },
     {
       id: 236,
@@ -170,7 +170,7 @@ const Workouts = ({navigation}: any) => {
       id: 237,
       title: 'Quick fit',
       image: require('../../Icon/Images/WorkoutCategories/Quick_FitF.png'),
-      category: 'Cardio/Abs/Legs/Fourarms/Biceps/Triceps',
+      category: 'Cardio',
     },
   ];
 

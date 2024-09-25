@@ -114,6 +114,7 @@ const Reminder = ({
         message: 'Reminder time should be atleast 5 minutes ahead of the current time.',
         type: 'info', // You might want to change 'success' to 'error' for a clearer message
         animationDuration: 500,
+        duration: 3000,
         floating: true,
         icon: {icon: 'auto', position: 'left'},
       });

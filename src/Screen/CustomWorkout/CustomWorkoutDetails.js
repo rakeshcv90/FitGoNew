@@ -612,7 +612,8 @@ const CustomWorkoutDetails = ({navigation, route}) => {
             pV={10}
             pH={10}
             ButtonWidth={DeviceWidth * 0.4}
-            bR={20}
+            bR={10}
+            fontFamily={Fonts.HELVETICA_BOLD}
             right={16}
             withAnimation
             download={VideoDownload}

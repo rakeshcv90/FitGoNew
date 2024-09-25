@@ -382,7 +382,7 @@ const LetsStart = ({navigation}) => {
               <Text
                 onPress={() => {
                   navigation.navigate('TermaAndCondition', {
-                    title: 'Privacy & Policy',
+                    title: 'Privacy Policy',
                   });
                 }}
                 style={styles.policyText1}>
@@ -393,7 +393,7 @@ const LetsStart = ({navigation}) => {
                 style={styles.policyText1}
                 onPress={() => {
                   navigation.navigate('TermaAndCondition', {
-                    title: 'Terms & Condition',
+                    title: 'Terms & Conditions',
                   });
                 }}>
                 {' '}

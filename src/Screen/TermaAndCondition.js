@@ -27,7 +27,7 @@ import NewHeader1 from '../Component/Headers/NewHeader1';
 import Wrapper from './WorkoutCompleteScreen/Wrapper';
 
 const TermaAndCondition = ({route}) => {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(true);
   const {defaultTheme} = useSelector(state => state);
   return (
     <View
@@ -52,7 +52,7 @@ const TermaAndCondition = ({route}) => {
         <WebView
           source={{
             uri:
-              route.params.title === 'Privacy policy'
+              route.params.title === 'Privacy Policy'
                 ? 'https://thefitnessandworkout.com/privacy-policy/'
                 : 'https://thefitnessandworkout.com/terms-condition/',
           }}

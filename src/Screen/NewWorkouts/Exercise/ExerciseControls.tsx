@@ -84,7 +84,6 @@ type ExerciseHookProps = {
   pause: boolean;
   back: boolean;
   setPause: Function;
-  setShowSet: Function;
   currentSet: number;
   setCurrentSet: Function;
   allExercise: Array<ExerciseData>;
@@ -168,7 +167,6 @@ const useExerciseHook = ({
   StartAnimation,
   currentSet,
   setCurrentSet,
-  setShowSet,
   outNavigation,
   getStoreVideoLoc,
 }: ExerciseHookProps) => {
@@ -269,11 +267,10 @@ const useExerciseHook = ({
             if (currentSet < NUMBER_OF_SETS) {
               console.log('LESSS');
               if (currentSet + 1 == NUMBER_OF_SETS) initInterstitial();
-              setShowSet(true);
               setCurrentSet(currentSet + 1);
               setSeconds(restStart ? getReadyTime : resetTime);
               clearTimeout(exerciseTimerRef.current);
-              animatedProgress.setValue(0)
+              animatedProgress.setValue(0);
               StartAnimation();
             } else {
               if (number == EXERCISE_LENGTH) {
@@ -323,7 +320,6 @@ const useExerciseHook = ({
 
   const prev = () => {
     if (number == 0) return;
-    setShowSet(true);
     setCurrentSet(1);
     setPause(false);
     animatedProgress.setValue(0);
@@ -337,7 +333,6 @@ const useExerciseHook = ({
     setSeconds(resetTime);
   };
   const next = () => {
-    setShowSet(true);
     setCurrentSet(1);
     setPause(false);
     setTimeout(() => {
@@ -398,7 +393,6 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
   const [progressPercent, setProgressPercent] = useState(0);
   const [quitLoader, setQuitLoader] = useState(false);
   const [currentSet, setCurrentSet] = useState(0);
-  const [showSet, setShowSet] = useState(false);
   const [completed, setCompleted] = useState(0);
   const opacity = useRef(new Animated.Value(0)).current;
   const scale = useRef(new Animated.Value(1)).current;
@@ -430,7 +424,6 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
         useNativeDriver: true,
       }),
     ]).start(() => {
-      setShowSet(false);
       opacity.setValue(0);
       scale.setValue(1);
       translateY.setValue(0);
@@ -471,7 +464,6 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
     StartAnimation,
     currentSet,
     setCurrentSet,
-    setShowSet,
     outNavigation,
     getStoreVideoLoc,
   });
@@ -727,24 +719,23 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
   let remainingSeconds = seconds % 60;
   return (
     <>
-      {showSet && (
-        <Animated.Text
-          style={{
-            color: AppColor.RED,
-            fontSize: 30,
-            position: 'absolute',
-            fontFamily: Fonts.MONTSERRAT_BOLD,
-            lineHeight: 40,
-            fontWeight: 'bold',
-            top: DeviceHeigth * 0.4,
-            alignSelf: 'center',
-            zIndex: 1,
-            opacity: opacity,
-            transform: [{scale}, {translateY}],
-          }}>
-          SET {currentSet}
-        </Animated.Text>
-      )}
+      <Animated.Text
+        style={{
+          color: AppColor.RED,
+          fontSize: 30,
+          position: 'absolute',
+          fontFamily: Fonts.MONTSERRAT_BOLD,
+          lineHeight: 40,
+          fontWeight: 'bold',
+          top: DeviceHeigth * 0.4,
+          alignSelf: 'center',
+          zIndex: 1,
+          opacity: opacity,
+          transform: [{scale}, {translateY}],
+        }}>
+        SET {currentSet}
+      </Animated.Text>
+
       <View
         style={[
           {
