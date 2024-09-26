@@ -241,14 +241,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
           width: DeviceWidth * 0.9,
           textAlign: 'center',
         }}>
-        You have completed your{' '}
-        {type != 'weekly'
-          ? data?.workout_title == undefined
-            ? data?.title == undefined
-              ? data?.workout_name + ' Exercise'
-              : data?.title
-            : data?.workout_title + ' Exercise'
-          : workoutName + ' Exercises'}
+        You have completed your workout
       </Text>
 
       <View
@@ -359,7 +352,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
         {/* {bannerAdsDisplay()} */}
         <BannerAdd bannerAdId={bannerAdId} />
       </View>
-      <RatingModal />
+      {/* <RatingModal /> */}
     </SafeAreaView>
   );
 };

@@ -221,7 +221,7 @@ const NewMonthlyAchievement = ({navigation}) => {
                 styles.txt1,
                 {fontFamily: Fonts.MONTSERRAT_BOLD, fontSize: 19},
               ]}>
-              Achievement
+              Exercise History
             </Text>
           </View>
           <View style={[styles.card, {flexDirection: 'column'}]}>

@@ -361,7 +361,7 @@ const OfferPage = ({navigation, route}) => {
             header={'Cardio Point'}
             text1={'Cardio point'}
             text1Color={AppColor.WHITE}
-            text2={'Do a few minutes of cardio and earn extra FitCoins'}
+            text2={'Do a few minutes of cardio and earn extra FitCoins.'}
             text3={`${cardioExxercise[0]?.fit_coins} coins`}
             coinTextColor={AppColor.YELLOW}
             isactive={!cardioStatus}
@@ -388,7 +388,7 @@ const OfferPage = ({navigation, route}) => {
             header={'Breathing Session'}
             text1={'Breathing Session'}
             text1Color={AppColor.WHITE}
-            text2={'Join the Breathing session & earn bonus FitCoins'}
+            text2={'Join the Breathing session & earn bonus FitCoins.'}
             text3={`${breatheCoins} coins`}
             coinTextColor={AppColor.WHITE}
             bannerType={'breathe'}

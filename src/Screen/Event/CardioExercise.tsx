@@ -145,10 +145,8 @@ const CardioExercise = ({navigation, route}: any) => {
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
   );
-  const [addClosed, setAddClosed] = useState(false);
-  const {initInterstitial, showInterstitialAd} = useInterstitialAd({
-    setAddClosed,
-  });
+  // const [addClosed, setAddClosed] = useState(false);
+  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const [seconds, setSeconds] = useState(
     parseInt(allExercise[number]?.exercise_rest.split(' ')[0]),
   );
@@ -224,7 +222,7 @@ const CardioExercise = ({navigation, route}: any) => {
   const PauseAudio = async (playbackState: any) => {
     await TrackPlayer.reset();
   };
-  
+
   let speaking = false;
 
   const SPEAK = (words: string) => {
@@ -243,21 +241,13 @@ const CardioExercise = ({navigation, route}: any) => {
   const dispatch = useDispatch();
   useEffect(() => {
     if (!back) {
-      // console.log(
-      //   'END',
-      //   number,
-      //   timer,
-      //   restStart,
-      //   seconds,
-      //   currentSet,
-      //   addClosed,
-      // );
+      // console.log('END', seconds);
       playTimerRef.current = setTimeout(() => {
         if (restStart) {
           if (timer === 0 && number != 0) {
             // if (number == allExercise?.length - 1) return;
-            allExercise[number]?.exercise_sets != 0 && setShowSet(true);
-            setCurrentSet(currentSet + 1);
+            setShowSet(true);
+            setCurrentSet(1);
             setRestStart(false);
             Tts.stop();
             setSeconds(
@@ -265,9 +255,10 @@ const CardioExercise = ({navigation, route}: any) => {
             );
 
             setTimer(10);
+            // setDemoW(0);
+            setDemo(!demo);
             timerProgress.setValue(0);
             setDemoW(0);
-            setDemo(!demo);
             PauseAudio(playbackState);
             Platform.OS == 'android'
               ? Platform.Version != 34 && setupPlayer()
@@ -275,9 +266,9 @@ const CardioExercise = ({navigation, route}: any) => {
             StartAnimation();
           } else if (timer === 0 && number == 0) {
             if (number == allExercise?.length - 1) return;
-            setPause(true);
+
             setRestStart(false);
-            allExercise[number]?.exercise_sets != 0 && setShowSet(true);
+            setShowSet(true);
             setCurrentSet(currentSet + 1);
             setTimer(10);
             setDemo(!demo);
@@ -300,7 +291,6 @@ const CardioExercise = ({navigation, route}: any) => {
               postCurrentRewardsExerciseAPI(number - 1);
             }
             setDemoW(demoW + 10);
-
             setTimer(timer - 1);
           } else {
             setDemoW(demoW + 10);
@@ -308,21 +298,21 @@ const CardioExercise = ({navigation, route}: any) => {
           }
         } else {
           if (pause) {
-            if (
-              seconds ==
-              parseInt(allExercise[number]?.exercise_rest.split(' ')[0])
-            ) {
-              SPEAK('Lets Go');
-            }
+            // if (
+            //   seconds ==
+            //   parseInt(allExercise[number]?.exercise_rest.split(' ')[0])
+            // ) {
+            //   SPEAK('Lets Go');
+            // }
             // setPlayW(playW + 100 / parseInt(currentData?.exercise_rest));
             if (seconds > 0) {
-              if (seconds == 4) SPEAK('three.            two.');
-              if (seconds == 2) SPEAK('one.    Done');
-              if (seconds == 11) SPEAK('10 seconds to go');
-              if (allExercise[number]?.exercise_sets == 0 && seconds == 10) {
-                initInterstitial();
-                console.log('ADD INITIALISE NO SET');
-              }
+              // if (seconds == 4) SPEAK('three.            two.');
+              // if (seconds == 2) SPEAK('one.    Done');
+              if (seconds == 11) SPEAK(`Last few seconds left, don't give up!`);
+              // if (allExercise[number]?.exercise_sets == 0 && seconds == 10) {
+              //   initInterstitial();
+              //   console.log('ADD INITIALISE NO SET');
+              // }
               setSeconds(seconds - 1);
               setPlayW(
                 playW +
@@ -338,17 +328,15 @@ const CardioExercise = ({navigation, route}: any) => {
               currentSet == allExercise[number]?.exercise_sets
             ) {
               setPause(false);
+              setCurrentSet(currentSet + 1);
               postCurrentRewardsExerciseAPI(number);
-
-              showInterstitialAd();
               clearTimeout(playTimerRef.current);
-              offerType
-                ? navigation.navigate('CardioCompleted')
-                : navigation?.navigate('WorkoutCompleted', {
-                    type: type,
-                    day: day,
-                    allExercise: allExercise,
-                  });
+              showInterstitialAd();
+              navigation.navigate('WorkoutCompleted', {
+                day: day,
+                allExercise: allExercise,
+                type: type,
+              });
             } else if (
               seconds == 0 &&
               number <= allExercise?.length - 1 &&
@@ -357,10 +345,10 @@ const CardioExercise = ({navigation, route}: any) => {
             ) {
               animatedProgress.setValue(0);
               setPlayW(0);
-              if (currentSet + 1 == allExercise[number]?.exercise_sets) {
-                initInterstitial();
-                console.log('ADD INITIALISE');
-              }
+              // if (currentSet + 1 == allExercise[number]?.exercise_sets) {
+              //   initInterstitial();
+              //   console.log('ADD INITIALISE');
+              // }
               setShowSet(true);
               setCurrentSet(currentSet + 1);
               setSeconds(
@@ -369,22 +357,18 @@ const CardioExercise = ({navigation, route}: any) => {
               clearTimeout(playTimerRef.current);
               StartAnimation();
             } else if (seconds == 0 && number < allExercise?.length - 1) {
-              !addClosed && showInterstitialAd();
-              if (addClosed) {
-                ProgressRef.current?.play();
-                setPause(false);
-                setCurrentSet(0);
-                const index = allExercise?.findIndex(
-                  (item: any) =>
-                    item?.exercise_id == allExercise[number]?.exercise_id,
-                );
-                handleExerciseChange(allExercise[index + 1]?.exercise_title);
-                setNumber(index + 1);
-                setTimer(10);
-                setDemoW(0);
-                setRestStart(true);
-                setAddClosed(false);
-              }
+              ProgressRef.current?.play();
+              setPause(false);
+              setCurrentSet(0);
+              const index = allExercise?.findIndex(
+                (item: any) =>
+                  item?.exercise_id == allExercise[number]?.exercise_id,
+              );
+              handleExerciseChange(allExercise[index + 1]?.exercise_title);
+              setNumber(index + 1);
+              setTimer(10);
+              setDemoW(0);
+              setRestStart(true);
               Platform.OS == 'android'
                 ? Platform.Version != 34 && setupPlayer()
                 : setupPlayer();
@@ -397,52 +381,29 @@ const CardioExercise = ({navigation, route}: any) => {
             ) {
               setPause(false);
               postCurrentRewardsExerciseAPI(number);
-              let checkAdsShow = AddCountFunction();
-              // const above45 =
-              //   moment(getExerciseInTime, 'hh:mm:ss')
-              //     .add(2, 'minutes')
-              //     .format('hh:mm:ss') >= moment().format('hh:mm:ss');
-              // console.error(above45,'START', getExerciseInTime, "NEWWEWEEW",moment().format('hh:mm:ss'));
 
-              if (checkAdsShow == true) {
-                showInterstitialAd();
-                clearTimeout(playTimerRef.current);
-                //CollectCoins
-                offerType
-                  ? navigation.navigate('CardioCompleted')
-                  : navigation?.navigate('WorkoutCompleted', {
-                      type: type,
-                      day: day,
-                      allExercise: allExercise,
-                    });
-              } else {
-                offerType
-                  ? navigation.navigate('CardioCompleted')
-                  : navigation?.navigate('WorkoutCompleted', {
-                      type: type,
-                      day: day,
-                      allExercise: allExercise,
-                    });
-              }
+              showInterstitialAd();
+              clearTimeout(playTimerRef.current);
+              navigation?.navigate('WorkoutCompleted', {
+                type: type,
+                day: day,
+                allExercise: allExercise,
+              });
             } else if (seconds == 0 && number <= allExercise?.length - 1) {
               animatedProgress.setValue(0);
               setPlayW(0);
-              !addClosed && showInterstitialAd();
-              if (addClosed) {
-                ProgressRef.current?.play();
-                setPause(false);
-                setCurrentSet(0);
-                const index = allExercise?.findIndex(
-                  (item: any) =>
-                    item?.exercise_id == allExercise[number]?.exercise_id,
-                );
-                handleExerciseChange(allExercise[index + 1]?.exercise_title);
-                setNumber(index + 1);
-                setTimer(10);
-                setDemoW(0);
-                setRestStart(true);
-                setAddClosed(false);
-              }
+              ProgressRef.current?.play();
+              setPause(false);
+              setCurrentSet(0);
+              const index = allExercise?.findIndex(
+                (item: any) =>
+                  item?.exercise_id == allExercise[number]?.exercise_id,
+              );
+              handleExerciseChange(allExercise[index + 1]?.exercise_title);
+              setNumber(index + 1);
+              setTimer(10);
+              setDemoW(0);
+              setRestStart(true);
               Platform.OS == 'android'
                 ? Platform.Version != 34 && setupPlayer()
                 : setupPlayer();
@@ -453,18 +414,7 @@ const CardioExercise = ({navigation, route}: any) => {
     } else {
     }
     // return () => clearTimeout(playTimerRef.current);
-  }, [
-    pause,
-    timer,
-    back,
-    demo,
-    seconds,
-    restStart,
-    showSet,
-    addClosed,
-    playW,
-    demoW,
-  ]);
+  }, [pause, timer, back, demo, seconds, restStart, showSet, playW, demoW]);
   useEffect(() => {
     Animated.timing(animatedProgress, {
       toValue: Math.round(playW) == 100 ? 0 : Math.round(playW),
@@ -836,7 +786,7 @@ const CardioExercise = ({navigation, route}: any) => {
                     lineHeight: 20,
                     fontWeight: '600',
                   }}>
-                  {allExercise[number]?.exercise_title}
+                  {/* {allExercise[number]?.exercise_title} */}
                 </Text>
                 <View
                   style={{
@@ -970,7 +920,7 @@ const CardioExercise = ({navigation, route}: any) => {
           </>
         ) : (
           <>
-            <Animated.Text
+            {/* <Animated.Text
               style={{
                 color: AppColor.RED,
                 fontSize: 30,
@@ -985,7 +935,7 @@ const CardioExercise = ({navigation, route}: any) => {
                 transform: [{scale}, {translateY}],
               }}>
               SET {currentSet}
-            </Animated.Text>
+            </Animated.Text> */}
 
             <View
               style={{
@@ -1016,7 +966,7 @@ const CardioExercise = ({navigation, route}: any) => {
                     lineHeight: 20,
                     fontWeight: '600',
                   }}>
-                  {allExercise[number]?.exercise_title}
+                  {/* {allExercise[number]?.exercise_title} */}
                 </Text>
                 <View
                   style={{
@@ -1106,6 +1056,56 @@ const CardioExercise = ({navigation, route}: any) => {
                     ? `0${minutes}:${remainingSeconds}`
                     : `0${minutes}:0${remainingSeconds}`}
                 </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      color: '#1F2937',
+                      fontFamily: Fonts.HELVETICA_REGULAR,
+                      fontSize: 16,
+                      lineHeight: 25,
+                      fontWeight: '600',
+                    }}>
+                    {allExercise[number]?.exercise_title}
+                  </Text>
+                  {allExercise[number]?.exercise_sets > 0 && (
+                    <>
+                      <Text
+                        style={{
+                          color: '#1F2937',
+                          fontFamily: Fonts.HELVETICA_REGULAR,
+                          fontSize: 16,
+                          lineHeight: 25,
+                          fontWeight: '600',
+                        }}>
+                        {' · '}
+                      </Text>
+                      <View
+                        style={{
+                          padding: 2,
+                          paddingHorizontal: 10,
+                          borderRadius: 20,
+                          borderWidth: 1,
+                          borderColor: '#EBEDF0',
+                        }}>
+                        <Text
+                          style={{
+                            color: '#6B7280',
+                            fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                            fontSize: 16,
+                            lineHeight: 20,
+                            fontWeight: '600',
+                          }}>
+                          {currentSet}/{allExercise[number]?.exercise_sets}
+                        </Text>
+                      </View>
+                    </>
+                  )}
+                </View>
               </View>
               <View
                 style={{

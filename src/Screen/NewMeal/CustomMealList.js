@@ -462,7 +462,7 @@ const CustomMealList = ({navigation, route}) => {
         });
         if (res.data.msg == 'diet updated successfully.') {
           showMessage({
-            message: 'Recipe added successfully',
+            message: 'Custom diet created successfully.',
             type: 'success',
             animationDuration: 500,
             floating: true,
@@ -567,7 +567,7 @@ const CustomMealList = ({navigation, route}) => {
             } else {
               showMessage({
                 message:
-                  'Select your meal from the given list to create your personalized diet plan!',
+                  'Select a meal from the given list to create your personalized diet plan!',
                 type: 'danger',
                 animationDuration: 500,
                 floating: true,

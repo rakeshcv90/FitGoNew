@@ -330,7 +330,7 @@ const EditCustomMeal = ({navigation, route}) => {
             } else {
               showMessage({
                 message:
-                  'Select your meal from the given list to create your personalized diet plan!',
+                  'Select a meal from the given list to create your personalized diet plan!',
                 type: 'danger',
                 animationDuration: 500,
                 floating: true,

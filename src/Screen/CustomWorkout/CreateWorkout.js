@@ -497,7 +497,7 @@ const CreateWorkout = ({navigation, route}) => {
             paddingRight: 20,
             height: 45,
             backgroundColor: '#f0013b',
-            borderRadius: 30,
+            borderRadius: 10,
             justifyContent: 'center',
             alignItems: 'center',
             position: 'absolute',
@@ -509,7 +509,7 @@ const CreateWorkout = ({navigation, route}) => {
               //width: 180,
               height: 40,
 
-              borderRadius: 30,
+              borderRadius: 10,
               justifyContent: 'center',
               alignItems: 'center',
               flexDirection: 'row',

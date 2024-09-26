@@ -104,7 +104,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
   useEffect(() => {
     // setExercise(categoryExercise);
     // setFilteredExercise(categoryExercise);
-    filterExercises(getEquipmentExercise)
+    filterExercises(getEquipmentExercise);
     setDownloadProgress(0);
     setDownloade(0);
     setSelectedIndex(-1);
@@ -198,13 +198,22 @@ const WorkoutCategories = ({navigation, route}: any) => {
     ) => {
       const newSelectedItems = selectedExercise;
       const itemIndex = newSelectedItems.indexOf(item?.exercise_id);
-
       if (itemIndex === -1) {
+        if (selectedExercise.length > 9) {
+          showMessage({
+            message: 'You can select upto 10 exercises at a time.',
+            type: 'info',
+            animationDuration: 500,
+            floating: true,
+            icon: {icon: 'auto', position: 'left'},
+          });
+          return;
+        }
         newSelectedItems.push(item?.exercise_id);
       } else {
         newSelectedItems.splice(itemIndex, 1);
       }
-
+      console.log(newSelectedItems.length)
       setSelectedExercise(newSelectedItems);
       setItemsLength(newSelectedItems.length);
     },

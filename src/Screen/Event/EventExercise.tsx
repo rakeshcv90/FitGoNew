@@ -147,10 +147,7 @@ const EventExercise = ({navigation, route}: any) => {
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
   );
-  const [addClosed, setAddClosed] = useState(false);
-  const {initInterstitial, showInterstitialAd} = useInterstitialAd({
-    setAddClosed,
-  });
+  const {initInterstitial, showInterstitialAd} = MyInterstitialAd()
   const [seconds, setSeconds] = useState(
     parseInt(allExercise[number]?.exercise_rest.split(' ')[0]),
   );
@@ -308,21 +305,21 @@ const EventExercise = ({navigation, route}: any) => {
           }
         } else {
           if (pause) {
-            if (
-              seconds ==
-              parseInt(allExercise[number]?.exercise_rest.split(' ')[0])
-            ) {
-              SPEAK('Lets Go');
-            }
+            // if (
+            //   seconds ==
+            //   parseInt(allExercise[number]?.exercise_rest.split(' ')[0])
+            // ) {
+            //   SPEAK('Lets Go');
+            // }
             // setPlayW(playW + 100 / parseInt(currentData?.exercise_rest));
             if (seconds > 0) {
-              if (seconds == 4) SPEAK('three.            two.');
-              if (seconds == 2) SPEAK('one.    Done');
-              if (seconds == 11) SPEAK('10 seconds to go');
-              if (allExercise[number]?.exercise_sets == 0 && seconds == 10) {
-                initInterstitial();
-                console.log('ADD INITIALISE NO SET');
-              }
+              // if (seconds == 4) SPEAK('three.            two.');
+              // if (seconds == 2) SPEAK('one.    Done');
+              if (seconds == 11) SPEAK(`Last few seconds left, don't give up!`);
+              // if (allExercise[number]?.exercise_sets == 0 && seconds == 10) {
+              //   initInterstitial();
+              //   console.log('ADD INITIALISE NO SET');
+              // }
               setSeconds(seconds - 1);
               setPlayW(
                 playW +
@@ -334,8 +331,7 @@ const EventExercise = ({navigation, route}: any) => {
 
           if (
             getExerciseOutTime != '' &&
-            moment().format(format) > getExerciseOutTime &&
-            !addClosed
+            moment().format(format) > getExerciseOutTime 
           ) {
             console.warn(
               'SHOWINGDF',
@@ -372,10 +368,10 @@ const EventExercise = ({navigation, route}: any) => {
             ) {
               animatedProgress.setValue(0);
               setPlayW(0);
-              if (currentSet + 1 == allExercise[number]?.exercise_sets) {
-                initInterstitial();
-                console.log('ADD INITIALISE');
-              }
+              // if (currentSet + 1 == allExercise[number]?.exercise_sets) {
+              //   initInterstitial();
+              //   console.log('ADD INITIALISE');
+              // }
               setShowSet(true);
               setCurrentSet(currentSet + 1);
               setSeconds(
@@ -384,8 +380,6 @@ const EventExercise = ({navigation, route}: any) => {
               clearTimeout(playTimerRef.current);
               StartAnimation();
             } else if (seconds == 0 && number < allExercise?.length - 1) {
-              !addClosed && !overExerciseVisible && showInterstitialAd();
-              if (addClosed) {
                 ProgressRef.current?.play();
                 setPause(false);
                 setCurrentSet(0);
@@ -398,8 +392,6 @@ const EventExercise = ({navigation, route}: any) => {
                 setTimer(10);
                 setDemoW(0);
                 setRestStart(true);
-                setAddClosed(false);
-              }
               Platform.OS == 'android'
                 ? Platform.Version != 34 && setupPlayer()
                 : setupPlayer();
@@ -412,9 +404,7 @@ const EventExercise = ({navigation, route}: any) => {
             ) {
               setPause(false);
               postCurrentRewardsExerciseAPI(number);
-              let checkAdsShow = AddCountFunction();
 
-              if (checkAdsShow == true) {
                 showInterstitialAd();
                 clearTimeout(playTimerRef.current);
                 navigation?.navigate('WorkoutCompleted', {
@@ -422,18 +412,9 @@ const EventExercise = ({navigation, route}: any) => {
                   day: day,
                   allExercise: allExercise,
                 });
-              } else {
-                navigation?.navigate('WorkoutCompleted', {
-                  type: type,
-                  day: day,
-                  allExercise: allExercise,
-                });
-              }
             } else if (seconds == 0 && number <= allExercise?.length - 1) {
               animatedProgress.setValue(0);
               setPlayW(0);
-              !addClosed && !overExerciseVisible && showInterstitialAd();
-              if (addClosed) {
                 ProgressRef.current?.play();
                 setPause(false);
                 setCurrentSet(0);
@@ -446,8 +427,6 @@ const EventExercise = ({navigation, route}: any) => {
                 setTimer(10);
                 setDemoW(0);
                 setRestStart(true);
-                setAddClosed(false);
-              }
               Platform.OS == 'android'
                 ? Platform.Version != 34 && setupPlayer()
                 : setupPlayer();
@@ -466,7 +445,6 @@ const EventExercise = ({navigation, route}: any) => {
     seconds,
     restStart,
     showSet,
-    addClosed,
     timerShown,
     playW,
     demoW,
@@ -823,7 +801,7 @@ const EventExercise = ({navigation, route}: any) => {
                     lineHeight: 20,
                     fontWeight: '600',
                   }}>
-                  {allExercise[number]?.exercise_title}
+                  {/* {allExercise[number]?.exercise_title} */}
                 </Text>
                 <View
                   style={{
@@ -959,7 +937,7 @@ const EventExercise = ({navigation, route}: any) => {
           </>
         ) : (
           <>
-            <Animated.Text
+            {/* <Animated.Text
               style={{
                 color: AppColor.RED,
                 fontSize: 30,
@@ -974,7 +952,7 @@ const EventExercise = ({navigation, route}: any) => {
                 transform: [{scale}, {translateY}],
               }}>
               SET {currentSet}
-            </Animated.Text>
+            </Animated.Text> */}
 
             <View
               style={{
@@ -1005,7 +983,7 @@ const EventExercise = ({navigation, route}: any) => {
                     lineHeight: 20,
                     fontWeight: '600',
                   }}>
-                  {allExercise[number]?.exercise_title}
+                  {/* {allExercise[number]?.exercise_title} */}
                 </Text>
                 <View
                   style={{
@@ -1095,6 +1073,56 @@ const EventExercise = ({navigation, route}: any) => {
                     ? `0${minutes}:${remainingSeconds}`
                     : `0${minutes}:0${remainingSeconds}`}
                 </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      color: '#1F2937',
+                      fontFamily: Fonts.HELVETICA_REGULAR,
+                      fontSize: 16,
+                      lineHeight: 25,
+                      fontWeight: '600',
+                    }}>
+                    {allExercise[number]?.exercise_title}
+                  </Text>
+                  {allExercise[number]?.exercise_sets > 0 && (
+                    <>
+                    <Text
+                      style={{
+                        color: '#1F2937',
+                        fontFamily: Fonts.HELVETICA_REGULAR,
+                        fontSize: 16,
+                        lineHeight: 25,
+                        fontWeight: '600',
+                      }}>
+                      {' · '}
+                    </Text>
+                    <View
+                      style={{
+                        padding: 2,
+                        paddingHorizontal: 10,
+                        borderRadius: 20,
+                        borderWidth: 1,
+                        borderColor: '#EBEDF0',
+                      }}>
+                      <Text
+                        style={{
+                          color: '#6B7280',
+                          fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                          fontSize: 16,
+                          lineHeight: 20,
+                          fontWeight: '600',
+                        }}>
+                      {currentSet}/{allExercise[number]?.exercise_sets}
+                      </Text>
+                    </View>
+                    </>
+                  )}
+                </View>
               </View>
               <View
                 style={{

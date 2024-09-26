@@ -472,21 +472,21 @@ const UpcomingEvent = ({navigation, route}: any) => {
                 style={{height: 60, width: 60}}
                 resizeMode="contain"
               />
-              {getOfferAgreement?.location == 'India' ? (
+              {/* {getOfferAgreement?.location == 'India' ? (
                 <View style={{marginLeft: 10}}>
                   <FitText type="normal" value="Winning price upto" />
                   <FitText type="Heading" value="₹1000/-" />
                 </View>
-              ) : (
+              ) : ( */}
                 <View style={{marginLeft: 10}}>
                   <FitText
                     type="Heading"
-                    value="Winning Voucher"
+                    value="Win Voucher"
                     fontSize={18}
                   />
                   <FitText type="normal" value="Earn the amazing price" />
                 </View>
-              )}
+              
             </LinearGradient>
             <FitText
               type="SubHeading"

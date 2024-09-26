@@ -174,7 +174,7 @@ const NewSubscription = ({navigation, route}: any) => {
     await TrackPlayer.reset();
   };
   const restorePurchase = async () => {
-    if(getPurchaseHistory?.plan != ''){
+    if (getPurchaseHistory?.plan) {
       showMessage({
         message: 'You already have an active subscription.',
         type: 'danger',
@@ -183,7 +183,7 @@ const NewSubscription = ({navigation, route}: any) => {
         floating: true,
         // icon: {icon: 'auto', position: 'left'},
       });
-      return
+      return;
     }
     setForLoading(true);
     try {
@@ -789,7 +789,7 @@ const NewSubscription = ({navigation, route}: any) => {
               <CheckIcon />
               <FitText
                 type="normal"
-                value="3 day free trial"
+                value="3 days free trial"
                 color="#333333E5"
                 fontFamily={Fonts.MONTSERRAT_MEDIUM}
                 marginVertical={3}
@@ -884,18 +884,11 @@ const NewSubscription = ({navigation, route}: any) => {
               : 'Proceed'
           }
           h={50}
-          colors={
-            planName.includes('noob') || planName.includes('pro')
-              ? [AppColor.WHITE, AppColor.WHITE]
-              : [color, color]
-          }
+          colors={[color, color]}
           textStyle={[
             styles.buttonText,
             {
-              color:
-                planName.includes('noob') || planName.includes('pro')
-                  ? color
-                  : AppColor.WHITE,
+              color: AppColor.WHITE,
             },
           ]}
           bC={color}
@@ -1228,7 +1221,7 @@ const NewSubscription = ({navigation, route}: any) => {
                     });
                   }}>
                   {' '}
-                  Terms of use
+                  Terms of Use
                 </Text>{' '}
               </Text>
             </View>
