@@ -412,7 +412,7 @@ const Exercise = ({navigation, route}: any) => {
       }, 1000);
     } else {
     }
-    return () => clearTimeout(playTimerRef.current);
+    // return () => clearTimeout(playTimerRef.current);
   }, [
     pause,
     timer,
