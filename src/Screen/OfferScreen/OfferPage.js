@@ -62,6 +62,7 @@ const OfferPage = ({navigation, route}) => {
       getEventEarnedCoins();
     }, []),
   );
+  console.log('hellooo--->', WeekArrayWithEvent[3]);
   const getEventEarnedCoins = async () => {
     const payload = new FormData();
     payload.append('user_id', getUserDataDetails?.id);
@@ -83,7 +84,6 @@ const OfferPage = ({navigation, route}) => {
           data: payload,
         },
       );
-      console.log(res?.data);
       setCardioPoints(res?.data?.cardio_earning);
       getCardioStatus();
     } catch (error) {
@@ -239,7 +239,6 @@ const OfferPage = ({navigation, route}) => {
     dispatch(setVideoLocation(StoringData));
   };
   let datas = [];
-  console.log(exerciseStatus);
   const handleStart = () => {
     if (!cardioStatus && exerciseStatus) {
       Promise.all(
@@ -356,21 +355,25 @@ const OfferPage = ({navigation, route}) => {
           {workoutLoaded ? null : <ActivityLoader />}
           <OfferHeader />
           <EventBanner navigation={navigation} />
-          <OfferCards
-            imgSource={localImage.cardio_banner}
-            header={'Cardio Point'}
-            text1={'Cardio point'}
-            text1Color={AppColor.WHITE}
-            text2={'Do a few minutes of cardio and earn extra FitCoins'}
-            text3={`${cardioExxercise[0]?.fit_coins} coins`}
-            coinTextColor={AppColor.YELLOW}
-            isactive={!cardioStatus}
-            onPress={() => handleStart()}
-            withAnimation={!cardioStatus}
-            downloaded={downloaded}
-            buttonText={cardioStatus ? `Completed` : 'Start Now'}
-            showRightArrow={!cardioStatus}
-          />
+          {WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1] !=
+            'Thursday' && (
+            <OfferCards
+              imgSource={localImage.cardio_banner}
+              header={'Cardio Point'}
+              text1={'Cardio point'}
+              text1Color={AppColor.WHITE}
+              text2={'Do a few minutes of cardio and earn extra FitCoins'}
+              text3={`${cardioExxercise[0]?.fit_coins} coins`}
+              coinTextColor={AppColor.YELLOW}
+              isactive={!cardioStatus}
+              onPress={() => handleStart()}
+              withAnimation={!cardioStatus}
+              downloaded={downloaded}
+              buttonText={cardioStatus ? `Completed` : 'Start Now'}
+              showRightArrow={!cardioStatus}
+            />
+          )}
+
           <OfferCards
             imgSource={localImage.reffer_banner}
             header={'Refer and Earn'}

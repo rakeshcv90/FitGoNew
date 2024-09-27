@@ -65,38 +65,54 @@ const WorkoutCard = ({
       <Text style={styles.header}>{cardHeader ?? 'Exercise Completed'}</Text>
       <Text style={styles.txt1}>{title}</Text>
       {cardType == 'streak' && (
-        <View style={styles.streakView}>
-          {WeekArray.map((v, i) => {
-            return (
-              <View style={{alignItems: 'center'}}>
-                <Animated.View
-                  style={[streakCoins[v] > 0 ? scaleAnimation : undefined]}>
-                  <ImageBackground
-                    source={
-                      streakCoins[v] > 0
-                        ? localImage.Streak
-                        : streakCoins[v] == null
-                        ? localImage.greyStreak
-                        : localImage.StreakBreak
-                    }
-                    style={styles.img2}
-                    resizeMode="contain">
-                    {streakCoins[v] > 0 && (
-                      <Icons
-                        name="check-bold"
-                        color={AppColor.WHITE}
-                        size={22}
-                      />
-                    )}
-                  </ImageBackground>
-                </Animated.View>
-                <Text style={{color: AppColor.GRAAY6, fontFamily: 'Helvetica'}}>
-                  {v?.substring(0, 3)}
-                </Text>
-              </View>
-            );
-          })}
-        </View>
+        <>
+          <View style={styles.streakView}>
+            {WeekArray.map((v, i) => {
+              return (
+                <View style={{alignItems: 'center'}}>
+                  <Animated.View
+                    style={[streakCoins[v] > 0 ? scaleAnimation : undefined]}>
+                    <ImageBackground
+                      source={
+                        streakCoins[v] > 0
+                          ? localImage.Streak
+                          : streakCoins[v] == null
+                          ? localImage.greyStreak
+                          : localImage.StreakBreak
+                      }
+                      style={styles.img2}
+                      resizeMode="contain">
+                      {streakCoins[v] > 0 && (
+                        <Icons
+                          name="check-bold"
+                          color={AppColor.WHITE}
+                          size={22}
+                        />
+                      )}
+                    </ImageBackground>
+                  </Animated.View>
+                  <Text
+                    style={{color: AppColor.GRAAY6, fontFamily: 'Helvetica'}}>
+                    {v?.substring(0, 3)}
+                  </Text>
+                </View>
+              );
+            })}
+          </View>
+          <TouchableOpacity
+            onPress={handleSkip}
+            style={{
+              position: 'absolute',
+              right: 16,
+              bottom: 10,
+              backgroundColor: AppColor.GRAY,
+              paddingHorizontal: 6,
+              paddingVertical: 6,
+              borderRadius: 8,
+            }}>
+            <Icons name="arrow-right" size={25} color={AppColor.BLACK} />
+          </TouchableOpacity>
+        </>
       )}
       {cardType == 'cardio' && (
         <View style={styles.cardioView}>

@@ -53,6 +53,7 @@ import moment from 'moment';
 import OverExerciseModal from '../../Component/Utilities/OverExercise';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
+import BottomSheet1 from '../../Component/BottomSheet';
 
 const format = 'hh:mm:ss';
 
@@ -87,7 +88,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
   const getEquipmentExercise = useSelector(
     state => state?.getEquipmentExercise,
   );
-
+  const bottomSheetRef = useRef();
   const dispatch = useDispatch();
   const uperBody = [
     {
@@ -155,16 +156,16 @@ const NewFocusWorkouts = ({route, navigation}) => {
     // delay for smooth animation
     setTimeout(() => {
       if (route?.params?.focusedPart == 'Upper Body' && getUprBodyCount == 0) {
-        refStandard.current.open();
+        bottomSheetRef.current?.openSheet();
       } else if (
         route?.params?.focusedPart == 'Lower Body' &&
         getLowerBodyCount == 0
       ) {
-        refStandard.current.open();
+        bottomSheetRef.current?.openSheet();
       } else if (route?.params?.focusedPart == 'Core' && getCoreCount == 0) {
-        refStandard.current.open();
+        bottomSheetRef.current?.openSheet();
       } else {
-        refStandard.current.open();
+        bottomSheetRef.current?.openSheet();
       }
     }, 1000);
   }, [route]);
@@ -202,7 +203,6 @@ const NewFocusWorkouts = ({route, navigation}) => {
     setDownloade(0);
     setSelectedIndex(-1);
   }, [isFocused]);
-
   const filterExercises = (exercises, filterCriteria, adjust) => {
     let modifiedFilter = [...filterCriteria]; // Create a copy of filterCriteria
     if (filterCriteria.length === 0) {
@@ -260,9 +260,9 @@ const NewFocusWorkouts = ({route, navigation}) => {
     } else {
       return searchCriteria;
     }
-    refStandard.current.close();
   };
   const handleFilterVisibilty = () => {
+    bottomSheetRef.current?.closeSheet();
     const focusedPart = route?.params?.focusedPart;
     if (focusedPart === 'Upper Body') {
       dispatch(setUprBodyCount(1));
@@ -316,7 +316,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
     }
   };
 
-  const BottomSheet = () => {
+  const BottomSheetContent = () => {
     const determineFilterCriteria = (
       route,
       getUperBodyFilOption,
@@ -389,336 +389,277 @@ const NewFocusWorkouts = ({route, navigation}) => {
     const checkFullHeight = isFullBody ? DeviceHeigth * 0.15 : 0;
 
     return (
-      <>
-        <RBSheet
-          ref={refStandard}
-          // draggable
-          closeOnPressMask={false}
-          customModalProps={{
-            animationType: 'slide',
-            statusBarTranslucent: true,
-          }}
-          customStyles={{
-            container: {
-              borderTopLeftRadius: 10,
-              borderTopRightRadius: 10,
-              height:
-                route?.params?.focusedPart == 'Upper Body'
-                  ? DeviceHeigth >= 1024
-                    ? DeviceHeigth * 0.58 - checkFullHeight
-                    : DeviceHeigth >= 856
-                    ? DeviceHeigth * 0.68 - checkFullHeight
-                    : DeviceHeigth <= 667
-                    ? DeviceHeigth <= 625
-                      ? DeviceHeigth * 0.88 - checkFullHeight
-                      : DeviceHeigth * 0.83 - checkFullHeight
-                    : DeviceHeigth * 0.71 - checkFullHeight
-                  : DeviceHeigth >= 1024
-                  ? DeviceHeigth * 0.45 - checkFullHeight
-                  : DeviceHeigth >= 856
-                  ? DeviceHeigth * 0.53 - checkFullHeight
-                  : DeviceHeigth <= 667
-                  ? DeviceHeigth <= 625
-                    ? DeviceHeigth * 0.68 - checkFullHeight
-                    : DeviceHeigth * 0.63 - checkFullHeight
-                  : DeviceHeigth * 0.55,
-            },
-            draggableIcon: {
-              width: 80,
-            },
+      <View style={styles.listContainer}>
+        <Icon
+          name="close"
+          size={27}
+          color={AppColor.BLACK}
+          onPress={() => bottomSheetRef.current?.closeSheet()}
+          style={styles.closeStyle}
+        />
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: '600',
+            lineHeight: 24,
+            fontFamily: Fonts.MONTSERRAT_BOLD,
+            color: '#1E1E1E',
+            marginLeft: DeviceWidth * 0.06,
+            textAlign: 'center',
           }}>
-          <View style={styles.listContainer}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                width: DeviceWidth * 0.9,
-                alignSelf: 'center',
-                alignItems: 'center',
-                // top: -10,
-              }}>
-              <View />
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontWeight: '600',
-                  lineHeight: 24,
-                  fontFamily: Fonts.MONTSERRAT_BOLD,
-                  color: '#1E1E1E',
-                  marginLeft: DeviceWidth * 0.06,
-                }}>
-                Filter
-              </Text>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={() => {
-                  AnalyticsConsole('CL_BS_FW');
-                  handleFilterVisibilty();
-                  refStandard.current.close();
-                  setFilterCriteria(
-                    determineFilterCriteria(
-                      route,
-                      getUperBodyFilOption,
-                      getLowerBodyFilOpt,
-                      getCoreFiltOpt,
-                      searchCriteria,
-                    ),
-                  );
-                }}>
-                <Icons name={'close'} size={24} color={AppColor.BLACK} />
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                width: DeviceWidth,
-                height: 1,
-                backgroundColor: '#1E1E1E',
-                opacity: 0.2,
-                marginVertical: 16,
-                alignSelf: 'center',
-              }}
-            />
-            {!isFullBody && (
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontWeight: '600',
-                  lineHeight: 24,
-                  fontFamily: Fonts.MONTSERRAT_BOLD,
-                  color: '#1E1E1E',
+          {isFullBody ? 'Adjust' : 'Filter'}
+        </Text>
+        <View
+          style={{
+            width: DeviceWidth,
+            height: 1,
+            backgroundColor: '#1E1E1E',
+            opacity: 0.2,
+            marginVertical: 16,
+            alignSelf: 'center',
+          }}
+        />
+        {!isFullBody && (
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: '600',
+              lineHeight: 24,
+              fontFamily: Fonts.MONTSERRAT_BOLD,
+              color: '#1E1E1E',
 
-                  width: DeviceWidth * 0.9,
-                  alignSelf: 'center',
-                }}>
-                {route?.params?.focusedPart}
-              </Text>
-            )}
-            <View
-              style={{
-                //height: DeviceHeigth * 0.35,
-                marginTop: 20,
-                justifyContent: 'center',
-                width: DeviceWidth * 0.9,
-                alignSelf: 'center',
-                alignItems: 'center',
-              }}>
-              <FlatList
-                data={
-                  route?.params?.focusedPart == 'Upper Body'
-                    ? uperBody
-                    : route?.params?.focusedPart == 'Lower Body'
-                    ? lowerBody
-                    : route?.params?.focusedPart == 'Core'
-                    ? core
-                    : []
-                }
-                numColumns={2}
-                // contentContainerStyle={{paddingBottom: DeviceHeigth * 0.0}}
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({item, index}) => {
-                  return (
-                    <>
-                      <TouchableOpacity
-                        activeOpacity={0.8}
-                        onPress={() => {
-                          handleFilterChange(item?.title);
-                        }}
-                        style={{
-                          // marginHorizontal: 10,
-                          marginEnd: 20,
-                          width: DeviceWidth / 2.4,
-                          //height: 124,
-                          justifyContent: 'space-between',
-                          marginBottom: 20,
-                          alignSelf: 'center',
-                          backgroundColor: '#F9F9F9',
-                          flexDirection: 'row',
-                          borderRadius: 10,
-                          borderWidth: 1.5,
-                          borderColor: filterCritera.includes(item.title)
-                            ? AppColor.RED
-                            : AppColor.LIGHTGREY2,
-                        }}>
-                        <View
-                          style={{
-                            width: 25,
-                            height: 25,
-                            top: 15,
-                            left: 10,
-                          }}
-                        />
-                        <View
-                          style={{
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                          }}>
-                          <Image
-                            source={item.ima}
-                            // onLoad={() => setImageLoad(false)}
-                            defaultSource={localImage?.NOWORKOUT}
-                            style={{
-                              width: 50,
-                              height: 60,
-                              justifyContent: 'center',
-                              alignSelf: 'center',
-                            }}
-                            resizeMode="contain"
-                          />
-                          <Text
-                            style={{
-                              color: 'black',
-                              fontSize: 15,
-                              fontWeight: '600',
-                              lineHeight: 20,
-                              marginVertical: 5,
-                              textAlign: 'center',
-                              fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                            }}>
-                            {item.title}
-                          </Text>
-                        </View>
-                        <Icon
-                          name={
-                            filterCritera.includes(item.title)
-                              ? 'check-circle'
-                              : 'checkbox-blank-circle-outline'
-                          }
-                          size={25}
-                          color={
-                            filterCritera.includes(item.title)
-                              ? AppColor.RED
-                              : AppColor.GRAY1
-                          }
-                          style={{marginTop: 8}}
-                        />
-                        <View />
-                      </TouchableOpacity>
-                    </>
-                  );
-                }}
-                initialNumToRender={10}
-                maxToRenderPerBatch={10}
-                updateCellsBatchingPeriod={100}
-                removeClippedSubviews={true}
-              />
-            </View>
-            {!isFullBody && (
-              <View
-                style={{
-                  width: DeviceWidth,
-                  height: 1,
-                  backgroundColor: '#1E1E1E',
-                  opacity: 0.2,
-                  marginVertical: 10,
-                  alignSelf: 'center',
-                }}
-              />
-            )}
-            <View style={{width: DeviceWidth * 0.9, alignSelf: 'center'}}>
-              <Text
-                style={{
-                  color: AppColor.BLACK,
-                  fontFamily: Fonts.HELVETICA_BOLD,
-                  fontSize: 16,
-                  marginBottom: 16,
-                }}>
-                Adjust
-              </Text>
-              <TouchableOpacity
-                activeOpacity={1}
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginBottom: 15,
-                }}
-                onPress={() => setAdjustSelelcted(prev => (prev == 0 ? 1 : 0))}>
-                {adjustArray.map((item, index) => (
-                  <View
+              width: DeviceWidth * 0.9,
+              alignSelf: 'center',
+            }}>
+            {route?.params?.focusedPart}
+          </Text>
+        )}
+        <View
+          style={{
+            //height: DeviceHeigth * 0.35,
+            marginTop: 20,
+            justifyContent: 'center',
+            width: DeviceWidth * 0.9,
+            alignSelf: 'center',
+            alignItems: 'center',
+          }}>
+          <FlatList
+            data={
+              route?.params?.focusedPart == 'Upper Body'
+                ? uperBody
+                : route?.params?.focusedPart == 'Lower Body'
+                ? lowerBody
+                : route?.params?.focusedPart == 'Core'
+                ? core
+                : []
+            }
+            numColumns={2}
+            // contentContainerStyle={{paddingBottom: DeviceHeigth * 0.0}}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item, index}) => {
+              return (
+                <>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() => {
+                      handleFilterChange(item?.title);
+                    }}
                     style={{
-                      width: DeviceWidth / 2.3,
+                      // marginHorizontal: 10,
+                      marginEnd: 20,
+                      width: DeviceWidth / 2.4,
+                      //height: 124,
+                      justifyContent: 'space-between',
+                      marginBottom: 20,
+                      alignSelf: 'center',
                       backgroundColor: '#F9F9F9',
+                      flexDirection: 'row',
                       borderRadius: 10,
                       borderWidth: 1.5,
-                      borderColor:
-                        adjustSelected == index ? AppColor.RED : '#F9F9F9',
+                      borderColor: filterCritera.includes(item.title)
+                        ? AppColor.RED
+                        : AppColor.LIGHTGREY2,
                     }}>
-                    <Image
-                      source={item.image}
+                    <View
                       style={{
-                        width: 35,
-                        height: 35,
-                        alignSelf: 'center',
-                        marginTop: 12,
+                        width: 25,
+                        height: 25,
+                        top: 15,
+                        left: 10,
                       }}
-                      tintColor={
-                        adjustSelected == index
-                          ? AppColor.RED
-                          : AppColor.SecondaryTextColor
-                      }
                     />
-                    <Text
+                    <View
                       style={{
-                        textAlign: 'center',
-                        color: AppColor.BLACK,
-                        fontFamily: Fonts.HELVETICA_BOLD,
-                        marginBottom: 12,
-                        marginTop: 4,
+                        justifyContent: 'center',
+                        alignItems: 'center',
                       }}>
-                      {item.text}
-                    </Text>
+                      <Image
+                        source={item.ima}
+                        // onLoad={() => setImageLoad(false)}
+                        defaultSource={localImage?.NOWORKOUT}
+                        style={{
+                          width: 50,
+                          height: 60,
+                          justifyContent: 'center',
+                          alignSelf: 'center',
+                        }}
+                        resizeMode="contain"
+                      />
+                      <Text
+                        style={{
+                          color: 'black',
+                          fontSize: 15,
+                          fontWeight: '600',
+                          lineHeight: 20,
+                          marginVertical: 5,
+                          textAlign: 'center',
+                          fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                        }}>
+                        {item.title}
+                      </Text>
+                    </View>
                     <Icon
-                      style={{position: 'absolute', right: 12, top: 10}}
                       name={
-                        adjustSelected == index
+                        filterCritera.includes(item.title)
                           ? 'check-circle'
                           : 'checkbox-blank-circle-outline'
                       }
                       size={25}
                       color={
-                        adjustSelected == index
+                        filterCritera.includes(item.title)
                           ? AppColor.RED
-                          : AppColor.SecondaryTextColor
+                          : AppColor.GRAY1
                       }
+                      style={{marginTop: 8}}
                     />
-                  </View>
-                ))}
-              </TouchableOpacity>
-              <TouchableOpacity
+                    <View />
+                  </TouchableOpacity>
+                </>
+              );
+            }}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            updateCellsBatchingPeriod={100}
+            removeClippedSubviews={true}
+          />
+        </View>
+        {!isFullBody && (
+          <View
+            style={{
+              width: DeviceWidth,
+              height: 1,
+              backgroundColor: '#1E1E1E',
+              opacity: 0.2,
+              marginVertical: 10,
+              alignSelf: 'center',
+            }}
+          />
+        )}
+        <View style={{width: DeviceWidth * 0.9, alignSelf: 'center'}}>
+          {!isFullBody && (
+            <Text
+              style={{
+                color: AppColor.BLACK,
+                fontFamily: Fonts.HELVETICA_BOLD,
+                fontSize: 16,
+                marginBottom: 16,
+              }}>
+              Adjust
+            </Text>
+          )}
+          <TouchableOpacity
+            activeOpacity={1}
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 15,
+            }}
+            onPress={() => setAdjustSelelcted(prev => (prev == 0 ? 1 : 0))}>
+            {adjustArray.map((item, index) => (
+              <View
                 style={{
-                  width: 150,
-                  height: 50,
-                  backgroundColor: AppColor.RED,
-                  borderRadius: 6,
-                  alignSelf: 'flex-end',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  opacity: !isFilterChanged ? 0.6 : 1,
-                }}
-                disabled={!isFilterChanged ? true : false}
-                onPress={() => {
-                  filterExercises(exerciseData, filterCritera, adjustSelected);
-                  handleFilterVisibilty();
+                  width: DeviceWidth / 2.3,
+                  backgroundColor: '#F9F9F9',
+                  borderRadius: 10,
+                  borderWidth: 1.5,
+                  borderColor:
+                    adjustSelected == index ? AppColor.RED : '#F9F9F9',
                 }}>
+                <Image
+                  source={item.image}
+                  style={{
+                    width: 35,
+                    height: 35,
+                    alignSelf: 'center',
+                    marginTop: 12,
+                  }}
+                  tintColor={
+                    adjustSelected == index
+                      ? AppColor.RED
+                      : AppColor.SecondaryTextColor
+                  }
+                />
                 <Text
                   style={{
-                    color: '#FFFFFF',
-                    fontSize: 14,
-                    fontWeight: '500',
-                    lineHeight: 20,
-
                     textAlign: 'center',
-                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                    color: AppColor.BLACK,
+                    fontFamily: Fonts.HELVETICA_BOLD,
+                    marginBottom: 12,
+                    marginTop: 4,
                   }}>
-                  Show Result
+                  {item.text}
                 </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </RBSheet>
-      </>
+                <Icon
+                  style={{position: 'absolute', right: 12, top: 10}}
+                  name={
+                    adjustSelected == index
+                      ? 'check-circle'
+                      : 'checkbox-blank-circle-outline'
+                  }
+                  size={25}
+                  color={
+                    adjustSelected == index
+                      ? AppColor.RED
+                      : AppColor.SecondaryTextColor
+                  }
+                />
+              </View>
+            ))}
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              width: 150,
+              height: 50,
+              backgroundColor: AppColor.RED,
+              borderRadius: 6,
+              alignSelf: 'flex-end',
+              justifyContent: 'center',
+              alignItems: 'center',
+              opacity: !isFilterChanged ? 0.6 : 1,
+            }}
+            disabled={!isFilterChanged ? true : false}
+            onPress={() => {
+              filterExercises(exerciseData, filterCritera, adjustSelected);
+              handleFilterVisibilty();
+            }}>
+            <Text
+              style={{
+                color: '#FFFFFF',
+                fontSize: 14,
+                fontWeight: '500',
+                lineHeight: 20,
+
+                textAlign: 'center',
+                fontFamily: Fonts.MONTSERRAT_MEDIUM,
+              }}>
+              Show Result
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     );
   };
   // downloading video logic
@@ -892,7 +833,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
             }}
             onIconPress={() => {
               AnalyticsConsole('O_BS_FW');
-              refStandard.current.open();
+              bottomSheetRef.current?.openSheet();
             }}
             icon
             backButton
@@ -1084,7 +1025,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
             />
           )}
 
-          <BottomSheet />
+          {/* <BottomSheet /> */}
 
           <WorkoutsDescription
             data={item}
@@ -1100,6 +1041,9 @@ const NewFocusWorkouts = ({route, navigation}) => {
         setOverExerciseVisible={setOverExerciseVisible}
         overExerciseVisible={overExerciseVisible}
       />
+      <BottomSheet1 ref={bottomSheetRef}>
+        <BottomSheetContent />
+      </BottomSheet1>
     </>
   );
 };
@@ -1209,6 +1153,12 @@ const styles = StyleSheet.create({
     // opacity: 0.7,
     fontFamily: Fonts.MONTSERRAT_MEDIUM,
     color: '#1E1E1E',
+  },
+  closeStyle: {
+    right: 8,
+    marginTop: 6,
+    position: 'absolute',
+    zIndex: 1,
   },
 });
 export default NewFocusWorkouts;

@@ -64,6 +64,7 @@ import WinnerView from '../../Component/NewHomeUtilities/WinnerView';
 import NewBanner from '../../Component/NewHomeUtilities/NewBanner';
 import LeaderBoardProgressComopnent from '../Leaderboard/LeaderBoardProgressComopnent';
 import PastWinnersComponent from '../Leaderboard/PastWinnersComponent';
+import BottomSheet from '../../Component/BottomSheet';
 
 const WeekArrayWithEvent = Array(5)
   .fill(0)

@@ -7,6 +7,7 @@ import {localImage} from '../../Component/Image';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import WorkoutCard from './WorkoutCard';
 import Animated, {
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -69,11 +70,6 @@ const WorkoutCompleted = ({navigation, route}) => {
       getEventEarnedCoins();
     }
   }, [type]);
-  const AnimationStart = () => {
-    streakCardOffset.value = withTiming(-DeviceWidth, {duration: 500}, () => {
-      cardioCardOffset.value = withSpring(0);
-    });
-  };
   const streakAnimation = useAnimatedStyle(() => {
     return {
       transform: [{translateX: streakCardOffset.value}],
@@ -186,22 +182,8 @@ const WorkoutCompleted = ({navigation, route}) => {
       //   moment(getExerciseOutTime, format),
       // )
     ) {
-      console.warn(
-        'SHOWINGDF',
-        moment().format(format),
-        getExerciseInTime,
-        getExerciseOutTime,
-      );
       setOverExerciseVisible(true);
     } else {
-      console.log(
-        'ads',
-        // getExerciseOutTime != '' &&
-        // moment().isAfter(moment(getExerciseOutTime, format))&&
-        getExerciseInTime > getExerciseOutTime,
-        getExerciseInTime,
-        getExerciseOutTime,
-      );
     }
   }, [focused]);
   const handleBackPress = () => {
@@ -209,8 +191,6 @@ const WorkoutCompleted = ({navigation, route}) => {
   };
   const RewardsbeforeNextScreen = async () => {
     downloadCounter = 0;
-    // const url =
-    //   'https://fitme.cvinfotechserver.com/adserver/public/api/test_user_event__exercise_status';
     for (const item of cardioExxercise) {
       datas.push({
         user_id: getUserDataDetails?.id,
@@ -220,7 +200,6 @@ const WorkoutCompleted = ({navigation, route}) => {
         fit_coins: item?.fit_coins,
       });
     }
-
     try {
       //LIVE URL
       const res = await axios({
@@ -228,15 +207,7 @@ const WorkoutCompleted = ({navigation, route}) => {
         method: 'Post',
         data: {user_details: datas, type: 'cardio'},
       });
-
-      //Test URl
-      // const res = await axios({
-      //   url: url,
-      //   method: 'Post',
-      //   data: {user_details: datas, type: 'cardio'},
-      // });
       setDownloade(0);
-
       AnalyticsConsole(`SCE_ON_${getPurchaseHistory?.currentDay}`);
       // setStart(false);
       if (moment().format(format) < getExerciseOutTime) {
@@ -346,7 +317,6 @@ const WorkoutCompleted = ({navigation, route}) => {
       } else {
         console.log('coins', response?.data?.responses);
         setCoins(response?.data?.responses);
-
         getLeaderboardDataAPI();
       }
     } catch (error) {
@@ -391,9 +361,6 @@ const WorkoutCompleted = ({navigation, route}) => {
         const openIndex = result?.data?.sessions?.findIndex(
           item => item.status == 'open',
         );
-        setTimeout(() => {
-          AnimationStart();
-        }, 7000);
         if (openIndex == -1 && type == 'cardio') {
           handleCompleteSkip();
         } else if (type == 'weekly' && openIndex != -1) {
@@ -409,9 +376,6 @@ const WorkoutCompleted = ({navigation, route}) => {
     } catch (error) {
       setLoader(false);
       console.log(error);
-      setTimeout(() => {
-        AnimationStart();
-      }, 7000);
     }
   };
   return (
@@ -462,6 +426,22 @@ const WorkoutCompleted = ({navigation, route}) => {
                   download={0}
                   title={`You’ve completed your workout for the day. Workout regularly to increase your chances of winning exciting prizes!`}
                   cardHeader={'Fitcoins Earned'}
+                  handleSkip={() => {
+                    if (
+                      WeekArrayWithEvent[getPurchaseHistory - 1] == 'Thursday'
+                    ) {
+                      if (breatheSessionAvailabel) {
+                        streakCardOffset.value = withSpring(-DeviceWidth);
+                        breatheCardOffset.value = withSpring(0);
+                      } else {
+                        streakCardOffset.value = withSpring(-DeviceWidth);
+                        completeCardOffset.value = withSpring(0);
+                      }
+                    } else {
+                      streakCardOffset.value = withSpring(-DeviceWidth);
+                      cardioCardOffset.value = withSpring(0);
+                    }
+                  }}
                 />
               </Animated.View>
               <Animated.View style={[styles.imgView, cardioAnimation]}>
