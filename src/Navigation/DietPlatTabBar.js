@@ -114,91 +114,78 @@ const DietPlatTabBar = ({navigation}) => {
         </Text>
         <View
           style={{
+            flex: 1,
             //height: DeviceHeigth * 0.35,
             marginTop: 20,
             justifyContent: 'center',
             width: DeviceWidth * 0.9,
             alignSelf: 'center',
             alignItems: 'center',
+            flexDirection: 'row'
           }}>
-          <FlatList
-            data={meal_type}
-            numColumns={2}
-            // contentContainerStyle={{paddingBottom: DeviceHeigth * 0.0}}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({item, index}) => {
-              return (
-                <>
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => {
-                      setSelectedItem(index);
-                    }}
+          {meal_type.map((item, index) => {
+            return (
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => {
+                  setSelectedItem(index);
+                }}
+                style={{
+                  marginHorizontal: 10,
+                  // marginEnd: 20,
+                  width: DeviceWidth / 2.4,
+                  //height: 124,
+                  justifyContent: 'center',
+                  marginBottom: 20,
+                  alignSelf: 'center',
+                  backgroundColor: '#F9F9F9',
+                  alignItems: 'center',
+                  borderRadius: 10,
+                  borderWidth: 1.5,
+                  borderColor: selectedItem == index ? AppColor.RED : '#fff',
+                }}>
+                <View
+                  style={{
+                    width: 25,
+                    height: 25,
+                    top: 15,
+                    left: 10,
+                  }}
+                />
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    paddingBottom: 20,
+                  }}>
+                  <Image
+                    source={item.ima}
+                    // onLoad={() => setImageLoad(false)}
+                    defaultSource={localImage?.NOWORKOUT}
                     style={{
-                      // marginHorizontal: 10,
-                      marginEnd: 20,
-                      width: DeviceWidth / 2.4,
-                      //height: 124,
+                      width: 60,
+                      height: 60,
+                      top: -10,
                       justifyContent: 'center',
-                      marginBottom: 20,
                       alignSelf: 'center',
-                      backgroundColor: '#F9F9F9',
-                      alignItems: 'center',
-                      borderRadius: 10,
-                      borderWidth: 1.5,
-                      borderColor:
-                        selectedItem == index ? AppColor.RED : '#fff',
-                    }}>
-                    <View
-                      style={{
-                        width: 25,
-                        height: 25,
-                        top: 15,
-                        left: 10,
-                      }}
-                    />
-                    <View
-                      style={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        paddingBottom: 20,
-                      }}>
-                      <Image
-                        source={item.ima}
-                        // onLoad={() => setImageLoad(false)}
-                        defaultSource={localImage?.NOWORKOUT}
-                        style={{
-                          width: 60,
-                          height: 60,
-                          top: -10,
-                          justifyContent: 'center',
-                          alignSelf: 'center',
-                        }}
-                        resizeMode="contain"
-                      />
-                      <FitText
-                        type="SubHeading"
-                        value={item?.title}
-                        fontWeight="700"
-                        fontSize={15}
-                        lineHeight={20}
-                        color={AppColor.BLACK}
-                        fontFamily={Fonts.MONTSERRAT_REGULAR}
-                      />
-                    </View>
+                    }}
+                    resizeMode="contain"
+                  />
+                  <FitText
+                    type="SubHeading"
+                    value={item?.title}
+                    fontWeight="700"
+                    fontSize={15}
+                    lineHeight={20}
+                    color={AppColor.BLACK}
+                    fontFamily={Fonts.MONTSERRAT_REGULAR}
+                  />
+                </View>
 
-                    <View />
-                  </TouchableOpacity>
-                </>
-              );
-            }}
-            initialNumToRender={10}
-            maxToRenderPerBatch={10}
-            updateCellsBatchingPeriod={100}
-            removeClippedSubviews={true}
-          />
+                <View />
+              </TouchableOpacity>
+            );
+          })}
         </View>
         <View
           style={{
@@ -321,9 +308,8 @@ const DietPlatTabBar = ({navigation}) => {
           )}
         </Tab.Navigator>
         <BottomSheet1 ref={refStandard}>
-        <BottomSheetContent />
+          <BottomSheetContent />
         </BottomSheet1>
-       
       </Wrapper>
     </View>
   );

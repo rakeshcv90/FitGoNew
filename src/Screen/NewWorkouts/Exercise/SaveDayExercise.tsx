@@ -241,7 +241,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
           width: DeviceWidth * 0.9,
           textAlign: 'center',
         }}>
-        You have completed your workout
+        You have completed your workout.
       </Text>
 
       <View

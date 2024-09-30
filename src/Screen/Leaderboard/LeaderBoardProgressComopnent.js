@@ -103,7 +103,7 @@ const LeaderBoardProgressComopnent = ({
                   : coins[weekArray[index]]}
               </Text>
             </View>
-            <View style={{marginVertical: 10,}}>
+            <View style={{marginVertical: 10}}>
               <Image
                 source={
                   nullCondition(index)
@@ -152,6 +152,8 @@ const LeaderBoardProgressComopnent = ({
         pV={8}
         mV={8}
         fontFamily={Fonts.HELVETICA_BOLD}
+        disabled={coins[currentDay] > 0}
+        buttonColor={coins[currentDay] > 0 ? AppColor.Gray5 : AppColor.RED}
         onPress={() => {
           navigation.navigate('BottomTab', {screen: 'MyPlans'});
         }}

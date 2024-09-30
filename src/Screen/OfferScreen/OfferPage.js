@@ -283,7 +283,18 @@ const OfferPage = ({navigation, route}) => {
         data: {user_details: datas, type: 'cardio'},
       });
       setDownloade(0);
-      if (
+      if (res.data?.msg == 'Required keys are missing in user_details') {
+        setDownloade(0);
+        setButtonClicked(false);
+        setVisible(false);
+        showMessage({
+          message: 'Error, Please try again later',
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (
         res.data?.msg == 'Exercise Status for All Users Inserted Successfully'
       ) {
         setDownloade(0);
@@ -360,7 +371,7 @@ const OfferPage = ({navigation, route}) => {
             <OfferCards
               imgSource={localImage.cardio_banner}
               header={'Cardio Point'}
-              text1={'Cardio point'}
+              text1={'Cardio Point'}
               text1Color={AppColor.WHITE}
               text2={'Do a few minutes of cardio and earn extra FitCoins.'}
               text3={`${cardioExxercise[0]?.fit_coins} coins`}

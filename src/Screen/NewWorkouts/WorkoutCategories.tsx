@@ -488,7 +488,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
           </>
         );
       },
-    [switchButton, selectedExercise, downloadProgress],
+    [switchButton, selectedExercise, downloadProgress, selectedIndex],
   );
   const getItem = (data: [], index: number) => {
     return data[index];

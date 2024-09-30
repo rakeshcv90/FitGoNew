@@ -654,7 +654,7 @@ const NewSubscription = ({navigation, route}: any) => {
       (item: any) => getPurchaseHistory?.product_id == item?.productId,
     );
     const Line = () => (
-      <Text numberOfLines={1} style={{color: '#3333331A'}}>
+      <Text numberOfLines={1} style={{color: '#3333331A'}} ellipsizeMode='clip' >
         {Array(80).fill('- ')}
       </Text>
     );
@@ -920,7 +920,7 @@ const NewSubscription = ({navigation, route}: any) => {
       });
       if (currentSelected < index) {
         showMessage({
-          message: 'You can not downgrade the Plan',
+          message: 'You can not downgrade the plan',
           type: 'danger',
           floating: true,
         });

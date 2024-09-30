@@ -32,7 +32,8 @@ const WeekArray = Array(7)
         .format('dddd')),
   );
 const CardioPointErns = ({navigation, route}) => {
-  const {day, type, weeklyTime, weeklyCal, weeklyCoins,allExercise} = route?.params;
+  const {day, type, weeklyTime, weeklyCal, weeklyCoins, allExercise} =
+    route?.params;
   const fitCoins = useSelector(state => state.fitCoins);
   const getAllExercise = useSelector(state => state.getAllExercise);
   const [cardioExxercise, setCardioExercise] = useState([]);
@@ -137,8 +138,18 @@ const CardioPointErns = ({navigation, route}) => {
       setDownloade(0);
 
       AnalyticsConsole(`SCE_ON_${getPurchaseHistory?.currentDay}`);
-      console.log('cvbfghfghfgh', res.data);
-      if (
+      if (res.data?.msg == 'Required keys are missing in user_details') {
+        setDownloade(0);
+        setButtonClicked(false);
+        setVisible(false);
+        showMessage({
+          message: 'Error, Please try again later',
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (
         res.data?.msg == 'Exercise Status for All Users Inserted Successfully'
       ) {
         setDownloade(0);
@@ -294,7 +305,7 @@ const CardioPointErns = ({navigation, route}) => {
                   weeklyTime: weeklyTime,
                   weeklyCal: weeklyCal,
                   weeklyCoins: weeklyCoins,
-                  allExercise:allExercise
+                  allExercise: allExercise,
                 })
               }
               style={{

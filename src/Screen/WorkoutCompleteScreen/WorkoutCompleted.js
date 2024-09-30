@@ -210,11 +210,22 @@ const WorkoutCompleted = ({navigation, route}) => {
       setDownloade(0);
       AnalyticsConsole(`SCE_ON_${getPurchaseHistory?.currentDay}`);
       // setStart(false);
-      if (moment().format(format) < getExerciseOutTime) {
-        console.warn('COMPLETEE', moment().format(format));
-        dispatch(setExerciseInTime(moment().format(format)));
-      }
-      if (
+      // if (moment().format(format) < getExerciseOutTime) {
+      //   console.warn('COMPLETEE', moment().format(format));
+      //   dispatch(setExerciseInTime(moment().format(format)));
+      // }
+      if (res.data?.msg == 'Required keys are missing in user_details') {
+        setDownloade(0);
+        setButtonClicked(false);
+        setVisible(false);
+        showMessage({
+          message: 'Error, Please try again later',
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (
         res.data?.msg == 'Exercise Status for All Users Inserted Successfully'
       ) {
         setDownloade(0);

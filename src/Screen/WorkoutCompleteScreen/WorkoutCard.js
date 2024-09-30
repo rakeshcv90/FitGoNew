@@ -74,7 +74,7 @@ const WorkoutCard = ({
                     style={[streakCoins[v] > 0 ? scaleAnimation : undefined]}>
                     <ImageBackground
                       source={
-                        streakCoins[v] > 0
+                       streakCoins && streakCoins[v] > 0
                           ? localImage.Streak
                           : streakCoins[v] == null
                           ? localImage.greyStreak
@@ -82,7 +82,7 @@ const WorkoutCard = ({
                       }
                       style={styles.img2}
                       resizeMode="contain">
-                      {streakCoins[v] > 0 && (
+                      {streakCoins && streakCoins[v] > 0 && (
                         <Icons
                           name="check-bold"
                           color={AppColor.WHITE}

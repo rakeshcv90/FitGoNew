@@ -6,6 +6,7 @@ import {
   Image,
   ScrollView,
   KeyboardAvoidingView,
+  TextInput,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import NewHeader from '../Component/Headers/NewHeader';
@@ -30,7 +31,6 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import DeviceInfo from 'react-native-device-info';
 import VersionNumber from 'react-native-version-number';
 import InputText from '../Component/InputText';
-import {TextInput} from 'react-native-paper';
 import {localImage} from '../Component/Image';
 import Button from '../Component/Button';
 import {Dropdown, MultiSelect} from 'react-native-element-dropdown';
@@ -66,12 +66,19 @@ const NewPersonalDetails = ({route, navigation}) => {
   const inputRef = useRef(null);
   useEffect(() => {
     getUserAllInData();
+    setEditable(false);
   }, []);
   const data = [
     {label: 'Male', value: 'Male'},
     {label: 'Female', value: 'Female'},
   ];
 
+  const handleIconPress = () => {
+    setEditable(!isEditible);
+    setTimeout(() => {
+      inputRef.current && inputRef.current?.focus();
+    }, 50);
+  };
   const injury = [
     {
       injury_id: 4,
@@ -284,6 +291,7 @@ const NewPersonalDetails = ({route, navigation}) => {
             workPlace: getUserDataDetails?.workoutarea,
           }}
           onSubmit={(values, action) => {
+            setEditable(false)
             handleFormSubmit(values, action);
           }}
           validationSchema={validationSchema}>
@@ -348,18 +356,75 @@ const NewPersonalDetails = ({route, navigation}) => {
                       editable={isEditible}
                       placeholder="Full Name"
                     /> */}
-                      <NewInputText
-                        errors={errors.name}
-                        touched={touched.name}
-                        value={values.name}
-                        onBlur={handleBlur('name')}
-                        onChangeText={handleChange('name')}
-                        colorText={false}
-                        placeholder="Full Name"
-                        label="Full Name"
-                        isEditable={isEditible}
-                        setEditable={setEditable}
-                      />
+                      <View>
+                        {isEditible && (
+                          <Text
+                            style={{
+                              backgroundColor: '#F8F9F9',
+                              color: 'black',
+                              position: 'absolute',
+                              zIndex: 1,
+                              left: 25,
+                              fontSize: 12,
+                              top: -8,
+                              paddingHorizontal: 5,
+                              lineHeight: 20,
+                            }}>
+                            Full Name
+                          </Text>
+                        )}
+                        <View
+                          style={{
+                            backgroundColor: '#F8F9F9',
+                            width: DeviceWidth * 0.9,
+                            alignSelf: 'center',
+                            height: 55,
+                            fontFamily: 'Poppins',
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderRadius: 15,
+                            borderWidth: 1,
+                            left: -5,
+                          }}>
+                          <TextInput
+                            ref={inputRef}
+                            style={{
+                              backgroundColor: '#F8F9F9',
+                              width: '90%',
+                              alignSelf: 'center',
+                              // height: 55,
+                              fontFamily: 'Poppins',
+                              color: 'black',
+                            }}
+                            value={values.name}
+                            onBlur={handleBlur('name')}
+                            onChangeText={handleChange('name')}
+                            placeholder="Full Name"
+                            placeholderTextColor={'grey'}
+                            editable={isEditible}
+                          />
+                          <TouchableOpacity onPress={handleIconPress}>
+                            <Image
+                              source={localImage.Pen_p}
+                              tintColor={AppColor.BoldText}
+                              style={{width: 18, height: 18}}
+                              resizeMode="contain"
+                            />
+                          </TouchableOpacity>
+                        </View>
+                        {errors.name && touched.name && (
+                          <Text
+                            style={{
+                              color: 'red',
+                              fontSize: 12,
+                              textAlign: 'center',
+                              marginTop: 5,
+                            }}>
+                            {errors}
+                          </Text>
+                        )}
+                      </View>
                     </View>
                     <View
                       style={{
@@ -457,7 +522,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                         </View>
                       </>
                     )}
-                    {values.experience == 'Experienced' && (
+                    {/* {values.experience == 'Experienced' && (
                       <View
                         style={{
                           marginTop: DeviceHeigth * 0.02,
@@ -483,7 +548,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                           }}
                         />
                       </View>
-                    )}
+                    )} */}
 
                     {values.workout_plans == 'AppCreated' &&
                       values.experience == 'Experienced' && (

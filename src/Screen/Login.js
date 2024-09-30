@@ -399,7 +399,7 @@ const Login = ({navigation}) => {
       });
     } else if (reg.test(email) === false) {
       showMessage({
-        message: 'Please Enter valid emaid id',
+        message: 'Please enter valid email id',
         floating: true,
         duration: 500,
         type: 'danger',

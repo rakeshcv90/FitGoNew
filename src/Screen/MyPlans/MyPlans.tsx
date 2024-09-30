@@ -496,7 +496,23 @@ const MyPlans = ({navigation}: any) => {
       setButtonClicked(false);
       setVisible(false);
       AnalyticsConsole(`SEE_ON_${getPurchaseHistory?.currentDay}`);
-      if (
+      if (res.data?.msg == 'Required keys are missing in user_details') {
+        setDownloade(0);
+        setButtonClicked(false);
+        setVisible(false);
+        setStart(false);
+        setDownloade(0);
+        setButtonClicked(false);
+        setVisible(false);
+        setDownloadedVideoSent(false);
+        showMessage({
+          message: 'Error, Please try again later',
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (
         res.data?.msg == 'Exercise Status for All Users Inserted Successfully'
       ) {
         setStart(false);

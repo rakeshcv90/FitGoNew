@@ -159,7 +159,7 @@ const WorkoutHistory = () => {
                 />
                 <Text style={styles.txt2}>
                   {
-                    'You have not earned any points today, start working out to earn points'
+                    'You have not earned any points today. \nStart working out to earn fitcoins.'
                   }
                 </Text>
               </View>
@@ -211,7 +211,7 @@ const WorkoutHistory = () => {
                     {screenObject.next == 0 ? null : (
                       <PointDeduction
                         border
-                        text1={'Stay on current exercise?'}
+                        text1={'Exercise Skipped'}
                         text2={`${screenObject.next}/${screenObject?.exerciseCount} exercise skip`}
                         icon={localImage.pause_icon}
                         coins={screenObject.next}

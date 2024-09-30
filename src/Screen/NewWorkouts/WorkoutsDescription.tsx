@@ -97,6 +97,21 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
           flex: 1,
           backgroundColor: AppColor.WHITE,
         }}>
+           {isLoading && (
+          <View style={styles.loader}>
+            <AnimatedLottieView
+              source={require('../../Icon/Images/NewImage2/Adloader.json')}
+              speed={2}
+              autoPlay
+              loop
+              resizeMode="contain"
+              style={{
+                height: DeviceWidth / 1.5,
+                width: DeviceWidth * 0.95,
+              }}
+            />
+          </View>
+        )}
         <View
           style={{
             flexDirection: 'row',
@@ -161,6 +176,9 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
             marginTop: 10,
             top: -DeviceHeigth * 0.07,
             zIndex: -1,
+          }}
+          onReadyForDisplay={() => {
+            setIsLoading(false);
           }}
           // poster={
           //   data?.exercise_image?.includes('https')

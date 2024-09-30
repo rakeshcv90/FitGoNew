@@ -186,7 +186,7 @@ const CountryLocation = ({navigation, route}) => {
         />
         <FitText
           type="SubHeading"
-          value="you with better services"
+          value="you with better services."
           textAlign="center"
         />
       </View>

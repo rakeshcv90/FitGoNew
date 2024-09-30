@@ -288,7 +288,7 @@ const Referral = () => {
             style={{height: '100%', width: '100%'}}
           />
         </View>
-        <Text style={styles.txt1}>Understand How Referral Works.</Text>
+        <Text style={styles.txt1}>Understand How Referral Works</Text>
         <Text style={[styles.txt1, {fontSize: 15}]}>Your Rank</Text>
         <ImageBackground
           source={localImage.Referral_Coin_Banner}

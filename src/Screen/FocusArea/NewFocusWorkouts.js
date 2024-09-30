@@ -441,6 +441,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
             width: DeviceWidth * 0.9,
             alignSelf: 'center',
             alignItems: 'center',
+            flex: 1
           }}>
           <FlatList
             data={
@@ -453,7 +454,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                 : []
             }
             numColumns={2}
-            // contentContainerStyle={{paddingBottom: DeviceHeigth * 0.0}}
+            scrollEnabled={false}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
@@ -538,10 +539,6 @@ const NewFocusWorkouts = ({route, navigation}) => {
                 </>
               );
             }}
-            initialNumToRender={10}
-            maxToRenderPerBatch={10}
-            updateCellsBatchingPeriod={100}
-            removeClippedSubviews={true}
           />
         </View>
         {!isFullBody && (

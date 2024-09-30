@@ -633,10 +633,10 @@ const UpcomingEvent = ({navigation, route}: any) => {
                     />
                   </View>
                 </View>
-                <Text numberOfLines={1} style={{color: '#3333331A'}}>
+                <Text numberOfLines={1} style={{color: '#3333331A'}} ellipsizeMode='clip'>
                   {Array(100).fill('- ')}
                 </Text>
-                {getPurchaseHistory?.plan != 'noob' &&
+                {/* {getPurchaseHistory?.plan != 'noob' &&
                   getPurchaseHistory?.plan != 'pro' &&
                   !PLATFORM_IOS && (
                     <View style={styles.row}>
@@ -660,7 +660,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
                         marginVertical={3}
                       />
                     </View>
-                  )}
+                  )} */}
                 <View style={styles.row}>
                   <FitIcon
                     color={

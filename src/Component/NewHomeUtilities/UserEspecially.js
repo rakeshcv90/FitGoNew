@@ -27,6 +27,34 @@ import {
 
 import GradientButton from '../GradientButton';
 
+const data = [
+  {
+    id: 1,
+    title: 'Custom Made',
+    image: require('../../Icon/Images/NewHome/back3.png'),
+    text: 'Create your own workout',
+  },
+  {
+    id: 2,
+    title: 'Nearby Gyms',
+    image: require('../../Icon/Images/NewHome/back1.png'),
+    text: 'Discover fitness centers close to you',
+  },
+  {
+    id: 3,
+    title: 'Diet',
+    image: require('../../Icon/Images/NewHome/back2.png'),
+    text: 'Reach your goals quickly with a nutritious diet',
+  },
+  {
+    id: 4,
+    title: 'Store',
+    image: require('../../Icon/Images/NewHome/back4.png'),
+    text: 'Explore top-tier fitness essentials',
+  },
+];
+
+
 const UserEspecially = () => {
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const navigation = useNavigation();
@@ -72,6 +100,64 @@ const UserEspecially = () => {
       }
     }
   };
+
+const Items = ({item, index}) => {
+  return (
+    <TouchableOpacity
+      activeOpacity={0.7}
+      onPress={() => {
+        HandelClick(index + 1);
+      }}
+      style={{
+        width: '50%',
+        height: PLATFORM_IOS ? DeviceHeigth * 0.15 : DeviceHeigth * 0.125,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+      <ImageBackground
+        source={item.image}
+        resizeMode={Platform.OS == 'ios' ? 'stretch' : 'contain'}
+        style={{
+          width: '100%',
+          height: '100%',
+          left: DeviceHeigth >= 1024 ? -7 : -3,
+        }}>
+        <View
+          style={{
+            width: '100%',
+            height: '100%',
+            paddingVertical: DeviceWidth * 0.04,
+            paddingLeft: DeviceWidth * 0.05,
+          }}>
+          <Text
+            style={{
+              fontFamily: Fonts.HELVETICA_BOLD,
+              fontSize: 15,
+              lineHeight: 20,
+              color: AppColor.WHITE,
+            }}>
+            {item.title}
+          </Text>
+          <View
+            style={{
+              width: '70%',
+              marginVertical: 5,
+            }}>
+            <Text
+              style={{
+                fontFamily: Fonts.HELVETICA_REGULAR,
+                fontSize: 13,
+                lineHeight: 20,
+                color: AppColor.WHITE,
+              }}>
+              {item.text}
+            </Text>
+          </View>
+        </View>
+      </ImageBackground>
+    </TouchableOpacity>
+  );
+};
   const locationPermission = () => {
     Platform.OS == 'ios'
       ? request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE).then(async result => {
@@ -222,251 +308,36 @@ const UserEspecially = () => {
   return (
     <View style={styles.container}>
       <View style={styles.box}>
+        <Text
+          style={{
+            color: AppColor.HEADERTEXTCOLOR,
+            fontFamily: Fonts.MONTSERRAT_BOLD,
+            fontWeight: '600',
+            lineHeight: 30,
+            fontSize: 18,
+            marginBottom: 10
+          }}>
+          Especially For You
+        </Text>
         <View
           style={{
             width: '100%',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
           }}>
-          <Text
-            style={{
-              color: AppColor.HEADERTEXTCOLOR,
-              fontFamily: Fonts.MONTSERRAT_BOLD,
-              fontWeight: '600',
-              lineHeight: 30,
-              fontSize: 18,
-            }}>
-            Especially For You
-          </Text>
+          {data.slice(0, 2).map((item, index) => (
+            <Items item={item} index={index} />
+          ))}
         </View>
         <View
           style={{
             width: '100%',
             flexDirection: 'row',
             justifyContent: 'space-between',
-            marginVertical: DeviceHeigth >= 1024 ? 5 : 5,
-            marginTop: DeviceHeigth * 0.02,
           }}>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => {
-              HandelClick(1);
-            }}
-            style={{
-              width: '50%',
-              height: DeviceHeigth * 0.15,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <ImageBackground
-              source={require('../../Icon/Images/NewHome/back3.png')}
-              resizeMode={Platform.OS=='ios'?"stretch":"contain"}
-              style={{
-                width: '100%',
-                height: '100%',
-                left: DeviceHeigth >= 1024 ? -7 : -3,
-              }}>
-              <View
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  paddingVertical: DeviceWidth * 0.07,
-                  paddingLeft: DeviceWidth * 0.04,
-                }}>
-                <Text
-                  style={{
-                    fontFamily: Fonts.HELVETICA_BOLD,
-                    fontSize: 15,
-                    lineHeight: 17,
-                    color: AppColor.WHITE,
-                  }}>
-                  Custom Made
-                </Text>
-                <View
-                  style={{
-                    width: '90%',
-                    height: '100%',
-                    marginVertical: 10,
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: Fonts.HELVETICA_REGULAR,
-                      fontSize: 13,
-                      lineHeight: 20,
-                      color: AppColor.WHITE,
-
-                    }}>
-                    Create your own workout
-                  </Text>
-                  
-                </View>
-              </View>
-            </ImageBackground>
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => {
-              HandelClick(2);
-            }}
-            style={{
-              width: '50%',
-              height: DeviceHeigth * 0.15,
-            }}>
-            <ImageBackground
-              source={require('../../Icon/Images/NewHome/back1.png')}
-              resizeMode={Platform.OS=='ios'?"stretch":"contain"}
-              style={{
-                width: '100%',
-                height: '100%',
-              }}>
-              <View
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  paddingVertical: DeviceWidth * 0.07,
-                  paddingLeft: DeviceWidth * 0.04,
-                }}>
-                <Text
-                  style={{
-                    fontFamily: Fonts.HELVETICA_BOLD,
-                    fontSize: 15,
-                    lineHeight: 17,
-                    color: AppColor.WHITE,
-                  }}>
-                  Nearby Gyms
-                </Text>
-                <View
-                  style={{
-                    width: '90%',
-                    height: '100%',
-                    marginVertical: 10,
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: Fonts.HELVETICA_REGULAR,
-                      fontSize: 13,
-                      lineHeight: 20,
-                      color: AppColor.WHITE,
-                    }}>
-                    Discover fitness centers close to you
-                  </Text>
-                 
-                 
-                
-                </View>
-              </View>
-            </ImageBackground>
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            width: '100%',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-           top:Platform.OS=='android'?-25:-10
-          }}>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => {
-              HandelClick(3);
-            }}
-            style={{
-              width: '50%',
-              height: DeviceHeigth * 0.15,
-            }}>
-            <ImageBackground
-              source={require('../../Icon/Images/NewHome/back2.png')}
-              resizeMode={Platform.OS=='ios'?"stretch":"contain"}
-              style={{
-                width: '100%',
-                height: '100%',
-                left: DeviceHeigth >= 1024 ? -7 : -3,
-              }}>
-              <View
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  paddingVertical: DeviceWidth * 0.07,
-                  paddingLeft: DeviceWidth * 0.04,
-                }}>
-                <Text
-                  style={{
-                    fontFamily: Fonts.HELVETICA_BOLD,
-                    fontSize: 15,
-                    lineHeight: 17,
-                    color: AppColor.WHITE,
-                  }}>
-                  Diet
-                </Text>
-                <View
-                  style={{
-                    width: '70%',
-                    height: '100%',
-                    marginVertical: 10,
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: Fonts.HELVETICA_REGULAR,
-                      fontSize: 13,
-                      lineHeight:18,
-                      color: AppColor.WHITE,
-                    }}>
-                  {  "Reach your goals quicker with a nutritious diet"}
-                  </Text>
-                </View>
-              </View>
-            </ImageBackground>
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => {
-              HandelClick(4);
-            }}
-            style={{
-              width: '50%',
-              height: DeviceHeigth * 0.15,
-            }}>
-            <ImageBackground
-              source={require('../../Icon/Images/NewHome/back4.png')}
-              resizeMode={Platform.OS=='ios'?"stretch":"contain"}
-              style={{
-                width: '100%',
-                height: '100%',
-              }}>
-              <View
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  paddingVertical: DeviceWidth * 0.07,
-                  paddingLeft: DeviceWidth * 0.04,
-                }}>
-                <Text
-                  style={{
-                    fontFamily: Fonts.HELVETICA_BOLD,
-                    fontSize: 15,
-                    lineHeight: 17,
-                    color: AppColor.WHITE,
-                  }}>
-                  Store
-                </Text>
-                <View
-                  style={{
-                    width: '90%',
-                    height: '100%',
-                    marginVertical: 10,
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: Fonts.HELVETICA_REGULAR,
-                      fontSize: 13,
-                      lineHeight: 18,
-                      color: AppColor.WHITE,
-                    }}>
-                    Explore top-tier fitness essentials
-                  </Text>
-                  
-                </View>
-              </View>
-            </ImageBackground>
-          </TouchableOpacity>
+          {data.slice(2).map((item, index) => (
+            <Items item={item} index={index} />
+          ))}
         </View>
       </View>
 
