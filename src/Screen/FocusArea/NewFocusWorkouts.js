@@ -68,7 +68,6 @@ const NewFocusWorkouts = ({route, navigation}) => {
   const exerciseData = route?.params?.focusExercises;
   const searchCriteria = route?.params?.searchCriteria;
   const searchCriteriaRedux = route?.params?.searchCriteriaRedux;
-  const refStandard = useRef();
   const [filterList, setFilterList] = useState(exerciseData);
   const [downloadProgress, setDownloadProgress] = useState(0);
   const getUprBodyCount = useSelector(state => state.getUprBodyCount);

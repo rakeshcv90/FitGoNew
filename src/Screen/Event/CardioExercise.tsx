@@ -259,6 +259,7 @@ const CardioExercise = ({navigation, route}: any) => {
             setDemo(!demo);
             timerProgress.setValue(0);
             setDemoW(0);
+            setPause(!pause)
             PauseAudio(playbackState);
             Platform.OS == 'android'
               ? Platform.Version != 34 && setupPlayer()
@@ -274,6 +275,7 @@ const CardioExercise = ({navigation, route}: any) => {
             setDemo(!demo);
             timerProgress.setValue(0);
             setDemoW(0);
+            setPause(!pause)
             PauseAudio(playbackState);
             Platform.OS == 'android'
               ? Platform.Version != 34 && setupPlayer()

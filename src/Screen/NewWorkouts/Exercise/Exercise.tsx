@@ -261,6 +261,7 @@ const Exercise = ({navigation, route}: any) => {
             setDemo(!demo);
             timerProgress.setValue(0);
             setDemoW(0);
+            setPause(!pause)
             PauseAudio(playbackState);
             Platform.OS == 'android'
               ? Platform.Version != 34 && setupPlayer()
@@ -273,6 +274,7 @@ const Exercise = ({navigation, route}: any) => {
             setCurrentSet(currentSet + 1);
             setTimer(10);
             setDemo(!demo);
+            setPause(!pause)
             PauseAudio(playbackState);
             timerProgress.setValue(0);
             setDemoW(0);
