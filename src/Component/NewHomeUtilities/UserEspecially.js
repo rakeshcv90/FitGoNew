@@ -228,11 +228,11 @@ const UserEspecially = () => {
           }}>
           <Text
             style={{
-              fontFamily: Fonts.HELVETICA_BOLD,
-              fontSize: 16,
-              fontWeight: '700',
-              lineHeight: 20,
-              color: AppColor.PrimaryTextColor,
+              color: AppColor.HEADERTEXTCOLOR,
+              fontFamily: Fonts.MONTSERRAT_BOLD,
+              fontWeight: '600',
+              lineHeight: 30,
+              fontSize: 18,
             }}>
             Especially For You
           </Text>

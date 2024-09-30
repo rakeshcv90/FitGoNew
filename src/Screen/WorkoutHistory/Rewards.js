@@ -105,18 +105,18 @@ const Rewards = ({data}) => {
           img1={localImage.person_profile}
           img2={localImage.persons}
           txt1={'Successful\nRegistration'}
-          txt2={'1 signup'}
+          txt2={'1 Sign Up'}
           txt3={'2'}
           count={`${data?.reffered}`}
           countColor={AppColor.BLACK}
-          RewardType={'Signup'}
+          RewardType={'Sign Up'}
         />
         <Cards
           marginLeft={16}
           img1={localImage.calender_icon}
           img2={localImage.person_plus}
           txt1={'Event joined'}
-          txt2={'1 join event'}
+          txt2={'1 Event Joined'}
           txt3={'5'}
           count={data?.joined ?? -1}
           alingItems={'center'}

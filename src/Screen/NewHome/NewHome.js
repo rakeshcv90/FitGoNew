@@ -736,12 +736,14 @@ const NewHome = ({navigation}) => {
         <View style={{marginVertical: 8}}>
           <Text
             style={{
-              color: AppColor.BLACK,
+              color: AppColor.HEADERTEXTCOLOR,
+              fontFamily: Fonts.MONTSERRAT_BOLD,
+              fontWeight: '600',
+              lineHeight: 30,
+              fontSize: 18,
               width: DeviceWidth * 0.95,
-              alignSelf: 'center',
-              fontFamily: Fonts.HELVETICA_BOLD,
-              fontSize: 16,
               marginBottom: 8,
+              alignSelf: 'center',
             }}>
             Past Winners
           </Text>

@@ -200,7 +200,7 @@ const Reminder = ({
                 fontFamily: 'Poppins',
                 lineHeight: 25,
               }}>
-              Schedule an Alarm
+              Set a Reminder
             </Text>
             <View
               style={{

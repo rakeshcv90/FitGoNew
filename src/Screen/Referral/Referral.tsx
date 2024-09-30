@@ -142,16 +142,18 @@ const Referral = () => {
         width: DeviceWidth * 0.05,
         height: DeviceWidth * 0.05,
         alignItems: 'center',
+        justifyContent: 'center',
         position: position ?? 'relative',
         zIndex: 10,
       }}
       resizeMode="contain">
       <Text
         style={{
-          top: DeviceHeigth >= 1024 ? DeviceWidth * 0.01 : 0,
+          top: DeviceHeigth >= 1024 ? DeviceWidth * 0.01 : -2,
           fontSize: DeviceHeigth >= 1024 ? 12 : 10,
           fontWeight: '700',
           fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+          color: AppColor.BLACK
         }}>
         {rank}
         {/* {referralData?.current_rank?.rank} */}
@@ -286,7 +288,7 @@ const Referral = () => {
             style={{height: '100%', width: '100%'}}
           />
         </View>
-        <Text style={styles.txt1}>Understand how referral works.</Text>
+        <Text style={styles.txt1}>Understand How Referral Works.</Text>
         <Text style={[styles.txt1, {fontSize: 15}]}>Your Rank</Text>
         <ImageBackground
           source={localImage.Referral_Coin_Banner}
