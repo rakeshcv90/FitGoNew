@@ -336,7 +336,7 @@ const Items = ({item, index}) => {
             justifyContent: 'space-between',
           }}>
           {data.slice(2).map((item, index) => (
-            <Items item={item} index={index} />
+            <Items item={item} index={index+2} />
           ))}
         </View>
       </View>

@@ -152,8 +152,12 @@ const LeaderBoardProgressComopnent = ({
         pV={8}
         mV={8}
         fontFamily={Fonts.HELVETICA_BOLD}
-        disabled={coins[currentDay] > 0}
-        buttonColor={coins[currentDay] > 0 ? AppColor.Gray5 : AppColor.RED}
+        disabled={coins[currentDay] != null && coins[currentDay] > 0}
+        buttonColor={
+          coins[currentDay] != null && coins[currentDay] > 0
+            ? AppColor.Gray5
+            : AppColor.RED
+        }
         onPress={() => {
           navigation.navigate('BottomTab', {screen: 'MyPlans'});
         }}

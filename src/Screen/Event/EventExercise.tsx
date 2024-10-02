@@ -147,7 +147,7 @@ const EventExercise = ({navigation, route}: any) => {
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
   );
-  const {initInterstitial, showInterstitialAd} = MyInterstitialAd()
+  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const [seconds, setSeconds] = useState(
     parseInt(allExercise[number]?.exercise_rest.split(' ')[0]),
   );
@@ -266,7 +266,7 @@ const EventExercise = ({navigation, route}: any) => {
             setDemo(!demo);
             timerProgress.setValue(0);
             setDemoW(0);
-            setPause(!pause)
+            setPause(!pause);
             PauseAudio(playbackState);
             Platform.OS == 'android'
               ? Platform.Version != 34 && setupPlayer()
@@ -282,7 +282,7 @@ const EventExercise = ({navigation, route}: any) => {
             setDemo(!demo);
             timerProgress.setValue(0);
             setDemoW(0);
-            setPause(!pause)
+            setPause(!pause);
             PauseAudio(playbackState);
             Platform.OS == 'android'
               ? Platform.Version != 34 && setupPlayer()
@@ -333,7 +333,7 @@ const EventExercise = ({navigation, route}: any) => {
 
           if (
             getExerciseOutTime != '' &&
-            moment().format(format) > getExerciseOutTime 
+            moment().format(format) > getExerciseOutTime
           ) {
             console.warn(
               'SHOWINGDF',
@@ -382,18 +382,18 @@ const EventExercise = ({navigation, route}: any) => {
               clearTimeout(playTimerRef.current);
               StartAnimation();
             } else if (seconds == 0 && number < allExercise?.length - 1) {
-                ProgressRef.current?.play();
-                setPause(false);
-                setCurrentSet(0);
-                const index = allExercise?.findIndex(
-                  (item: any) =>
-                    item?.exercise_id == allExercise[number]?.exercise_id,
-                );
-                handleExerciseChange(allExercise[index + 1]?.exercise_title);
-                setNumber(index + 1);
-                setTimer(10);
-                setDemoW(0);
-                setRestStart(true);
+              ProgressRef.current?.play();
+              setPause(false);
+              setCurrentSet(0);
+              const index = allExercise?.findIndex(
+                (item: any) =>
+                  item?.exercise_id == allExercise[number]?.exercise_id,
+              );
+              handleExerciseChange(allExercise[index + 1]?.exercise_title);
+              setNumber(index + 1);
+              setTimer(10);
+              setDemoW(0);
+              setRestStart(true);
               Platform.OS == 'android'
                 ? Platform.Version != 34 && setupPlayer()
                 : setupPlayer();
@@ -407,28 +407,28 @@ const EventExercise = ({navigation, route}: any) => {
               setPause(false);
               postCurrentRewardsExerciseAPI(number);
 
-                showInterstitialAd();
-                clearTimeout(playTimerRef.current);
-                navigation?.navigate('WorkoutCompleted', {
-                  type: type,
-                  day: day,
-                  allExercise: allExercise,
-                });
+              showInterstitialAd();
+              clearTimeout(playTimerRef.current);
+              navigation?.navigate('WorkoutCompleted', {
+                type: type,
+                day: day,
+                allExercise: allExercise,
+              });
             } else if (seconds == 0 && number <= allExercise?.length - 1) {
               animatedProgress.setValue(0);
               setPlayW(0);
-                ProgressRef.current?.play();
-                setPause(false);
-                setCurrentSet(0);
-                const index = allExercise?.findIndex(
-                  (item: any) =>
-                    item?.exercise_id == allExercise[number]?.exercise_id,
-                );
-                handleExerciseChange(allExercise[index + 1]?.exercise_title);
-                setNumber(index + 1);
-                setTimer(10);
-                setDemoW(0);
-                setRestStart(true);
+              ProgressRef.current?.play();
+              setPause(false);
+              setCurrentSet(0);
+              const index = allExercise?.findIndex(
+                (item: any) =>
+                  item?.exercise_id == allExercise[number]?.exercise_id,
+              );
+              handleExerciseChange(allExercise[index + 1]?.exercise_title);
+              setNumber(index + 1);
+              setTimer(10);
+              setDemoW(0);
+              setRestStart(true);
               Platform.OS == 'android'
                 ? Platform.Version != 34 && setupPlayer()
                 : setupPlayer();
@@ -891,6 +891,16 @@ const EventExercise = ({navigation, route}: any) => {
                   }}>
                   {timer == 10 ? '00:' + timer : '00:0' + timer}
                 </Text>
+                <Text
+                  style={{
+                    color: '#1F2937',
+                    fontFamily: Fonts.HELVETICA_REGULAR,
+                    fontSize: 16,
+                    lineHeight: 25,
+                    fontWeight: '600',
+                  }}>
+                  {allExercise[number]?.exercise_title}
+                </Text>
               </View>
               <View
                 style={{
@@ -1093,35 +1103,35 @@ const EventExercise = ({navigation, route}: any) => {
                   </Text>
                   {allExercise[number]?.exercise_sets > 0 && (
                     <>
-                    <Text
-                      style={{
-                        color: '#1F2937',
-                        fontFamily: Fonts.HELVETICA_REGULAR,
-                        fontSize: 16,
-                        lineHeight: 25,
-                        fontWeight: '600',
-                      }}>
-                      {' · '}
-                    </Text>
-                    <View
-                      style={{
-                        padding: 2,
-                        paddingHorizontal: 10,
-                        borderRadius: 20,
-                        borderWidth: 1,
-                        borderColor: '#EBEDF0',
-                      }}>
                       <Text
                         style={{
-                          color: '#6B7280',
-                          fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                          color: '#1F2937',
+                          fontFamily: Fonts.HELVETICA_REGULAR,
                           fontSize: 16,
-                          lineHeight: 20,
+                          lineHeight: 25,
                           fontWeight: '600',
                         }}>
-                      {currentSet}/{allExercise[number]?.exercise_sets}
+                        {' · '}
                       </Text>
-                    </View>
+                      <View
+                        style={{
+                          padding: 2,
+                          paddingHorizontal: 10,
+                          borderRadius: 20,
+                          borderWidth: 1,
+                          borderColor: '#EBEDF0',
+                        }}>
+                        <Text
+                          style={{
+                            color: '#6B7280',
+                            fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                            fontSize: 16,
+                            lineHeight: 20,
+                            fontWeight: '600',
+                          }}>
+                          {currentSet}/{allExercise[number]?.exercise_sets}
+                        </Text>
+                      </View>
                     </>
                   )}
                 </View>
@@ -1238,12 +1248,12 @@ const EventExercise = ({navigation, route}: any) => {
                   justifyContent: 'space-between',
                   alignItems: 'center',
                 }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}>
                   <FitToggle value={getSoundOffOn} />
                   <FitText
                     type="normal"
@@ -1252,7 +1262,7 @@ const EventExercise = ({navigation, route}: any) => {
                     fontFamily={Fonts.HELVETICA_REGULAR}
                     lineHeight={30}
                   />
-                  </View>
+                </View>
                 <TouchableOpacity
                   onPress={() => {
                     setOpen(true);

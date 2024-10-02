@@ -261,7 +261,7 @@ const Exercise = ({navigation, route}: any) => {
             setDemo(!demo);
             timerProgress.setValue(0);
             setDemoW(0);
-            setPause(!pause)
+            setPause(!pause);
             PauseAudio(playbackState);
             Platform.OS == 'android'
               ? Platform.Version != 34 && setupPlayer()
@@ -274,7 +274,7 @@ const Exercise = ({navigation, route}: any) => {
             setCurrentSet(currentSet + 1);
             setTimer(10);
             setDemo(!demo);
-            setPause(!pause)
+            setPause(!pause);
             PauseAudio(playbackState);
             timerProgress.setValue(0);
             setDemoW(0);
@@ -857,6 +857,16 @@ const Exercise = ({navigation, route}: any) => {
                   }}>
                   {timer == 10 ? '00:' + timer : '00:0' + timer}
                 </Text>
+                <Text
+                  style={{
+                    color: '#1F2937',
+                    fontFamily: Fonts.HELVETICA_REGULAR,
+                    fontSize: 16,
+                    lineHeight: 25,
+                    fontWeight: '600',
+                  }}>
+                  {allExercise[number]?.exercise_title}
+                </Text>
               </View>
               <View
                 style={{
@@ -1059,35 +1069,35 @@ const Exercise = ({navigation, route}: any) => {
                   </Text>
                   {allExercise[number]?.exercise_sets > 0 && (
                     <>
-                    <Text
-                      style={{
-                        color: '#1F2937',
-                        fontFamily: Fonts.HELVETICA_REGULAR,
-                        fontSize: 16,
-                        lineHeight: 25,
-                        fontWeight: '600',
-                      }}>
-                      {' · '}
-                    </Text>
-                    <View
-                      style={{
-                        padding: 2,
-                        paddingHorizontal: 10,
-                        borderRadius: 20,
-                        borderWidth: 1,
-                        borderColor: '#EBEDF0',
-                      }}>
                       <Text
                         style={{
-                          color: '#6B7280',
-                          fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                          color: '#1F2937',
+                          fontFamily: Fonts.HELVETICA_REGULAR,
                           fontSize: 16,
-                          lineHeight: 20,
+                          lineHeight: 25,
                           fontWeight: '600',
                         }}>
-                      {currentSet}/{allExercise[number]?.exercise_sets}
+                        {' · '}
                       </Text>
-                    </View>
+                      <View
+                        style={{
+                          padding: 2,
+                          paddingHorizontal: 10,
+                          borderRadius: 20,
+                          borderWidth: 1,
+                          borderColor: '#EBEDF0',
+                        }}>
+                        <Text
+                          style={{
+                            color: '#6B7280',
+                            fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                            fontSize: 16,
+                            lineHeight: 20,
+                            fontWeight: '600',
+                          }}>
+                          {currentSet}/{allExercise[number]?.exercise_sets}
+                        </Text>
+                      </View>
                     </>
                   )}
                 </View>

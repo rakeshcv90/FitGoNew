@@ -154,6 +154,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
       // dispatch(setChallengesData([]));
       // dispatch(setAllExercise([]));
     }
+    navigation.navigate('WorkoutDays', {data, challenge});
   };
   let categoryExercise: Array<any> = [];
 

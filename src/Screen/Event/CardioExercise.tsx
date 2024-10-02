@@ -259,7 +259,7 @@ const CardioExercise = ({navigation, route}: any) => {
             setDemo(!demo);
             timerProgress.setValue(0);
             setDemoW(0);
-            setPause(!pause)
+            setPause(!pause);
             PauseAudio(playbackState);
             Platform.OS == 'android'
               ? Platform.Version != 34 && setupPlayer()
@@ -275,7 +275,7 @@ const CardioExercise = ({navigation, route}: any) => {
             setDemo(!demo);
             timerProgress.setValue(0);
             setDemoW(0);
-            setPause(!pause)
+            setPause(!pause);
             PauseAudio(playbackState);
             Platform.OS == 'android'
               ? Platform.Version != 34 && setupPlayer()
@@ -875,6 +875,16 @@ const CardioExercise = ({navigation, route}: any) => {
                     color: '#1F2937',
                   }}>
                   {timer == 10 ? '00:' + timer : '00:0' + timer}
+                </Text>
+                <Text
+                  style={{
+                    color: '#1F2937',
+                    fontFamily: Fonts.HELVETICA_REGULAR,
+                    fontSize: 16,
+                    lineHeight: 25,
+                    fontWeight: '600',
+                  }}>
+                  {allExercise[number]?.exercise_title}
                 </Text>
               </View>
               <View
