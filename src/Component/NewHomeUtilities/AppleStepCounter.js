@@ -390,7 +390,7 @@ const AppleStepCounter = () => {
         <View
           style={{
             width: '100%',
-            height: '15%',
+            // height: '15%',
             flexDirection: 'row',
 
             justifyContent: 'space-between',
@@ -576,7 +576,7 @@ const AppleStepCounter = () => {
 var styles = StyleSheet.create({
   container: {
     width: DeviceWidth,
-    height: DeviceHeigth * 0.2,
+    height: DeviceHeigth <= 667 ? DeviceHeigth * 0.25 : DeviceHeigth * 0.2,
     backgroundColor: AppColor.WHITE,
     marginVertical: 15,
   },

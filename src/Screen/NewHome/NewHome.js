@@ -108,12 +108,13 @@ const NewHome = ({navigation}) => {
   const getPermissionIos = useSelector(state => state?.getPermissionIos);
   const getWeeklyPlansData = useSelector(state => state?.getWeeklyPlansData);
   const allWorkoutData = useSelector(state => state?.allWorkoutData);
+  const getChallengesData = useSelector(state => state?.getChallengesData);
   const getEquipmentExercise = useSelector(
     state => state?.getEquipmentExercise,
   );
   useEffect(() => {
     if (isFocused) {
-     getAllExercise?.length <= 0 && getAllChallangeAndAllExerciseData();
+     getAllExercise?.length <= 0 ? getAllChallangeAndAllExerciseData(): setChallData()
       getLeaderboardDataAPI();
       Object.keys(allWorkoutData)?.length <= 1 && allWorkoutApi();
       enteredCurrentEvent && getEarnedCoins();
@@ -151,6 +152,14 @@ const NewHome = ({navigation}) => {
   }, [isAlarmEnabled]);
 
   const shimmerValue = useSharedValue(0);
+
+  const setChallData = () => {
+    const challenge = getChallengesData?.filter(
+      item => item?.status == 'active',
+    );
+
+    setCurrentChallenge(challenge);
+  }
 
   const allWorkoutApi = async () => {
     try {

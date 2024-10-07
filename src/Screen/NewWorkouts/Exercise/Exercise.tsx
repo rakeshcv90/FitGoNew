@@ -331,12 +331,13 @@ const Exercise = ({navigation, route}: any) => {
               number == allExercise?.length - 1 &&
               currentSet == allExercise[number]?.exercise_sets
             ) {
+              console.log("COND 1", number)
               setPause(false);
               type == 'focus' || type == 'bodypart'
                 ? postSingleExerciseAPI(number)
                 : postCurrentExerciseAPI(number);
-              showInterstitialAd();
               clearTimeout(playTimerRef.current);
+              showInterstitialAd();
               navigation.navigate('SaveDayExercise', {
                 data,
                 day,
@@ -349,6 +350,7 @@ const Exercise = ({navigation, route}: any) => {
               number <= allExercise?.length - 1 &&
               currentSet < allExercise[number]?.exercise_sets
             ) {
+              console.log("COND 2", number)
               animatedProgress.setValue(0);
               setPlayW(0);
               setShowSet(true);
@@ -359,8 +361,10 @@ const Exercise = ({navigation, route}: any) => {
               clearTimeout(playTimerRef.current);
               StartAnimation();
             } else if (seconds == 0 && number < allExercise?.length - 1) {
+              console.log("COND 3", number)
               ProgressRef.current?.play();
               setPause(false);
+              setCurrentSet(0)
               const index = allExercise?.findIndex(
                 (item: any) =>
                   item?.exercise_id == allExercise[number]?.exercise_id,
@@ -369,7 +373,6 @@ const Exercise = ({navigation, route}: any) => {
               setNumber(index + 1);
               setTimer(10);
               setDemoW(0);
-              setCurrentSet(0);
               setRestStart(true);
               Platform.OS == 'android'
                 ? Platform.Version != 34 && setupPlayer()
@@ -381,8 +384,8 @@ const Exercise = ({navigation, route}: any) => {
               type == 'focus' || type == 'bodypart'
                 ? postSingleExerciseAPI(number)
                 : postCurrentExerciseAPI(number);
-              showInterstitialAd();
               clearTimeout(playTimerRef.current);
+              showInterstitialAd();
               navigation.navigate('SaveDayExercise', {
                 data,
                 day,
@@ -1304,6 +1307,7 @@ const Exercise = ({navigation, route}: any) => {
         setSeconds={setSeconds}
         handleExerciseChange={handleExerciseChange}
         setNumber={setNumber}
+        setCurrentSet={setCurrentSet}
       />
       <PauseModal back={back} quitLoader={quitLoader} />
 

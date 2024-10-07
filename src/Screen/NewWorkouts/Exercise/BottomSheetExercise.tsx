@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import BottomSheet from 'react-native-easy-bottomsheet';
-import {AppColor} from '../../../Component/Color';
+import {AppColor, Fonts} from '../../../Component/Color';
 import {DeviceHeigth, DeviceWidth} from '../../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {showMessage} from 'react-native-flash-message';
@@ -19,7 +19,7 @@ const BottomSheetExercise = ({
   isVisible,
   setVisible,
   exerciseData,
-  setCurrentData,
+  setCurrentSet,
   setPlayW,
   setPause,
   animatedProgress,
@@ -32,6 +32,7 @@ const BottomSheetExercise = ({
 }: any) => {
   const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
   const Box = ({selected, item, index}: any) => {
+    const time = parseInt(item?.exercise_rest.split(' ')[0]);
     return (
       <>
         <TouchableOpacity
@@ -41,6 +42,7 @@ const BottomSheetExercise = ({
             clearInterval(playTimerRef.current);
             setTimeout(() => {
               setSeconds(parseInt(item?.exercise_rest.split(' ')[0]));
+              setCurrentSet(0)
               setPlayW(0);
               timerProgress.setValue(0);
               animatedProgress.setValue(0);
@@ -98,7 +100,19 @@ const BottomSheetExercise = ({
               <Text style={[styles.small, {fontSize: 14}]}>
                 {item?.exercise_title}
               </Text>
-              <Text style={styles.small}>{item?.exercise_rest}</Text>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text style={styles.small}>
+                  {'Time - ' +
+                    '1 x ' +
+                    (time > 60
+                      ? Math.floor(time / 60) + ' min'
+                      : time + ' sec')}{' '}
+                  |{' '}
+                </Text>
+                <Text style={styles.small}>
+                  {'Set - ' + item?.exercise_sets}
+                </Text>
+              </View>
             </View>
             <Icons
               name={'chevron-right'}
@@ -252,16 +266,12 @@ const styles = StyleSheet.create({
     color: AppColor.LITELTEXTCOLOR,
     lineHeight: 30,
   },
-  // box: {
-  //   // flex: 1,
-  //   width: DeviceWidth * 0.95,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   padding: 0,
-  //   borderRadius: 15,
-  //  // marginLeft: -20,
-  //   // marginVertical: 5,
-  // },
+  txt2: {
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    color: AppColor.BLACK,
+    fontSize: 16,
+    lineHeight: 30,
+  },
   box: {
     width: '100%',
     // padding: 10,

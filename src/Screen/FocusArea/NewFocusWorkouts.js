@@ -163,9 +163,10 @@ const NewFocusWorkouts = ({route, navigation}) => {
         bottomSheetRef.current?.openSheet();
       } else if (route?.params?.focusedPart == 'Core' && getCoreCount == 0) {
         bottomSheetRef.current?.openSheet();
-      } else {
-        bottomSheetRef.current?.openSheet();
-      }
+      } 
+      // else {
+      //   bottomSheetRef.current?.openSheet();
+      // }
     }, 1000);
   }, [route]);
   // automatic filter when user comes to this screen
