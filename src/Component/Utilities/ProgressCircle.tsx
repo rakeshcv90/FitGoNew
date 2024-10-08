@@ -31,7 +31,7 @@ type CircleProgressProps = {
   /**
    * Value controlling the progress of the circle.
    */
-  animatedProgress: Animated.Value;
+  progress: number;
 
   /**
    * Whether the progress animation should be clockwise.
@@ -93,7 +93,7 @@ LogBox.ignoreLogs(['No stops in gradient'])
 const CircleProgress: React.FC<CircleProgressProps> = ({
   radius = 60,
   strokeWidth = 30, // Default strokeWidth
-  animatedProgress,
+  progress,
   clockwise = false, // Default clockwise direction
   startAngle = 270, // Default start angle
   gradientColors = [],
@@ -109,6 +109,22 @@ const CircleProgress: React.FC<CircleProgressProps> = ({
   const circumference = 2 * Math.PI * radius;
   //   const output = circumference - circumference * progress;
   
+  const animatedProgress = useRef<Animated.Value>(
+    new Animated.Value(0),
+  ).current;
+
+  useEffect(() => {
+    if(progress == 0){
+      animatedProgress.setValue(0)
+    }
+    Animated.timing(animatedProgress, {
+      toValue:
+        Math.round(progress) == 100 ? 0 : Math.round(progress),
+      duration: 500, // Duration of the animation (500ms)
+      useNativeDriver: true,
+    }).start();
+  }, [progress]);
+
   // Interpolating the animated value to strokeDashoffset
   const strokeDashoffset = animatedProgress.interpolate({
     inputRange: inputRange,
@@ -174,46 +190,6 @@ const CircleProgress: React.FC<CircleProgressProps> = ({
     </View>
   );
 };
-const ProgressCircle = () => {
-  const [progress, setProgress] = useState(0);
-  const [timer, setTimer] = useState(30);
-
-  const animatedProgress = useRef(new Animated.Value(0)).current; // Animated value for progress
-
-  const increaseProgress = () => {
-    setProgress(() => (timer == 0 ? 0 : timer - timer));
-  };
-
-  useEffect(() => {
-    if (timer == 0) return;
-    else
-      setTimeout(() => {
-        setTimer(timer - 1);
-        setProgress(progress + 100 / 30);
-      }, 1000);
-    Animated.timing(animatedProgress, {
-      toValue: progress,
-      duration: 500, // Duration of the animation (500ms)
-      useNativeDriver: true,
-    }).start();
-    console.log(timer, 'strokeDashoffset', progress);
-  }, [timer, progress]);
-  const strokeLinecap = progress >= 100 ? 'butt' : 'round'; // Handle strokeLinecap logic here
-
-  return (
-    <View style={styles.appContainer}>
-      <CircleProgress
-        radius={60}
-        strokeWidth={20}
-        animatedProgress={animatedProgress}
-        startAngle={270} // Start from the top
-        clockwise={false} // Anticlockwise animation
-        strokeLinecap={strokeLinecap}
-      />
-      <Button title="Increase Progress" onPress={increaseProgress} />
-    </View>
-  );
-};
 
 export default CircleProgress;
 
@@ -239,3 +215,45 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
+
+// const ProgressCircle = () => {
+//   const [progress, setProgress] = useState(0);
+//   const [timer, setTimer] = useState(30);
+
+//   const animatedProgress = useRef(new Animated.Value(0)).current; // Animated value for progress
+
+//   const increaseProgress = () => {
+//     setProgress(() => (timer == 0 ? 0 : timer - timer));
+//   };
+
+//   useEffect(() => {
+//     if (timer == 0) return;
+//     else
+//       setTimeout(() => {
+//         setTimer(timer - 1);
+//         setProgress(progress + 100 / 30);
+//       }, 1000);
+//     Animated.timing(animatedProgress, {
+//       toValue: progress,
+//       duration: 500, // Duration of the animation (500ms)
+//       useNativeDriver: true,
+//     }).start();
+//     console.log(timer, 'strokeDashoffset', progress);
+//   }, [timer, progress]);
+//   const strokeLinecap = progress >= 100 ? 'butt' : 'round'; // Handle strokeLinecap logic here
+
+//   return (
+//     <View style={styles.appContainer}>
+//       <CircleProgress
+//         radius={60}
+//         strokeWidth={20}
+//         animatedProgress={animatedProgress}
+//         startAngle={270} // Start from the top
+//         clockwise={false} // Anticlockwise animation
+//         strokeLinecap={strokeLinecap}
+//       />
+//       <Button title="Increase Progress" onPress={increaseProgress} />
+//     </View>
+//   );
+// };
