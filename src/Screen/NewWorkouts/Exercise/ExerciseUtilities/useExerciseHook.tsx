@@ -2,7 +2,8 @@ import {useEffect, useRef, useState} from 'react';
 import Tts from 'react-native-tts';
 import {useSelector} from 'react-redux';
 import TrackPlayer from 'react-native-track-player';
-import { handleExerciseChange } from './Helpers';
+import {handleExerciseChange, initTts} from './Helpers';
+import {PLATFORM_IOS} from '../../../../Component/Color';
 
 export type ExerciseData = {
   exercise_bodypart: string;
@@ -40,6 +41,7 @@ type ExerciseHookProps = {
   progressPercent: number;
   setProgressPercent: Function;
   outNavigation: Function;
+  apiCalls: Function;
   getStoreVideoLoc?: any;
   number: number;
   setNumber: Function;
@@ -67,19 +69,20 @@ const useExerciseHook = ({
   getStoreVideoLoc,
   number,
   setNumber,
+  apiCalls,
 }: ExerciseHookProps) => {
   const [restStart, setRestStart] = useState(false);
   const resetTime = parseInt(allExercise[number]?.exercise_rest.split(' ')[0]);
   const NUMBER_OF_SETS = parseInt(allExercise[number]?.exercise_sets);
   const EXERCISE_LENGTH = allExercise.length - 1;
-  const hasSets = parseInt(allExercise[number]?.exercise_sets) >= 0;
+  const hasSets = NUMBER_OF_SETS >= 0;
 
   const [seconds, setSeconds] = useState(!restStart ? getReadyTime : resetTime);
   const exerciseTimerRef = useRef<any>(null);
   const getSoundOffOn = useSelector((state: any) => state.getSoundOffOn);
 
   const SPEAK = (words: string) => {
-    getSoundOffOn && Tts.speak(words);
+    PLATFORM_IOS ? false : Tts.speak(words);
   };
 
   useEffect(() => {
@@ -120,7 +123,9 @@ const useExerciseHook = ({
                 outNavigation();
               } else {
                 setSeconds(restStart ? getReadyTime : resetTime);
+                apiCalls();
                 clearTimeout(exerciseTimerRef.current);
+                setCurrentSet(1);
                 setProgressPercent(0);
                 setNumber(number + 1);
                 handleExerciseChange(
@@ -135,7 +140,9 @@ const useExerciseHook = ({
               outNavigation();
             } else {
               setSeconds(restStart ? getReadyTime : resetTime);
+              apiCalls();
               clearTimeout(exerciseTimerRef.current);
+              setCurrentSet(1);
               setProgressPercent(0);
               setNumber(number + 1);
               handleExerciseChange(

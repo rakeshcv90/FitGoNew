@@ -85,11 +85,14 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
   const Sat = getPurchaseHistory?.currentDay == 6;
   const Sun = getPurchaseHistory?.currentDay == 0;
 
-  const outNavigation = () => {
-    setPause(false);
+  const apiCalls = () => {
     type == 'focus' || type == 'bodypart'
       ? postSingleExerciseAPI()
       : postCurrentExerciseAPI();
+  }
+
+  const outNavigation = () => {
+    setPause(false);
 
     navigation.navigate('SaveDayExercise', {
       data,
@@ -119,6 +122,7 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
     getStoreVideoLoc,
     number,
     setNumber,
+    apiCalls
   });
 
   const resumeButton = () => {
