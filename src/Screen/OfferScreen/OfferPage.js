@@ -308,6 +308,8 @@ const OfferPage = ({navigation, route}) => {
           trackerData: res?.data?.inserted_data,
           type: 'cardio',
           offerType: true,
+          challenge: false,
+          isEventPage: true
         });
         // }
       } else {
@@ -321,6 +323,8 @@ const OfferPage = ({navigation, route}) => {
           trackerData: res?.data?.existing_data,
           type: 'cardio',
           offerType: true,
+          challenge: false,
+          isEventPage: true
         });
       }
     } catch (error) {

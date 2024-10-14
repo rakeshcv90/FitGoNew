@@ -38,6 +38,8 @@ type ExerciseControlsProps = {
   type: string;
   challenge?: boolean;
   getStoreVideoLoc?: any;
+  isEventPage?: boolean | false;
+  offerType?: boolean | false;
 };
 
 const WeekArray = Array(7)
@@ -66,6 +68,8 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
   setBack,
   setNumber,
   number,
+  isEventPage,
+  offerType,
 }) => {
   const navigation: any = useNavigation();
   const getScreenAwake = useSelector((state: any) => state.getScreenAwake);
@@ -82,25 +86,36 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
   const [quitLoader, setQuitLoader] = useState(false);
   const [currentSet, setCurrentSet] = useState(0);
   const [completed, setCompleted] = useState(0);
+  const [skip, setSkip] = useState(0);
+  const [next, setNext] = useState(0);
+  const [previous, setPrevious] = useState(0);
   const Sat = getPurchaseHistory?.currentDay == 6;
   const Sun = getPurchaseHistory?.currentDay == 0;
 
   const apiCalls = () => {
-    type == 'focus' || type == 'bodypart'
+    isEventPage
+      ? postCurrentRewardsExerciseAPI()
+      : type == 'focus' || type == 'bodypart'
       ? postSingleExerciseAPI()
       : postCurrentExerciseAPI();
-  }
+  };
 
   const outNavigation = () => {
     setPause(false);
-
-    navigation.navigate('SaveDayExercise', {
-      data,
-      day,
-      allExercise,
-      type,
-      challenge,
-    });
+    apiCalls();
+    isEventPage
+      ? navigation.navigate('WorkoutCompleted', {
+          day: day,
+          allExercise: allExercise,
+          type: type,
+        })
+      : navigation.navigate('SaveDayExercise', {
+          data,
+          day,
+          allExercise,
+          type,
+          challenge,
+        });
   };
   const {
     seconds,
@@ -122,7 +137,9 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
     getStoreVideoLoc,
     number,
     setNumber,
-    apiCalls
+    apiCalls,
+    skip,
+    setSkip,
   });
 
   const resumeButton = () => {
@@ -183,7 +200,15 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
       setQuitLoader(false);
       console.log('DELE TRACK ERRR', error);
     }
-    navigation.goBack();
+    offerType
+      ? navigation.navigate('OfferPage', {type: 'cardioCompleted'})
+      : isEventPage
+      ? navigation?.navigate('WorkoutCompleted', {
+          type: type,
+          day: day,
+          allExercise: allExercise,
+        })
+      : navigation.goBack();
   };
 
   const postCurrentExerciseAPI = async () => {
@@ -262,7 +287,48 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
       console.error(error, 'PostSINGLExerciseAPIERror');
     }
   };
+  const postCurrentRewardsExerciseAPI = async () => {
+    const payload = new FormData();
+    payload.append('id', trackerData[number]?.id);
 
+    payload.append('type', type);
+    payload.append('day', WeekArray[day]);
+    payload.append('workout_id', `-${day + 1}`);
+    payload.append('user_id', getUserDataDetails?.id);
+    payload.append('version', VersionNumber.appVersion);
+
+    next > 0 && payload.append('next_status', next);
+    previous > 0 && payload.append('prev_status', previous);
+    skip > 0 && payload.append('skip_status', skip);
+
+    try {
+      const res = await axios({
+        // url: url,
+        url: NewAppapi.POST_REWARDS_EXERCISE,
+        method: 'post',
+        data: payload,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      if (res?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: res?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (res.data) {
+        setCompleted(completed + 1);
+      }
+      setSkip(0);
+      setNext(0);
+      setPrevious(0);
+    } catch (error) {
+      console.error(error, 'New Exewr PostREWARDSAPIERror');
+    }
+  };
   return (
     <>
       <View
@@ -292,7 +358,7 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
               justifyContent: 'center',
               alignItems: 'center',
               width: DeviceWidth,
-              alignSelf: 'center'
+              alignSelf: 'center',
             }}>
             <CircleProgress
               radius={50}
@@ -317,7 +383,7 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
               justifyContent: 'space-between',
               alignItems: 'center',
               // width: '100%',
-              alignSelf: 'center'
+              alignSelf: 'center',
             }}>
             <VideoControls
               pause={pause}
@@ -328,10 +394,13 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
               setNumber={setNumber}
               getStoreVideoLoc={getStoreVideoLoc}
               allExercise={allExercise}
-              exerciseTimerRef={exerciseTimerRef}
               number={number}
               progressPercent={progressPercent}
               setProgressPercent={setProgressPercent}
+              previous={previous}
+              setPrevious={setPrevious}
+              next={next}
+              setNext={setNext}
             />
           </View>
         )}
@@ -345,6 +414,7 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
           setNumber={setNumber}
           setProgressPercent={setProgressPercent}
           setSeconds={setSeconds}
+          isEventPage={isEventPage}
         />
       </View>
 

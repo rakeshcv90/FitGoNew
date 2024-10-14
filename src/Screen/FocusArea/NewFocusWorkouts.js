@@ -738,6 +738,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
           trackerData: [],
           type: 'bodypart',
           challenge: false,
+          isEventPage: false
         });
       });
     }
@@ -770,6 +771,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
           trackerData: [],
           type: 'bodypart',
           challenge: false,
+          isEventPage: false
         });
       });
     }

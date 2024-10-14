@@ -239,6 +239,8 @@ const WorkoutCompleted = ({navigation, route}) => {
           trackerData: res?.data?.inserted_data,
           type: 'cardio',
           offerType: false,
+          challenge: false,
+          isEventPage: true
         });
         // }
       } else {
@@ -252,6 +254,8 @@ const WorkoutCompleted = ({navigation, route}) => {
           trackerData: res?.data?.existing_data,
           type: 'cardio',
           offerType: false,
+          challenge: false,
+          isEventPage: true
         });
       }
     } catch (error) {

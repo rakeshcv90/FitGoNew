@@ -17,7 +17,7 @@ import {StatusBar} from 'react-native';
 import {ArrowLeft} from '../../../Component/Utilities/Arrows/Arrow';
 import ExerciseControls from './ExerciseUtilities/ExerciseControls';
 
-const TestExercise = ({navigation, route}: any) => {
+const NewExercise = ({navigation, route}: any) => {
   const {
     allExercise,
     currentExercise,
@@ -27,6 +27,8 @@ const TestExercise = ({navigation, route}: any) => {
     trackerData,
     type,
     challenge,
+    isEventPage,
+    offerType
   } = route.params;
   const [pause, setPause] = useState(false);
   const [back, setBack] = useState(false);
@@ -152,10 +154,12 @@ const TestExercise = ({navigation, route}: any) => {
           trackerData={trackerData}
           type={type}
           challenge={challenge}
+          isEventPage={isEventPage}
+          offerType={offerType}
         />
       </ScrollView>
     </SafeAreaView>
   );
 };
 
-export default TestExercise;
+export default NewExercise;

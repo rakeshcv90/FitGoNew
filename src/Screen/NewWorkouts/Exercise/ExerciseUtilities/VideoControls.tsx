@@ -11,9 +11,12 @@ type VideoControls = {
   setNumber: Function;
   seconds: number;
   setSeconds: Function;
+  next: number;
+  setNext: Function;
+  previous: number;
+  setPrevious: Function;
   setCurrentSet: Function;
   allExercise: Array<any>;
-  exerciseTimerRef: Ref<null>;
   getStoreVideoLoc: any;
   progressPercent: number;
   setProgressPercent: Function;
@@ -28,16 +31,18 @@ const VideoControls = ({
   setPause,
   setSeconds,
   setCurrentSet,
-  exerciseTimerRef,
   getStoreVideoLoc,
   progressPercent,
   setProgressPercent,
+  next,
+  previous,
+  setNext,
+  setPrevious,
 }: VideoControls) => {
   const prev = () => {
     setCurrentSet(1);
-    // animatedProgress.setValue(0);
     setProgressPercent(0);
-    // clearTimeout(exerciseTimerRef.current);
+    setPrevious(previous + 1);
     handleExerciseChange(
       allExercise[number - 1]?.exercise_title,
       getStoreVideoLoc,
@@ -45,10 +50,10 @@ const VideoControls = ({
     setSeconds(allExercise[number - 1]?.exercise_rest.split(' ')[0]);
     setNumber(number - 1);
   };
-  const next = () => {
+  const nextButton = () => {
     setCurrentSet(1);
     setProgressPercent(0);
-    //   clearTimeout(exerciseTimerRef.current);
+    setNext(next + 1);
     handleExerciseChange(
       allExercise[number + 1]?.exercise_title,
       getStoreVideoLoc,
@@ -57,13 +62,9 @@ const VideoControls = ({
     setNumber(number + 1);
   };
 
-  const handlePrev = useCallback(() => {
-    prev(); // Call the function here instead of directly in JSX
-  }, [prev]);
+  const handlePrev = useCallback(prev, [prev]);
 
-  const handleNext = useCallback(() => {
-    next(); // Call the function here instead of directly in JSX
-  }, [next]);
+  const handleNext = useCallback(nextButton, [nextButton]);
 
   return (
     <View

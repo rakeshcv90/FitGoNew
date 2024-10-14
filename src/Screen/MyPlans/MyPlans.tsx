@@ -436,6 +436,8 @@ const MyPlans = ({navigation}: any) => {
             exerciseNumber: 0,
             trackerData: res?.data?.inserted_data,
             type: 'weekly',
+            challenge: false,
+            isEventPage: false
           });
         } else {
           analytics().logEvent(
@@ -450,6 +452,8 @@ const MyPlans = ({navigation}: any) => {
             exerciseNumber: 0,
             trackerData: res?.data?.inserted_data,
             type: 'weekly',
+            challenge: false,
+            isEventPage: false
           });
         }
       } else {
@@ -521,7 +525,7 @@ const MyPlans = ({navigation}: any) => {
         setVisible(false);
         setDownloadedVideoSent(false);
 
-        navigation.navigate('EventExercise', {
+        navigation.navigate('Exercise', {
           allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
           currentExercise:
             getWeeklyPlansData[WeekArray[selectedDay]]?.exercises[0],
@@ -530,12 +534,14 @@ const MyPlans = ({navigation}: any) => {
           exerciseNumber: 0,
           trackerData: res?.data?.inserted_data,
           type: 'weekly',
+          challenge: false,
+          isEventPage: true
         });
         // }
       } else {
         setStart(false);
         setDownloadedVideoSent(false);
-        navigation.navigate('EventExercise', {
+        navigation.navigate('Exercise', {
           allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
           currentExercise:
             getWeeklyPlansData[WeekArray[selectedDay]]?.exercises[0],
@@ -544,6 +550,8 @@ const MyPlans = ({navigation}: any) => {
           exerciseNumber: 0,
           trackerData: res?.data?.existing_data,
           type: 'weekly',
+          challenge: false,
+          isEventPage: true
         });
       }
     } catch (error) {
@@ -641,6 +649,8 @@ const MyPlans = ({navigation}: any) => {
             exerciseNumber: 0,
             trackerData: res?.data?.user_details,
             type: 'weekly',
+            challenge: false,
+            isEventPage: false
           });
         } else {
           analytics().logEvent(
@@ -657,6 +667,8 @@ const MyPlans = ({navigation}: any) => {
             exerciseNumber: 0,
             trackerData: res?.data?.user_details,
             type: 'weekly',
+            challenge: false,
+            isEventPage: false
           });
         }
       } else {

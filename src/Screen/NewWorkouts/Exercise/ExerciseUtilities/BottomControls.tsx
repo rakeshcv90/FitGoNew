@@ -21,6 +21,7 @@ type BottomControlsProps = {
   setNumber: Function;
   setCurrentSet: Function;
   setProgressPercent: Function;
+  isEventPage?: boolean | false;
 };
 
 const BottomControls = ({
@@ -32,6 +33,7 @@ const BottomControls = ({
   setNumber,
   setProgressPercent,
   setSeconds,
+  isEventPage,
 }: BottomControlsProps) => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
@@ -65,7 +67,14 @@ const BottomControls = ({
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
-              width: DeviceHeigth >= 1024 ? '50%' : '70%',
+              width:
+                DeviceHeigth >= 1024
+                  ? isEventPage
+                    ? '70%'
+                    : '50%'
+                  : isEventPage
+                  ? '90%'
+                  : '70%',
             }}>
             <TouchableOpacity
               onPress={() => {
@@ -120,25 +129,27 @@ const BottomControls = ({
               />
             </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            onPress={() => {
-              setRestStart(false);
-              setOpenSheet(true);
-            }}
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderRadius: 5,
-              width: 30,
-              height: 30,
-              marginVertical: 5,
-            }}>
-            <Image
-              source={localImage.Exercise_List}
-              style={{width: 15, height: 15}}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
+          {!isEventPage && (
+            <TouchableOpacity
+              onPress={() => {
+                setRestStart(false);
+                setOpenSheet(true);
+              }}
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 5,
+                width: 30,
+                height: 30,
+                marginVertical: 5,
+              }}>
+              <Image
+                source={localImage.Exercise_List}
+                style={{width: 15, height: 15}}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          )}
         </View>
       )}
 
