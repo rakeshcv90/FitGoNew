@@ -2,9 +2,15 @@ import {useEffect, useRef, useState} from 'react';
 import Tts from 'react-native-tts';
 import {useSelector} from 'react-redux';
 import TrackPlayer from 'react-native-track-player';
-import {handleExerciseChange, initTts} from './Helpers';
+import {
+  handleExerciseChange,
+  initTts,
+  resolveImportedAssetOrPath,
+  songs,
+} from './Helpers';
 import {PLATFORM_IOS} from '../../../../Component/Color';
-import { Platform } from 'react-native';
+import {Platform} from 'react-native';
+import useMusicPlayer from './useMusicPlayer';
 
 export type ExerciseData = {
   exercise_bodypart: string;
@@ -81,11 +87,15 @@ const useExerciseHook = ({
   const NUMBER_OF_SETS = parseInt(allExercise[number]?.exercise_sets);
   const EXERCISE_LENGTH = allExercise.length - 1;
   const hasSets = NUMBER_OF_SETS >= 0;
-  const isIOS18 = PLATFORM_IOS && Platform.Version >= 18
+  const isIOS18 = PLATFORM_IOS && Platform.Version >= 18;
+
+  const {pauseMusic, playMusic, stopMusic} = useMusicPlayer({
+    song: resolveImportedAssetOrPath(songs[0]),
+    restStart: restStart
+  });
 
   const [seconds, setSeconds] = useState(!restStart ? getReadyTime : resetTime);
   const exerciseTimerRef = useRef<any>(null);
-  const getSoundOffOn = useSelector((state: any) => state.getSoundOffOn);
 
   const SPEAK = (words: string) => {
     !isIOS18 && Tts.speak(words);
@@ -104,6 +114,7 @@ const useExerciseHook = ({
                 `Get Ready for ${allExercise[number]?.exercise_title} Exercise`,
               );
           }
+          // stopMusic();
           if (seconds > 0) {
             setSeconds(seconds - 1);
             setProgressPercent(
@@ -169,8 +180,8 @@ const useExerciseHook = ({
     setRestStart(false);
     setProgressPercent(0);
     setSeconds(resetTime);
-    setCurrentSet(1)
-    setSkip(skip+1)
+    setCurrentSet(1);
+    setSkip(skip + 1);
     console.log('RESET');
   };
 
