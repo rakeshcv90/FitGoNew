@@ -708,18 +708,18 @@ const NewFocusWorkouts = ({route, navigation}) => {
     dispatch(setVideoLocation(StoringData));
   };
   const Start = exercise => {
-    if (
-      getExerciseOutTime != '' &&
-      moment().format(format) > getExerciseOutTime
-    ) {
-      console.warn(
-        'SHOWINGDF',
-        moment().format(format),
-        getExerciseInTime,
-        getExerciseOutTime,
-      );
-      setOverExerciseVisible(true);
-    } else {
+    // if (
+    //   getExerciseOutTime != '' &&
+    //   moment().format(format) > getExerciseOutTime
+    // ) {
+    //   console.warn(
+    //     'SHOWINGDF',
+    //     moment().format(format),
+    //     getExerciseInTime,
+    //     getExerciseOutTime,
+    //   );
+    //   setOverExerciseVisible(true);
+    // } else {
       setStart(true);
       AnalyticsConsole('S_E_FW');
       Promise.all(
@@ -741,7 +741,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
           isEventPage: false
         });
       });
-    }
+    
   };
   const handleIconPress = (item, index) => {
     if (

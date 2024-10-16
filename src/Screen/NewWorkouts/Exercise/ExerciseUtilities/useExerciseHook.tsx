@@ -37,7 +37,9 @@ export type ExerciseData = {
   video: string;
   week_day: string;
 };
-
+/**
+ * Props for the useExerciseHook Hook.
+ */
 type ExerciseHookProps = {
   pause: boolean;
   back: boolean;
@@ -54,6 +56,7 @@ type ExerciseHookProps = {
   setNumber: Function;
   skip: number;
   setSkip: Function;
+  musicLink: string
 };
 
 const StartAudio = async () => {
@@ -81,6 +84,7 @@ const useExerciseHook = ({
   apiCalls,
   skip,
   setSkip,
+  musicLink
 }: ExerciseHookProps) => {
   const [restStart, setRestStart] = useState(false);
   const resetTime = parseInt(allExercise[number]?.exercise_rest.split(' ')[0]);
@@ -88,17 +92,20 @@ const useExerciseHook = ({
   const EXERCISE_LENGTH = allExercise.length - 1;
   const hasSets = NUMBER_OF_SETS >= 0;
   const isIOS18 = PLATFORM_IOS && Platform.Version >= 18;
-
-  const {pauseMusic, playMusic, stopMusic} = useMusicPlayer({
-    song: resolveImportedAssetOrPath(songs[0]),
-    restStart: restStart
-  });
+  const getSoundOffOn = useSelector((state: any) => state.getSoundOffOn);
 
   const [seconds, setSeconds] = useState(!restStart ? getReadyTime : resetTime);
   const exerciseTimerRef = useRef<any>(null);
 
+  const {pauseMusic, playMusic, stopMusic, releaseMusic} = useMusicPlayer({
+    song: musicLink,
+    // song: resolveImportedAssetOrPath(songs[0]), //LOCAL MUSIC 
+    restStart: restStart,
+    pause: pause,
+  });
+
   const SPEAK = (words: string) => {
-    !isIOS18 && Tts.speak(words);
+    !isIOS18 && getSoundOffOn && Tts.speak(words);
   };
 
   useEffect(() => {
@@ -139,7 +146,8 @@ const useExerciseHook = ({
                 clearTimeout(exerciseTimerRef.current);
                 outNavigation();
               } else {
-                setSeconds(restStart ? getReadyTime : resetTime);
+                setSeconds(getReadyTime);
+                setRestStart(true)
                 apiCalls();
                 clearTimeout(exerciseTimerRef.current);
                 setCurrentSet(1);
@@ -156,7 +164,7 @@ const useExerciseHook = ({
               clearTimeout(exerciseTimerRef.current);
               outNavigation();
             } else {
-              setSeconds(restStart ? getReadyTime : resetTime);
+              setSeconds(!restStart ? getReadyTime : resetTime);
               apiCalls();
               clearTimeout(exerciseTimerRef.current);
               setCurrentSet(1);
@@ -172,7 +180,9 @@ const useExerciseHook = ({
       }
     }
     // console.warn(seconds, restStart, number, currentSet);
-    return () => clearTimeout(exerciseTimerRef.current);
+    return () => {
+      clearTimeout(exerciseTimerRef.current);
+    };
   }, [seconds, pause, progressPercent, restStart, number, currentSet]);
 
   const reset = () => {
@@ -192,6 +202,7 @@ const useExerciseHook = ({
     setRestStart,
     setSeconds,
     exerciseTimerRef,
+    releaseMusic
   };
 };
 

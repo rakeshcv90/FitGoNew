@@ -115,18 +115,20 @@ const SplaceScreen = ({navigation, route}) => {
     }
   }, [loaded]);
   const initInterstitial = async isTestingDevice => {
-    const ID = isTestingDevice
-      ? interstitialAdIdTest
-      : interstitialAdId;
+    const ID = isTestingDevice || __DEV__ ? interstitialAdIdTest : interstitialAdId;
     const interstitialAd = InterstitialAd.createForAdRequest(ID, {});
     interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
       setLoaded(interstitialAd);
     });
     interstitialAd.load();
-    interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {});
+    interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {
+      // loadScreen();
+      navigation.navigate('SplaceNew');
+    });
     interstitialAd.addAdEventListener(AdEventType.CLICKED, () => {});
     interstitialAd.addAdEventListener(AdEventType.ERROR, () => {
-      loadScreen();
+      // loadScreen();
+      navigation.navigate('SplaceNew');
     });
   };
   const loadScreen = agreement => {
@@ -200,22 +202,22 @@ const SplaceScreen = ({navigation, route}) => {
 
       if (getPurchaseHistory?.plan != null) {
         if (getPurchaseHistory?.plan == 'premium' && !isValid) {
-          loadScreen(agremment);
+          // loadScreen(agremment);
           Platform.OS == 'android' && checkCancel();
         } else {
           setTimeout(() => {
-            if (getUpdateAvailable == false) {
-              loaded.show();
-            }
-            loadScreen(agremment);
+            loaded.show();
+            //   if (getUpdateAvailable == false) {
+            //   }
+            //   loadScreen(agremment);
           }, 4000);
         }
       } else {
         setTimeout(() => {
-          if (getUpdateAvailable == false) {
-            loaded.show();
-          }
-          loadScreen(agremment);
+          loaded.show();
+          //   if (getUpdateAvailable == false) {
+          //   }
+          //   loadScreen(agremment);
         }, 4000);
       }
     }

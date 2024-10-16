@@ -1,60 +1,71 @@
-import axios from 'axios';
+import axios, { AxiosResponse, AxiosError } from 'axios';
 
 const isEmpty = (obj: any) =>
   Object.keys(obj).length === 0 && obj.constructor === Object;
 
-const handleResponse = (response: any, jsonResponse: any) => {
-  const jsonRes = isEmpty(jsonResponse) ? {} : jsonResponse;
-  const {status} = response;
-  const {errors = {}} = Object.assign({}, jsonRes);
-  return {status, data: jsonResponse, errors};
+const handleResponse = (response: AxiosResponse | undefined, error: AxiosError | null = null) => {
+  if (response) {
+    const { status, data } = response;
+    const errors = data?.errors || {};
+    return {
+      status,
+      data: isEmpty(data) ? {} : data,
+      errors,
+    };
+  } else if (error) {
+    // Handle error responses gracefully
+    return {
+      status: error?.response?.status || 500,
+      data: {},
+      errors: error?.response?.data?.errors || 'An error occurred',
+      message: error?.message || 'Request failed',
+    };
+  }
+  return {
+    status: 500,
+    data: {},
+    errors: 'Unknown error occurred',
+  };
 };
 
 export const RequestAPI = {
   async makeRequest(
     method: 'GET' | 'POST',
     url: string,
-    data: Object,
-    callback: Function,
+    data: Record<string, any> = {},
+    callback: (response: { status: number; data: any; errors: any; message?: string }) => void,
   ) {
-    const payload = new FormData();
-
-    if (method == 'POST') {
-      Object.entries(data).map((item: Array<string>) =>
-        payload.append(item[0], item[1]),
-      );
-    }
     const headers = {
       'Content-Type': 'multipart/form-data',
       Accept: 'application/json',
     };
-    const getData = {
-      method: 'GET',
-      params: data,
-    };
-    const postData = {
-      method: 'POST',
-      data: payload,
-    };
-    const init =
-      method == 'GET'
-        ? Object.assign({}, getData, {})
-        : Object.assign({}, postData, {headers});
-    try {
 
-      const res = await axios({
-        url,
-        ...init,
-        timeout: 30000,
-        withCredentials: true,
+    const payload = new FormData();
+
+    if (method === 'POST') {
+      Object.entries(data).forEach(([key, value]) => {
+        payload.append(key, value as string);
       });
-  
-      if (res.data) {
-        callback(handleResponse(res, res.data));
-      }
+    }
+
+    const requestOptions = {
+      method,
+      url,
+      data: method === 'POST' ? payload : undefined,
+      params: method === 'GET' ? data : undefined,
+      headers: method === 'POST' ? headers : undefined,
+      timeout: 30000,
+      withCredentials: true,
+    };
+
+    try {
+      const response = await axios(requestOptions);
+
+      // Success response handling
+      callback(handleResponse(response, null));
     } catch (error: any) {
-      // console.log("AXIOS_ERR",error, init)
-      callback(handleResponse(error?.response, error));
+      // Error handling: AxiosError or NetworkError
+      callback(handleResponse(error.response, error));
     }
   },
 };

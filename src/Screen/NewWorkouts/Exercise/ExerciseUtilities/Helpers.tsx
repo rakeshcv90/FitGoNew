@@ -42,17 +42,6 @@ function resolveImportedAssetOrPath(pathOrAsset: any) {
 function resolveImportedAsset(id: number) {
   return id ? resolveAssetSource(id)?.uri ?? undefined : undefined;
 }
-const setupPlayer = async () => {
-  try {
-    await TrackPlayer.add(songs);
-    await TrackPlayer.updateOptions({
-      capabilities: [Capability.Play, Capability.Pause],
-      compactCapabilities: [Capability.Play, Capability.Pause],
-    });
-  } catch (error) {
-    console.log('Music Player Error Exercise', error);
-  }
-};
 
 const initTts = async () => {
   const ttsStatus: any = await Tts.getInitStatus();
@@ -182,7 +171,6 @@ const PauseModal = ({
 };
 
 export {
-  setupPlayer,
   initTts,
   handleExerciseChange,
   PauseModal,

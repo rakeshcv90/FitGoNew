@@ -1,4 +1,10 @@
-import {Image, TouchableOpacity, View} from 'react-native';
+import {
+  AppState,
+  AppStateStatus,
+  Image,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {FC, useEffect, useState} from 'react';
 import {AppColor} from '../../../../Component/Color';
 import {
@@ -17,10 +23,10 @@ import axios from 'axios';
 import {showMessage} from 'react-native-flash-message';
 import VideoControls from './VideoControls';
 import {handleExerciseChange, initTts, PauseModal} from './Helpers';
-import {setupPlayer} from 'react-native-track-player/lib/src/trackPlayer';
 import ExerciseTimer from './ExerciseTimer';
 import BottomControls from './BottomControls';
 import useExerciseHook, {ExerciseData} from './useExerciseHook';
+import {RequestAPI} from '../../../../Component/Utilities/RequestAPI';
 
 type ExerciseControlsProps = {
   pause: boolean;
@@ -89,6 +95,7 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
   const [skip, setSkip] = useState(0);
   const [next, setNext] = useState(0);
   const [previous, setPrevious] = useState(0);
+  const [musicLink, setMusicLink] = useState('');
   const Sat = getPurchaseHistory?.currentDay == 6;
   const Sun = getPurchaseHistory?.currentDay == 0;
 
@@ -101,6 +108,7 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
   };
 
   const outNavigation = () => {
+    releaseMusic();
     setPause(false);
     apiCalls();
     isEventPage
@@ -124,6 +132,7 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
     setRestStart,
     setSeconds,
     exerciseTimerRef,
+    releaseMusic,
   } = useExerciseHook({
     pause,
     setPause,
@@ -140,13 +149,28 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
     apiCalls,
     skip,
     setSkip,
+    musicLink
   });
 
   const resumeButton = () => {
     setBack(false);
     setPause(!pause);
   };
-
+  useEffect(() => {
+    const subscribe = AppState.addEventListener(
+      'change',
+      (state: AppStateStatus) => {
+        if (!restStart) {
+          if (state.match(/background|inactive/)) {
+            setPause(false);
+          } else if (state.match(/active/)) {
+            setPause(true);
+          }
+        }
+      },
+    );
+    return () => subscribe.remove();
+  }, []);
   useEffect(() => {
     if (getScreenAwake) {
       KeepAwake.activate();
@@ -162,12 +186,20 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
       setNumber(exerciseNumber);
       handleExerciseChange(currentExercise?.exercise_title, getStoreVideoLoc);
     }
-    // Platform.OS == 'android'
-    //   ? Platform.Version != 34 && setupPlayer()
-    //   : setupPlayer();
+   musicLink == '' && getMusicDetails();
   }, []);
 
+  const getMusicDetails = () => {
+    RequestAPI.makeRequest('GET', NewAppapi.GET_MUSIC_DETAILS, {}, res => {
+      const exerciseMusic = res.data?.filter(
+        (item: any) => item?.type == 'Exercise' && item?.title == 'Background music',
+      );
+      setMusicLink(exerciseMusic[0]?.music_file)
+    });
+  };
+
   const quitFunction = () => {
+    releaseMusic();
     type == 'day'
       ? navigation.goBack()
       : type == 'custom'

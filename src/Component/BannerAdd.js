@@ -26,7 +26,7 @@ import {PLATFORM_IOS} from './Color';
 
 const DeviceID = store.getState().getDeviceID;
 const getUserDataDetails = store.getState().getUserDataDetails;
-const IsTesting = PLATFORM_IOS
+const IsTesting = __DEV__ ? true : PLATFORM_IOS
   ? getUserDataDetails?.social_id != null &&
     ADS_IOS.includes(getUserDataDetails?.social_id)
   : DeviceID != '' && ADS_IDs.includes(DeviceID);
@@ -70,7 +70,7 @@ export const NewInterstitialAd = setClosed => {
   const adStatus = useRef(true);
   const initInterstitial = async () => {
     if (interstitialAdRef.current) return;
-    console.log("ADDD CALLED")
+    console.log('ADDD CALLED');
     const interstitialAd = InterstitialAd.createForAdRequest(
       IsTesting ? interstitialAdIdTest : interstitialAdId,
       {},
@@ -82,11 +82,11 @@ export const NewInterstitialAd = setClosed => {
     interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {
       interstitialAd.load();
       setClosed(true);
-      console.log("CLOSED")
+      console.log('CLOSED');
     });
     interstitialAd.addAdEventListener(AdEventType.CLICKED, () => {});
     interstitialAd.addAdEventListener(AdEventType.ERROR, error => {
-      console.log('eerrr',error)
+      console.log('eerrr', error);
       setClosed(true);
     });
     interstitialAd.addAdEventListener(AdEventType.OPENED, () => {
@@ -108,16 +108,16 @@ export const NewInterstitialAd = setClosed => {
 };
 
 export const MyInterstitialAd = () => {
+  const interstitialAd = InterstitialAd.createForAdRequest(
+    IsTesting ? interstitialAdIdTest : interstitialAdId,
+    {
+      requestNonPersonalizedAdsOnly: true,
+    },
+  );
   const interstitialAdRef = useRef(null);
   const adStatus = useRef(true);
   const initInterstitial = async () => {
     if (interstitialAdRef.current) return;
-    const interstitialAd = InterstitialAd.createForAdRequest(
-      IsTesting ? interstitialAdIdTest : interstitialAdId,
-      {
-        requestNonPersonalizedAdsOnly: true,
-      },
-    );
     interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
       adStatus.current = interstitialAd;
       interstitialAdRef.current = interstitialAd;

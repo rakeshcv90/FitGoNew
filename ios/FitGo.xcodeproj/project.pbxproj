@@ -16,6 +16,8 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		186A6F322B1DA2D00005DC45 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 186A6F312B1DA2D00005DC45 /* GoogleService-Info.plist */; };
 		186A6F332B1DA2D00005DC45 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 186A6F312B1DA2D00005DC45 /* GoogleService-Info.plist */; };
+		18CE64DD2CBF9D64006D8443 /* MusicPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 18CE64DC2CBF9D64006D8443 /* MusicPlayer.m */; };
+		18CFBC4D2CBF9BD700732610 /* MusicPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CFBC4C2CBF9BD700732610 /* MusicPlayer.swift */; };
 		28272472D35C408FAC4ABEC9 /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1DE8D01FE55F4B03AA60D32B /* Montserrat-Bold.ttf */; };
 		2A216FF72B593B6A0064CD70 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2A216FF62B593B6A0064CD70 /* Launch Screen.storyboard */; };
 		2A216FF82B593B6A0064CD70 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2A216FF62B593B6A0064CD70 /* Launch Screen.storyboard */; };
@@ -83,13 +85,15 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = FitGo/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = FitGo/main.m; sourceTree = "<group>"; };
 		186A6F312B1DA2D00005DC45 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		18CE64D82CBF9C86006D8443 /* FitGo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FitGo-Bridging-Header.h"; sourceTree = "<group>"; };
+		18CE64DC2CBF9D64006D8443 /* MusicPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MusicPlayer.m; sourceTree = "<group>"; };
+		18CFBC4C2CBF9BD700732610 /* MusicPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayer.swift; sourceTree = "<group>"; };
 		1D7604ACC2AA470BA5198074 /* Montserrat-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-ExtraLightItalic.ttf"; path = "../assets/fonts/Montserrat-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
 		1DE8D01FE55F4B03AA60D32B /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Bold.ttf"; path = "../assets/fonts/Montserrat-Bold.ttf"; sourceTree = "<group>"; };
 		24B810C0B89F4E699E5D6849 /* Montserrat-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Medium.ttf"; path = "../assets/fonts/Montserrat-Medium.ttf"; sourceTree = "<group>"; };
 		26F15DDA5171AC45FEC4A677 /* libPods-FitGo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FitGo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A216FF62B593B6A0064CD70 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		2A7862402B9B39F500CA8F52 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
-		2AAC3EDD2B4530CD007908D0 /* FitGo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FitGo-Bridging-Header.h"; sourceTree = "<group>"; };
 		2AAC3EDE2B4530CD007908D0 /* dummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dummy.swift; sourceTree = "<group>"; };
 		2AB4A85D2C24329600F7CD92 /* fitme_notification.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = fitme_notification.wav; sourceTree = "<group>"; };
 		2B4095CC67EC4DFDA5C7D1D2 /* Montserrat-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-SemiBoldItalic.ttf"; path = "../assets/fonts/Montserrat-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
@@ -164,6 +168,7 @@
 		13B07FAE1A68108700A75B9A /* FitGo */ = {
 			isa = PBXGroup;
 			children = (
+				18CE64D82CBF9C86006D8443 /* FitGo-Bridging-Header.h */,
 				4C5CC9DF2B32FE6E00F3F879 /* FitGoDebug.entitlements */,
 				4C23D41F2B0DC621000DEDA1 /* FitGo.entitlements */,
 				4CF7BFBE2AC13D4B00F8EF48 /* Fonts */,
@@ -174,9 +179,10 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				2AAC3EDE2B4530CD007908D0 /* dummy.swift */,
-				2AAC3EDD2B4530CD007908D0 /* FitGo-Bridging-Header.h */,
 				2A216FF62B593B6A0064CD70 /* Launch Screen.storyboard */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
+				18CFBC4C2CBF9BD700732610 /* MusicPlayer.swift */,
+				18CE64DC2CBF9D64006D8443 /* MusicPlayer.m */,
 			);
 			name = FitGo;
 			sourceTree = "<group>";
@@ -608,8 +614,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18CE64DD2CBF9D64006D8443 /* MusicPlayer.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				2AAC3EDF2B4530CD007908D0 /* dummy.swift in Sources */,
+				18CFBC4D2CBF9BD700732610 /* MusicPlayer.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -689,6 +697,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = 277GPQ33HC;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = FitGo/Info.plist;
@@ -729,6 +738,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = 277GPQ33HC;
 				INFOPLIST_FILE = FitGo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = FitMe;
@@ -787,6 +797,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				DEFINES_MODULE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
@@ -834,6 +845,7 @@
 				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "FitGo/FitGo-Bridging-Header.h";
 			};
 			name = Debug;
 		};
@@ -868,6 +880,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				DEFINES_MODULE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
@@ -907,6 +920,7 @@
 				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "FitGo/FitGo-Bridging-Header.h";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
