@@ -14,20 +14,22 @@ import {
   trueCondition,
   UIArray,
 } from './PermissionMethods';
-import {getCurrentLocation, storeAgreementApi} from './PermissionHooks';
+import {getCurrentLocation, storeAgreementApi, useHealthkitPermission} from './PermissionHooks';
 import {useDispatch} from 'react-redux';
 import {setOfferAgreement} from '../ThemeRedux/Actions';
 const PermissionScreen = () => {
   const [permissionState, setPermissionState] = useState({
     storage: false,
-    // notification: false,
+    notification: false,
     location: false,
     healthkit: false,
   });
-  const dispatch = useDispatch();
+  const {initHealthKit, checkHealthikitPermission,requestSteps}=useHealthkitPermission()
   useEffect(() => {
+    requestSteps().then((res)=>console.log('rtefref',res)).catch((err)=>console.log('erroror',err))
     checkPermissions();
     const handleAppStateChange = nextAppState => {
+      console.log('re',nextAppState)
       if (nextAppState === 'active') {
         checkPermissions();
       }
@@ -71,23 +73,6 @@ const PermissionScreen = () => {
       const result = await permissionMethods[askMethod]();
       if (trueCondition(result)) {
         setPermissionState(prev => ({...prev, [permissionKey]: true}));
-        // if (
-        //   result['android.permission.ACCESS_FINE_LOCATION'] == //location permissions
-        //   RESULTS.GRANTED
-        // ) {
-        //   getCurrentLocation()
-        //     .then(res => {
-        //       storeAgreementApi(res)
-        //         .then(res => {
-        //           dispatch(setOfferAgreement(res));
-        //           console.log('resssss', res);
-        //         })
-        //         .catch(err => {
-        //           handleError(err);
-        //         });
-        //     })
-        //     .catch(error => handleError(error));
-        // }
       } else if (alertCondition(result)) {
         showAlert();
       }
@@ -140,6 +125,7 @@ const PermissionScreen = () => {
           <View style={styles.pView}>
             {UIArray.map((item, index) => (
               <PermissionView
+                key={index}
                 img={item.img}
                 text1={item.text1}
                 text2={item.text2}

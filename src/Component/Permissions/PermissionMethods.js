@@ -2,6 +2,7 @@ import {openSettings, RESULTS} from 'react-native-permissions';
 import {localImage} from '../Image';
 import {
   useGalleryPermission,
+  useHealthkitPermission,
   useLocation,
   useNotificationPermissions,
 } from './PermissionHooks';
@@ -28,22 +29,22 @@ export const UIArray = [
     checkPermission: 'checkNotificationPermission',
     askPermission: 'askNotificationPermission',
   },
-//   {
-//     img: localImage.location_permission,
-//     text1: 'Location',
-//     text2: 'Allow Fitme to access your location for better services.',
-//     key: 'location',
-//     checkPermission: 'checkLocationPermission',
-//     askPermission: 'askLocationPermission',
-//   },
+  {
+    img: localImage.location_permission,
+    text1: 'Location',
+    text2: 'Allow Fitme to access your location for better services.',
+    key: 'location',
+    checkPermission: 'checkLocationPermission',
+    askPermission: 'askLocationPermission',
+  },
   PLATFORM_IOS && {
     img: localImage.health_permission,
     text1: 'Health Kit',
     text2:
       'Allow Fitme to access health kit data to keep tracking your health data.',
     key: 'healthkit',
-    checkPermission: null, // You can handle HealthKit permission separately
-    askPermission: null,
+    checkPermission: 'checkHealthikitPermission', // You can handle HealthKit permission separately
+    askPermission: 'initHealthKit',
   },
 ].filter(Boolean); // to remove the ios only part from the array
 //
@@ -54,6 +55,7 @@ const {askPermissionForLibrary, checkPermissionForLibarary} =
   useGalleryPermission();
 
 const {askLocationPermission, checkLocationPermission} = useLocation();
+const {initHealthKit, checkHealthikitPermission} = useHealthkitPermission();
 //permissionMenthods
 export const permissionMethods = {
   checkPermissionForLibarary,
@@ -62,6 +64,8 @@ export const permissionMethods = {
   askNotificationPermission,
   checkLocationPermission,
   askLocationPermission,
+  initHealthKit,
+  checkHealthikitPermission,
 };
 
 // else condition to show alert
@@ -113,25 +117,27 @@ export const handleError = err => {
 
 export const trueCondition = result => {
   const isObject = typeof result === 'object' && result != null;
-    return (
-      result === RESULTS.GRANTED ||
-      result === RESULTS.LIMITED ||
-      // (isObject &&
-      //   result['android.permission.ACCESS_FINE_LOCATION'] ==
-      //     RESULTS.GRANTED) ||
-      (isObject &&
-        result['authorizationStatus'] === AuthorizationStatus.AUTHORIZED)
-    );
-  };
-  //
- export  const alertCondition = result => {
+  console.log('result', result);
+  return (
+    result === RESULTS.GRANTED ||
+    result === RESULTS.LIMITED ||
+    (isObject &&
+      result['android.permission.ACCESS_FINE_LOCATION'] == RESULTS.GRANTED) ||
+    (isObject &&
+      result['authorizationStatus'] === AuthorizationStatus.AUTHORIZED) ||
+    (PLATFORM_IOS && isObject && result?.permissions?.read[0] == 2)
+  );
+};
+//
+export const alertCondition = result => {
   const isObject = typeof result === 'object' && result != null;
-    return (
-      result === RESULTS.BLOCKED ||
-      // (isObject &&
-      //   result['android.permission.ACCESS_FINE_LOCATION'] == //location permissions
-      //     RESULTS.BLOCKED) ||
-
-      (isObject && result['authorizationStatus'] === AuthorizationStatus.DENIED)
-    );
-  };
+  return (
+    result === RESULTS.BLOCKED ||
+    (isObject &&
+      result['android.permission.ACCESS_FINE_LOCATION'] == //location permissions
+        RESULTS.BLOCKED) ||
+    (isObject &&
+      result['authorizationStatus'] === AuthorizationStatus.DENIED) ||
+    (PLATFORM_IOS && isObject && result?.permissions?.read[0] == 1)
+  );
+};

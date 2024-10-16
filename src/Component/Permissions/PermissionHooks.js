@@ -229,30 +229,72 @@ export const useNotificationPermissions = () => {
 };
 // healthikit permission for ios
 export const useHealthkitPermission = () => {
-  AppleHealthKit.isAvailable((err, available) => {
-    const permissions = {
-      permissions: {
-        read: [AppleHealthKit.Constants.Permissions.StepCount],
-      },
+  const permission = {
+    permissions: {
+      read: [AppleHealthKit.Constants.Permissions.StepCount],
+      write: [AppleHealthKit.Constants.Permissions.StepCount],
+    },
+  };
+  const checkHealthikitPermission = async () => {
+    try {
+      const result = await new Promise((resolve, reject) => {
+        AppleHealthKit.getAuthStatus(permission, (err, result) => {
+          if (err) {
+            reject(err); // Reject the promise if there's an error
+          } else {
+            resolve(result); // Resolve the promise with the result
+          }
+        });
+      });
+      console.log(result, '111'); // You can now handle the result here
+      return result; // Return the result from the function
+    } catch (error) {
+      console.error('Error checking HealthKit permission:', error);
+    }
+  };
+  const initHealthKit = () => {
+    AppleHealthKit.isAvailable((err, available) => {
+      if (err) {
+        console.log('error initializing Healthkit: ', err);
+      } else if (available) {
+        AppleHealthKit.initHealthKit(permission, (error, result) => {
+          if (error) {
+            Alert.alert('Error', 'Error while initializing  healthkit', {});
+          }
+        });
+      } else {
+        Alert.alert(
+          'Attention',
+          "Health data can't be tracked in this Device due to its specifications",
+          {},
+        );
+      }
+    });
+  };
+  const requestSteps = async () => {
+    const options = {
+      startDate: new Date(
+        new Date().getFullYear(),
+        new Date().getMonth(),
+        new Date().getDate(),
+        0,
+        0,
+        0,
+      ),
+      endDate: new Date(),
     };
-    if (err) {
-      console.log('error initializing Healthkit: ', err);
-      return err;
-    } else if (available) {
-      AppleHealthKit.initHealthKit(permissions, (error, result) => {
-        if (error) {
-          console.log('[ERROR] Cannot grant permissions!', error);
-          return error;
-        } else if (result) {
-          console.log('healthkit Data---->', result);
+    const healthData = await new Promise((resolve, reject) => {
+      AppleHealthKit.getStepCount(options, (callbackError, results) => {
+        if (callbackError) {
+          reject(callbackError);
+        } else {
+          resolve(results);
         }
       });
-    } else {
-      Alert.alert(
-        'Attention',
-        "Health data can't be tracked in this Device due to its specifications",
-        {},
-      );
-    }
-  });
+    });
+    console.log('healthData',healthData)
+    return healthData;
+  };
+
+  return {initHealthKit, checkHealthikitPermission,requestSteps};
 };
