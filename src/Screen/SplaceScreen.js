@@ -63,6 +63,7 @@ import codePush from 'react-native-code-push';
 import {CommonActions} from '@react-navigation/native';
 import {PLATFORM_IOS} from '../Component/Color';
 import {RequestAPI} from '../Component/Utilities/RequestAPI';
+import {MyInterstitialAd} from '../Component/BannerAdd';
 const products = Platform.select({
   ios: ['fitme_noob', 'fitme_pro', 'fitme_legend'],
   android: ['fitme_monthly', 'a_monthly', 'fitme_legend'],
@@ -70,31 +71,40 @@ const products = Platform.select({
 
 const SplaceScreen = ({navigation, route}) => {
   const dispatch = useDispatch();
-
-  // console.log("routeSpalce",route.params?.data)
   const showIntro = useSelector(state => state.showIntro);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
-  const getUpdateAvailable = useSelector(state => state?.getUpdateAvailable);
   const planType = useSelector(state => state.planType);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const [loaded, setLoaded] = useState(false);
-  const [ApiDataloaded, setApiDataLoaded] = useState({});
   const getOfferAgreement = useSelector(state => state.getOfferAgreement);
+  const getDeviceID = useSelector(state => state?.getDeviceID);
+  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   useEffect(() => {
     PLATFORM_IOS
       ? getUserDataDetails && getUserDataDetails?.social_id != null
         ? ADS_IOS.includes(getUserDataDetails?.social_id)
           ? initInterstitial(true)
           : initInterstitial(false)
-        : loadScreen()
+        : false // do not load ad if social id is null
       : DeviceInfo.syncUniqueId().then(uniqueId => {
-          console.log('Device Id----', uniqueId);
           dispatch(setDeviceID(uniqueId));
           ADS_IDs.includes(uniqueId)
             ? initInterstitial(true)
             : initInterstitial(false);
         });
   }, []);
+  const isTesting = __DEV__
+    ? true
+    : PLATFORM_IOS
+    ? getUserDataDetails && getUserDataDetails?.social_id != null
+      ? ADS_IOS.includes(getUserDataDetails?.social_id)
+        ? true
+        : false
+      : -1 // js reads undefined and null as same so, i have put -1 for the comparision purpose
+    : ADS_IDs.includes(getDeviceID)
+    ? true
+    : false;
+
   useEffect(() => {
     requestPermissionforNotification(dispatch);
     getUserAllInData();
@@ -114,21 +124,6 @@ const SplaceScreen = ({navigation, route}) => {
       DisplayAds(getOfferAgreement);
     }
   }, [loaded]);
-  const initInterstitial = async isTestingDevice => {
-    const ID = isTestingDevice
-      ? interstitialAdIdTest
-      : interstitialAdId;
-    const interstitialAd = InterstitialAd.createForAdRequest(ID, {});
-    interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
-      setLoaded(interstitialAd);
-    });
-    interstitialAd.load();
-    interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {});
-    interstitialAd.addAdEventListener(AdEventType.CLICKED, () => {});
-    interstitialAd.addAdEventListener(AdEventType.ERROR, () => {
-      loadScreen();
-    });
-  };
   const loadScreen = agreement => {
     if (showIntro) {
       if (getUserDataDetails?.id) {
@@ -195,29 +190,21 @@ const SplaceScreen = ({navigation, route}) => {
   const isValid = getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD');
 
   const DisplayAds = agremment => {
-    if (loaded) {
-      setLoaded(false);
-
-      if (getPurchaseHistory?.plan != null) {
-        if (getPurchaseHistory?.plan == 'premium' && !isValid) {
-          loadScreen(agremment);
-          Platform.OS == 'android' && checkCancel();
-        } else {
-          setTimeout(() => {
-            if (getUpdateAvailable == false) {
-              loaded.show();
-            }
-            loadScreen(agremment);
-          }, 4000);
-        }
+    if (getPurchaseHistory?.plan != null) {
+      if (getPurchaseHistory?.plan == 'premium' && !isValid) {
+        loadScreen(agremment);
+        Platform.OS == 'android' && checkCancel();
       } else {
         setTimeout(() => {
-          if (getUpdateAvailable == false) {
-            loaded.show();
-          }
+          showInterstitialAd(isTesting);
           loadScreen(agremment);
         }, 4000);
       }
+    } else {
+      setTimeout(() => {
+        showInterstitialAd(isTesting);
+        loadScreen(agremment);
+      }, 4000);
     }
   };
 

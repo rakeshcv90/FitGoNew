@@ -1,7 +1,8 @@
 import {Platform} from 'react-native';
 import {TestIds} from 'react-native-google-mobile-ads';
 
-export const ADS_IDs = [                                      // Device_IDs
+export const ADS_IDs = [
+  // Device_IDs
   '311fb49b3ce6550f',
   '92982e3a291815c2',
   '3ef616890f6a402b',
@@ -19,7 +20,7 @@ export const ADS_IDs = [                                      // Device_IDs
   'c87c56528508709e', //android 14 samsung
   'fccf6c54a494e29f', // android 14 debug
   '8a0a218772cd72ed', // pixel 3xl debug
-  '8454b6dd3a6df800',  // pixel 3xl release
+  '8454b6dd3a6df800', // pixel 3xl release
   'efafdb802eeaa67a',
   '2632a909404f1496', // samsung Fold
   '550dd03a07868f3f', // Moto Debug
@@ -29,12 +30,13 @@ export const ADS_IDs = [                                      // Device_IDs
   '8d54921a7c6b740f', //rakesh phone'
   '9c105cf5d167e9ca', // Vivo Coordinator
 ];
-export const ADS_IOS = [                                        // SOCIAL_IDs
-  '001477.ab2010ce7baf4388bddca64e18eb7c5b.0652',               // Apple Ipad
-  '001893.5744463e939d41fbac17fab10a28fc30.0854',               // iPhone X
-  '000577.1a615fb9865b4030a0941abcfec38391.0421',               // iPhone 12
-  '000443.cbdb762d9ae448999b21de3eadaceecf.1118',               // iPhone 14 maybe
-]
+export const ADS_IOS = [
+  // SOCIAL_IDs
+  '001477.ab2010ce7baf4388bddca64e18eb7c5b.0652', // Apple Ipad
+  '001893.5744463e939d41fbac17fab10a28fc30.0854', // iPhone X
+  '000577.1a615fb9865b4030a0941abcfec38391.0421', // iPhone 12
+  '000443.cbdb762d9ae448999b21de3eadaceecf.1118', // iPhone 14 maybe
+];
 //Live Ads
 export const bannerAdId =
   Platform.OS == 'android'
@@ -96,4 +98,7 @@ export const adUnitIDsTest = {
       ? 'ca-app-pub-3940256099942544/2521693316'
       : 'ca-app-pub-3940256099942544/1044960115',
 };
-export const OPENAPP_IDTest = TestIds.APP_OPEN;
+export const OPENAPP_IDTest =
+  Platform.OS == 'ios'
+    ? 'ca-app-pub-3940256099942544/5575463023'
+    : 'ca-app-pub-3940256099942544/9257395921';

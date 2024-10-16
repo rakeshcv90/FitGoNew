@@ -51,7 +51,6 @@ const OfferTerms = ({navigation, route}: any) => {
     (state: any) => state.getAgreementContent,
   );
   const [modalVisible, setModalVisible] = useState(true);
-  const CustomCreated = route?.params?.CustomCreated;
   const screenType = route?.params?.type;
   const {width: windowWidth} = useWindowDimensions();
   const contentWidth = windowWidth;
@@ -131,7 +130,7 @@ const OfferTerms = ({navigation, route}: any) => {
         icon: {icon: 'auto', position: 'left'},
       });
     } else {
-      navigation.navigate('CountryLocation', {CustomCreated: CustomCreated});
+      navigation.navigate('CountryLocation');
     }
   };
   // to check and uncheck the box automatically

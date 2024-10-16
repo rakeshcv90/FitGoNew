@@ -268,5 +268,9 @@ export const localImage = {
   celebrationAnimation:require('../Icon/Images/InAppRewards/celebration.json'),
   celebrationTrophy:require('../Icon/Images/InAppRewards/celebrationTrophy.png'),
   startCorner1:require('../Icon/Images/InAppRewards/starCorner1.png'),
-  rankImage:require('../Icon/Images/InAppRewards/rankImage.png')
+  rankImage:require('../Icon/Images/InAppRewards/rankImage.png'),
+  notification_permission:require('../Icon/Images/NewImage/notification_permission.png'),
+  gallery_permission:require('../Icon/Images/NewImage/gallery_permission.png'),
+  location_permission:require('../Icon/Images/NewImage/location_permission1.png'),
+  health_permission:require('../Icon/Images/NewImage/health_permission.png')
 };

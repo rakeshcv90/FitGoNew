@@ -1,7 +1,7 @@
 import React from 'react';
 import SplaceScreen from '../Screen/SplaceScreen';
 import TermaAndCondition from '../Screen/TermaAndCondition';
-import Yourself from '../Screen/Yourself/Index';
+import Yourself from '../Screen/Yourself/index';
 import Gender from '../Screen/Yourself/Gender';
 import Height from '../Screen/Yourself/Height';
 import Weight from '../Screen/Yourself/Weight';
@@ -78,6 +78,7 @@ import PastWinner from '../Screen/NewHome/PastWinner';
 import CardioCompleted from '../Screen/WorkoutCompleteScreen/CardioCompleted';
 import NewStore from '../Screen/Store/NewStore';
 import Products from '../Screen/Store/Products';
+import PermissionScreen from '../Component/Permissions/PermissionScreen';
 const Stack = createStackNavigator();
 
 const screenOptions = {
@@ -92,7 +93,7 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      {/* <Stack.Screen name="SplaceNew" component={SplaceNew} /> */}
+      <Stack.Screen name="SplaceNew" component={PermissionScreen} />
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
       <Stack.Screen
         name="IntroductionScreen1"

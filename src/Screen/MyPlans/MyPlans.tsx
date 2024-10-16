@@ -332,6 +332,7 @@ const MyPlans = ({navigation}: any) => {
             // key: 'Config.REACT_APP_API_KEY',
           })
           .then(res => {
+            console.log('path',res.path())
             setButtonClicked(true);
             StoringData[data?.exercise_title] = res.path();
             downloadCounter++;
