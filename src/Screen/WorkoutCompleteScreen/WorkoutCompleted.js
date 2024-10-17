@@ -29,6 +29,7 @@ import OverExerciseModal from '../../Component/Utilities/OverExercise';
 import Wrapper from './Wrapper';
 import AnimatedLottieView from 'lottie-react-native';
 import LoadingScreen from '../../Component/NewHomeUtilities/LoadingScreen';
+import { ReviewApp } from '../../Component/ReviewApp';
 const format = 'hh:mm:ss';
 
 const WeekArrayWithEvent = Array(5)
@@ -393,6 +394,9 @@ const WorkoutCompleted = ({navigation, route}) => {
       console.log(error);
     }
   };
+
+  const onPress = () => navigation.navigate('MyPlans')
+  
   return (
     <>
       {loader ? (
@@ -550,7 +554,7 @@ const WorkoutCompleted = ({navigation, route}) => {
                   title={
                     'Congratulations! You’ve completed your workout and earned more FitCoins. Keep working out regularly to win the fitness challenge.'
                   }
-                  handleComplete={() => navigation.navigate('MyPlans')}
+                  handleComplete={() => ReviewApp(onPress)}
                 />
               </Animated.View>
             </View>

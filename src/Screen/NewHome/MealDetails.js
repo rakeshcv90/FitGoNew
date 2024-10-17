@@ -23,6 +23,7 @@ import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
 import moment from 'moment';
 import { ArrowLeft } from '../../Component/Utilities/Arrows/Arrow';
+import { ReviewApp } from '../../Component/ReviewApp';
 
 const MealDetails = ({route, navigation}) => {
   const getStoreVideoLoc = useSelector(state => state.getStoreVideoLoc);
@@ -34,7 +35,10 @@ const MealDetails = ({route, navigation}) => {
     fontWeight: '400',
     color: AppColor.INPUTLABLECOLOR,
   };
-
+useEffect(() => {
+  ReviewApp(temp)
+},[])
+const temp = () => {}
   // const bannerAdsDisplay = () => {
   //   if (getPurchaseHistory.length > 0) {
   //     if (
