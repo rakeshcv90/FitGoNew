@@ -57,7 +57,7 @@ const data = [
 ];
 
 const UserEspecially = () => {
-  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
+  const {showInterstitialAd} = MyInterstitialAd();
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const [locationP, setLocationP] = useState(false);

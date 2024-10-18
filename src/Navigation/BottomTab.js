@@ -44,7 +44,7 @@ const Tabs = createBottomTabNavigator();
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
 
 const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
-  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
+  const { showInterstitialAd} = MyInterstitialAd();
   const Dispatch = useDispatch();
   const getFitmeAdsCount = useSelector(state => state.getFitmeAdsCount);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
@@ -54,9 +54,6 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
     state => state?.enteredUpcomingEvent,
   );
   // const getPopUpFreuqency = useSelector(state => state?.getPopUpFreuqency);
-  useEffect(() => {
-    initInterstitial();
-  }, []);
   function NotificationBadge() {
     return (
       <View style={styles.badgeContainer}>

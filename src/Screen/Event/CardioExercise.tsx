@@ -146,7 +146,7 @@ const CardioExercise = ({navigation, route}: any) => {
     (state: any) => state.getPurchaseHistory,
   );
   // const [addClosed, setAddClosed] = useState(false);
-  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
+  const {showInterstitialAd} = MyInterstitialAd();
   const [seconds, setSeconds] = useState(
     parseInt(allExercise[number]?.exercise_rest.split(' ')[0]),
   );
@@ -200,7 +200,6 @@ const CardioExercise = ({navigation, route}: any) => {
   // Convert seconds into minutes and seconds
 
   useEffect(() => {
-    initInterstitial();
     const initTts = async () => {
       const ttsStatus = await Tts.getInitStatus();
       if (!ttsStatus.isInitialized) {
@@ -312,7 +311,6 @@ const CardioExercise = ({navigation, route}: any) => {
               // if (seconds == 2) SPEAK('one.    Done');
               if (seconds == 11) SPEAK(`Last few seconds left, don't give up!`);
               // if (allExercise[number]?.exercise_sets == 0 && seconds == 10) {
-              //   initInterstitial();
               //   console.log('ADD INITIALISE NO SET');
               // }
               setSeconds(seconds - 1);
@@ -348,7 +346,6 @@ const CardioExercise = ({navigation, route}: any) => {
               animatedProgress.setValue(0);
               setPlayW(0);
               // if (currentSet + 1 == allExercise[number]?.exercise_sets) {
-              //   initInterstitial();
               //   console.log('ADD INITIALISE');
               // }
               setShowSet(true);

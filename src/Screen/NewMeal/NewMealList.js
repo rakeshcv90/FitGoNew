@@ -12,15 +12,10 @@ import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 import {useSelector} from 'react-redux';
 
 const NewMealList = ({navigation, route}) => {
-  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
+  const {showInterstitialAd} = MyInterstitialAd();
   const getDietFilterData = useSelector(state => state?.getDietFilterData);
   const mealData = useSelector(state => state.mealData);
-  const [filterMealList, setFilterMealList] = useState(route?.params?.data);
-
-  useEffect(() => {
-    initInterstitial();
-  }, []);
-
+  const [filterMealList, setFilterMealList] = useState(route?.params?.data)
   const checkMealAddCount = item => {
     let checkAdsShow = AddCountFunction();
 

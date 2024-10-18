@@ -21,14 +21,7 @@ import {localImage} from '../Image';
 const FocuseMind = () => {
   const allWorkoutData = useSelector(state => state.allWorkoutData);
   const navigation = useNavigation();
-  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
-  const isFocused = useIsFocused();
-  useEffect(() => {
-    if (isFocused) {
-      initInterstitial();
-    }
-  }, [isFocused]);
-
+  const {showInterstitialAd} = MyInterstitialAd();
   const viewMorePress = () => {
     analytics().logEvent('CV_FITME_CLICKED_ON_MEDITATION');
     let checkAdsShow = AddCountFunction();

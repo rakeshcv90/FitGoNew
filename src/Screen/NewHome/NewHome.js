@@ -65,6 +65,7 @@ import NewBanner from '../../Component/NewHomeUtilities/NewBanner';
 import LeaderBoardProgressComopnent from '../Leaderboard/LeaderBoardProgressComopnent';
 import PastWinnersComponent from '../Leaderboard/PastWinnersComponent';
 import BottomSheet from '../../Component/BottomSheet';
+import {MyInterstitialAd} from '../../Component/BannerAdd';
 
 const WeekArrayWithEvent = Array(5)
   .fill(0)
@@ -111,7 +112,7 @@ const NewHome = ({navigation}) => {
   const getChallengesData = useSelector(state => state?.getChallengesData);
   const getEquipmentExercise = useSelector(
     state => state?.getEquipmentExercise,
-  );
+  ); 
   useEffect(() => {
     if (isFocused) {
       getAllExercise?.length <= 0
@@ -789,7 +790,8 @@ const NewHome = ({navigation}) => {
 
         // }}
       />
-      {!enteredUpcomingEvent && (
+
+      {/* {!enteredUpcomingEvent && (
         <UpcomingEventModal
           visible={!getPopUpSeen}
           onConfirm={() => {
@@ -817,7 +819,7 @@ const NewHome = ({navigation}) => {
               } else {
                 dispatch(setPopUpSeen(true));
                 navigation?.navigate('NewSubscription', {upgrade: true});
-              }
+              }  
             } else {
               dispatch(setPopUpSeen(true));
               navigation?.navigate('NewSubscription', {upgrade: true});
@@ -828,7 +830,7 @@ const NewHome = ({navigation}) => {
             dispatch(setPopUpSeen(true));
           }}
         />
-      )}
+      )} */}
       <LocationPermissionModal
         locationP={locationP1}
         setLocationP={setLocationP1}

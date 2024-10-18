@@ -66,7 +66,7 @@ const WorkoutDays = ({navigation, route}: any) => {
     (state: any) => state.getFitmeMealAdsCount,
   );
 
-  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
+  const {showInterstitialAd} = MyInterstitialAd();
 
   let isFocuse = useIsFocused();
   const dispatch = useDispatch();
@@ -93,7 +93,6 @@ const WorkoutDays = ({navigation, route}: any) => {
       postViewsAPI();
       getCurrentDayAPI();
       setreward(0);
-      initInterstitial();
     }
   }, [isFocuse]);
   const getCurrentDayAPI = async () => {

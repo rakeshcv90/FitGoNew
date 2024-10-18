@@ -17,13 +17,8 @@ import { MyInterstitialAd } from '../BannerAdd';
 
 const FitnessInstructor = () => {
   const navigation = useNavigation();
-  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
+  const {showInterstitialAd} = MyInterstitialAd();
   const isFocused = useIsFocused();
-  useEffect(() => {
-    if (isFocused) {
-      initInterstitial();
-    }
-  }, [isFocused]);
   let fitnessInstructor = [
     {
       id: 1,

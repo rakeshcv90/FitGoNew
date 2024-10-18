@@ -63,7 +63,7 @@ const Workouts = ({navigation}: any) => {
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
   );
-  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
+  const {showInterstitialAd} = MyInterstitialAd();
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );

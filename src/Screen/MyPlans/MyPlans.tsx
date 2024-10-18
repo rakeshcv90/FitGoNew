@@ -122,7 +122,7 @@ const MyPlans = ({navigation}: any) => {
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
   );
-  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
+  const {showInterstitialAd} = MyInterstitialAd();
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
@@ -190,7 +190,6 @@ const MyPlans = ({navigation}: any) => {
   }, [workoutPrepared]);
   useFocusEffect(
     React.useCallback(() => {
-      initInterstitial();
       if (enteredCurrentEvent) {
         getEarnedCoins();
         getLeaderboardDataAPI();
@@ -332,7 +331,7 @@ const MyPlans = ({navigation}: any) => {
             // key: 'Config.REACT_APP_API_KEY',
           })
           .then(res => {
-            console.log('path',res.path())
+            console.log('path', res.path());
             setButtonClicked(true);
             StoringData[data?.exercise_title] = res.path();
             downloadCounter++;
@@ -438,7 +437,7 @@ const MyPlans = ({navigation}: any) => {
             trackerData: res?.data?.inserted_data,
             type: 'weekly',
             challenge: false,
-            isEventPage: false
+            isEventPage: false,
           });
         } else {
           analytics().logEvent(
@@ -454,7 +453,7 @@ const MyPlans = ({navigation}: any) => {
             trackerData: res?.data?.inserted_data,
             type: 'weekly',
             challenge: false,
-            isEventPage: false
+            isEventPage: false,
           });
         }
       } else {
@@ -536,7 +535,7 @@ const MyPlans = ({navigation}: any) => {
           trackerData: res?.data?.inserted_data,
           type: 'weekly',
           challenge: false,
-          isEventPage: true
+          isEventPage: true,
         });
         // }
       } else {
@@ -552,7 +551,7 @@ const MyPlans = ({navigation}: any) => {
           trackerData: res?.data?.existing_data,
           type: 'weekly',
           challenge: false,
-          isEventPage: true
+          isEventPage: true,
         });
       }
     } catch (error) {
@@ -632,46 +631,23 @@ const MyPlans = ({navigation}: any) => {
         setButtonClicked(false);
         setVisible(false);
         setDownloade(0);
-
-        let checkAdsShow = AddCountFunction();
-        if (checkAdsShow == true) {
-          showInterstitialAd();
-          analytics().logEvent(
-            `CV_FITME_CLICKED_ON_${WeekArray[selectedDay]}_PLAN`,
-          );
-          navigation.navigate('Exercise', {
-            allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
-            currentExercise:
-              // trainingCount != -1
-              //   ? exerciseData[trainingCount]
-              getWeeklyPlansData[WeekArray[selectedDay]]?.exercises[0],
-            data: [],
-            day: selectedDay,
-            exerciseNumber: 0,
-            trackerData: res?.data?.user_details,
-            type: 'weekly',
-            challenge: false,
-            isEventPage: false
-          });
-        } else {
-          analytics().logEvent(
-            `CV_FITME_CLICKED_ON_${WeekArray[selectedDay]}_PLAN`,
-          );
-          navigation.navigate('Exercise', {
-            allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
-            currentExercise:
-              // trainingCount != -1
-              //   ? exerciseData[trainingCount]
-              getWeeklyPlansData[WeekArray[selectedDay]]?.exercises[0],
-            data: [],
-            day: selectedDay,
-            exerciseNumber: 0,
-            trackerData: res?.data?.user_details,
-            type: 'weekly',
-            challenge: false,
-            isEventPage: false
-          });
-        }
+        analytics().logEvent(
+          `CV_FITME_CLICKED_ON_${WeekArray[selectedDay]}_PLAN`,
+        );
+        navigation.navigate('Exercise', {
+          allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
+          currentExercise:
+            // trainingCount != -1
+            //   ? exerciseData[trainingCount]
+            getWeeklyPlansData[WeekArray[selectedDay]]?.exercises[0],
+          data: [],
+          day: selectedDay,
+          exerciseNumber: 0,
+          trackerData: res?.data?.user_details,
+          type: 'weekly',
+          challenge: false,
+          isEventPage: false,
+        });
       } else {
       }
     } catch (error) {

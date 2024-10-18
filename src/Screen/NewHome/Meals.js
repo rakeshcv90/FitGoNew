@@ -42,12 +42,11 @@ const Meals = ({navigation}) => {
   const getFitmeMealAdsCount = useSelector(state => state.getFitmeMealAdsCount);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const getStoreVideoLoc = useSelector(state => state.getStoreVideoLoc);
-  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
+  const {showInterstitialAd} = MyInterstitialAd();
   const dispatch = useDispatch();
   const carouselRef = useRef(null);
 
   useEffect(() => {
-    initInterstitial();
     mealData?.map((item, index) => downloadVideos(item, index));
   }, []);
   const checkMealAddCount = item => {

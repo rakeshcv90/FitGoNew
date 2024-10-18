@@ -100,26 +100,17 @@ export const NewInterstitialAd = setClosed => {
   const showInterstitialAd = async () => {
     if (adStatus.current?._loaded) {
       adStatus.current.show();
-      interstitialAdRef.current = false;
-    } else {
-      // setClosed(true);
     }
   };
 
   return {initInterstitial, showInterstitialAd};
 };
-var interstitialJustClosed = false;
+let interstitialAdRef1 = null; // Persistent ad reference
+let interstitialAdStatus = null; // Persistent ad status
+let interstitialJustClosed = false;
 export const MyInterstitialAd = () => {
-  const interstitialAd = InterstitialAd.createForAdRequest(
-    IsTesting ? interstitialAdIdTest : interstitialAdId,
-    {
-      requestNonPersonalizedAdsOnly: true,
-    },
-  );
-  const interstitialAdRef = useRef(null);
-  const adStatus = useRef(true);
   const initInterstitial = async isTesting => {
-    if (interstitialAdRef.current) return;
+    if (interstitialAdRef1?._loaded) return;
     const interstitialAd = InterstitialAd.createForAdRequest(
       isTesting
         ? interstitialAdIdTest
@@ -130,30 +121,28 @@ export const MyInterstitialAd = () => {
         requestNonPersonalizedAdsOnly: true,
       },
     );
-      interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
-        adStatus.current = interstitialAd;
-        interstitialAdRef.current = interstitialAd;
-        console.log('loaded');
-      });
-      interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {
-        interstitialAd.load();
-        interstitialJustClosed = true;
-        console.log('closedAd');
-        setTimeout(() => {
-          interstitialJustClosed = false;
-        }, 3000);
-      });
-      interstitialAd.addAdEventListener(AdEventType.CLICKED, () => {});
-      interstitialAd.addAdEventListener(AdEventType.ERROR, error => {});
+    interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
+      interstitialAdStatus = interstitialAd;
+      interstitialAdRef1 = interstitialAd;
+    });
+    interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {
       interstitialAd.load();
-      console.log('INTER LOADER');
-    };
+      interstitialJustClosed = true;
+      setTimeout(() => {
+        interstitialJustClosed = false;
+      }, 3000);
+    });
+    interstitialAd.addAdEventListener(AdEventType.CLICKED, () => {});
+    interstitialAd.addAdEventListener(AdEventType.ERROR, error => {});
+    interstitialAd.load();
+    console.log('INTER LOADER');
+  };
 
   const showInterstitialAd = async isTesting => {
+    console.log('isTesting', interstitialAdRef1, interstitialAdStatus);
     if (isTesting == -1) return;
-    if (adStatus.current?._loaded) {
-      adStatus.current.show();
-      interstitialAdRef.current = null;
+    if (interstitialAdStatus?._loaded) {
+      await interstitialAdStatus?.show();
     }
   };
   return {initInterstitial, showInterstitialAd};
@@ -191,14 +180,16 @@ export const MyRewardedAd = () => {
     rewarded.load(); // Ensure the ad starts loading
   }, []);
 
-  const showRewardAds = useCallback(async () => {
-    if (adStatus.current && adStatus.current._loaded) {
-      console.log('Showing ad');
-      await adStatus.current.show();
-    } else {
-      console.log('Ad not ready');
-    }
-  }, []);
+  const showRewardAds =
+    (async () => {
+      if (adStatus.current && adStatus.current) {
+        console.log('Showing ad');
+        await adStatus.current.show();
+      } else {
+        console.log('Ad not ready');
+      }
+    },
+    []);
   return {rewardAdsLoad, showRewardAds};
 };
 var isAdBeingShown = false;

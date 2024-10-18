@@ -140,7 +140,7 @@ const Exercise = ({navigation, route}: any) => {
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
   );
-  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
+  const {showInterstitialAd} = MyInterstitialAd();
   // useInterstitialAd({setAddClosed});
   const [seconds, setSeconds] = useState(
     parseInt(allExercise[number]?.exercise_rest.split(' ')[0]),
@@ -202,7 +202,6 @@ const Exercise = ({navigation, route}: any) => {
     };
   }, []);
   useEffect(() => {
-    initInterstitial();
     const initTts = async () => {
       const ttsStatus = await Tts.getInitStatus();
       if (!ttsStatus.isInitialized) {

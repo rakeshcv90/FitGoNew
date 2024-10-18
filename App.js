@@ -277,7 +277,6 @@ const App = () => {
   // };
   const {initOpenApp, showOpenAppAd} = OpenAppAds();
   const appState = useRef(AppState.currentState);
-
   useEffect(() => {
     initOpenApp();
     const subscription = AppState.addEventListener('change', nextAppState => {
@@ -285,7 +284,14 @@ const App = () => {
         navigationRef?.current?.getCurrentRoute()?.name != 'SplaceScreen' &&
         navigationRef?.current?.getCurrentRoute()?.name != 'Log In' &&
         navigationRef?.current?.getCurrentRoute()?.name != 'Sign Up' &&
-        navigationRef?.current?.getCurrentRoute()?.name != 'PermissionScreen'
+        navigationRef?.current?.getCurrentRoute()?.name != 'PermissionScreen' &&
+        navigationRef?.current?.getCurrentRoute()?.name != 'CustomWorkout' &&
+        navigationRef?.current?.getCurrentRoute()?.name != 'WorkoutCompleted' &&
+        navigationRef?.current?.getCurrentRoute()?.name != 'SaveDayExercise' &&
+        navigationRef?.current?.getCurrentRoute()?.name != 'MealDetails' &&
+        navigationRef?.current?.getCurrentRoute()?.name != 'AITrainer' &&
+        navigationRef?.current?.getCurrentRoute()?.name != 'CreateWorkout' &&
+        navigationRef?.current?.getCurrentRoute()?.name != 'IntroductionScreen1';
       if (
         appState?.current?.match(/inactive|background/) &&
         nextAppState === 'active' &&
