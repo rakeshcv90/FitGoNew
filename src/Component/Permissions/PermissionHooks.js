@@ -14,6 +14,8 @@ import VersionNumber from 'react-native-version-number';
 import notifee from '@notifee/react-native';
 import AppleHealthKit from 'react-native-health';
 import axios from 'axios';
+import {showMessage} from 'react-native-flash-message';
+import { launchImageLibrary } from 'react-native-image-picker';
 export const useLocation = () => {
   // permission as per the platform
   const permission =
@@ -42,73 +44,71 @@ export const useLocation = () => {
   return {askLocationPermission, checkLocationPermission};
 };
 //location apis
-export const getCurrentLocation = async () => {
-  return new Promise((resolve, reject) => {
-    Geolocation.getCurrentPosition(
-      async position => {
-        try {
-          const coordinates = {
-            lat: position?.coords?.latitude,
-            lng: position?.coords?.longitude, // 36.17367911141759, -115.15029443045587 United States
-          };
-          const apiKeys = await getApiKey();
-          const country = await getCountryFromCoordinates(
-            coordinates,
-            apiKeys?.data[0]?.api_url,
-            apiKeys?.data[0]?.api_key,
-          );
-          resolve(country);
-        } catch (error) {
-          reject(error);
-        }
-      },
-      error => {
-        reject(error);
-      },
-    );
-  });
-};
-const getApiKey = async () => {
-  try {
-    const response = await axios.get(
-      `${NewAppapi.GET_APIKEY}?version=${VersionNumber.appVersion}`,
-    );
-    return response?.data;
-  } catch (error) {
-    console.log('something error-->', error);
-    return null;
-  }
-};
-const getCountryFromCoordinates = async (coordinates, apiUrl, apikey) => {
-  try {
-    const response = await axios.get(apiUrl, {
-      params: {
-        latlng: `${coordinates.lat},${coordinates.lng}`,
-      },
-      headers: {
-        'x-rapidapi-key': apikey,
-      },
-    });
-    // Extract country from the response
-    const addressComponents = response.data.results[0].address_components;
-    const countryComponent = addressComponents.find(component =>
-      component.types.includes('country'),
-    );
-    const countryLongName = countryComponent
-      ? countryComponent.long_name
-      : null;
-    return countryLongName;
-  } catch (error) {
-    console.error('Error fetching country:', error);
-    return null;
-  }
-};
-export const storeAgreementApi = async country => {
-  setLoaded(false);
+// export const getCurrentLocation = async () => {
+//   return new Promise((resolve, reject) => {
+//     Geolocation.getCurrentPosition(
+//       async position => {
+//         try {
+//           const coordinates = {
+//             lat: position?.coords?.latitude,
+//             lng: position?.coords?.longitude, // 36.17367911141759, -115.15029443045587 United States
+//           };
+//           const apiKeys = await getApiKey();
+//           const country = await getCountryFromCoordinates(
+//             coordinates,
+//             apiKeys?.data[0]?.api_url,
+//             apiKeys?.data[0]?.api_key,
+//           );
+//           resolve(country);
+//         } catch (error) {
+//           reject(error);
+//         }
+//       },
+//       error => {
+//         reject(error);
+//       },
+//     );
+//   });
+// };
+// const getApiKey = async () => {
+//   try {
+//     const response = await axios.get(
+//       `${NewAppapi.GET_APIKEY}?version=${VersionNumber.appVersion}`,
+//     );
+//     return response?.data;
+//   } catch (error) {
+//     console.log('something error-->', error);
+//     return null;
+//   }
+// };
+// const getCountryFromCoordinates = async (coordinates, apiUrl, apikey) => {
+//   try {
+//     const response = await axios.get(apiUrl, {
+//       params: {
+//         latlng: `${coordinates.lat},${coordinates.lng}`,
+//       },
+//       headers: {
+//         'x-rapidapi-key': apikey,
+//       },
+//     });
+//     // Extract country from the response
+//     const addressComponents = response.data.results[0].address_components;
+//     const countryComponent = addressComponents.find(component =>
+//       component.types.includes('country'),
+//     );
+//     const countryLongName = countryComponent
+//       ? countryComponent.long_name
+//       : null;
+//     return countryLongName;
+//   } catch (error) {
+//     console.error('Error fetching country:', error);
+//     return null;
+//   }
+// };
+export const storeAgreementApi = async getUserDataDetails => {
   const payload = new FormData();
   payload.append('version', VersionNumber?.appVersion);
   payload.append('user_id', getUserDataDetails?.id);
-  payload.append('country', country);
   payload.append('term_conditons', 'Accepted');
   try {
     const result = await axios(NewAppapi.STORE_USER_AGR_COUNTRY, {
@@ -117,9 +117,10 @@ export const storeAgreementApi = async country => {
       headers: {'Content-Type': 'multipart/form-data'},
     });
     if (result?.data) {
-      return await getAgreementStatus();
+      return await getAgreementStatus(getUserDataDetails);
     }
   } catch (error) {
+    console.log('errrrrrr', error);
     showMessage({
       message: 'Something went wrong.',
       floating: true,
@@ -129,7 +130,7 @@ export const storeAgreementApi = async country => {
     });
   }
 };
-const getAgreementStatus = async () => {
+const getAgreementStatus = async getUserDataDetails => {
   try {
     const result = await axios(NewAppapi.GET_AGR_STATUS, {
       method: 'POST',
@@ -153,6 +154,7 @@ const getAgreementStatus = async () => {
       return result?.data;
     }
   } catch (error) {
+    console.log('errrrrrr', error);
     showMessage({
       message: 'Something went wrong.',
       floating: true,
@@ -188,7 +190,7 @@ export const useGalleryPermission = () => {
     }
   };
   //launch
-  const launchImageLibrary = async () => {
+  const launchLibrary = async () => {
     try {
       const resultLibrary = await launchImageLibrary({
         mediaType: 'photo',
@@ -198,13 +200,20 @@ export const useGalleryPermission = () => {
       });
       return resultLibrary;
     } catch (error) {
-      console.log('lib launch error', error);
+      console.log('errreerere',error)
+      showMessage({
+        message: 'Please check and enable all the required permissions from app settings',
+        floating: true,
+        duration: 500,
+        type: 'danger',
+        icon: {icon: 'auto', position: 'left'},
+      });
     }
   };
   return {
     checkPermissionForLibarary,
     askPermissionForLibrary,
-    launchImageLibrary,
+    launchLibrary,
   };
 };
 // notification permissions
@@ -236,6 +245,12 @@ export const useHealthkitPermission = () => {
     },
   };
   const checkHealthikitPermission = async () => {
+    const permission = {
+      permissions: {
+        read: [AppleHealthKit.Constants.Permissions.StepCount],
+        write: [AppleHealthKit.Constants.Permissions.StepCount],
+      },
+    };
     try {
       const result = await new Promise((resolve, reject) => {
         AppleHealthKit.getAuthStatus(permission, (err, result) => {
@@ -246,30 +261,43 @@ export const useHealthkitPermission = () => {
           }
         });
       });
-      console.log(result, '111'); // You can now handle the result here
       return result; // Return the result from the function
     } catch (error) {
       console.error('Error checking HealthKit permission:', error);
     }
   };
-  const initHealthKit = () => {
-    AppleHealthKit.isAvailable((err, available) => {
-      if (err) {
-        console.log('error initializing Healthkit: ', err);
-      } else if (available) {
-        AppleHealthKit.initHealthKit(permission, (error, result) => {
-          if (error) {
-            Alert.alert('Error', 'Error while initializing  healthkit', {});
-          }
-        });
-      } else {
-        Alert.alert(
-          'Attention',
-          "Health data can't be tracked in this Device due to its specifications",
-          {},
-        );
-      }
+  const initHealthKit = async () => {
+    const permission = {
+      permissions: {
+        read: [AppleHealthKit.Constants.Permissions.StepCount],
+      },
+    };
+    const result = await new Promise((resolve, reject) => {
+      AppleHealthKit.isAvailable((err, available) => {
+        if (err) {
+          console.log('error initializing Healthkit: ', err);
+          reject(false);
+        } else if (available) {
+          AppleHealthKit.initHealthKit(permission, (error, result) => {
+            if (error) {
+              Alert.alert('Error', 'Error while initializing  healthkit', {});
+              reject(false);
+            }
+            if (result) {
+              resolve(true);
+            }
+          });
+        } else {
+          reject(false);
+          Alert.alert(
+            'Attention',
+            "Health data can't be tracked in this Device due to its specifications",
+            {},
+          );
+        }
+      });
     });
+    return result;
   };
   const requestSteps = async () => {
     const options = {
@@ -292,9 +320,8 @@ export const useHealthkitPermission = () => {
         }
       });
     });
-    console.log('healthData',healthData)
     return healthData;
   };
 
-  return {initHealthKit, checkHealthikitPermission,requestSteps};
+  return {initHealthKit, checkHealthikitPermission, requestSteps};
 };

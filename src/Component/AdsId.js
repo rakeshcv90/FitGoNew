@@ -100,5 +100,5 @@ export const adUnitIDsTest = {
 };
 export const OPENAPP_IDTest =
   Platform.OS == 'ios'
-    ? 'ca-app-pub-3940256099942544/5575463023'
+    ? TestIds.APP_OPEN
     : 'ca-app-pub-3940256099942544/9257395921';

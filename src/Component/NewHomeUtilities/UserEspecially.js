@@ -26,6 +26,8 @@ import {
 } from 'react-native-permissions';
 
 import GradientButton from '../GradientButton';
+import {useLocation} from '../Permissions/PermissionHooks';
+import {AuthorizationStatus} from '@notifee/react-native';
 
 const data = [
   {
@@ -54,18 +56,12 @@ const data = [
   },
 ];
 
-
 const UserEspecially = () => {
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const [locationP, setLocationP] = useState(false);
-
-  useEffect(() => {
-    if (isFocused) {
-      initInterstitial();
-    }
-  }, [isFocused]);
+  const {checkLocationPermission} = useLocation();
   const HandelClick = index => {
     if (index == 1) {
       AnalyticsConsole(`CustomWrk_FR_Home`);
@@ -101,104 +97,79 @@ const UserEspecially = () => {
     }
   };
 
-const Items = ({item, index}) => {
-  return (
-    <TouchableOpacity
-      activeOpacity={0.7}
-      onPress={() => {
-        HandelClick(index + 1);
-      }}
-      style={{
-        width: '50%',
-        height: PLATFORM_IOS ? DeviceHeigth * 0.15 : DeviceHeigth * 0.125,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
-      <ImageBackground
-        source={item.image}
-        resizeMode={Platform.OS == 'ios' ? 'stretch' : 'contain'}
+  const Items = ({item, index}) => {
+    return (
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={() => {
+          HandelClick(index + 1);
+        }}
         style={{
-          width: '100%',
-          height: '100%',
-          left: DeviceHeigth >= 1024 ? -7 : -3,
+          width: '50%',
+          height: PLATFORM_IOS ? DeviceHeigth * 0.15 : DeviceHeigth * 0.125,
+          alignItems: 'center',
+          justifyContent: 'center',
         }}>
-        <View
+        <ImageBackground
+          source={item.image}
+          resizeMode={Platform.OS == 'ios' ? 'stretch' : 'contain'}
           style={{
             width: '100%',
             height: '100%',
-            paddingVertical: DeviceWidth * 0.04,
-            paddingLeft: DeviceWidth * 0.05,
+            left: DeviceHeigth >= 1024 ? -7 : -3,
           }}>
-          <Text
-            style={{
-              fontFamily: Fonts.HELVETICA_BOLD,
-              fontSize: 15,
-              lineHeight: 20,
-              color: AppColor.WHITE,
-            }}>
-            {item.title}
-          </Text>
           <View
             style={{
-              width: '70%',
-              marginVertical: 5,
+              width: '100%',
+              height: '100%',
+              paddingVertical: DeviceWidth * 0.04,
+              paddingLeft: DeviceWidth * 0.05,
             }}>
             <Text
               style={{
-                fontFamily: Fonts.HELVETICA_REGULAR,
-                fontSize: 13,
+                fontFamily: Fonts.HELVETICA_BOLD,
+                fontSize: 15,
                 lineHeight: 20,
                 color: AppColor.WHITE,
               }}>
-              {item.text}
+              {item.title}
             </Text>
+            <View
+              style={{
+                width: '70%',
+                marginVertical: 5,
+              }}>
+              <Text
+                style={{
+                  fontFamily: Fonts.HELVETICA_REGULAR,
+                  fontSize: 13,
+                  lineHeight: 20,
+                  color: AppColor.WHITE,
+                }}>
+                {item.text}
+              </Text>
+            </View>
           </View>
-        </View>
-      </ImageBackground>
-    </TouchableOpacity>
-  );
-};
-  const locationPermission = () => {
-    Platform.OS == 'ios'
-      ? request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE).then(async result => {
-          if (result === RESULTS.GRANTED) {
-            console.log('Location permission granted IOS');
-            setLocationP(false);
-            analytics().logEvent(`CV_FITME_CLICKED_ON_GYM_LISTING_SCREEN`);
-            let checkAdsShow = AddCountFunction();
-            if (checkAdsShow == true) {
-              showInterstitialAd();
-              navigation.navigate('GymListing');
-            } else {
-              navigation.navigate('GymListing');
-            }
-            // getCurrentLocation();
-          } else {
-            setLocationP(true);
-            console.log('Location permission denied IOS', result);
-          }
-        })
-      : requestMultiple([
-          PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION,
-          PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-        ]).then(async result => {
-          if (result['android.permission.ACCESS_FINE_LOCATION'] == 'granted') {
-            console.log('Location permission granted Android');
-            analytics().logEvent(`CV_FITME_CLICKED_ON_GYM_LISTING_SCREEN`);
-            setLocationP(false);
-            let checkAdsShow = AddCountFunction();
-            if (checkAdsShow == true) {
-              showInterstitialAd();
-              navigation.navigate('GymListing');
-            } else {
-              navigation.navigate('GymListing');
-            }
-            // getCurrentLocation();
-          } else {
-            setLocationP(true);
-            console.log('Location permission denied Android');
-          }
-        });
+        </ImageBackground>
+      </TouchableOpacity>
+    );
+  };
+  const locationPermission = async () => {
+    const result = await checkLocationPermission();
+    if (
+      result['android.permission.ACCESS_FINE_LOCATION'] == RESULTS.BLOCKED ||
+      result['android.permission.ACCESS_FINE_LOCATION'] == RESULTS.DENIED
+    ) {
+      setLocationP(true);
+    } else {
+      let checkAdsShow = AddCountFunction();
+      if (checkAdsShow == true) {
+        showInterstitialAd();
+        navigation.navigate('GymListing');
+      } else {
+        navigation.navigate('GymListing');
+      }
+    }
   };
   const PermissionModal = ({locationP, setLocationP}) => {
     return (
@@ -315,7 +286,7 @@ const Items = ({item, index}) => {
             fontWeight: '600',
             lineHeight: 30,
             fontSize: 18,
-            marginBottom: 10
+            marginBottom: 10,
           }}>
           Especially For You
         </Text>
@@ -336,7 +307,7 @@ const Items = ({item, index}) => {
             justifyContent: 'space-between',
           }}>
           {data.slice(2).map((item, index) => (
-            <Items item={item} index={index+2} />
+            <Items item={item} index={index + 2} />
           ))}
         </View>
       </View>

@@ -114,7 +114,9 @@ const NewHome = ({navigation}) => {
   );
   useEffect(() => {
     if (isFocused) {
-     getAllExercise?.length <= 0 ? getAllChallangeAndAllExerciseData(): setChallData()
+      getAllExercise?.length <= 0
+        ? getAllChallangeAndAllExerciseData()
+        : setChallData();
       getLeaderboardDataAPI();
       Object.keys(allWorkoutData)?.length <= 1 && allWorkoutApi();
       enteredCurrentEvent && getEarnedCoins();
@@ -159,7 +161,7 @@ const NewHome = ({navigation}) => {
     );
 
     setCurrentChallenge(challenge);
-  }
+  };
 
   const allWorkoutApi = async () => {
     try {
@@ -787,54 +789,46 @@ const NewHome = ({navigation}) => {
 
         // }}
       />
-      {(getOfferAgreement?.location === 'India' ||
-        getOfferAgreement?.location == 'United States') &&
-        !enteredUpcomingEvent &&
-        getPermissionIos && (
-          <UpcomingEventModal
-            visible={!getPopUpSeen}
-            onConfirm={() => {
-              AnalyticsConsole('U_E');
-              if (getPurchaseHistory) {
-                if (getPurchaseHistory.plan === 'noob') {
-                  dispatch(setPopUpSeen(true));
-                  dispatch(setPermissionIos(false));
-                  navigation?.navigate('NewSubscription', {upgrade: true});
-                  showMessage({
-                    message:
-                      'Oops! You’ve used up all your chances to join the event. Upgrade your plan to join now, or wait to renew your plan.',
-                    type: 'info',
-                    animationDuration: 500,
-                    floating: true,
-                    icon: {icon: 'auto', position: 'left'},
-                  });
-                } else if (
-                  getPurchaseHistory.plan !== 'noob' &&
-                  getPurchaseHistory.used_plan < getPurchaseHistory.allow_usage
-                ) {
-                  dispatch(setPopUpSeen(true));
-                  dispatch(setPermissionIos(false));
-                  navigation?.navigate('UpcomingEvent', {
-                    eventType: 'upcoming',
-                  });
-                } else {
-                  dispatch(setPopUpSeen(true));
-                  dispatch(setPermissionIos(false));
-                  navigation?.navigate('NewSubscription', {upgrade: true});
-                }
+      {!enteredUpcomingEvent && (
+        <UpcomingEventModal
+          visible={!getPopUpSeen}
+          onConfirm={() => {
+            AnalyticsConsole('U_E');
+            if (getPurchaseHistory) {
+              if (getPurchaseHistory.plan === 'noob') {
+                dispatch(setPopUpSeen(true));
+                navigation?.navigate('NewSubscription', {upgrade: true});
+                showMessage({
+                  message:
+                    'Oops! You’ve used up all your chances to join the event. Upgrade your plan to join now, or wait to renew your plan.',
+                  type: 'info',
+                  animationDuration: 500,
+                  floating: true,
+                  icon: {icon: 'auto', position: 'left'},
+                });
+              } else if (
+                getPurchaseHistory.plan !== 'noob' &&
+                getPurchaseHistory.used_plan < getPurchaseHistory.allow_usage
+              ) {
+                dispatch(setPopUpSeen(true));
+                navigation?.navigate('UpcomingEvent', {
+                  eventType: 'upcoming',
+                });
               } else {
                 dispatch(setPopUpSeen(true));
-                dispatch(setPermissionIos(false));
                 navigation?.navigate('NewSubscription', {upgrade: true});
               }
-            }}
-            onCancel={() => {
-              AnalyticsConsole('JNC_D_B');
+            } else {
               dispatch(setPopUpSeen(true));
-              dispatch(setPermissionIos(false));
-            }}
-          />
-        )}
+              navigation?.navigate('NewSubscription', {upgrade: true});
+            }
+          }}
+          onCancel={() => {
+            AnalyticsConsole('JNC_D_B');
+            dispatch(setPopUpSeen(true));
+          }}
+        />
+      )}
       <LocationPermissionModal
         locationP={locationP1}
         setLocationP={setLocationP1}

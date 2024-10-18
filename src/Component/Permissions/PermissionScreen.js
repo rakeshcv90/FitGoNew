@@ -1,22 +1,17 @@
 import {AppState, Platform, StyleSheet, Text, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Wrapper from '../../Screen/WorkoutCompleteScreen/Wrapper';
 import {AppColor, Fonts, PLATFORM_IOS} from '../Color';
 import {Image} from 'react-native';
 import NewButton from '../NewButton';
-import {AuthorizationStatus} from '@notifee/react-native';
-import {RESULTS} from 'react-native-permissions';
 import {
   alertCondition,
-  handleError,
   permissionMethods,
   showAlert,
   trueCondition,
   UIArray,
 } from './PermissionMethods';
-import {getCurrentLocation, storeAgreementApi, useHealthkitPermission} from './PermissionHooks';
-import {useDispatch} from 'react-redux';
-import {setOfferAgreement} from '../ThemeRedux/Actions';
+import {useNavigation} from '@react-navigation/native';
 const PermissionScreen = () => {
   const [permissionState, setPermissionState] = useState({
     storage: false,
@@ -24,25 +19,37 @@ const PermissionScreen = () => {
     location: false,
     healthkit: false,
   });
-  const {initHealthKit, checkHealthikitPermission,requestSteps}=useHealthkitPermission()
+  const appState = useRef(AppState.currentState);
+  const navigation = useNavigation();
   useEffect(() => {
-    requestSteps().then((res)=>console.log('rtefref',res)).catch((err)=>console.log('erroror',err))
     checkPermissions();
-    const handleAppStateChange = nextAppState => {
-      console.log('re',nextAppState)
-      if (nextAppState === 'active') {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (
+        appState?.current?.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
         checkPermissions();
       }
-    };
-    const subscription = AppState.addEventListener(
-      'change',
-      handleAppStateChange,
-    );
+      appState.current = nextAppState;
+    });
     return () => {
       subscription.remove();
     };
   }, []);
-  //
+  // perform navigation
+  useEffect(() => {
+    const readyToNavigate = PLATFORM_IOS
+      ? permissionState.location &&
+        permissionState.notification &&
+        permissionState.storage &&
+        permissionState.healthkit
+      : permissionState.location &&
+        permissionState.notification &&
+        permissionState.storage;
+    if (readyToNavigate) {
+      navigation.navigate('BottomTab', {screen: 'Home'});
+    }
+  }, [permissionState]);
   const checkPermissions = () => {
     Promise.all(
       UIArray.map(item => {
@@ -64,17 +71,46 @@ const PermissionScreen = () => {
       });
     });
   };
-  // handle permission request
+  // handle permission request one at a time
   const handlePermissionRequest = async permissionKey => {
     const askMethod = UIArray.find(
-      item => item.key === permissionKey,
+      item => item?.key === permissionKey,
     ).askPermission;
     if (askMethod && permissionMethods[askMethod]) {
       const result = await permissionMethods[askMethod]();
+      if (
+        PLATFORM_IOS &&
+        permissionMethods[item.askPermission] ==
+          permissionMethods['initHealthKit']
+      ) {
+        setPermissionState(prev => ({...prev, healthkit: true}));
+      }
       if (trueCondition(result)) {
         setPermissionState(prev => ({...prev, [permissionKey]: true}));
       } else if (alertCondition(result)) {
-        showAlert();
+        await showAlert();
+      }
+    }
+  };
+  // handle permission all at oncee
+  const handleAllPermissions = async () => {
+    for (const item of UIArray) {
+      if (permissionMethods[item.askPermission]) {
+        try {
+          const result = await permissionMethods[item.askPermission](); // Wait for each permission to resolve
+          if (
+            PLATFORM_IOS &&
+            permissionMethods[item.askPermission] ==
+              permissionMethods['initHealthKit']
+          ) {
+            setPermissionState(prev => ({...prev, healthkit: true}));
+          }
+          if (alertCondition(result)) {
+            await showAlert();
+          }
+        } catch (error) {
+          console.error('Error requesting permission:', error); // Handle any errors that occur during permission request
+        }
       }
     }
   };
@@ -86,27 +122,67 @@ const PermissionScreen = () => {
     grantedPermissions,
     itemKey,
   }) => {
+    const isHealthkitAvailable =
+      permissionState.location &&
+      permissionState.notification &&
+      permissionState.storage;
     return (
       <View>
-        <View style={styles.pContainer}>
-          <Image source={img} style={{height: 35, width: 35}} />
-          <View style={{width: '55%', marginHorizontal: 8}}>
-            <Text style={styles.pHeading}>{text1}</Text>
-            <Text style={styles.pDescription}>{text2}</Text>
-          </View>
+        <View
+          style={[
+            styles.pContainer,
+            {flexDirection: itemKey === 'healthkit' ? 'column' : 'row'},
+          ]}>
+          {itemKey != 'healthkit' ? (
+            <>
+              <Image source={img} style={{height: 35, width: 35}} />
+              <View style={{width: '55%', marginHorizontal: 8}}>
+                <Text style={styles.pHeading}>{text1}</Text>
+                <Text style={styles.pDescription}>{text2}</Text>
+              </View>
+            </>
+          ) : (
+            <View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginBottom: 18,
+                }}>
+                <Image source={img} style={{height: 35, width: 35}} />
+                <View style={{width: '80%', marginHorizontal: 8}}>
+                  <Text style={styles.pHeading}>{text1}</Text>
+                  <Text style={styles.pDescription}>{text2}</Text>
+                </View>
+              </View>
+            </View>
+          )}
           <NewButton
-            ButtonWidth={'25%'}
-            title={grantedPermissions ? 'Allowed' : 'Allow'}
+            ButtonWidth={itemKey == 'healthkit' ? '90%' : '25%'}
+            title={
+              itemKey == 'healthkit'
+                ? 'Sync Healthkit Data'
+                : grantedPermissions
+                ? 'Allowed'
+                : 'Allow'
+            }
             pV={8}
             buttonColor={grantedPermissions ? AppColor.RED : AppColor.WHITE}
             borderWidth={1.5}
             borderColor={AppColor.RED}
             titleColor={grantedPermissions ? AppColor.WHITE : AppColor.RED}
             fontFamily={Fonts.HELVETICA_BOLD}
-            disabled={grantedPermissions}
+            disabled={
+              itemKey == 'healthkit'
+                ? !isHealthkitAvailable
+                : grantedPermissions
+            }
             onPress={() => {
               handlePermissionRequest(itemKey);
             }}
+            opacity={
+              itemKey == 'healthkit' ? (isHealthkitAvailable ? 1 : 0.5) : 1
+            }
           />
         </View>
         {index != UIArray.length - 1 && <View style={styles.border} />}
@@ -137,10 +213,17 @@ const PermissionScreen = () => {
           </View>
         </View>
         <NewButton
-          title={'Grant All Permissions'}
+          title={
+            permissionState.location &&
+            permissionState.notification &&
+            permissionState.storage
+              ? 'Continue to app'
+              : 'Grant All Permissions'
+          }
           fontFamily={Fonts.HELVETICA_REGULAR}
           position={'absolute'}
           bottom={20}
+          onPress={handleAllPermissions}
         />
       </Wrapper>
     </View>

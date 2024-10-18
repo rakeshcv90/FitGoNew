@@ -34,12 +34,20 @@ import {
   setChallengesData,
   setCompleteProfileData,
   Setmealdata,
+  setOfferAgreement,
   setStoreData,
 } from '../../Component/ThemeRedux/Actions';
 import {useSelector, useDispatch} from 'react-redux';
 import {BlurView} from '@react-native-community/blur';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
+import {storeAgreementApi} from '../../Component/Permissions/PermissionHooks';
+import {
+  permissionMethods,
+  UIArray,
+} from '../../Component/Permissions/PermissionMethods';
+import {RESULTS} from 'react-native-permissions';
+import { AuthorizationStatus } from '@notifee/react-native';
 const OfferTerms = ({navigation, route}: any) => {
   const dispatch = useDispatch();
   const [language, setLanguage] = useState('English');
@@ -54,6 +62,7 @@ const OfferTerms = ({navigation, route}: any) => {
   const screenType = route?.params?.type;
   const {width: windowWidth} = useWindowDimensions();
   const contentWidth = windowWidth;
+  const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   useEffect(() => {
     setContent(getAgreementContent['term_condition_english']);
     if (Object.keys(getAgreementContent).length == 0) {
@@ -93,9 +102,6 @@ const OfferTerms = ({navigation, route}: any) => {
       }
     } catch (error) {
       console.log('all_in_one_api_error', error);
-      dispatch(Setmealdata([]));
-      dispatch(setCompleteProfileData([]));
-      dispatch(setStoreData([]));
     }
   };
   const handleRadioButton = (param: any) => {
@@ -119,6 +125,43 @@ const OfferTerms = ({navigation, route}: any) => {
       </View>
     );
   };
+  //check permissions
+  const isObject = result => {
+    return !!(typeof result === 'object' && result != null);
+  };
+  const checkPermissions = () => {
+    Promise.all(
+      UIArray.map(item => {
+        if (permissionMethods[item.checkPermission]) {
+          return permissionMethods[item.checkPermission]().then(res => ({
+            key: item.key,
+            result: res,
+          }));
+        }
+        return Promise.resolve({key: item.key, result: null});
+      }),
+    ).then(results => {
+      const condition = results.some(result => {
+        return (
+          result?.result == RESULTS.DENIED ||
+          result.result == RESULTS.BLOCKED ||
+          (isObject(result?.result) &&
+            result?.result['android.permission.ACCESS_FINE_LOCATION'] ==
+              RESULTS.BLOCKED) ||
+          (isObject(result?.result) &&
+            result?.result['android.permission.ACCESS_FINE_LOCATION'] ==
+              RESULTS.DENIED) ||
+          (isObject(result?.result) &&
+          result?.result['authorizationStatus'] === AuthorizationStatus.DENIED)
+        );
+      });
+      if (condition) {
+        navigation.navigate('PermissionScreen');
+      } else {
+        navigation.navigate('BottomTab', {});
+      }
+    });
+  };
   const handleAgreement = () => {
     AnalyticsConsole('IAR_ACC');
     if (!checked) {
@@ -130,7 +173,10 @@ const OfferTerms = ({navigation, route}: any) => {
         icon: {icon: 'auto', position: 'left'},
       });
     } else {
-      navigation.navigate('CountryLocation');
+      storeAgreementApi(getUserDataDetails).then(res => {
+        dispatch(setOfferAgreement(res));
+        checkPermissions();
+      });
     }
   };
   // to check and uncheck the box automatically
@@ -236,8 +282,11 @@ const OfferTerms = ({navigation, route}: any) => {
                     style={styles.modalContainer1}
                     blurType="light"
                     blurAmount={1}
-                    reducedTransparencyFallbackColor="white" >
-                    <TouchableOpacity activeOpacity={1} style={{flex: 1,}} onPress={()=>setOpened(false)} >
+                    reducedTransparencyFallbackColor="white">
+                    <TouchableOpacity
+                      activeOpacity={1}
+                      style={{flex: 1}}
+                      onPress={() => setOpened(false)}>
                       <View
                         style={{
                           // width: DeviceWidth * 0.3,

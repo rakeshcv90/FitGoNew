@@ -11,7 +11,7 @@ import {
   BackHandler,
   Modal,
   ActivityIndicator,
-  AppState
+  AppState,
 } from 'react-native';
 import React, {useState, useEffect, useRef} from 'react';
 import {
@@ -284,7 +284,8 @@ const App = () => {
       const strictCondition =
         navigationRef?.current?.getCurrentRoute()?.name != 'SplaceScreen' &&
         navigationRef?.current?.getCurrentRoute()?.name != 'Log In' &&
-        navigationRef?.current?.getCurrentRoute()?.name != 'Sign Up';
+        navigationRef?.current?.getCurrentRoute()?.name != 'Sign Up' &&
+        navigationRef?.current?.getCurrentRoute()?.name != 'PermissionScreen'
       if (
         appState?.current?.match(/inactive|background/) &&
         nextAppState === 'active' &&

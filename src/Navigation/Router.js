@@ -93,7 +93,6 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      <Stack.Screen name="SplaceNew" component={PermissionScreen} />
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
       <Stack.Screen
         name="IntroductionScreen1"
@@ -204,6 +203,7 @@ export const LoginStack = () => {
         component={CardioCompleted}
         options={{detachPreviousScreen: true}}
       />
+      <Stack.Screen name='PermissionScreen' component={PermissionScreen}/>
     </Stack.Navigator>
   );
 };

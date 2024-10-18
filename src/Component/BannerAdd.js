@@ -124,35 +124,32 @@ export const MyInterstitialAd = () => {
         requestNonPersonalizedAdsOnly: true,
       },
     );
-    interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
-      adStatus.current = interstitialAd;
-      interstitialAdRef.current = interstitialAd;
-      console.log('loaded');
-    });
-    interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {
+      interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
+        adStatus.current = interstitialAd;
+        interstitialAdRef.current = interstitialAd;
+        console.log('loaded');
+      });
+      interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {
+        interstitialAd.load();
+        interstitialJustClosed = true;
+        console.log('closedAd');
+        setTimeout(() => {
+          interstitialJustClosed = false;
+        }, 3000);
+      });
+      interstitialAd.addAdEventListener(AdEventType.CLICKED, () => {});
+      interstitialAd.addAdEventListener(AdEventType.ERROR, error => {});
       interstitialAd.load();
-      interstitialJustClosed = true;
-      console.log('closedAd');
-      setTimeout(() => {
-        interstitialJustClosed = false;
-      }, 3000);
-    });
-    interstitialAd.addAdEventListener(AdEventType.CLICKED, () => {});
-    interstitialAd.addAdEventListener(AdEventType.ERROR, error => {});
-    interstitialAd.load();
-    console.log('INTER LOADER');
-  };
+      console.log('INTER LOADER');
+    };
 
   const showInterstitialAd = async isTesting => {
-    console.log(isTesting, isTesting == -1, DeviceID, 'isTesting');
     if (isTesting == -1) return;
     if (adStatus.current?._loaded) {
       adStatus.current.show();
       interstitialAdRef.current = null;
-    } else {
     }
   };
-
   return {initInterstitial, showInterstitialAd};
 };
 
@@ -202,7 +199,7 @@ var isAdBeingShown = false;
 export const OpenAppAds = () => {
   const adStatusRef = useRef(null);
   const initOpenApp = async () => {
-    if (adStatusRef.current || !DeviceID) return; // remove deviceId in live
+    if (adStatusRef.current) return; // remove deviceId in live
     const OpenAds = AppOpenAd.createForAdRequest(
       IsTesting ? OPENAPP_IDTest : OPENAPP_ID,
     );
@@ -223,7 +220,7 @@ export const OpenAppAds = () => {
     OpenAds.load();
   };
   const showOpenAppAd = async () => {
-    if (interstitialJustClosed || isAdBeingShown || !DeviceID) return; // remove DevidId in live
+    if (interstitialJustClosed || isAdBeingShown) return; // remove DevidId in live
     if (adStatusRef.current?._loaded) {
       adStatusRef.current.show();
     }

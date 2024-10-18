@@ -64,6 +64,13 @@ import {CommonActions} from '@react-navigation/native';
 import {PLATFORM_IOS} from '../Component/Color';
 import {RequestAPI} from '../Component/Utilities/RequestAPI';
 import {MyInterstitialAd} from '../Component/BannerAdd';
+import {
+  permissionMethods,
+  trueCondition,
+  UIArray,
+} from '../Component/Permissions/PermissionMethods';
+import {RESULTS} from 'react-native-permissions';
+import {AuthorizationStatus} from '@notifee/react-native';
 const products = Platform.select({
   ios: ['fitme_noob', 'fitme_pro', 'fitme_legend'],
   android: ['fitme_monthly', 'a_monthly', 'fitme_legend'],
@@ -114,28 +121,67 @@ const SplaceScreen = ({navigation, route}) => {
     dispatch(setPopUpSeen(false));
     dispatch(setFitmeAdsCount(0));
   }, []);
+  const isObject = result => {
+    return !!(typeof result === 'object' && result != null);
+  };
+  const checkPermissions = () => {
+    Promise.all(
+      UIArray.map(item => {
+        if (permissionMethods[item.checkPermission]) {
+          return permissionMethods[item.checkPermission]().then(res => ({
+            key: item.key,
+            result: res,
+          }));
+        }
+        return Promise.resolve({key: item.key, result: null});
+      }),
+    ).then(results => {
+      const condition = results.some(result => {
+        return (
+          result?.result == RESULTS.DENIED ||
+          result.result == RESULTS.BLOCKED ||
+          (isObject(result?.result) &&
+            result?.result['android.permission.ACCESS_FINE_LOCATION'] ==
+              RESULTS.BLOCKED) ||
+          (isObject(result?.result) &&
+            result?.result['android.permission.ACCESS_FINE_LOCATION'] ==
+              RESULTS.DENIED) ||
+          (isObject(result?.result) &&
+          result?.result['authorizationStatus'] === AuthorizationStatus.DENIED)
+        );
+      });
+      if (condition) {
+        navigation.navigate('PermissionScreen');
+      } else {
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{name: 'BottomTab'}],
+          }),
+        );
+      }
+    });
+  };
   useEffect(() => {
     if (
       getUserDataDetails?.length > 0 ||
       Object.keys(getUserDataDetails)?.length > 0
     ) {
       getUserDetailData(getUserDataDetails?.id);
-    } else {
-      DisplayAds(getOfferAgreement);
     }
-  }, [loaded]);
-  const loadScreen = agreement => {
+  }, []);
+  const moveToNextScreen = () => {
+    setTimeout(() => {
+      showInterstitialAd(isTesting);
+      loadScreen();
+    }, 4000);
+  };
+  const loadScreen = condition => {
     if (showIntro) {
       if (getUserDataDetails?.id) {
         if (getUserDataDetails?.profile_compl_status == 1) {
-          if (agreement?.term_condition == 'Accepted') {
-            // navigation.replace('BottomTab');
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 0,
-                routes: [{name: 'BottomTab'}],
-              }),
-            );
+          if (getOfferAgreement?.term_condition == 'Accepted') {
+            checkPermissions();
           } else {
             navigation.replace('OfferTerms');
           }
@@ -188,25 +234,6 @@ const SplaceScreen = ({navigation, route}) => {
     }
   };
   const isValid = getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD');
-
-  const DisplayAds = agremment => {
-    if (getPurchaseHistory?.plan != null) {
-      if (getPurchaseHistory?.plan == 'premium' && !isValid) {
-        loadScreen(agremment);
-        Platform.OS == 'android' && checkCancel();
-      } else {
-        setTimeout(() => {
-          showInterstitialAd(isTesting);
-          loadScreen(agremment);
-        }, 4000);
-      }
-    } else {
-      setTimeout(() => {
-        showInterstitialAd(isTesting);
-        loadScreen(agremment);
-      }, 4000);
-    }
-  };
 
   const getPastWinner = () => {
     RequestAPI.makeRequest(
@@ -334,6 +361,7 @@ const SplaceScreen = ({navigation, route}) => {
         dispatch(Setmealdata(responseData?.data?.diets));
         dispatch(setStoreData(responseData?.data?.types));
         dispatch(setCompleteProfileData(responseData?.data?.additional_data));
+        moveToNextScreen();
       }
     } catch (error) {
       console.log('all_in_one_api_error', error);
@@ -403,7 +431,6 @@ const SplaceScreen = ({navigation, route}) => {
       } else {
         dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
         dispatch(setOfferAgreement(responseData?.data?.additional_data));
-        DisplayAds(responseData?.data?.additional_data);
         dispatch(setUserProfileData(responseData?.data?.profile));
         dispatch(setCustomDietData(responseData?.data?.diet_data));
         if (responseData?.data.event_details == 'Not any subscription') {
@@ -429,8 +456,6 @@ const SplaceScreen = ({navigation, route}) => {
       }
     } catch (error) {
       console.log('GET-USER-DATA splaceScreen', error);
-
-      DisplayAds((response = null));
     }
   };
   const getAllChallangeAndAllExerciseData = async () => {

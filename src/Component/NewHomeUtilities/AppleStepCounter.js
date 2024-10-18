@@ -21,6 +21,7 @@ import {setPedomterData, setPermissionIos} from '../ThemeRedux/Actions';
 import {BlurView} from '@react-native-community/blur';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Slider} from '@miblanchard/react-native-slider';
+import {useHealthkitPermission} from '../Permissions/PermissionHooks';
 
 const AppleStepCounter = () => {
   const dispatch = useDispatch();
@@ -45,90 +46,99 @@ const AppleStepCounter = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
-    if (isFocused) {
-      setTimeout(() => {
-        ActivityPermission();
-      }, 2000);
-    }
-  }, [isFocused]);
-
-  const ActivityPermission = async () => {
+   getSteps()
+   const  subs=new NativeEventEmitter(NativeModules.AppleHealthKit).addListener(
+    'healthKit:HeartRate:new',
+    async () => {
+      console.log('trieieii')
+     getSteps()
+    },
+  );
+  return  (()=> subs.remove())
+  }, []);
+  const {requestSteps} = useHealthkitPermission();
+  const getSteps = async () => {
     if (Platform.OS == 'android') {
     } else if (Platform.OS == 'ios') {
-      AppleHealthKit.isAvailable((err, available) => {
-        const permissions = {
-          permissions: {
-            read: [AppleHealthKit.Constants.Permissions.StepCount],
-          },
-        };
-        if (err) {
-          console.log('error initializing Healthkit: ', err);
-          if (!getPopUpSeen) {
-            dispatch(setPermissionIos(true));
-          }
-        } else if (available == true) {
-          AppleHealthKit.initHealthKit(permissions, error => {
-            Promise.resolve(
-              AsyncStorage.setItem('hasPermissionForStepCounter', 'true'),
-            );
-            if (error) {
-              console.log('[ERROR] Cannot grant permissions!', error);
-              if (!getPopUpSeen) {
-                dispatch(setPermissionIos(true));
-              }
-            } else {
-              if (!getPopUpSeen) {
-                setTimeout(() => {
-                  if (!getPopUpSeen) {
-                    dispatch(setPermissionIos(true));
-                  }
-                }, 1500);
-              }
-              new NativeEventEmitter(NativeModules.AppleHealthKit).addListener(
-                // adding a listner here to record whenever new Steps will be sent from healthkit
-                'healthKit:StepCount:new',
-                async () => {
-                  AppleHealthKit.getStepCount(
-                    options,
-                    (callbackError, results) => {
-                      if (callbackError) {
-                        console.log('Error while getting the data');
-                      }
-                      setSteps(results.value);
-                      setDistance(((results.value / 20) * 0.01).toFixed(2));
-                      setCalories(((results.value / 20) * 1).toFixed(1));
-                    },
-                  );
-                },
-              );
-              const options = {
-                startDate: new Date(
-                  new Date().getFullYear(),
-                  new Date().getMonth(),
-                  new Date().getDate(),
-                  0,
-                  0,
-                  0,
-                ),
-                endDate: new Date(),
-              };
-              AppleHealthKit.getStepCount(options, (callbackError, results) => {
-                if (callbackError) {
-                }
-                setSteps(results?.value);
-                setDistance(((results?.value / 20) * 0.01).toFixed(2));
-                setCalories(((results?.value / 20) * 1).toFixed(1));
-              });
-            }
-          });
-        } else {
-          Alert.alert(
-            'Attention',
-            "Health data can't be tracked in this Device due to its specifications",
-            {},
-          );
-        }
+      requestSteps().then(results => {
+        setSteps(results.value);
+        setDistance(((results.value / 20) * 0.01).toFixed(2));
+        setCalories(((results.value / 20) * 1).toFixed(1));
       });
+      // AppleHealthKit.isAvailable((err, available) => {
+      //   const permissions = {
+      //     permissions: {
+      //       read: [AppleHealthKit.Constants.Permissions.StepCount],
+      //     },
+      //   };
+      //   if (err) {
+      //     console.log('error initializing Healthkit: ', err);
+      //     if (!getPopUpSeen) {
+      //       dispatch(setPermissionIos(true));
+      //     }
+      //   } else if (available == true) {
+      //     AppleHealthKit.initHealthKit(permissions, error => {
+      //       Promise.resolve(
+      //         AsyncStorage.setItem('hasPermissionForStepCounter', 'true'),
+      //       );
+      //       if (error) {
+      //         console.log('[ERROR] Cannot grant permissions!', error);
+      //         if (!getPopUpSeen) {
+      //           dispatch(setPermissionIos(true));
+      //         }
+      //       } else {
+      //         if (!getPopUpSeen) {
+      //           setTimeout(() => {
+      //             if (!getPopUpSeen) {
+      //               dispatch(setPermissionIos(true));
+      //             }
+      //           }, 1500);
+      //         }
+      //         new NativeEventEmitter(NativeModules.AppleHealthKit).addListener(
+      //           // adding a listner here to record whenever new Steps will be sent from healthkit
+      //           'healthKit:StepCount:new',
+      //           async () => {
+      //             AppleHealthKit.getStepCount(
+      //               options,
+      //               (callbackError, results) => {
+      //                 if (callbackError) {
+      //                   console.log('Error while getting the data');
+      //                 }
+      //                 setSteps(results.value);
+      //                 setDistance(((results.value / 20) * 0.01).toFixed(2));
+      //                 setCalories(((results.value / 20) * 1).toFixed(1));
+      //               },
+      //             );
+      //           },
+      //         );
+      //         const options = {
+      //           startDate: new Date(
+      //             new Date().getFullYear(),
+      //             new Date().getMonth(),
+      //             new Date().getDate(),
+      //             0,
+      //             0,
+      //             0,
+      //           ),
+      //           endDate: new Date(),
+      //         };
+      //         AppleHealthKit.getStepCount(options, (callbackError, results) => {
+      //           if (callbackError) {
+      //           }
+      //           setSteps(results?.value);
+      //           setDistance(((results?.value / 20) * 0.01).toFixed(2));
+      //           setCalories(((results?.value / 20) * 1).toFixed(1));
+      //         });
+      //       }
+      //     });
+      //   } else {
+      //     Alert.alert(
+      //       'Attention',
+      //       "Health data can't be tracked in this Device due to its specifications",
+      //       {},
+      //     );
+      //   }
+      // });
     }
   };
   const closeModal = () => {

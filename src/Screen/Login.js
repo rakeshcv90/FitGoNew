@@ -67,6 +67,12 @@ import RNFetchBlob from 'rn-fetch-blob';
 import AppUpdateComponent from '../Component/AppUpdateComponent';
 import {EnteringEventFunction} from './Event/EnteringEventFunction';
 import {CommonActions} from '@react-navigation/native';
+import {
+  permissionMethods,
+  UIArray,
+} from '../Component/Permissions/PermissionMethods';
+import {RESULTS} from 'react-native-permissions';
+import { AuthorizationStatus } from '@notifee/react-native';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
@@ -139,7 +145,7 @@ const Login = ({navigation}) => {
           platform: Platform.OS,
         },
       });
-    
+
       if (data.data.profile_status == 1) {
         showMessage({
           message: data.data.msg,
@@ -605,6 +611,49 @@ const Login = ({navigation}) => {
   //     // setApiDataLoaded(true);
   //   }
   // };
+  // permissions  condition
+  const isObject = result => {
+    return !!(typeof result === 'object' && result != null);
+  };
+  const checkPermissions = () => {
+    Promise.all(
+      UIArray.map(item => {
+        if (permissionMethods[item.checkPermission]) {
+          return permissionMethods[item.checkPermission]().then(res => ({
+            key: item.key,
+            result: res,
+          }));
+        }
+        return Promise.resolve({key: item.key, result: null});
+      }),
+    ).then(results => {
+      const condition = results.some(result => {
+        return (
+          result?.result == RESULTS.DENIED ||
+          result.result == RESULTS.BLOCKED ||
+          (isObject(result?.result) &&
+            result?.result['android.permission.ACCESS_FINE_LOCATION'] ==
+              RESULTS.BLOCKED) ||
+          (isObject(result?.result) &&
+            result?.result['android.permission.ACCESS_FINE_LOCATION'] ==
+              RESULTS.DENIED) ||
+          (isObject(result?.result) &&
+            result?.result['authorizationStatus'] === AuthorizationStatus.DENIED)
+        );
+      });
+      console.log('coooonnnss',condition)
+      if (condition) {
+        navigation.navigate('PermissionScreen');
+      } else {
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{name: 'BottomTab'}],
+          }),
+        );
+      }
+    });
+  };
   const getUserDetailData = async (userId, status) => {
     try {
       const responseData = await axios.get(
@@ -654,12 +703,7 @@ const Login = ({navigation}) => {
             responseData?.data?.additional_data?.term_condition == 'Accepted'
           ) {
             // navigation.replace('BottomTab');
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 0,
-                routes: [{name: 'BottomTab'}],
-              }),
-            );
+            checkPermissions();
           } else {
             navigation.replace('OfferTerms');
           }

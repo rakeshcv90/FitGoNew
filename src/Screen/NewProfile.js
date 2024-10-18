@@ -29,7 +29,6 @@ import {localImage} from '../Component/Image';
 import Reminder from '../Component/Reminder';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {showMessage} from 'react-native-flash-message';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {request, PERMISSIONS, openSettings} from 'react-native-permissions';
 import VersionNumber from 'react-native-version-number';
 import ActivityLoader from '../Component/ActivityLoader';
@@ -55,6 +54,7 @@ import Wrapper from './WorkoutCompleteScreen/Wrapper';
 import Header from '../Component/Header';
 import NewHeader1 from '../Component/Headers/NewHeader1';
 import NewButton from '../Component/NewButton';
+import {useGalleryPermission} from '../Component/Permissions/PermissionHooks';
 const NewProfile = ({navigation}) => {
   useEffect(() => {
     notifee.getTriggerNotifications().then(res => {
@@ -83,6 +83,7 @@ const NewProfile = ({navigation}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const getSoundOffOn = useSelector(state => state.getSoundOffOn);
   const getScreenAwake = useSelector(state => state.getScreenAwake);
+  const {launchLibrary} = useGalleryPermission();
   const setAlarmIsEnabled = data => {
     dispatch(setIsAlarmEnabled(data));
   };
@@ -355,45 +356,18 @@ const NewProfile = ({navigation}) => {
         console.log('UpdateProfileError', error);
       }
     };
-    const askPermissionForLibrary = async permission => {
-      const resultLib = await request(permission);
-
-      if (resultLib == 'granted' || resultLib == 'limited') {
-        try {
-          const resultLibrary = await launchImageLibrary({
-            mediaType: 'photo',
-            quality: 0.7,
-            maxWidth: 300,
-            maxHeight: 200,
-          });
-          setUserAvatar(resultLibrary.assets[0]);
-
-          if (resultLibrary) {
-            setModalImageUploaded(true);
-          }
-        } catch (error) {
-          console.log('LibimageError', error);
+    const askPermissionForLibrary = async () => {
+      try {
+        const resultLibrary = await launchLibrary();
+        setUserAvatar(resultLibrary.assets[0]);
+        if (resultLibrary) {
+          setModalImageUploaded(true);
         }
-      } else if (resultLib == 'blocked') {
-        Alert.alert(
-          'Permission Required',
-          'To use the photo library ,Please enable library access in settings',
-          [
-            {
-              text: 'cancel',
-              style: 'cancel',
-            },
-            {
-              text: 'Open settings',
-              onPress: openSettings,
-            },
-          ],
-          {cancelable: false},
-        );
-      } else {
-        console.log('Galaey error occured');
+      } catch (error) {
+        console.log('LibimageError', error);
       }
     };
+
     const handleUploadButton = () => {
       if (modalImageUploaded) {
         AnalyticsConsole(`UPLOAD_IMAGE`);
@@ -489,9 +463,7 @@ const NewProfile = ({navigation}) => {
                 buttonColor={AppColor.PrimaryTextColor}
                 fontFamily={Fonts.HELVETICA_BOLD}
                 title={
-                  modalImageUploaded
-                    ? 'Change Profile Photo'
-                    : 'Select Photo'
+                  modalImageUploaded ? 'Change Profile Photo' : 'Select Photo'
                 }
                 onPress={handleUploadButton}
               />

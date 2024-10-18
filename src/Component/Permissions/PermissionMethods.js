@@ -68,23 +68,30 @@ export const permissionMethods = {
   checkHealthikitPermission,
 };
 
-// else condition to show alert
+// else condition to show alert 
+// creating it as asynchrounous to stop the  execution while it is resolved
 export const showAlert = () => {
-  Alert.alert(
-    'Permission Required',
-    "To access certain features of this app, you need to grant this permission from app's settings.",
-    [
-      {
-        text: 'cancel',
-        style: 'cancel',
-      },
-      {
-        text: 'Open settings',
-        onPress: openSettings,
-      },
-    ],
-    {cancelable: false},
-  );
+  return new Promise(resolve => {
+    Alert.alert(
+      'Permission Required',
+      "To access certain features of this app, you need to grant this permission from the app's settings.",
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+          onPress: () => resolve(false), // Resolve the promise with `false` when cancel is pressed
+        },
+        {
+          text: 'Open settings',
+          onPress: () => {
+            openSettings(); // Call your openSettings function
+            resolve(true); // Resolve the promise with `true` after settings is opened
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  });
 };
 // handle location error method
 export const handleError = err => {
@@ -124,8 +131,7 @@ export const trueCondition = result => {
     (isObject &&
       result['android.permission.ACCESS_FINE_LOCATION'] == RESULTS.GRANTED) ||
     (isObject &&
-      result['authorizationStatus'] === AuthorizationStatus.AUTHORIZED) ||
-    (PLATFORM_IOS && isObject && result?.permissions?.read[0] == 2)
+      result['authorizationStatus'] === AuthorizationStatus.AUTHORIZED)
   );
 };
 //
@@ -136,8 +142,6 @@ export const alertCondition = result => {
     (isObject &&
       result['android.permission.ACCESS_FINE_LOCATION'] == //location permissions
         RESULTS.BLOCKED) ||
-    (isObject &&
-      result['authorizationStatus'] === AuthorizationStatus.DENIED) ||
-    (PLATFORM_IOS && isObject && result?.permissions?.read[0] == 1)
+    (isObject && result['authorizationStatus'] === AuthorizationStatus.DENIED)
   );
 };
