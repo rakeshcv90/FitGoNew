@@ -238,6 +238,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
           trackerData: [],
           type: 'focus',
           challenge: false,
+          isEventPage: false
         });
       });
     }
@@ -340,6 +341,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
           trackerData: [],
           type: 'focus',
           challenge: false,
+          isEventPage: false
         });
       });
     }

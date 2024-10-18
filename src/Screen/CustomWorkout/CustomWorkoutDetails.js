@@ -190,6 +190,8 @@ const CustomWorkoutDetails = ({navigation, route}) => {
               exerciseNumber: trainingCount != -1 ? trainingCount : 0,
               trackerData: res?.data?.inserted_data,
               type: 'custom',
+              challenge: false,
+              isEventPage: false
             });
           } else {
             setDownloade(false);
@@ -205,6 +207,8 @@ const CustomWorkoutDetails = ({navigation, route}) => {
               exerciseNumber: trainingCount != -1 ? trainingCount : 0,
               trackerData: trackerData,
               type: 'custom',
+              challenge: false,
+              isEventPage: false
             });
           }
         }

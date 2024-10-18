@@ -339,7 +339,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
         <GradientButton
           onPress={() => {
             // analytics().logEvent(`CV_FITME_COMPLETED_DAY_${day}_EXERCISES`);
-            onPresh();
+            ReviewApp(onPresh)
             // TESTAPI()
           }}
           text="Save and Continue"

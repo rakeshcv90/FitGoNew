@@ -110,6 +110,12 @@ export const NewInterstitialAd = setClosed => {
 };
 var interstitialJustClosed = false;
 export const MyInterstitialAd = () => {
+  const interstitialAd = InterstitialAd.createForAdRequest(
+    IsTesting ? interstitialAdIdTest : interstitialAdId,
+    {
+      requestNonPersonalizedAdsOnly: true,
+    },
+  );
   const interstitialAdRef = useRef(null);
   const adStatus = useRef(true);
   const initInterstitial = async isTesting => {

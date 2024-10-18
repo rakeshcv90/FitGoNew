@@ -38,6 +38,7 @@ import NewMonthlyAchievement from '../Screen/NewHome/NewMonthlyAchievement';
 import {showMessage} from 'react-native-flash-message';
 import AnimatedLottieView from 'lottie-react-native';
 import NewHome from '../Screen/NewHome/NewHome';
+import BackHandlerModal from './BackHandlerModal';
 const Tabs = createBottomTabNavigator();
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
@@ -311,6 +312,7 @@ const BottomTab = () => {
         }}>
         <BannerAdd bannerAdId={bannerAdId} />
       </View>
+      <BackHandlerModal />
     </>
   );
 };

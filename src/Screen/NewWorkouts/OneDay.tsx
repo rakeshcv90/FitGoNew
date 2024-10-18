@@ -288,7 +288,8 @@ const OneDay = ({navigation, route}: any) => {
               exerciseNumber: trainingCount != -1 ? trainingCount : 0,
               trackerData: res?.data?.inserted_data,
               type: 'day',
-              challenge,
+              challenge: true,
+              isEventPage: false
             });
           } else {
             setOpen(false);
@@ -304,7 +305,8 @@ const OneDay = ({navigation, route}: any) => {
               exerciseNumber: trainingCount != -1 ? trainingCount : 0,
               trackerData: trackerData,
               type: 'day',
-              challenge,
+              challenge: true,
+              isEventPage: false
             });
           }
         }

@@ -79,6 +79,8 @@ import CardioCompleted from '../Screen/WorkoutCompleteScreen/CardioCompleted';
 import NewStore from '../Screen/Store/NewStore';
 import Products from '../Screen/Store/Products';
 import PermissionScreen from '../Component/Permissions/PermissionScreen';
+import SplaceNew from '../Screen/SplaceNew';
+import NewExercise from '../Screen/NewWorkouts/Exercise/NewExercise';
 const Stack = createStackNavigator();
 
 const screenOptions = {
@@ -94,6 +96,7 @@ export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
+      <Stack.Screen name="SplaceNew" component={SplaceNew} />
       <Stack.Screen
         name="IntroductionScreen1"
         component={IntroductionScreen1}
@@ -125,7 +128,7 @@ export const LoginStack = () => {
       <Stack.Screen name="OfferTerms" component={OfferTerms} />
       <Stack.Screen name="WorkoutDays" component={WorkoutDays} />
       <Stack.Screen name="OneDay" component={OneDay} />
-      <Stack.Screen name="Exercise" component={Exercise} />
+      <Stack.Screen name="Exercise" component={NewExercise} />
       <Stack.Screen
         name="SaveDayExercise"
         component={SaveDayExercise}
@@ -171,8 +174,8 @@ export const LoginStack = () => {
       <Stack.Screen name="Leaderboard" component={Leaderboard} />
       <Stack.Screen name="Winner" component={Winner} />
       <Stack.Screen name="Referral" component={Referral} />
-      <Stack.Screen name="EventExercise" component={EventExercise} />
-      <Stack.Screen name="CardioExercise" component={CardioExercise} />
+      <Stack.Screen name="EventExercise" component={NewExercise} />
+      <Stack.Screen name="CardioExercise" component={NewExercise} />
       <Stack.Screen
         name="EventExerciseHistory"
         component={EventExerciseHistory}

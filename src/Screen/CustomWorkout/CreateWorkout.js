@@ -37,6 +37,7 @@ import FastImage from 'react-native-fast-image';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import VersionNumber, {appVersion} from 'react-native-version-number';
+import {ReviewApp} from '../../Component/ReviewApp';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -331,7 +332,8 @@ const CreateWorkout = ({navigation, route}) => {
       }
     }
   };
-
+  const nav = () => navigation.goBack();
+  
   const getUserDetailData = async () => {
     try {
       const responseData = await axios.get(
@@ -359,12 +361,11 @@ const CreateWorkout = ({navigation, route}) => {
         });
         dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
         setForLoading(false);
-        navigation.goBack();
+        ReviewApp(nav);
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
       setForLoading(false);
-   
     }
   };
   const updateFilteredCategories = test => {

@@ -6,7 +6,7 @@ const ANDROID_APP_ID = 'fitme.health.fitness.homeworkouts.equipment';
 export const APP_STORE_LINK = `itms-apps://apps.apple.com/app/id${IOS_APP_ID}?action=write-review`;
 export const PLAY_STORE_LINK = `http://play.google.com/store/apps/details?id=${ANDROID_APP_ID}`;
 
-export const ReviewApp = (onPresh) => {
+export const ReviewApp = (onPress) => {
   // Linking.openURL(STORE_LINK)
 
 
@@ -15,7 +15,7 @@ export const ReviewApp = (onPresh) => {
     .then(hasFlowFinishedSuccessfully => {
       
       if (hasFlowFinishedSuccessfully) {
-        onPresh()
+        onPress()
       }
     })
     .catch(error => {

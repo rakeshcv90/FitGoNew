@@ -1,7 +1,10 @@
 package fitme.health.fitness.homeworkouts.equipment;
-// import com.reactnative.googlefit.GoogleFitPackage;
-import android.app.Application;
-import com.microsoft.codepush.react.CodePush;
+
+import android.content.Context;
+
+import androidx.multidex.MultiDex;
+import androidx.multidex.MultiDexApplication;
+
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
@@ -9,10 +12,13 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactNativeHost;
 import com.facebook.soloader.SoLoader;
-import java.util.List;
-import com.levelasquez.androidopensettings.AndroidOpenSettingsPackage; 
+import com.levelasquez.androidopensettings.AndroidOpenSettingsPackage;
+import com.microsoft.codepush.react.CodePush;
 
-public class MainApplication extends Application implements ReactApplication {
+import java.util.List;
+
+
+public class MainApplication extends MultiDexApplication implements ReactApplication {
   
   private final ReactNativeHost mReactNativeHost =
       new DefaultReactNativeHost(this) {
@@ -27,18 +33,20 @@ public class MainApplication extends Application implements ReactApplication {
        
         @Override
         protected List<ReactPackage> getPackages() {
-          
+
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
-          
- 
+
+
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
           // new GoogleFitPackage(BuildConfig.APPLICATION_ID);
            new AndroidOpenSettingsPackage();
+           packages.add(new MusicPlayerPackage());         // Correctly added
+//            new CalendarPackage();
           return packages;
         }
-        
+
         @Override
         protected String getJSMainModuleName() {
           return "index";
@@ -70,4 +78,10 @@ public class MainApplication extends Application implements ReactApplication {
     }
     fitme.health.fitness.homeworkouts.equipment.ReactNativeFlipper.initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
   }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 }

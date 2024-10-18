@@ -4,6 +4,7 @@
 #import "RCTAppleHealthKit.h"
 #import <Firebase.h>
 #import <CodePush/CodePush.h>
+#import "FitGo-Swift.h"
 
 @implementation AppDelegate
 

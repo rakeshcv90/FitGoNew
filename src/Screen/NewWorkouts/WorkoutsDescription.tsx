@@ -32,6 +32,7 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
   const getSoundOffOn = useSelector((state: any) => state.getSoundOffOn);
   const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
   const cleanText = TextSpeech.replace(/<\/?[^>]+(>|$)/g, '');
+  const isIOS18 = PLATFORM_IOS && Platform.Version >= 18
   useEffect(() => {
     const initTts = async () => {
       const ttsStatus = await Tts.getInitStatus();
@@ -58,7 +59,7 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
     initTts();
   }, []);
   useEffect(() => {
-    if (open && getSoundOffOn == true) {
+    if (open && getSoundOffOn == true && !isIOS18) {
       Tts.speak(cleanText);
     } else {
       Tts.stop();
