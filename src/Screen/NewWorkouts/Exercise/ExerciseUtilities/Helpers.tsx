@@ -18,7 +18,7 @@ import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource'
 
 const songs = [
   // require('../../../../Icon/Images/Exercise_Timer.wav'),
-  require('../../../../Icon/Images/ExerciseNew.mp3'),
+  // require('../../../../Icon/Images/ExerciseNew.mp3'),
 ];
 // const songs = [
 //     {

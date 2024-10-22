@@ -250,38 +250,6 @@ const NewProfile = ({navigation}) => {
       img: localImage.NLogOut,
     },
   ];
-  const ListData1 = [
-    {
-      id: 1,
-      txt: 'Mute Voice Assistant',
-      img: localImage.NSounds,
-    },
-    {
-      id: 2,
-      txt: 'Health Notification',
-      img: localImage.NPedometer,
-    },
-    {
-      id: 3,
-      txt: 'Contact Us',
-      img: localImage.NContact,
-    },
-    {
-      id: 4,
-      txt: 'Privacy Policy',
-      img: localImage.NPrivacy,
-    },
-    {
-      id: 5,
-      txt: 'Terms & Conditions',
-      img: localImage.NPolicy,
-    },
-    {
-      id: 6,
-      txt: 'Rate Us',
-      img: localImage.NRate,
-    },
-  ];
   const UpdateProfileModal = () => {
     const [modalImageUploaded, setModalImageUploaded] = useState(false);
     const [IsimgUploaded, setImguploaded] = useState(true);

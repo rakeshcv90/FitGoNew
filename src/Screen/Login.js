@@ -61,10 +61,6 @@ import {
   requestPermissionforNotification,
 } from '../Component/Helper/PushNotification';
 import analytics from '@react-native-firebase/analytics';
-import {Alert} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import RNFetchBlob from 'rn-fetch-blob';
-import AppUpdateComponent from '../Component/AppUpdateComponent';
 import {EnteringEventFunction} from './Event/EnteringEventFunction';
 import {CommonActions} from '@react-navigation/native';
 import {
@@ -1178,24 +1174,6 @@ const Login = ({navigation}) => {
                   style={{marginBottom: -1}}
                 />
               }
-              // right={
-              //   <TextInput.Icon
-              //     icon={() => (
-              //       <TouchableOpacity
-              //         onPress={() => {
-              //           setShowPassword(!showPassword);
-              //         }}>
-              //         <Image
-              //           source={showPassword ? localImage.EYE : localImage.EYE1}
-              //           style={{width: 22, height: 22}}
-              //           resizeMode="contain"
-              //           tintColor="#ADA4A5"
-              //         />
-              //       </TouchableOpacity>
-              //     )}
-              //     style={{marginTop: 14}}
-              //   />
-              // }
               left={
                 <TextInput.Icon
                   icon={() => (

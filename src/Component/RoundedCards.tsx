@@ -120,26 +120,6 @@ const RoundedCards: FC<Props> = ({...props}) => {
                       marginBottom: 5,
                     },
                   ]}>
-                  {/* {props?.horizontal && item.workout_price == 'Premium' && (
-                    <Image
-                      source={require('../Icon/Images/NewImage/rect.png')}
-                      style={{
-                        width: 30,
-                        height: 30,
-                        top:
-                          Platform.OS == 'android'
-                            ? DeviceHeigth * 0.003
-                            : DeviceHeigth >= 1024
-                            ? -DeviceHeigth * 0.005
-                            : DeviceHeigth * 0.003,
-                        left:
-                          Platform.OS == 'android'
-                            ? -DeviceWidth * 0.095
-                            : DeviceWidth >= 768
-                            ? -DeviceWidth * 0.11
-                            : -DeviceWidth * 0.095,
-                      }}></Image>
-                  )} */}
 
                   {isLoading && (
                     <ShimmerPlaceholder

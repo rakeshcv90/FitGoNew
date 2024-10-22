@@ -90,33 +90,6 @@ const MediumRounded: FC<Props> = ({...props}) => {
                       marginLeft: index == 0 ? 5 : 10,
                     },
                   ]}>
-                  {/* <Image
-                    source={
-                      item.workout_price == 'Premium'
-                        ? require('../Icon/Images/NewImage/premium.png')
-                        : require('../Icon/Images/NewImage/free.png')
-                    }
-                    resizeMode="contain"
-                    style={{
-                      width: 100,
-                      height: 50,
-                      top:
-                        Platform.OS == 'android'
-                          ? DeviceHeigth * 0.01
-                          : DeviceHeigth >= 1024
-                          ? -DeviceHeigth * 0.007
-                          : DeviceHeigth >= 932
-                          ? DeviceHeigth * 0.005
-                          : DeviceHeigth * 0.005,
-                      left:
-                        Platform.OS == 'android'
-                          ? -DeviceWidth * 0.18
-                          : DeviceWidth >= 768
-                          ? -DeviceWidth * 0.24
-                          : DeviceHeigth >= 932
-                          ? -DeviceWidth * 0.195
-                          : -DeviceWidth * 0.18,
-                    }}></Image> */}
 
                   <Image
                     source={{uri: item?.workout_image_link}}

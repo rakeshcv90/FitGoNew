@@ -118,13 +118,13 @@ const SplaceScreen = ({navigation, route}) => {
           callAds(false);
         }
       } else {
-        callAds(false); // load live ad if null
+        callAds(true); // load live ad if null
       }
     } else {
       // For non-iOS platforms, fetch the unique ID
       DeviceInfo.syncUniqueId().then(uniqueId => {
         dispatch(setDeviceID(uniqueId));
-        if (ADS_IDs.includes(uniqueId)) {
+        if (ADS_IDs.includes(uniqueId)||__DEV__) {
           callAds(true);
         } else {
           callAds(false);

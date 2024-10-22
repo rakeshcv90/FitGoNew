@@ -39,49 +39,12 @@ const InviteFriends = () => {
           }}>
           Invite your friends to earn {'\n'}more Fitcoins.
         </Text>
-        {/* <Text
-          style={{
-            // fontFamily: Fonts.HELVETICA_REGULAR,
-            fontWeight: '300',
-            fontSize: 14,
-            lineHeight: 20,
-            color: AppColor.WHITE,
-            marginTop: 3,
-          }}>
-          friend sends their register. They get ₹20!
-        </Text> */}
         <View
           style={{
             flexDirection: 'row',
             marginVertical: DeviceHeigth * 0.02,
             alignItems: 'center',
           }}>
-          {/* <Text
-            style={{
-              //fontFamily: Fonts.HELVETICA_REGULAR,
-              fontWeight: '300',
-              fontSize: 14,
-              lineHeight: 20,
-              color: AppColor.WHITE,
-              textAlign: 'center',
-            }}>
-            Copy your refer code
-          </Text>
-          <Text
-            style={{
-              // fontFamily: Fonts.HELVETICA_REGULAR,
-              fontWeight: '500',
-              fontSize: 14,
-              lineHeight: 20,
-              color: AppColor.WHITE,
-              textAlign: 'center',
-            }}>
-            {''} h7e0w89
-          </Text>
-          <Image
-            style={{width: 20, height: 20}}
-            source={require('../../Icon/Images/NewHome/share.png')}
-          /> */}
         </View>
         <TouchableOpacity
         onPress={()=>{

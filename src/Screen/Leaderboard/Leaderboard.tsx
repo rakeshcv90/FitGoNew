@@ -673,7 +673,6 @@ const Leaderboard = () => {
                       height: DeviceHeigth * 0.2,
                     }}>
                     <Image
-                      // source={require('../../Icon/Images/NewHome/b1.png')}
                       source={{uri: getBanners.new_join}}
                       resizeMode="stretch"
                       style={{width: '95%', height: '100%', borderRadius: 20}}

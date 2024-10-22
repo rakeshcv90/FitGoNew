@@ -98,13 +98,14 @@ const NewHeader = ({
               {!coinsLoaded ? (
                 <FitCoins
                   onPress={() => {
-                    if (winnerAnnounced) {
-                      AnalyticsConsole('W_L');
-                      navigation.navigate('Winner');
-                    } else {
-                      AnalyticsConsole('LB');
+                    // if (winnerAnnounced) {
+                    //   AnalyticsConsole('W_L');
+                    //   navigation.navigate('Winner');
+                    // } else {
+                    //   AnalyticsConsole('LB');
+                    //   navigation.navigate('Leaderboard');
+                    // }
                       navigation.navigate('Leaderboard');
-                    }
                   }}
                   coins={coins}
                 />

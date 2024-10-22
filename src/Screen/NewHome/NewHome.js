@@ -772,7 +772,6 @@ const NewHome = ({navigation}) => {
         {Platform.OS == 'ios' && <AppleStepCounter />}
         <UserEspecially />
         <FocuseMind />
-        {/* <FitnessInstructor /> */}
         {enteredCurrentEvent && (!Sat || !Sun) && <InviteFriends />}
       </ScrollView>
       <RewardModal

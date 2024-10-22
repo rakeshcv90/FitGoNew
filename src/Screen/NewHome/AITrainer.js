@@ -402,16 +402,6 @@ console.log("AFTER GPT",response.data.result)
                                       justifyContent: 'center',
                                       alignSelf: 'flex-end',
                                     }}>
-                                    {/* <AnimatedLottieView
-                                    source={require('../../Icon/Images/NewImage2/Sound.json')}
-                                    autoPlay
-                                    loop
-                                    style={{
-                                      width: 30,
-                                      height: 30,
-                                      marginBottom: -10,
-                                    }}
-                                  /> */}
                                     <Image
                                       style={{
                                         width: 30,
