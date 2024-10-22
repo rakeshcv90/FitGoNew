@@ -63,7 +63,7 @@ import codePush from 'react-native-code-push';
 import {CommonActions} from '@react-navigation/native';
 import {PLATFORM_IOS} from '../Component/Color';
 import {RequestAPI} from '../Component/Utilities/RequestAPI';
-import {MyInterstitialAd} from '../Component/BannerAdd';
+import {MyInterstitialAd, OpenAppAds} from '../Component/BannerAdd';
 import {
   permissionMethods,
   trueCondition,
@@ -86,33 +86,41 @@ const SplaceScreen = ({navigation, route}) => {
   const getOfferAgreement = useSelector(state => state.getOfferAgreement);
   const getDeviceID = useSelector(state => state?.getDeviceID);
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
+  const {initOpenApp, showOpenAppAd} = OpenAppAds();
   useEffect(() => {
-    PLATFORM_IOS
-      ? getUserDataDetails && getUserDataDetails?.social_id != null
-        ? ADS_IOS.includes(getUserDataDetails?.social_id)
-          ? initInterstitial(true)
-          : initInterstitial(false)
-        : false // do not load ad if social id is null
-      : DeviceInfo.syncUniqueId().then(uniqueId => {
-          dispatch(setDeviceID(uniqueId));
-          ADS_IDs.includes(uniqueId)
-            ? initInterstitial(true)
-            : initInterstitial(false);
-        });
+    if (PLATFORM_IOS) {
+      if (getUserDataDetails && getUserDataDetails.social_id != null) {
+        if (ADS_IOS.includes(getUserDataDetails.social_id)) {
+          callAds(true);
+        } else {
+          callAds(false);
+        }
+      } else {
+        callAds(false); // load live ad if null
+      }
+    } else {
+      // For non-iOS platforms, fetch the unique ID
+      DeviceInfo.syncUniqueId().then(uniqueId => {
+        dispatch(setDeviceID(uniqueId));
+        if (ADS_IDs.includes(uniqueId)) {
+          callAds(true);
+        } else {
+          callAds(false);
+        }
+      });
+    }
   }, []);
-  const isTesting = __DEV__
-    ? true
-    : PLATFORM_IOS
-    ? getUserDataDetails && getUserDataDetails?.social_id != null
-      ? ADS_IOS.includes(getUserDataDetails?.social_id)
-        ? true
-        : false
-      : -1 // js reads undefined and null as same so, i have put -1 for the comparision purpose
-    : ADS_IDs.includes(getDeviceID)
-    ? true
-    : false;
+  // function to call ads
+  const callAds = condition => {
+    initInterstitial(condition);
+    initOpenApp(condition).then(() => {
+      showOpenAppAd().then(() => {
+        afterAdFunction();
+      });
+    });
+  };
 
-  useEffect(() => {
+  const afterAdFunction = () => {
     requestPermissionforNotification(dispatch);
     getUserAllInData();
     getPlanData();
@@ -120,7 +128,7 @@ const SplaceScreen = ({navigation, route}) => {
     getPastWinner();
     dispatch(setPopUpSeen(false));
     dispatch(setFitmeAdsCount(0));
-  }, []);
+  };
   const isObject = result => {
     return !!(typeof result === 'object' && result != null);
   };
@@ -147,7 +155,8 @@ const SplaceScreen = ({navigation, route}) => {
             result?.result['android.permission.ACCESS_FINE_LOCATION'] ==
               RESULTS.DENIED) ||
           (isObject(result?.result) &&
-          result?.result['authorizationStatus'] === AuthorizationStatus.DENIED)
+            result?.result['authorizationStatus'] ===
+              AuthorizationStatus.DENIED)
         );
       });
       if (condition) {
@@ -171,10 +180,7 @@ const SplaceScreen = ({navigation, route}) => {
     }
   }, []);
   const moveToNextScreen = () => {
-    setTimeout(() => {
-      showInterstitialAd(isTesting);
-      loadScreen();
-    }, 4000);
+    loadScreen();
   };
   const loadScreen = condition => {
     if (showIntro) {
@@ -365,6 +371,7 @@ const SplaceScreen = ({navigation, route}) => {
       }
     } catch (error) {
       console.log('all_in_one_api_error', error);
+      moveToNextScreen();
       // getAllChallangeAndAllExerciseData();
     }
   };

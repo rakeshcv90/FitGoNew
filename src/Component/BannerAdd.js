@@ -112,11 +112,7 @@ export const MyInterstitialAd = () => {
   const initInterstitial = async isTesting => {
     if (interstitialAdRef1?._loaded) return;
     const interstitialAd = InterstitialAd.createForAdRequest(
-      isTesting
-        ? interstitialAdIdTest
-        : IsTesting
-        ? interstitialAdIdTest
-        : interstitialAdId,
+      isTesting ? interstitialAdIdTest : interstitialAdId,
       {
         requestNonPersonalizedAdsOnly: true,
       },
@@ -138,9 +134,7 @@ export const MyInterstitialAd = () => {
     console.log('INTER LOADER');
   };
 
-  const showInterstitialAd = async isTesting => {
-    console.log('isTesting', interstitialAdRef1, interstitialAdStatus);
-    if (isTesting == -1) return;
+  const showInterstitialAd = async () => {
     if (interstitialAdStatus?._loaded) {
       await interstitialAdStatus?.show();
     }
@@ -193,34 +187,58 @@ export const MyRewardedAd = () => {
   return {rewardAdsLoad, showRewardAds};
 };
 var isAdBeingShown = false;
+let adStatusRef = null;
+
 export const OpenAppAds = () => {
-  const adStatusRef = useRef(null);
-  const initOpenApp = async () => {
-    if (adStatusRef.current) return; // remove deviceId in live
-    const OpenAds = AppOpenAd.createForAdRequest(
-      IsTesting ? OPENAPP_IDTest : OPENAPP_ID,
-    );
-    OpenAds.addAdEventListener(AdEventType.LOADED, () => {
-      adStatusRef.current = OpenAds;
-    });
-    OpenAds.addAdEventListener(AdEventType.CLOSED, () => {
-      isAdBeingShown = false;
+  const initOpenApp = testing => {
+    return new Promise((resolve, reject) => {
+      if (adStatusRef) return resolve(); // Ad is already initialized
+      const OpenAds = AppOpenAd.createForAdRequest(
+        testing ? OPENAPP_IDTest : OPENAPP_ID,
+      );
+      OpenAds.addAdEventListener(AdEventType.LOADED, () => {
+        adStatusRef = OpenAds;
+        resolve(); // Resolve when the ad is loaded
+      });
+      OpenAds.addAdEventListener(AdEventType.ERROR, error => {
+        resolve(); // resolve the promise in case of an error
+      });
+      OpenAds.addAdEventListener(AdEventType.CLOSED, () => {
+        isAdBeingShown = false;
+        OpenAds.load();
+      });
+      OpenAds.addAdEventListener(AdEventType.OPENED, () => {
+        isAdBeingShown = true;
+      });
       OpenAds.load();
     });
-    OpenAds.addAdEventListener(AdEventType.CLICKED, () => {});
-    OpenAds.addAdEventListener(AdEventType.ERROR, error => {
-      console.log('Error loading app open ad');
-    });
-    OpenAds.addAdEventListener(AdEventType.OPENED, () => {
-      isAdBeingShown = true;
-    });
-    OpenAds.load();
   };
+
   const showOpenAppAd = async () => {
-    if (interstitialJustClosed || isAdBeingShown) return; // remove DevidId in live
-    if (adStatusRef.current?._loaded) {
-      adStatusRef.current.show();
-    }
+    return new Promise((resolve, reject) => {
+      if (interstitialJustClosed || isAdBeingShown) return resolve(); // Return if ad shouldn't be shown
+      if (adStatusRef?._loaded) {
+        adStatusRef.addAdEventListener(AdEventType.OPENED, () => {});
+        // resovlve or fail listeners
+        adStatusRef.addAdEventListener(AdEventType.CLOSED, () => {
+          resolve();
+        });
+        adStatusRef.addAdEventListener(AdEventType.ERROR, error => {
+          resolve(); // resolve the promise if there's an error showing the ad
+        });
+        adStatusRef.show();
+      } else {
+        resolve(); // Resolve if no ad is available
+      }
+    });
   };
-  return {initOpenApp, showOpenAppAd};
+  // to explicitly track if the ad has been closed
+  const openAdClosed = async () => {
+    return new Promise(resolve => {
+      adStatusRef.addAdEventListener(AdEventType.CLOSED, () => {
+        resolve(true);
+      });
+    });
+  };
+  return {initOpenApp, showOpenAppAd,openAdClosed};
 };

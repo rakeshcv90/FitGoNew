@@ -61,22 +61,22 @@ const NewBanner = ({
   const getOfferAgreement = useSelector(
     (state: any) => state?.getOfferAgreement,
   );
-  const isValidLoc =
-    getOfferAgreement?.location === 'India' ||
-    getOfferAgreement?.location === 'United States';
+  // const isValidLoc =
+  //   getOfferAgreement?.location === 'India' ||
+  //   getOfferAgreement?.location === 'United States';
 
   useEffect(() => {
     const BArray: Array<any> = [];
-    if (isValidLoc) {
-      getReqBanner(BArray);
-    } else {
-      setBannerArray([
-        {
-          name: BANNER_TYPES.COMING_SOON,
-          image: getBanners[BANNER_TYPES.COMING_SOON],
-        },
-      ]);
-    }
+    // if (isValidLoc) {
+    getReqBanner(BArray);
+    // } else {
+    //   setBannerArray([
+    //     {
+    //       name: BANNER_TYPES.COMING_SOON,
+    //       image: getBanners[BANNER_TYPES.COMING_SOON],
+    //     },
+    //   ]);
+    // }
   }, [enteredCurrentEvent, enteredUpcomingEvent, getBanners]);
 
   const getReqBanner = useCallback(
@@ -116,55 +116,55 @@ const NewBanner = ({
   );
   const handleStart = () => {
     if (userDetails?.email != null && userDetails?.name != null) {
-      setLoaded(false);
-      if (
-        getOfferAgreement?.location === 'India' ||
-        getOfferAgreement?.location == 'United States'
-      ) {
-        setLoaded(true);
-        if (purchaseHistory?.plan == null) {
-          AnalyticsConsole('PP_BANNER');
-          navigation.navigate('StepGuide');
-          // navigation.navigate('NewSubscription', {upgrade: false});
-        } else {
-          AnalyticsConsole('UP_BANNER');
-          navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
-        }
+      // setLoaded(false);
+      // if (
+      //   getOfferAgreement?.location === 'India' ||
+      //   getOfferAgreement?.location == 'United States'
+      // ) {
+      // setLoaded(true);
+      if (purchaseHistory?.plan == null) {
+        AnalyticsConsole('PP_BANNER');
+        navigation.navigate('StepGuide');
+        // navigation.navigate('NewSubscription', {upgrade: false});
       } else {
-        locationPermission()
-          .then(result => {
-            if (result == 'blocked') {
-              setLocation(true);
-              setLoaded(true);
-            } else if (result === 'denied') {
-              setLocation(true);
-              setLoaded(true);
-            } else if (result) {
-              //   StoreAgreementApi(result);
-            } else if (result == null) {
-              // setLocation(true);
-              setLoaded(true);
-              showMessage({
-                message: 'Error while getting your location',
-                floating: true,
-                duration: 500,
-                type: 'danger',
-              });
-            } else {
-              setLoaded(true);
-              showMessage({
-                message: 'Error while getting your location',
-                floating: true,
-                duration: 500,
-                type: 'danger',
-              });
-            }
-          })
-          .catch(err => {
-            console.log('location Error', err);
-            setLoaded(true);
-          });
+        AnalyticsConsole('UP_BANNER');
+        navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
       }
+      // } else {
+      //   locationPermission()
+      //     .then(result => {
+      //       if (result == 'blocked') {
+      //         setLocation(true);
+      //         setLoaded(true);
+      //       } else if (result === 'denied') {
+      //         setLocation(true);
+      //         setLoaded(true);
+      //       } else if (result) {
+      //         //   StoreAgreementApi(result);
+      //       } else if (result == null) {
+      //         // setLocation(true);
+      //         setLoaded(true);
+      //         showMessage({
+      //           message: 'Error while getting your location',
+      //           floating: true,
+      //           duration: 500,
+      //           type: 'danger',
+      //         });
+      //       } else {
+      //         setLoaded(true);
+      //         showMessage({
+      //           message: 'Error while getting your location',
+      //           floating: true,
+      //           duration: 500,
+      //           type: 'danger',
+      //         });
+      //       }
+      //     })
+      //     .catch(err => {
+      //       console.log('location Error', err);
+      //       setLoaded(true);
+      //     });
+      // }
     } else {
       if (
         (userDetails.name?.toUpperCase() == 'GUEST' ||
@@ -207,16 +207,18 @@ const NewBanner = ({
             })
           : navigation?.navigate('NewSubscription', {upgrade: true});
       } else navigation?.navigate('NewSubscription', {upgrade: true});
-    } else if (item.name == BANNER_TYPES.COMING_SOON) {
-      AnalyticsConsole('CS_BANNER');
-      showMessage({
-        message:
-          'This feature will be soon available in your country, stay tuned!',
-        floating: true,
-        duration: 500,
-        type: 'danger',
-      });
-    } else if (item.name == BANNER_TYPES.JOINED) {
+    }
+    //  else if (item.name == BANNER_TYPES.COMING_SOON) {
+    //   AnalyticsConsole('CS_BANNER');
+    //   showMessage({
+    //     message:
+    //       'This feature will be soon available in your country, stay tuned!',
+    //     floating: true,
+    //     duration: 500,
+    //     type: 'danger',
+    //   });
+    // } 
+    else if (item.name == BANNER_TYPES.JOINED) {
       AnalyticsConsole('JN_BANNER');
       navigation.navigate('UpcomingEvent', {eventType: 'current'});
     } else if (item.name == BANNER_TYPES.ONGOING) {
@@ -299,7 +301,7 @@ const NewBanner = ({
           <View style={{justifyContent: 'center', width: '100%'}}>
             <FlatList
               data={BannerArray}
-              keyExtractor={(_,index) => index.toString()}
+              keyExtractor={(_, index) => index.toString()}
               horizontal
               showsHorizontalScrollIndicator={false}
               renderItem={renderItem}
