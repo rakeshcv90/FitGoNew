@@ -27,6 +27,7 @@ import ExerciseTimer from './ExerciseTimer';
 import BottomControls from './BottomControls';
 import useExerciseHook, {ExerciseData} from './useExerciseHook';
 import {RequestAPI} from '../../../../Component/Utilities/RequestAPI';
+import {OpenAppAds} from '../../../../Component/BannerAdd';
 
 type ExerciseControlsProps = {
   pause: boolean;
@@ -149,8 +150,10 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
     apiCalls,
     skip,
     setSkip,
-    musicLink
+    musicLink,
   });
+
+  // const {openAdClosed} = OpenAppAds();
 
   const resumeButton = () => {
     setBack(false);
@@ -159,12 +162,14 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
   useEffect(() => {
     const subscribe = AppState.addEventListener(
       'change',
-      (state: AppStateStatus) => {
+      async (state: AppStateStatus) => {
         if (!restStart) {
           if (state.match(/background|inactive/)) {
             setPause(false);
           } else if (state.match(/active/)) {
-            setPause(true);
+            const isClosed = true;
+            //  await openAdClosed();
+            isClosed && setPause(true);
           }
         }
       },
@@ -186,15 +191,16 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
       setNumber(exerciseNumber);
       handleExerciseChange(currentExercise?.exercise_title, getStoreVideoLoc);
     }
-   musicLink == '' && getMusicDetails();
+    musicLink == '' && getMusicDetails();
   }, []);
 
   const getMusicDetails = () => {
     RequestAPI.makeRequest('GET', NewAppapi.GET_MUSIC_DETAILS, {}, res => {
       const exerciseMusic = res.data?.filter(
-        (item: any) => item?.type == 'Exercise' && item?.title == 'Background music',
+        (item: any) =>
+          item?.type == 'Exercise' && item?.title == 'Background music',
       );
-      setMusicLink(exerciseMusic[0]?.music_file)
+      setMusicLink(exerciseMusic[0]?.music_file);
     });
   };
 

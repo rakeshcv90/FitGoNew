@@ -30,6 +30,8 @@ class MusicPlayer: NSObject {
     
     audioPlayer?.automaticallyWaitsToMinimizeStalling = false
     isInitialized = true
+    // Pause the player immediately after setting it up
+    audioPlayer?.pause()
     resolver(isInitialized)
   }
 

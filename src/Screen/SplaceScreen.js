@@ -1,5 +1,12 @@
-import {StyleSheet, Image, StatusBar, Platform, View} from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import {
+  StyleSheet,
+  Image,
+  StatusBar,
+  Platform,
+  View,
+  ImageBackground,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import {
   Appapi,
   DeviceHeigth,
@@ -71,6 +78,14 @@ import {
 } from '../Component/Permissions/PermissionMethods';
 import {RESULTS} from 'react-native-permissions';
 import {AuthorizationStatus} from '@notifee/react-native';
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
+
 const products = Platform.select({
   ios: ['fitme_noob', 'fitme_pro', 'fitme_legend'],
   android: ['fitme_monthly', 'a_monthly', 'fitme_legend'],
@@ -86,8 +101,17 @@ const SplaceScreen = ({navigation, route}) => {
   const getOfferAgreement = useSelector(state => state.getOfferAgreement);
   const getDeviceID = useSelector(state => state?.getDeviceID);
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
+  const circleRef = useSharedValue(1);
+  const logoRef = useSharedValue(0);
+  const logoLeftRef = useSharedValue(0);
+  const logoOpacityRef = useSharedValue(0);
+  const textWidthRef = useSharedValue(0);
+  const textOpacityRef = useSharedValue(0);
+
   useEffect(() => {
-    PLATFORM_IOS
+    __DEV__
+      ? true
+      : PLATFORM_IOS
       ? getUserDataDetails && getUserDataDetails?.social_id != null
         ? ADS_IOS.includes(getUserDataDetails?.social_id)
           ? initInterstitial(true)
@@ -147,7 +171,8 @@ const SplaceScreen = ({navigation, route}) => {
             result?.result['android.permission.ACCESS_FINE_LOCATION'] ==
               RESULTS.DENIED) ||
           (isObject(result?.result) &&
-          result?.result['authorizationStatus'] === AuthorizationStatus.DENIED)
+            result?.result['authorizationStatus'] ===
+              AuthorizationStatus.DENIED)
         );
       });
       if (condition) {
@@ -473,89 +498,137 @@ const SplaceScreen = ({navigation, route}) => {
       console.log('GET-USER-Challange and AllExerciseData DATA', error);
     }
   };
+
+  useEffect(() => {
+    logoOpacityRef.value = withTiming(1, {duration: 800});
+    circleRef.value = withTiming(0, {duration: 1000});
+    logoRef.value = withTiming(
+      -150,
+      {easing: Easing.out(Easing.cubic), duration: 1000},
+      () =>
+        (logoRef.value = withSpring(
+          0,
+          {stiffness: 150},
+          () =>
+            (logoLeftRef.value = withTiming(-50, {duration: 1000}, () => {
+              textWidthRef.value = withTiming(DeviceWidth, {
+                duration: 3000,
+              });
+              textOpacityRef.value = 1;
+              //  withTiming(1, {
+              //   duration: 3000,
+              // });
+            })),
+        )),
+    );
+  }, []);
+
+  const circleStyle = useAnimatedStyle(() => ({
+    transform: [{scale: circleRef.value}],
+  }));
+  const logoStyle = useAnimatedStyle(() => ({
+    transform: [{translateY: logoRef.value}, {translateX: logoLeftRef.value}],
+    opacity: logoOpacityRef.value,
+  }));
+  const textViewStyle = useAnimatedStyle(() => ({
+    transform: [{translateX: textWidthRef.value}],
+    // width: textWidthRef.value,
+  }));
+  const textStyle = useAnimatedStyle(() => ({
+    opacity: textOpacityRef.value,
+  }));
+
+  const AnimatedImage = Animated.createAnimatedComponent(Image);
+
   return (
-    <View style={styels.container}>
-      <StatusBar backgroundColor="#ec119a" barStyle={'light-content'} />
-      <LinearGradient
-        start={{x: 0, y: 0}}
-        end={{x: 0, y: 1}}
-        colors={['#ec119a', 'transparent', 'transparent']}
-        style={{
-          width: '100%',
-
-          height: '100%',
-          justifyContent: 'center',
-          alignSelf: 'center',
-        }}>
+    <ImageBackground
+      source={localImage.BGSplash}
+      style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
+      imageStyle={styles.container}>
+      <StatusBar backgroundColor="white" barStyle={'light-content'} />
+      <View style={styles.main}>
+        <AnimatedImage
+          source={localImage.CircleSplash}
+          style={[styles.circle, circleStyle]}
+          resizeMode={'contain'}
+        />
         <View
           style={{
-            width: '100%',
-            height: '40%',
-
-            justifyContent: 'center',
+            flexDirection: 'row',
             alignItems: 'center',
-            paddingTop: 50,
+            justifyContent: 'center',
           }}>
-          <Image
-            source={localImage.SplashText}
-            style={styels.Textlogo}
-            resizeMode="contain"
+          <AnimatedImage
+            source={localImage.LogoSplash}
+            style={[styles.logo, logoStyle]}
+            resizeMode={'contain'}
           />
-          {/* <AnimatedLottieView
-          source={localImage.Splace3}
-          speed={1}
-          autoPlay
-          loop
-          resizeMode="cover"
-          style={{
-            width: '100%',
-            height: DeviceHeigth * 0.45,
-            height: DeviceHeigth * 0.4,
-            position: 'absolute',
-            bottom: 0, // Adjust this value based on the height of the second animation
-          }}
-        /> */}
+          <Animated.View
+            style={[
+              styles.textView,
+              textStyle,
+              {
+                // backgroundColor: 'white',
+              },
+            ]}>
+            <Animated.View
+              style={[
+                textViewStyle,
+                styles.textView,
+                {
+                  backgroundColor: 'white',
+                  zIndex: 1,
+                },
+              ]}
+            />
+            <AnimatedImage
+              source={localImage.SplashText}
+              style={[styles.text, textStyle]}
+              resizeMode={'contain'}
+            />
+          </Animated.View>
         </View>
-        <View
-          style={{width: '100%', height: '60%', zIndex: 1, overflow: 'hidden'}}>
-          <AnimatedLottieView
-            source={localImage.Splace1}
-            speed={1}
-            autoPlay
-            loop
-            resizeMode="cover"
-            style={{
-              width: '100%',
-              height: DeviceHeigth * 0.45,
-              height: DeviceHeigth * 0.4,
-              position: 'absolute',
-              bottom: 0, // Adjust this value based on the height of the second animation
-            }}
-          />
-          <AnimatedLottieView
-            source={localImage.Splace2}
-            speed={1}
-            autoPlay
-            loop
-            resizeMode="contain"
-            style={{
-              width: DeviceWidth,
-              height: DeviceHeigth * 0.45,
-              position: 'absolute',
-              bottom: 0,
-            }}
-          />
-        </View>
-      </LinearGradient>
-    </View>
+      </View>
+    </ImageBackground>
   );
 };
-const styels = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   Textlogo: {
     width: DeviceWidth * 0.6,
+  },
+  main: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    width: DeviceWidth * 0.6,
+    height: 100,
+    // backgroundColor: 'red',
+  },
+  circle: {
+    width: DeviceWidth / 2,
+    height: 40,
+    position: 'absolute',
+  },
+  logo: {
+    width: 80,
+    height: 80,
+    position: 'absolute',
+  },
+  text: {
+    height: 80,
+    width: DeviceWidth / 4,
+    zIndex: -1,
+  },
+  textView: {
+    position: 'absolute',
+    width: DeviceWidth / 4,
+    left: -5,
+    height: 80,
   },
 });
 export default SplaceScreen;

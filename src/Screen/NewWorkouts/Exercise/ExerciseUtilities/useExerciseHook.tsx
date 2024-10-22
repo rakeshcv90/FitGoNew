@@ -102,6 +102,7 @@ const useExerciseHook = ({
     // song: resolveImportedAssetOrPath(songs[0]), //LOCAL MUSIC 
     restStart: restStart,
     pause: pause,
+    getSoundOffOn: getSoundOffOn
   });
 
   const SPEAK = (words: string) => {
