@@ -153,7 +153,7 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
     musicLink,
   });
 
-  // const {openAdClosed} = OpenAppAds();
+  const {openAdClosed} = OpenAppAds();
 
   const resumeButton = () => {
     setBack(false);
@@ -167,8 +167,7 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
           if (state.match(/background|inactive/)) {
             setPause(false);
           } else if (state.match(/active/)) {
-            const isClosed = true;
-            //  await openAdClosed();
+            const isClosed = await openAdClosed();
             isClosed && setPause(true);
           }
         }
@@ -452,6 +451,7 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
           setNumber={setNumber}
           setProgressPercent={setProgressPercent}
           setSeconds={setSeconds}
+          setPause={setPause}
           isEventPage={isEventPage}
         />
       </View>

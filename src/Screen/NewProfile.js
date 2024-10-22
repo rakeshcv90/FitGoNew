@@ -356,7 +356,7 @@ const NewProfile = ({navigation}) => {
         console.log('UpdateProfileError', error);
       }
     };
-    const askPermissionForLibrary = async () => {
+    const openLibrary = async () => {
       try {
         const resultLibrary = await launchLibrary();
         setUserAvatar(resultLibrary.assets[0]);
@@ -379,16 +379,7 @@ const NewProfile = ({navigation}) => {
             console.log('some error', err);
           });
       } else {
-        AnalyticsConsole(`OPEN_GALLERY`);
-        if (Platform.OS == 'ios') {
-          askPermissionForLibrary(PERMISSIONS.IOS.PHOTO_LIBRARY);
-        } else {
-          askPermissionForLibrary(
-            Platform.Version >= 33
-              ? PERMISSIONS.ANDROID.READ_MEDIA_IMAGES
-              : PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-          );
-        }
+        openLibrary();
       }
     };
     return (
@@ -675,12 +666,6 @@ const NewProfile = ({navigation}) => {
         <View style={styles.card}>
           {getUserDataDetails.email != null
             ? CardData?.map((v, i) => {
-                if (
-                  getOfferAgreement?.location != 'India' &&
-                  getOfferAgreement?.location != 'United States' &&
-                  v.txt == 'Subscription'
-                )
-                  return;
                 return (
                   <TouchableOpacity
                     key={i}

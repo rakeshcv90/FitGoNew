@@ -291,12 +291,12 @@ const TextBanner = ({navigation, setLocationP}) => {
   };
   const handleStart = () => {
     if (getUserDataDetails?.email != null && getUserDataDetails?.name != null) {
-      setLoaded(false);
-      if (
-        getOfferAgreement?.location === 'India' ||
-        getOfferAgreement?.location == 'United States'
-      ) {
-        setLoaded(true);
+      // setLoaded(false);
+      // if (
+      //   getOfferAgreement?.location === 'India' ||
+      //   getOfferAgreement?.location == 'United States'
+      // ) {
+      //   setLoaded(true);
         if (getPurchaseHistory?.plan == null) {
           AnalyticsConsole('PP_BANNER');
           navigation.navigate('StepGuide');
@@ -305,43 +305,44 @@ const TextBanner = ({navigation, setLocationP}) => {
           AnalyticsConsole('UP_BANNER');
           navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
         }
-      } else {
-        locationPermission()
-          .then(result => {
-            if (result == 'blocked') {
-              setLocationP(true);
-              setLoaded(true);
-            } else if (result === 'denied') {
-              setLocationP(true);
-              setLoaded(true);
-            } else if (result) {
-              StoreAgreementApi(result);
-            } else if (result == null) {
-              // setLocationP(true);
-              setLoaded(true);
-              showMessage({
-                message: 'Error while getting your location',
-                floating: true,
-                duration: 500,
-                type: 'danger',
-                icon: {icon: 'auto', position: 'left'},
-              });
-            } else {
-              setLoaded(true);
-              showMessage({
-                message: 'Error while getting your location',
-                floating: true,
-                duration: 500,
-                type: 'danger',
-                icon: {icon: 'auto', position: 'left'},
-              });
-            }
-          })
-          .catch(err => {
-            console.log('location Error', err);
-            setLoaded(true);
-          });
-      }
+      // }
+      //  else {
+      //   locationPermission()
+      //     .then(result => {
+      //       if (result == 'blocked') {
+      //         setLocationP(true);
+      //         setLoaded(true);
+      //       } else if (result === 'denied') {
+      //         setLocationP(true);
+      //         setLoaded(true);
+      //       } else if (result) {
+      //         StoreAgreementApi(result);
+      //       } else if (result == null) {
+      //         // setLocationP(true);
+      //         setLoaded(true);
+      //         showMessage({
+      //           message: 'Error while getting your location',
+      //           floating: true,
+      //           duration: 500,
+      //           type: 'danger',
+      //           icon: {icon: 'auto', position: 'left'},
+      //         });
+      //       } else {
+      //         setLoaded(true);
+      //         showMessage({
+      //           message: 'Error while getting your location',
+      //           floating: true,
+      //           duration: 500,
+      //           type: 'danger',
+      //           icon: {icon: 'auto', position: 'left'},
+      //         });
+      //       }
+      //     })
+      //     .catch(err => {
+      //       console.log('location Error', err);
+      //       setLoaded(true);
+      //     });
+      // }
     } else {
       if (
         (getUserDataDetails.name?.toUpperCase() == 'GUEST' ||
