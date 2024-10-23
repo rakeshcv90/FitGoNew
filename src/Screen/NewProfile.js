@@ -51,7 +51,6 @@ import {AnalyticsConsole} from '../Component/AnalyticsConsole';
 import RatingModal from '../Component/RatingModal';
 import FitIcon from '../Component/Utilities/FitIcon';
 import Wrapper from './WorkoutCompleteScreen/Wrapper';
-import Header from '../Component/Header';
 import NewHeader1 from '../Component/Headers/NewHeader1';
 import NewButton from '../Component/NewButton';
 import {useGalleryPermission} from '../Component/Permissions/PermissionHooks';

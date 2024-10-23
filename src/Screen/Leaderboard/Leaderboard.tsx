@@ -34,6 +34,7 @@ import NewHeader1 from '../../Component/Headers/NewHeader1';
 import LeaderBoardTopComponent from './LeaderBoardTopComponent';
 import PastWinnersComponent from './PastWinnersComponent';
 import LeaderBoardProgressComopnent from './LeaderBoardProgressComopnent';
+import FitText from '../../Component/Utilities/FitText';
 
 type TypeData = {
   name: string;
@@ -76,7 +77,9 @@ const Leaderboard = () => {
   const [coins, setCoins] = useState({});
   const [winnerData, setWinnerData] = useState();
   const getBanners = useSelector((state: any) => state?.getBanners);
-  const enteredUpcomingEvent = useSelector((state: any) => state?.enteredUpcomingEvent);
+  const enteredUpcomingEvent = useSelector(
+    (state: any) => state?.enteredUpcomingEvent,
+  );
   const enteredCurrentEvent = useSelector(
     (state: any) => state?.enteredCurrentEvent,
   );
@@ -369,17 +372,19 @@ const Leaderboard = () => {
                 }}>
                 {mainData[0]?.name}
               </Text>
-              <Image
-                source={require('../../Icon/Images/NewHome/price.png')}
-                resizeMode="contain"
+              <View
                 style={{
-                  width: 100,
-                  height: 50,
+                  borderRadius: 20,
+                  borderWidth: 1,
+                  borderColor: AppColor.RED,
+                  padding: 5,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  marginVertical: 15,
-                }}
-              />
+                  marginVertical: 20,
+                  paddingHorizontal: 10,
+                }}>
+                <FitText type="normal" value="Won: Voucher" color={AppColor.RED} fontWeight='700' />
+              </View>
               <View
                 style={{
                   width: DeviceHeigth >= 1024 ? '50%' : '65%',
@@ -745,11 +750,7 @@ const Leaderboard = () => {
           </Wrapper>
         </View>
       )}
-      <WinnerModal
-        setVisible={setVisible}
-        visible={visible}
-        mainData={mainData}
-      />
+      <WinnerModal setVisible={setVisible} visible={visible} mainData={mainData} />
     </>
   );
 };

@@ -17,7 +17,6 @@ import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {localImage} from '../../Component/Image';
 import {useDispatch, useSelector} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
-import TextBanner from '../../Component/NewHomeUtilities/TextBanner';
 import WorkoutChallengeZone from '../../Component/NewHomeUtilities/WorkoutChallengeZone';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import {
@@ -113,7 +112,7 @@ const NewHome = ({navigation}) => {
   const getChallengesData = useSelector(state => state?.getChallengesData);
   const getEquipmentExercise = useSelector(
     state => state?.getEquipmentExercise,
-  ); 
+  );
   useEffect(() => {
     if (isFocused) {
       getAllExercise?.length <= 0
@@ -162,6 +161,7 @@ const NewHome = ({navigation}) => {
       item => item?.status == 'active',
     );
 
+    getCurrentDayAPI(challenge);
     setCurrentChallenge(challenge);
   };
 
@@ -820,7 +820,7 @@ const NewHome = ({navigation}) => {
               } else {
                 dispatch(setPopUpSeen(true));
                 navigation?.navigate('NewSubscription', {upgrade: true});
-              }  
+              }
             } else {
               dispatch(setPopUpSeen(true));
               navigation?.navigate('NewSubscription', {upgrade: true});

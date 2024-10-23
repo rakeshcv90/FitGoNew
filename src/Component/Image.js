@@ -119,7 +119,6 @@ export const localImage = {
   success: require('../Icon/Images/InAppRewards/success.png'),
   greenStreak: require('../Icon/Images/InAppRewards/GreenStreak.png'),
   line: require('../Icon/Images/InAppRewards/line.png'),
-  FC1: require('../Icon/Images/InAppRewards/FC1.png'),
   breathingSound: require('../Icon/Images/breathing.mp3'),
   VolumeUp: require('../Icon/Images/InAppRewards/Volumeup.json'),
   focusAnimation: require('../Icon/Images/InAppRewards/focusAnimation.json'),

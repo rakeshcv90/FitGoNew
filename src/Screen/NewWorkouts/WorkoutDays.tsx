@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {AppColor, Fonts} from '../../Component/Color';
-import Header from '../../Component/Headers/NewHeader';
 import GradientText from '../../Component/GradientText';
 import moment from 'moment';
 import LinearGradient from 'react-native-linear-gradient';

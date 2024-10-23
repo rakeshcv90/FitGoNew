@@ -18,7 +18,6 @@ import {localImage} from '../Component/Image';
 import axios from 'axios';
 import {useNavigation} from '@react-navigation/native';
 import Loader from '../Component/Loader';
-import HeaderWithoutSearch from '../Component/HeaderWithoutSearch';
 import CustomStatusBar from '../Component/CustomStatusBar';
 import {WebView} from 'react-native-webview';
 import {AppColor} from '../Component/Color';

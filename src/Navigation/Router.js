@@ -28,7 +28,6 @@ import CreateWorkout from '../Screen/CustomWorkout/CreateWorkout';
 import EditCustomWorkout from '../Screen/CustomWorkout/EditCustomWorkout';
 
 import Experience from '../Screen/Experience';
-import WorkoutDayData from '../Screen/FocusArea/WorkoutDayData';
 
 import WorkoutDetail from '../Screen/CustomWorkout/WorkoutDetail';
 import PredictionScreen from '../Screen/Yourself/PredictionScreen';
@@ -137,7 +136,6 @@ export const LoginStack = () => {
       />
       <Stack.Screen name="CreateWorkout" component={CreateWorkout} />
       <Stack.Screen name="EditCustomWorkout" component={EditCustomWorkout} />
-      <Stack.Screen name="WorkoutDayData" component={WorkoutDayData} />
       <Stack.Screen name="WorkoutDetail" component={WorkoutDetail} />
       <Stack.Screen name="GymListing" component={GymListing} />
       <Stack.Screen name="Trainer" component={Trainer} />

@@ -382,12 +382,6 @@ export const setRatingTrack=data=>{
       payload:data
     }
 }
-export const setUpdateAvailable=data=>{
-  return{
-    type:types.UPDATE_AVAILABLE,
-    payload:data
-  }
-}
 export const setOpenAdsCount=data=>{
   return{
     type:types.OPEN_ADS_COUNT,

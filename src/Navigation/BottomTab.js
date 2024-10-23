@@ -13,7 +13,6 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Workouts from '../Screen/NewHome/Workouts';
 
 import Trainer from '../Screen/NewHome/Trainer';
-import NewProgressScreen from '../Screen/NewHome/NewProgressScreen';
 import {View, Text} from 'react-native';
 import {BannerAdd, MyInterstitialAd, OpenAppAds} from '../Component/BannerAdd';
 import {bannerAdId} from '../Component/AdsId';

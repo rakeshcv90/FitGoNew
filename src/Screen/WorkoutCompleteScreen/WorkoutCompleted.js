@@ -399,7 +399,7 @@ const WorkoutCompleted = ({navigation, route}) => {
   
   return (
     <>
-      {loader ? (
+      {!loader ? (
         <LoadingScreen />
       ) : (
         <Wrapper>
@@ -476,7 +476,7 @@ const WorkoutCompleted = ({navigation, route}) => {
                   streakCoins={coins}
                   cardioCoins={cardioExxercise[0]?.fit_coins}
                   handleSkip={() => {
-                    if (breatheSessionAvailabel) {
+                    if (!breatheSessionAvailabel) {
                       cardioCardOffset.value = withSpring(-DeviceWidth);
                       breatheCardOffset.value = withSpring(0);
                     } else {

@@ -10,9 +10,10 @@ import React, {useState} from 'react';
 import {DeviceHeigth, DeviceWidth} from '../Config';
 import {AppColor, Fonts} from '../Color';
 import CircularProgress from 'react-native-circular-progress-indicator';
-import PercentageBar from '../PercentageBar';
 import {AnalyticsConsole} from '../AnalyticsConsole';
 import {useNavigation} from '@react-navigation/native';
+import FitText from '../Utilities/FitText';
+import FitIcon from '../Utilities/FitIcon';
 const WorkoutChallengeZone = ({day, currentChallenge}) => {
   const navigation = useNavigation();
   return (
@@ -110,16 +111,21 @@ const WorkoutChallengeZone = ({day, currentChallenge}) => {
                   style={{
                     justifyContent: 'center',
                     alignItems: 'center',
-                    // top: DeviceHeigth * 0.037,
-                    // left: -DeviceWidth * 0.15,
                     flexDirection: 'row',
-                    alignItems: 'center',
-                    alignSelf: 'center',
                   }}>
-                  <Image
-                    source={require('../../Icon/Images/NewHome/start.png')}
-                    resizeMode="contain"
-                    style={{width: 100, height: 30}}
+                  <FitText
+                    type="normal"
+                    value="START NOW"
+                    color={AppColor.RED}
+                    lineHeight={25}
+                    fontWeight='600'
+                    marginTop={2}
+                  />
+                  <FitIcon
+                    name="right"
+                    size={16}
+                    type="AntDesign"
+                    color={AppColor.RED}
                   />
                 </TouchableOpacity>
               </View>
