@@ -5,19 +5,24 @@ type Props = {
   song: string;
   restStart: boolean;
   pause: boolean;
+  getSoundOffOn: boolean;
 };
 
-const useMusicPlayer = ({song, restStart, pause}: Props) => {
+const useMusicPlayer = ({song, restStart, pause, getSoundOffOn}: Props) => {
   const MusicPlayer = NativeModules.MusicPlayer;
   const [initialized, setInitialized] = useState(false);
   const [duration, setDuration] = useState(0);
 
   useEffect(() => {
-    if (initialized)
-      restStart ? stopMusic() : pause ? playMusic() : pauseMusic();
-    else if (song.length != 0) setupMusic();
-  }, [restStart, pause, initialized, song]);
-  
+    if (getSoundOffOn) {
+      if (initialized)
+        restStart ? stopMusic() : pause ? playMusic() : pauseMusic();
+      else if (song.length != 0) setupMusic();
+    }else{
+      releaseMusic()
+    }
+  }, [restStart, pause, initialized, song, getSoundOffOn]);
+
   const setupMusic = async () => {
     console.log('INITIALIZNG', song);
     const isInitialized = await MusicPlayer?.setupPlayer(song);
@@ -46,6 +51,8 @@ const useMusicPlayer = ({song, restStart, pause}: Props) => {
   };
   const releaseMusic = () => {
     console.log('RELEASE');
+    setInitialized(false)
+    setDuration(0)
     MusicPlayer?.releaseMediaPlayer();
   };
 

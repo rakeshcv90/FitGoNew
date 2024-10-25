@@ -1,5 +1,5 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {AppColor, Fonts} from '../../../../Component/Color';
 import {DeviceHeigth} from '../../../../Component/Config';
 import {setSoundOnOff} from '../../../../Component/ThemeRedux/Actions';
@@ -22,6 +22,7 @@ type BottomControlsProps = {
   setCurrentSet: Function;
   setProgressPercent: Function;
   isEventPage?: boolean | false;
+  setPause: Function;
 };
 
 const BottomControls = ({
@@ -34,12 +35,17 @@ const BottomControls = ({
   setProgressPercent,
   setSeconds,
   isEventPage,
+  setPause,
 }: BottomControlsProps) => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [openSheet, setOpenSheet] = useState(false);
   const getSoundOffOn = useSelector((state: any) => state.getSoundOffOn);
   const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
+
+  useEffect(() => {
+    open ? setPause(false) : setPause(true);
+  }, [open]);
 
   return (
     <View>

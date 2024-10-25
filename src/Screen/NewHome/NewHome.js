@@ -99,6 +99,7 @@ const NewHome = ({navigation}) => {
   const getPastWinners = useSelector(state => state?.getPastWinners);
   const getAllExercise = useSelector(state => state?.getAllExercise);
   const [showRewardModal, setShowRewardModal] = useState(false);
+  const [openPopup, setOpenPopup] = useState(false);
 
   const Sat = getPurchaseHistory?.currentDay == 6;
   const Sun = getPurchaseHistory?.currentDay == 0;
@@ -467,6 +468,7 @@ const NewHome = ({navigation}) => {
       />
       <ScrollView
         showsVerticalScrollIndicator={false}
+        onMomentumScrollEnd={() => setOpenPopup(true)}
         style={[styles.container]}>
         <View style={styles.userCard}>
           <View
@@ -591,7 +593,7 @@ const NewHome = ({navigation}) => {
                   />
                   <Text
                     style={[styles.cointxt, {color: AppColor.orangeColor1}]}>
-                    {fitCoins <= 0 ? 0 : fitCoins}
+                    {fitCoins <= 0 ? 0 : fitCoins ?? 0}
                   </Text>
                 </TouchableOpacity>
               </>
@@ -791,9 +793,9 @@ const NewHome = ({navigation}) => {
         // }}
       />
 
-      {/* {!enteredUpcomingEvent && (
+      {!enteredUpcomingEvent && (
         <UpcomingEventModal
-          visible={!getPopUpSeen}
+          visible={!getPopUpSeen && openPopup}
           onConfirm={() => {
             AnalyticsConsole('U_E');
             if (getPurchaseHistory) {
@@ -830,7 +832,7 @@ const NewHome = ({navigation}) => {
             dispatch(setPopUpSeen(true));
           }}
         />
-      )} */}
+      )}
       <LocationPermissionModal
         locationP={locationP1}
         setLocationP={setLocationP1}
