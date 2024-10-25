@@ -83,7 +83,8 @@ const NewFocusWorkouts = ({route, navigation}) => {
   const [searchFilterList, setSearchFilterList] = useState([]);
   const [start, setStart] = useState(false);
   const [overExerciseVisible, setOverExerciseVisible] = useState(false);
-  const [adujstedExerciseList, SetAdjustedExerciseList] = useState([]);
+  const [selectedExerciseIds, setSelectedExerciseIds] = useState(new Set());
+  const [startSelection, setStartSelection] = useState(false);
   const getEquipmentExercise = useSelector(
     state => state?.getEquipmentExercise,
   );
@@ -163,7 +164,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
         bottomSheetRef.current?.openSheet();
       } else if (route?.params?.focusedPart == 'Core' && getCoreCount == 0) {
         bottomSheetRef.current?.openSheet();
-      } 
+      }
       // else {
       //   bottomSheetRef.current?.openSheet();
       // }
@@ -442,7 +443,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
             width: DeviceWidth * 0.9,
             alignSelf: 'center',
             alignItems: 'center',
-            flex: 1
+            flex: 1,
           }}>
           <FlatList
             data={
@@ -707,53 +708,37 @@ const NewFocusWorkouts = ({route, navigation}) => {
     }
     dispatch(setVideoLocation(StoringData));
   };
-  const Start = exercise => {
-    // if (
-    //   getExerciseOutTime != '' &&
-    //   moment().format(format) > getExerciseOutTime
-    // ) {
-    //   console.warn(
-    //     'SHOWINGDF',
-    //     moment().format(format),
-    //     getExerciseInTime,
-    //     getExerciseOutTime,
-    //   );
-    //   setOverExerciseVisible(true);
-    // } else {
-      setStart(true);
-      AnalyticsConsole('S_E_FW');
-      Promise.all(
-        exercise?.map((item, index) => {
-          return downloadVideos(item, index, exercise?.length);
-        }),
-      ).finally(() => {
-        setDownloade(0);
-        setStart(false);
-        navigation.navigate('Exercise', {
-          allExercise: exercise,
-          currentExercise: exercise[0],
-          data: CategoryDetails,
-          day: -11,
-          exerciseNumber: 0,
-          trackerData: [],
-          type: 'bodypart',
-          challenge: false,
-          isEventPage: false
-        });
+  const Start = () => {
+    const exercise = filterList.filter(item =>
+      selectedExerciseIds.has(item?.exercise_id),
+    );
+    setStart(true);
+    AnalyticsConsole('S_E_FW');
+    Promise.all(
+      exercise?.map((item, index) => {
+        return downloadVideos(item, index, exercise?.length);
+      }),
+    ).finally(() => {
+      setDownloade(0);
+      setStart(false);
+      navigation.navigate('Exercise', {
+        allExercise: exercise,
+        currentExercise: exercise[0],
+        data: CategoryDetails,
+        day: -11,
+        exerciseNumber: 0,
+        trackerData: [],
+        type: 'bodypart',
+        challenge: false,
+        isEventPage: false,
       });
-    
+    });
   };
   const handleIconPress = (item, index) => {
     if (
       getExerciseOutTime != '' &&
       moment().format(format) > getExerciseOutTime
     ) {
-      console.warn(
-        'SHOWINGDF',
-        moment().format(format),
-        getExerciseInTime,
-        getExerciseOutTime,
-      );
       setOverExerciseVisible(true);
     } else {
       setStart(true);
@@ -771,7 +756,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
           trackerData: [],
           type: 'bodypart',
           challenge: false,
-          isEventPage: false
+          isEventPage: false,
         });
       });
     }
@@ -806,6 +791,17 @@ const NewFocusWorkouts = ({route, navigation}) => {
       </View>
     );
   };
+  const handleSelection = id => {
+    setSelectedExerciseIds(prev => {
+      const newSet = new Set(prev); //to maintain immutability
+      if (newSet?.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
   return (
     <>
       <View style={styles.container}>
@@ -814,9 +810,19 @@ const NewFocusWorkouts = ({route, navigation}) => {
             backgroundColor: '#FDFDFD',
           }}>
           <NewHeader1
-            header={route?.params?.focusedPart}
+            header={
+              startSelection
+                ? `${selectedExerciseIds?.size} Selected`
+                : route?.params?.focusedPart
+            }
             iconSource={require('../../Icon/Images/NewImage2/filter.png')}
+            workoutCat={startSelection}
             onBackPress={() => {
+              if (startSelection) {
+                setStartSelection(false);
+                setSelectedExerciseIds(new Set());
+                return;
+              }
               if (downloaded > 0) {
                 showMessage({
                   message:
@@ -834,7 +840,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
               AnalyticsConsole('O_BS_FW');
               bottomSheetRef.current?.openSheet();
             }}
-            icon
+            icon={!startSelection}
             backButton
           />
           <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -957,6 +963,10 @@ const NewFocusWorkouts = ({route, navigation}) => {
                           style={{right: -15, padding: 2}}
                           disabled={selectedIndex == index}
                           onPress={() => {
+                            if (startSelection) {
+                              handleSelection(item?.exercise_id);
+                              return;
+                            }
                             if (
                               selectedIndex == index ||
                               downloadProgress > 0
@@ -967,27 +977,44 @@ const NewFocusWorkouts = ({route, navigation}) => {
                               handleIconPress(item, index);
                             }
                           }}>
-                          <CircularProgressBase
-                            value={
-                              selectedIndex == index ? downloadProgress : 0
-                            }
-                            radius={16}
-                            activeStrokeColor={AppColor.RED}
-                            inActiveStrokeColor={AppColor.GRAY1}
-                            activeStrokeWidth={3}
-                            inActiveStrokeWidth={3}
-                            maxValue={100}>
-                            <Image
-                              source={localImage.ExercisePlay}
-                              tintColor={selectedIndex != index && '#565656'}
-                              resizeMode="contain"
-                              style={{
-                                width: 12,
-                                height: 12,
-                                alignSelf: 'center',
-                              }}
+                          {startSelection ? (
+                            <Icon
+                              name={
+                                selectedExerciseIds.has(item?.exercise_id)
+                                  ? 'check-circle'
+                                  : 'checkbox-blank-circle-outline'
+                              }
+                              size={25}
+                              color={
+                                selectedExerciseIds.has(item?.exercise_id)
+                                  ? AppColor.RED
+                                  : AppColor.GRAY1
+                              }
+                              style={{marginTop: 8}}
                             />
-                          </CircularProgressBase>
+                          ) : (
+                            <CircularProgressBase
+                              value={
+                                selectedIndex == index ? downloadProgress : 0
+                              }
+                              radius={16}
+                              activeStrokeColor={AppColor.RED}
+                              inActiveStrokeColor={AppColor.GRAY1}
+                              activeStrokeWidth={3}
+                              inActiveStrokeWidth={3}
+                              maxValue={100}>
+                              <Image
+                                source={localImage.ExercisePlay}
+                                tintColor={selectedIndex != index && '#565656'}
+                                resizeMode="contain"
+                                style={{
+                                  width: 12,
+                                  height: 12,
+                                  alignSelf: 'center',
+                                }}
+                              />
+                            </CircularProgressBase>
+                          )}
                         </TouchableOpacity>
                       )}
                     </TouchableOpacity>
@@ -1015,11 +1042,29 @@ const NewFocusWorkouts = ({route, navigation}) => {
             <NewButton
               position={'absolute'}
               bottom={10}
-              title={'Start Workout'}
-              withAnimation
+              title={
+                selectedExerciseIds.size < 1
+                  ? 'Select Exercises'
+                  : 'Start Workout'
+              }
+              withAnimation={downloaded > 0}
               download={downloaded}
               onPress={() => {
-                if (selectedIndex == -1) Start(filterList);
+                if (!startSelection) {
+                  setStartSelection(true);
+                  return;
+                }
+                if (selectedExerciseIds.size >= 1) {
+                  Start();
+                } else {
+                  showMessage({
+                    message: 'Please select exercises to start.',
+                    type: 'info',
+                    animationDuration: 500,
+                    floating: true,
+                    icon: {icon: 'auto', position: 'left'},
+                  });
+                }
               }}
             />
           )}

@@ -27,6 +27,9 @@ import ExerciseTimer from './ExerciseTimer';
 import BottomControls from './BottomControls';
 import useExerciseHook, {ExerciseData} from './useExerciseHook';
 import {RequestAPI} from '../../../../Component/Utilities/RequestAPI';
+import {OpenAppAds} from '../../../../Component/BannerAdd';
+import RestButtons from './RestButtons';
+import FitText from '../../../../Component/Utilities/FitText';
 
 type ExerciseControlsProps = {
   pause: boolean;
@@ -133,6 +136,9 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
     setSeconds,
     exerciseTimerRef,
     releaseMusic,
+    restSet,
+    setRestSet,
+    setReset
   } = useExerciseHook({
     pause,
     setPause,
@@ -149,8 +155,10 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
     apiCalls,
     skip,
     setSkip,
-    musicLink
+    musicLink,
   });
+
+  const {openAdClosed} = OpenAppAds();
 
   const resumeButton = () => {
     setBack(false);
@@ -159,12 +167,13 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
   useEffect(() => {
     const subscribe = AppState.addEventListener(
       'change',
-      (state: AppStateStatus) => {
-        if (!restStart) {
+      async (state: AppStateStatus) => {
+        if (!restStart || !restSet) {
           if (state.match(/background|inactive/)) {
             setPause(false);
           } else if (state.match(/active/)) {
-            setPause(true);
+            const isClosed = await openAdClosed();
+            isClosed && setPause(true);
           }
         }
       },
@@ -186,15 +195,16 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
       setNumber(exerciseNumber);
       handleExerciseChange(currentExercise?.exercise_title, getStoreVideoLoc);
     }
-   musicLink == '' && getMusicDetails();
+    musicLink == '' && getMusicDetails();
   }, []);
 
   const getMusicDetails = () => {
     RequestAPI.makeRequest('GET', NewAppapi.GET_MUSIC_DETAILS, {}, res => {
       const exerciseMusic = res.data?.filter(
-        (item: any) => item?.type == 'Exercise' && item?.title == 'Background music',
+        (item: any) =>
+          item?.type == 'Exercise' && item?.title == 'Background music',
       );
-      setMusicLink(exerciseMusic[0]?.music_file)
+      setMusicLink(exerciseMusic[0]?.music_file);
     });
   };
 
@@ -367,12 +377,13 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
         style={[
           {
             // height: DeviceHeigth * 0.28,
-            paddingTop: 10,
+            paddingTop: restSet ? 30 : 10,
             paddingHorizontal: 20,
             backgroundColor: AppColor.WHITE,
             width: DeviceHeigth >= 1024 ? '95%' : '90%',
             alignSelf: 'center',
             borderRadius: 10,
+            paddingBottom: restSet ? 30 : 0,
           },
           ShadowStyle,
         ]}>
@@ -408,6 +419,13 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
               </TouchableOpacity>
             </CircleProgress>
           </View>
+        ) : restSet ? (
+          <RestButtons
+            reset={setReset}
+            seconds={seconds}
+            setRestSet={setRestSet}
+            setSeconds={setSeconds}
+          />
         ) : (
           <View
             style={{
@@ -437,17 +455,22 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
           </View>
         )}
         <View style={{height: DeviceHeigth >= 1024 ? 20 : 0}} />
-        <BottomControls
-          allExercise={allExercise}
-          restStart={restStart}
-          number={number}
-          setRestStart={setRestStart}
-          setCurrentSet={setCurrentSet}
-          setNumber={setNumber}
-          setProgressPercent={setProgressPercent}
-          setSeconds={setSeconds}
-          isEventPage={isEventPage}
-        />
+        {restSet && !restStart ? (
+          <FitText type="Heading" value="Take a Rest" textAlign="center" />
+        ) : (
+          <BottomControls
+            allExercise={allExercise}
+            restStart={restStart}
+            number={number}
+            setRestStart={setRestStart}
+            setCurrentSet={setCurrentSet}
+            setNumber={setNumber}
+            setProgressPercent={setProgressPercent}
+            setSeconds={setSeconds}
+            setPause={setPause}
+            isEventPage={isEventPage}
+          />
+        )}
       </View>
 
       <PauseModal
@@ -464,7 +487,3 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
 };
 
 export default ExerciseControls;
-
-// if (seconds == resetTime) SPEAK('Lets Go');
-// if (seconds == 4) SPEAK('three.            two.');
-// if (seconds == 2) SPEAK('one.    Done');

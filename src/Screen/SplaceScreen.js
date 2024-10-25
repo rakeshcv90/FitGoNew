@@ -105,7 +105,7 @@ const SplaceScreen = ({navigation, route}) => {
         if (ADS_IDs.includes(uniqueId)) {
           callAds(true);
         } else {
-          callAds(false);
+          callAds(__DEV__ ? true : false);
         }
       });
     }
@@ -179,9 +179,6 @@ const SplaceScreen = ({navigation, route}) => {
       getUserDetailData(getUserDataDetails?.id);
     }
   }, []);
-  const moveToNextScreen = () => {
-    loadScreen();
-  };
   const loadScreen = condition => {
     if (showIntro) {
       if (getUserDataDetails?.id) {
@@ -249,7 +246,7 @@ const SplaceScreen = ({navigation, route}) => {
         version: VersionNumber.appVersion,
       },
       res => {
-        if (res.error) {
+        if (res?.error) {
         }
         if (res.data) {
           dispatch(setPastWinners(res.data?.data));
@@ -367,11 +364,11 @@ const SplaceScreen = ({navigation, route}) => {
         dispatch(Setmealdata(responseData?.data?.diets));
         dispatch(setStoreData(responseData?.data?.types));
         dispatch(setCompleteProfileData(responseData?.data?.additional_data));
-        moveToNextScreen();
+        loadScreen();
       }
     } catch (error) {
       console.log('all_in_one_api_error', error);
-      moveToNextScreen();
+      loadScreen();
       // getAllChallangeAndAllExerciseData();
     }
   };
