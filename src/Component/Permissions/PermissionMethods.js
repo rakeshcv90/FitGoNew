@@ -10,7 +10,6 @@ import {AuthorizationStatus} from '@notifee/react-native';
 import {Alert} from 'react-native';
 import {PLATFORM_IOS} from '../Color';
 import {showMessage} from 'react-native-flash-message';
-import AndroidOpenSettings from 'react-native-android-open-settings';
 // item Array
 export const UIArray = [
   {
@@ -106,7 +105,6 @@ export const handleError = err => {
         },
         {
           text: 'Enable location service',
-          onPress: () => AndroidOpenSettings.locationSourceSettings(),
         },
       ],
     );

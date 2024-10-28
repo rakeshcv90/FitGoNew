@@ -75,7 +75,31 @@ class MusicPlayer: NSObject {
           resolver(0)  // Return 0 if there is no current item
       }
   }
+  
+  // Function to get Current Music Position
+  @objc(getCurrentPosition:rejecter:)
+    func getCurrentPosition(resolver: @escaping RCTPromiseResolveBlock, rejecter: @escaping RCTPromiseRejectBlock) {
+      if let currentItem = audioPlayer?.currentItem {
+        let currentTime = CMTimeGetSeconds(currentItem.currentTime())
+        resolver(Int(currentTime))
+      } else {
+        resolver(0)
+      }
+    }
 
+    // function to seek to a specific position in seconds
+    @objc(seekTo:resolver:rejecter:)
+    func seekTo(position: Int, resolver: @escaping RCTPromiseResolveBlock, rejecter: @escaping RCTPromiseRejectBlock) {
+      let seekTime = CMTimeMake(value: Int64(position), timescale: 1000)
+      audioPlayer?.seek(to: seekTime, completionHandler: { completed in
+        if completed {
+          resolver(true)
+        } else {
+          rejecter("SeekError", "Failed to seek to position \(position)", nil)
+        }
+      })
+    }
+  
   @objc(releaseMediaPlayer)
   func releaseMediaPlayer() {
     audioPlayer = nil

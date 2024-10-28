@@ -8,7 +8,6 @@ import axios from 'axios';
 // import GoogleFit, {Scopes} from 'react-native-google-fit';
 import AppleHealthKit from 'react-native-health';
 import {NewAppapi} from './Config';
-import NetInfo from '@react-native-community/netinfo';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import {Platform} from 'react-native';
 import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';

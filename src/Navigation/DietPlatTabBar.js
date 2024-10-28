@@ -8,7 +8,6 @@ import {
   Image,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
-import RBSheet from 'react-native-raw-bottom-sheet';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import DietPlanHeader from '../Component/Headers/DietPlanHeader';
 import {AnalyticsConsole} from '../Component/AnalyticsConsole';

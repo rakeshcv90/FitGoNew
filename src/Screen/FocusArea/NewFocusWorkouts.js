@@ -18,8 +18,6 @@ import {useIsFocused} from '@react-navigation/native';
 import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
 import NativeAddTest from '../../Component/NativeAddTest';
-import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
-import RBSheet from 'react-native-raw-bottom-sheet';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';

@@ -1,7 +1,5 @@
 import Geolocation from '@react-native-community/geolocation';
 import axios from 'axios';
-import {Alert} from 'react-native';
-import geocoder from 'react-native-geocoder-reborn';
 import {
   PERMISSIONS,
   RESULTS,

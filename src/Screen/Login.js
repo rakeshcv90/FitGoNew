@@ -30,7 +30,6 @@ import {
 } from '@react-native-google-signin/google-signin';
 import ActivityLoader from '../Component/ActivityLoader';
 import {showMessage} from 'react-native-flash-message';
-import {LoginManager, Profile} from 'react-native-fbsdk-next';
 import AnimatedLottieView from 'lottie-react-native';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {

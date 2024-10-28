@@ -12,7 +12,6 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactNativeHost;
 import com.facebook.soloader.SoLoader;
-import com.levelasquez.androidopensettings.AndroidOpenSettingsPackage;
 import com.microsoft.codepush.react.CodePush;
 
 import java.util.List;
@@ -41,7 +40,6 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
           // new GoogleFitPackage(BuildConfig.APPLICATION_ID);
-           new AndroidOpenSettingsPackage();
            packages.add(new MusicPlayerPackage());         // Correctly added
 //            new CalendarPackage();
           return packages;

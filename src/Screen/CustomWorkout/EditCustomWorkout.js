@@ -22,7 +22,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import {Image} from 'react-native';
 import {localImage} from '../../Component/Image';
-import {Dropdown} from 'react-native-element-dropdown';
 import axios from 'axios';
 import {showMessage} from 'react-native-flash-message';
 import ActivityLoader from '../../Component/ActivityLoader';

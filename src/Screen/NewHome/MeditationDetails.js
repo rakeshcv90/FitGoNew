@@ -480,8 +480,8 @@ const MeditationDetails = ({navigation, route}) => {
                       activeOpacity={0.8}
                       onPress={() => {
                         navigation.navigate('MeditationExerciseDetails', {
-                          item: item,
-                          name: selectedTitle,
+                          index: index,
+                          allMeditation: mindsetExercise
                         });
                       }}>
                       <ImageBackground
@@ -531,8 +531,8 @@ const MeditationDetails = ({navigation, route}) => {
                                 navigation.navigate(
                                   'MeditationExerciseDetails',
                                   {
-                                    item: item,
-                                    name: selectedTitle,
+                                    index: index,
+                                    allMeditation: mindsetExercise
                                   },
                                 );
                               }}>

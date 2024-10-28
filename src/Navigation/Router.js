@@ -63,6 +63,7 @@ import Products from '../Screen/Store/Products';
 import PermissionScreen from '../Component/Permissions/PermissionScreen';
 import SplaceNew from '../Screen/SplaceNew';
 import NewExercise from '../Screen/NewWorkouts/Exercise/NewExercise';
+import NewMeditationExercise from '../Screen/NewHome/NewMeditationExercise';
 const Stack = createStackNavigator();
 
 const screenOptions = {
@@ -118,7 +119,7 @@ export const LoginStack = () => {
       <Stack.Screen name="Breathe" component={Breathe} />
       <Stack.Screen
         name="MeditationExerciseDetails"
-        component={MeditationExerciseDetails}
+        component={NewMeditationExercise}
       />
       <Stack.Screen name="BottomTab" component={BottomTab} />
       <Stack.Screen name="AITrainer" component={AITrainer} />

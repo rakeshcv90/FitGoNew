@@ -51,7 +51,6 @@ import {showMessage} from 'react-native-flash-message';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
 import {LocationPermissionModal} from '../../Component/Utilities/LocationPermission';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Marquee} from '@animatereactnative/marquee';
 import moment from 'moment';
 import Reanimated, {
   useAnimatedStyle,
@@ -63,8 +62,8 @@ import WinnerView from '../../Component/NewHomeUtilities/WinnerView';
 import NewBanner from '../../Component/NewHomeUtilities/NewBanner';
 import LeaderBoardProgressComopnent from '../Leaderboard/LeaderBoardProgressComopnent';
 import PastWinnersComponent from '../Leaderboard/PastWinnersComponent';
-import BottomSheet from '../../Component/BottomSheet';
-import {MyInterstitialAd} from '../../Component/BannerAdd';
+import MarqueeText from '../../Component/Utilities/MarqueeText';
+import FitSlider from '../../Component/Utilities/FitSlider';
 
 const WeekArrayWithEvent = Array(5)
   .fill(0)
@@ -637,6 +636,7 @@ const NewHome = ({navigation}) => {
             )}
           </View>
         </View>
+        <FitSlider />
         {enteredCurrentEvent && (
           <ImageBackground
             source={require('../../Icon/Images/NewHome/Banner.png')}
@@ -668,21 +668,10 @@ const NewHome = ({navigation}) => {
             <View
               style={{
                 width: DeviceHeigth >= 1024 ? '70%' : '60%',
-                height: '100%',
-                overflow: 'visible',
-                zIndex: 1,
-                justifyContent: 'center',
               }}>
-              <Marquee spacing={20} speed={0.7}>
-                <Text
-                  style={{
-                    color: AppColor.PrimaryTextColor,
-                    fontFamily: Fonts.HELVETICA_REGULAR,
-                  }}>
-                  Explore Special Offers to Win Exciting Prizes! Check Out the
-                  Upcoming Challenges!
-                </Text>
-              </Marquee>
+              <MarqueeText
+                text="Explore Special Offers to Win Exciting Prizes! Check Out the Upcoming Challenges!"
+              />
             </View>
 
             <TouchableOpacity

@@ -102,6 +102,23 @@ class MusicPlayerModule(reactContext: ReactApplicationContext) :
         promise.resolve(0)
     }
 
+    // Method to get Current Music Position
+    @ReactMethod
+    fun getCurrentPosition(promise: Promise) {
+        if (mediaPlayer != null) {
+            val durationInMillis = mediaPlayer!!.getCurrentPosition()
+            val duration = durationInMillis / 1000
+            promise.resolve(duration)
+        }
+        promise.resolve(0)
+    }
+
+    // Method to go to New Music Position 
+    @ReactMethod
+    fun seekTo(position: Int) {
+        mediaPlayer?.seekTo(position)
+    }
+    
     // Method to pause audio playback
     @ReactMethod
     fun pause() {

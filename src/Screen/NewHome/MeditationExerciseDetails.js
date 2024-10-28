@@ -34,6 +34,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import FitIcon from '../../Component/Utilities/FitIcon';
+import FitSlider from '../../Component/Utilities/FitSlider';
 
 const MeditationExerciseDetails = ({navigation, route}) => {
   let isFocused = useIsFocused();
@@ -50,6 +51,7 @@ const MeditationExerciseDetails = ({navigation, route}) => {
       // url: getStoreVideoLoc[route.params.item.id],
     },
   ];
+  console.log(duration / 60)
   useEffect(() => {
     if (isFocused) {
       setupPlayer();
@@ -131,9 +133,9 @@ const MeditationExerciseDetails = ({navigation, route}) => {
               textTransform: 'capitalize',
             }}
             backButton
-            onBackPress={() =>{
+            onBackPress={() => {
               TrackPlayer.reset();
-              navigation.goBack()
+              navigation.goBack();
             }}
           />
           <View
@@ -184,11 +186,22 @@ const MeditationExerciseDetails = ({navigation, route}) => {
                 marginTop: DeviceHeigth * 0.04,
                 marginBottom: DeviceHeigth * 0.01,
               }}>
-              <SeekBar
+              {/* <SeekBar
                 currentPosition={position}
                 duration={duration}
                 onSlidingComplete={handleSlidingComplete}
                 onValueChange={handleValueChange}
+              /> */}
+              <FitSlider
+                slideColor={AppColor.WHITE}
+                slideHeight={2}
+                minText={'0:00'}
+                maxText={'23:02'}
+                minVal={0}
+                maxVal={duration}
+                textColor={AppColor.WHITE}
+                showText
+                autoAnimation={playbackState.state != State.Paused}
               />
             </View>
 

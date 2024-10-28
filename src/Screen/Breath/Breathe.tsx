@@ -37,7 +37,6 @@ import CircularProgress, {
 import AnimatedLottieView from 'lottie-react-native';
 import {duration} from 'moment';
 import {Image} from 'react-native';
-import backgroundServer from 'react-native-background-actions';
 import QuitModal from './QuitModal';
 import {useSelector} from 'react-redux';
 import axios from 'axios';

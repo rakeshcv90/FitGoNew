@@ -14,7 +14,6 @@ import {localImage} from '../../Component/Image';
 import moment from 'moment';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import NewButton from '../../Component/NewButton';
-import AnimatedNumber from 'react-native-animated-numbers';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {ArrowRight} from '../../Component/Utilities/Arrows/Arrow';
 import Animated, {
