@@ -74,7 +74,7 @@ const RestButtons = ({
         alignItems: 'center',
         marginVertical: 30,
       }}>
-      <Button name="+5sec" />
+      <Button name="+5 sec" />
       <Button name="Skip" />
     </View>
   );

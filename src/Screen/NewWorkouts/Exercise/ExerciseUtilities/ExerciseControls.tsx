@@ -36,6 +36,7 @@ type ExerciseControlsProps = {
   setPause: Function;
   number: number;
   setNumber: Function;
+  setIsRest: Function;
   back: boolean;
   setBack: Function;
   allExercise: Array<ExerciseData>;
@@ -75,6 +76,7 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
   getStoreVideoLoc,
   back,
   setBack,
+  setIsRest,
   setNumber,
   number,
   isEventPage,
@@ -160,9 +162,13 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
 
   const {openAdClosed} = OpenAppAds();
 
+  useEffect(() => {
+    setIsRest(restSet)
+  },[restSet])
+
   const resumeButton = () => {
     setBack(false);
-    setPause(!pause);
+    setPause(true);
   };
   useEffect(() => {
     const subscribe = AppState.addEventListener(

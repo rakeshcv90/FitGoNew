@@ -143,6 +143,12 @@ export const setSoundOnOff = data => {
     payload: data,
   };
 };
+export const setMusicOnOff = data => {
+  return {
+    type: types.MUSIC_ON_OFF,
+    payload: data,
+  };
+};
 export const setFcmToken = data => {
   return {
     type: types.FCM_TOKEN,

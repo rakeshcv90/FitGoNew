@@ -1,10 +1,9 @@
 import {
-  Platform,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
   ScrollView,
+  BackHandler,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -19,6 +18,7 @@ import ExerciseControls from './ExerciseUtilities/ExerciseControls';
 import {BannerAdd} from '../../../Component/BannerAdd';
 import {bannerAdId} from '../../../Component/AdsId';
 import Wrapper from '../../WorkoutCompleteScreen/Wrapper';
+import NativeAddTest from '../../../Component/NativeAddTest';
 
 const NewExercise = ({navigation, route}: any) => {
   const {
@@ -35,8 +35,22 @@ const NewExercise = ({navigation, route}: any) => {
   } = route.params;
   const [pause, setPause] = useState(false);
   const [back, setBack] = useState(false);
+  const [isRest, setIsRest] = useState(false);
   const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
   const [number, setNumber] = useState(0);
+
+  const backAction = () => {
+    setBack(true);
+    return true; // Prevent the default back action
+  };
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove(); // Cleanup on unmount
+  }, []);
 
   return (
     <View
@@ -73,7 +87,7 @@ const NewExercise = ({navigation, route}: any) => {
               <TouchableOpacity
                 onPress={() => {
                   setBack(true);
-                  setPause(!pause);
+                  setPause(false);
                 }}
                 style={{
                   width: 40,
@@ -122,29 +136,33 @@ const NewExercise = ({navigation, route}: any) => {
                 },
                 ShadowStyle,
               ]}>
-              <Video
-                source={{
-                  uri: getStoreVideoLoc[allExercise[number]?.exercise_title],
-                }}
-                onReadyForDisplay={() => {
-                  setPause(true);
-                }}
-                onLoad={() => {
-                  setPause(true);
-                }}
-                paused={!pause}
-                onPlaybackResume={() => {
-                  setPause(true);
-                }}
-                repeat={true}
-                resizeMode="contain"
-                style={{
-                  width: DeviceWidth,
-                  height: DeviceHeigth * 0.4,
-                  alignSelf: 'center',
-                  top: 30,
-                }}
-              />
+              {isRest ? (
+                <NativeAddTest media={true} type="video" />
+              ) : (
+                <Video
+                  source={{
+                    uri: getStoreVideoLoc[allExercise[number]?.exercise_title],
+                  }}
+                  onReadyForDisplay={() => {
+                    setPause(true);
+                  }}
+                  onLoad={() => {
+                    setPause(true);
+                  }}
+                  paused={!pause}
+                  onPlaybackResume={() => {
+                    setPause(true);
+                  }}
+                  repeat={true}
+                  resizeMode="contain"
+                  style={{
+                    width: DeviceWidth,
+                    height: DeviceHeigth * 0.4,
+                    alignSelf: 'center',
+                    top: 30,
+                  }}
+                />
+              )}
             </View>
           </View>
           <ExerciseControls
@@ -155,6 +173,7 @@ const NewExercise = ({navigation, route}: any) => {
             getStoreVideoLoc={getStoreVideoLoc}
             back={back}
             setBack={setBack}
+            setIsRest={setIsRest}
             allExercise={allExercise}
             currentExercise={currentExercise}
             data={data}

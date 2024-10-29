@@ -11,58 +11,53 @@ import {ShadowStyle} from './ShadowStyle';
 interface Props {
   title?: string;
   value: boolean;
+  onChange: (changedValue: boolean, name?: string) => void;
+  name?: string;
+  /*  2px margin for both Top & Down on inside Button */
+  toggleHeight?: number;
+  toggleContainerWidth?: number;
 }
 
 const FitToggle = ({
   title,
   value,
+  name,
+  onChange,
+  toggleContainerWidth,
+  toggleHeight,
 }: Props) => {
-  const dispatch = useDispatch();
-  const onChange = () => {
-    AnalyticsConsole(`SOUND_ON_OFF`);
-    if (!value) {
-      showMessage({
-        message: 'Sound unmuted.',
-        type: 'success',
-        animationDuration: 500,
-        floating: true,
-      });
-    } else {
-      showMessage({
-        message: 'Sound muted.',
-        animationDuration: 500,
-        type: 'danger',
-        floating: true,
-      });
-    }
-    dispatch(setSoundOnOff(!value));
-  };
+  const handleChange = () => onChange(value, name);
 
   return (
     <TouchableOpacity
-      onPress={onChange}
+      onPress={handleChange}
       activeOpacity={1}
       style={[
         styles.container,
         {
-          width: 45,
+          width: toggleContainerWidth ?? 45,
           alignItems: value ? 'flex-end' : 'flex-start',
           backgroundColor: value ? '#F8809D' : '#3C3C434D',
           paddingHorizontal: 2,
+          height: toggleHeight ?? 22,
         },
       ]}>
       <View
         style={[
           styles.circle,
-          {backgroundColor: value ? AppColor.RED : AppColor.WHITE},
+          {
+            backgroundColor: value ? AppColor.RED : AppColor.WHITE,
+            width: toggleHeight ? toggleHeight - 4 : 18,
+            height: toggleHeight ? toggleHeight - 4 : 18,
+          },
           //   ShadowStyle
         ]}>
-        <FitIcon
+        {/* <FitIcon
           name={value ? 'volume-up' : 'volume-mute'}
           size={10}
           type="FontAwesome5"
           color={value ? 'white' : '#333333B2'}
-        />
+        /> */}
       </View>
     </TouchableOpacity>
   );
@@ -75,7 +70,6 @@ const styles = StyleSheet.create({
     // flex: 1,
     justifyContent: 'center',
     borderRadius: 15,
-    height: 22,
     // alignItems: 'center',
     // padding: 2,
   },
@@ -84,7 +78,5 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     justifyContent: 'center',
     alignItems: 'center',
-    width: 20,
-    height: 20,
   },
 });

@@ -43,8 +43,6 @@ import {
   setVideoLocation,
 } from '../../Component/ThemeRedux/Actions';
 import RNFetchBlob from 'rn-fetch-blob';
-import GradientButton from '../../Component/GradientButton';
-import {getActiveTrackIndex} from 'react-native-track-player/lib/src/trackPlayer';
 import NewButton from '../../Component/NewButton';
 import {showMessage} from 'react-native-flash-message';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';

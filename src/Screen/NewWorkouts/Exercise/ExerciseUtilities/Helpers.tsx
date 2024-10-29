@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import TrackPlayer, {Capability} from 'react-native-track-player';
 import Tts from 'react-native-tts';
 import {AppColor} from '../../../../Component/Color';
 import NativeAddTest from '../../../../Component/NativeAddTest';

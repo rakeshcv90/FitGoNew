@@ -41,6 +41,7 @@ import KeepAwake from 'react-native-keep-awake';
 
 import {
   setIsAlarmEnabled,
+  setMusicOnOff,
   setProfileImg_Data,
   setScreenAwake,
   setSoundOnOff,
@@ -55,6 +56,7 @@ import Header from '../Component/Header';
 import NewHeader1 from '../Component/Headers/NewHeader1';
 import NewButton from '../Component/NewButton';
 import {useGalleryPermission} from '../Component/Permissions/PermissionHooks';
+import FitToggle from '../Component/Utilities/FitToggle';
 const NewProfile = ({navigation}) => {
   useEffect(() => {
     notifee.getTriggerNotifications().then(res => {
@@ -82,6 +84,7 @@ const NewProfile = ({navigation}) => {
   const getOfferAgreement = useSelector(state => state.getOfferAgreement);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const getSoundOffOn = useSelector(state => state.getSoundOffOn);
+  const getMusicOffOn = useSelector(state => state.getMusicOffOn);
   const getScreenAwake = useSelector(state => state.getScreenAwake);
   const {launchLibrary} = useGalleryPermission();
   const setAlarmIsEnabled = data => {
@@ -158,7 +161,8 @@ const NewProfile = ({navigation}) => {
       'mailto:thefitnessandworkout@gmail.com?subject=Feedback&body=Hello%20there!',
     );
   };
-  const HandleButtons = (id, value) => {
+  const HandleButtons = (ids, value) => {
+    const id = ids - 1;
     if (id == 3) {
       navigation.navigate('Questions', {screenName: 'Home'});
     }
@@ -201,51 +205,56 @@ const NewProfile = ({navigation}) => {
   const ListData = [
     {
       id: 1,
-      txt: 'Voice Assistant',
+      txt: 'Voice Sound',
       img: localImage.NSounds,
     },
     {
       id: 2,
+      txt: 'Music Sound',
+      img: localImage.NMusic,
+    },
+    {
+      id: 3,
       txt: 'Display Always On',
       img: localImage.DisplayOn,
     },
     {
-      id: 3,
+      id: 4,
       txt: 'FAQs',
       img: localImage.FAQ,
     },
     {
-      id: 4,
+      id: 5,
       txt: 'Report',
       img: localImage.REPORT,
     },
     {
-      id: 5,
+      id: 6,
       txt: 'Contact Us',
       img: localImage.NContact,
     },
     {
-      id: 6,
+      id: 7,
       txt: 'Privacy Policy',
       img: localImage.NPrivacy,
     },
     {
-      id: 7,
+      id: 8,
       txt: 'Terms & Conditions',
       img: localImage.NPolicy,
     },
     {
-      id: 8,
+      id: 9,
       txt: 'Rate Us',
       img: localImage.NRate,
     },
     {
-      id: 9,
+      id: 10,
       txt: 'Delete Account',
       img: localImage.NDelete,
     },
     {
-      id: 10,
+      id: 11,
       txt: 'Log Out',
       img: localImage.NLogOut,
     },
@@ -611,6 +620,33 @@ const NewProfile = ({navigation}) => {
       </Modal>
     );
   };
+
+  const onChange = (value, name) => {
+    const isSound = name == 'Sound' ? 'Sound' : 'Music';
+    AnalyticsConsole(`${isSound}_ON_OFF`);
+    if (!value) {
+      showMessage({
+        message:
+          name == 'Screen' ? 'Display always on.' : isSound + ' unmuted.',
+        type: 'success',
+        animationDuration: 500,
+        floating: true,
+      });
+    } else {
+      showMessage({
+        message: name == 'Screen' ? 'Display always off.' : isSound + ' muted.',
+        animationDuration: 500,
+        type: 'danger',
+        floating: true,
+      });
+    }
+    name == 'Screen'
+      ? dispatch(setScreenAwake(!value))
+      : name == 'Sound'
+      ? dispatch(setSoundOnOff(!value))
+      : dispatch(setMusicOnOff(!value));
+  };
+
   return (
     <View style={styles.Container}>
       <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
@@ -740,7 +776,7 @@ const NewProfile = ({navigation}) => {
           showsVerticalScrollIndicator={false}
           style={{marginBottom: DeviceHeigth * 0.025}}>
           <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
-            {ListData.slice(0, 2).map((v, i) => (
+            {ListData.slice(0, 3).map((v, i) => (
               <View
                 key={i}
                 style={{
@@ -765,92 +801,18 @@ const NewProfile = ({navigation}) => {
                   </Text>
                 </View>
                 <View style={{alignSelf: 'center'}}>
-                  {v.id == 1 ? (
-                    <Switch
-                      value={getSoundOffOn}
-                      onValueChange={text => {
-                        AnalyticsConsole(`SOUND_ON_OFF`);
-
-                        if (text == true) {
-                          showMessage({
-                            message: 'Sound unmuted.',
-                            type: 'success',
-                            animationDuration: 500,
-                            floating: true,
-                            icon: {icon: 'auto', position: 'left'},
-                          });
-                        } else {
-                          showMessage({
-                            message: 'Sound muted.',
-                            animationDuration: 500,
-                            type: 'danger',
-                            floating: true,
-                            icon: {icon: 'auto', position: 'left'},
-                          });
-                        }
-
-                        dispatch(setSoundOnOff(text));
-                      }}
-                      disabled={false}
-                      circleSize={19}
-                      barHeight={21}
-                      circleBorderWidth={0.1}
-                      renderActiveText={false}
-                      renderInActiveText={false}
-                      switchLeftPx={2}
-                      switchRightPx={2}
-                      switchWidthMultiplier={2.2}
-                      switchBorderRadius={30}
-                      backgroundActive={'#FFE3E3'}
-                      backgroundInactive={AppColor.GRAY2}
-                      circleActiveColor={'#f0013b'}
-                      circleInActiveColor={AppColor.WHITE}
-                      changeValueImmediately={true}
-                      outerCircleStyle={{color: '#f0013b'}}
-                    />
-                  ) : (
-                    <Switch
-                      value={getScreenAwake}
-                      onValueChange={text => {
-                        AnalyticsConsole(`DISPLAY_ALWAYS_ON`);
-                        if (text == true) {
-                          showMessage({
-                            message: 'Display always on.',
-                            type: 'success',
-                            animationDuration: 500,
-                            floating: true,
-                            icon: {icon: 'auto', position: 'left'},
-                          });
-                          dispatch(setScreenAwake(true));
-                        } else {
-                          showMessage({
-                            message: 'Display always off.',
-                            animationDuration: 500,
-                            type: 'danger',
-                            floating: true,
-                            icon: {icon: 'auto', position: 'left'},
-                          });
-                          dispatch(setScreenAwake(false));
-                        }
-                      }}
-                      disabled={false}
-                      circleSize={19}
-                      barHeight={21}
-                      circleBorderWidth={0.1}
-                      renderActiveText={false}
-                      renderInActiveText={false}
-                      switchLeftPx={2}
-                      switchRightPx={2}
-                      switchWidthMultiplier={2.2}
-                      switchBorderRadius={30}
-                      backgroundActive={'#FFE3E3'}
-                      backgroundInactive={AppColor.GRAY2}
-                      circleActiveColor={'#f0013b'}
-                      circleInActiveColor={AppColor.WHITE}
-                      changeValueImmediately={true}
-                      outerCircleStyle={{color: '#f0013b'}}
-                    />
-                  )}
+                  <FitToggle
+                    key={v.id}
+                    value={
+                      v.id == 1
+                        ? getSoundOffOn
+                        : v.id == 2
+                        ? getMusicOffOn
+                        : getScreenAwake
+                    }
+                    name={v.id == 1 ? 'Sound' : v.id == 2 ? 'Music' : 'Screen'}
+                    onChange={onChange}
+                  />
                 </View>
               </View>
             ))}
@@ -867,7 +829,7 @@ const NewProfile = ({navigation}) => {
             </Text>
           </View>
           <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
-            {ListData.slice(2).map((v, i) => (
+            {ListData.slice(3).map((v, i) => (
               <TouchableOpacity
                 key={i}
                 style={{

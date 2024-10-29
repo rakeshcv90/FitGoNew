@@ -113,6 +113,7 @@ export const localImage = {
   Planning: require('../Icon/Images/NewImage2/planning.png'),
   NewPrfile: require('../Icon/Images/NewImage2/NewProfile.png'),
   NSounds: require('../Icon/Images/NewImage2/NSounds.png'),
+  NMusic: require('../Icon/Images/NewImage2/NMusic.png'),
   NFAQ: require('../Icon/Images/NewImage2/FAQProfile.png'),
   NReport: require('../Icon/Images/NewImage2/ReportProfile.png'),
   NPedometer: require('../Icon/Images/NewImage2/NPdeometer.png'),

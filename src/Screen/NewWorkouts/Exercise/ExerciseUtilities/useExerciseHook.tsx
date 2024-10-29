@@ -1,7 +1,6 @@
 import {useEffect, useRef, useState} from 'react';
 import Tts from 'react-native-tts';
 import {useSelector} from 'react-redux';
-import TrackPlayer from 'react-native-track-player';
 import {
   handleExerciseChange,
   initTts,
@@ -59,13 +58,6 @@ type ExerciseHookProps = {
   musicLink: string;
 };
 
-const StartAudio = async () => {
-  await TrackPlayer.play();
-};
-const PauseAudio = async () => {
-  await TrackPlayer.reset();
-};
-
 const getReadyTime = 10;
 
 const useExerciseHook = ({
@@ -94,6 +86,7 @@ const useExerciseHook = ({
   const hasSets = NUMBER_OF_SETS >= 0;
   const isIOS18 = PLATFORM_IOS && Platform.Version >= 18;
   const getSoundOffOn = useSelector((state: any) => state.getSoundOffOn);
+  const getMusicOffOn = useSelector((state: any) => state.getMusicOffOn);
 
   const [seconds, setSeconds] = useState(!restStart ? getReadyTime : resetTime);
   const exerciseTimerRef = useRef<any>(null);
@@ -103,7 +96,7 @@ const useExerciseHook = ({
     // song: resolveImportedAssetOrPath(songs[0]), //LOCAL MUSIC
     restStart: restStart,
     pause: pause,
-    getSoundOffOn: getSoundOffOn,
+    getSoundOffOn: getMusicOffOn,
   });
 
   const SPEAK = (words: string) => {
@@ -189,7 +182,7 @@ const useExerciseHook = ({
   }, [seconds, pause, progressPercent, restStart, number, currentSet, restSet]);
 
   const reset = () => {
-    PauseAudio();
+    // PauseAudio();
     setRestStart(false);
     setProgressPercent(0);
     setSeconds(resetTime);
@@ -198,7 +191,7 @@ const useExerciseHook = ({
     console.log('RESET');
   };
   const setReset = () => {
-    PauseAudio();
+    // PauseAudio();
     setRestSet(false);
     setProgressPercent(0);
     clearTimeout(exerciseTimerRef.current);
