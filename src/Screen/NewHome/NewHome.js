@@ -62,8 +62,7 @@ import WinnerView from '../../Component/NewHomeUtilities/WinnerView';
 import NewBanner from '../../Component/NewHomeUtilities/NewBanner';
 import LeaderBoardProgressComopnent from '../Leaderboard/LeaderBoardProgressComopnent';
 import PastWinnersComponent from '../Leaderboard/PastWinnersComponent';
-import MarqueeText from '../../Component/Utilities/MarqueeText';
-import FitSlider from '../../Component/Utilities/FitSlider';
+import MarqueeText from '../../Component/Utilities/MarqueeText';;
 
 const WeekArrayWithEvent = Array(5)
   .fill(0)
@@ -636,7 +635,6 @@ const NewHome = ({navigation}) => {
             )}
           </View>
         </View>
-        <FitSlider />
         {enteredCurrentEvent && (
           <ImageBackground
             source={require('../../Icon/Images/NewHome/Banner.png')}
