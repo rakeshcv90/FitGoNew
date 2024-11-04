@@ -26,15 +26,21 @@ import {PLATFORM_IOS} from './Color';
 
 const DeviceID = store.getState().getDeviceID;
 const getUserDataDetails = store.getState().getUserDataDetails;
-const IsTesting = __DEV__
-  ? true
-  : PLATFORM_IOS
+const IsTesting = PLATFORM_IOS
   ? getUserDataDetails?.social_id != null &&
     ADS_IOS.includes(getUserDataDetails?.social_id)
   : DeviceID != '' && ADS_IDs.includes(DeviceID);
+  
+// const IsTesting = __DEV__
+//   ? true
+//   : PLATFORM_IOS
+//   ? getUserDataDetails?.social_id != null &&
+//     ADS_IOS.includes(getUserDataDetails?.social_id)
+//   : DeviceID != '' && ADS_IDs.includes(DeviceID);
 export const BannerAdd = ({bannerAdId}) => {
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const isValid = getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD');
+  console.log("TESTINGGGG",DeviceID, IsTesting)
   return (
     <>
       <BannerAd

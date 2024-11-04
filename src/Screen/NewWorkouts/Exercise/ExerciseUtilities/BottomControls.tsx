@@ -42,7 +42,7 @@ type BottomControlsProps = {
 const Buttons = [
   {
     id: 1,
-    name: 'Sound',
+    name: 'Voice Assistant',
     image: localImage.NSounds,
   },
   {
@@ -91,7 +91,7 @@ const MusicPopup = ({
             ...ShadowStyle,
           }}>
           <View style={[styles.row, {marginVertical: 10}]}>
-            <FitText type="Heading" value="Audio & Sound" />
+            <FitText type="Heading" value="Sound Setting" />
             <FitIcon
               onPress={() => setOpenMusic(false)}
               size={30}
@@ -222,7 +222,7 @@ const BottomControls = ({
               <FitText
                 type="normal"
                 // value={!getSoundOffOn ? ' Sound Off' : ' Sound On'}
-                value="Sound Settings"
+                value="Sound Setting"
                 color="#6B7280"
                 fontFamily={Fonts.HELVETICA_REGULAR}
                 lineHeight={30}

@@ -39,6 +39,7 @@ import ActivityLoader from '../Component/ActivityLoader';
 import {
   setCustomDietData,
   setCustomWorkoutData,
+  setDeviceID,
   setOfferAgreement,
   setUserId,
   setUserProfileData,
@@ -123,6 +124,7 @@ const Signup = ({navigation}) => {
     if (isFocused) {
       DeviceInfo.syncUniqueId().then(uniqueId => {
         setDeviceId(uniqueId);
+        dispatch(setDeviceID(uniqueId))
       });
       setAppVersion(VersionNumber.appVersion);
     }

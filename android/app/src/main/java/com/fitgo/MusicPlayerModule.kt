@@ -20,6 +20,15 @@ class MusicPlayerModule(reactContext: ReactApplicationContext) :
         return "MusicPlayer"
     }
 
+    // Kill the App as a whole
+    @ReactMethod
+    fun closeApp() {
+    val currentActivity = currentActivity ?: return
+    currentActivity.runOnUiThread {
+        currentActivity.finishAffinity()  // Closes all activities in the task
+    }
+}
+
     // Method to Setup Music Player
     @ReactMethod
     fun setupPlayer(audioSource: String, promise: Promise) {

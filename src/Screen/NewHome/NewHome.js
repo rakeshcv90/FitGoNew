@@ -162,6 +162,7 @@ const NewHome = ({navigation}) => {
       item => item?.status == 'active',
     );
 
+    getCurrentDayAPI(challenge);
     setCurrentChallenge(challenge);
   };
 

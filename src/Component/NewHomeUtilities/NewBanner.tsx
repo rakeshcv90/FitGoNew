@@ -279,6 +279,8 @@ const NewBanner = ({
           overflow: 'hidden',
           borderTopLeftRadius: 20,
           borderTopRightRadius: 20,
+          borderBottomLeftRadius: item.name == BANNER_TYPES.JOINED ? 20 : 0,
+          borderBottomRightRadius: item.name == BANNER_TYPES.JOINED ? 20 : 0,
         }}
         resizeMode="stretch"
         source={{uri: item.image}}
@@ -287,6 +289,9 @@ const NewBanner = ({
       />
     </TouchableOpacity>
   );
+
+  const isJoinedBanner = BannerArray.includes(BANNER_TYPES.JOINED)
+
   return (
     <>
       <View style={styles.bannerCard}>
@@ -294,9 +299,6 @@ const NewBanner = ({
           style={{
             width: '100%',
             height: '85%',
-            // backgroundColor: 'red',
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
           }}>
           <View style={{justifyContent: 'center', width: '100%'}}>
             <FlatList
@@ -309,7 +311,7 @@ const NewBanner = ({
             />
           </View>
         </View>
-        <FadeText navigation={navigation} />
+        {!isJoinedBanner &&<FadeText navigation={navigation} />}
       </View>
       <NameUpdateModal
         dataType={dataType}

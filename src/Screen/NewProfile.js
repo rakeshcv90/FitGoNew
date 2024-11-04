@@ -205,7 +205,7 @@ const NewProfile = ({navigation}) => {
   const ListData = [
     {
       id: 1,
-      txt: 'Voice Sound',
+      txt: 'Voice Assistant',
       img: localImage.NSounds,
     },
     {

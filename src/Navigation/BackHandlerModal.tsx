@@ -8,6 +8,7 @@ import {
   Alert,
   TouchableOpacity,
   StyleSheet,
+  NativeModules,
 } from 'react-native';
 import FitText from '../Component/Utilities/FitText';
 import {navigationRef} from '../../App';
@@ -17,23 +18,19 @@ import {AppColor, Fonts} from '../Component/Color';
 
 const BackHandlerModal = () => {
   const [isModalVisible, setModalVisible] = useState(false);
-  const [backPressCount, setBackPressCount] = useState(0);
+  const MusicPlayer = NativeModules.MusicPlayer;
 
   useEffect(() => {
     const backAction = () => {
-      if (isModalVisible) {
-        // If modal is already open, then exit the app
-        BackHandler.exitApp();
-        return true; // Prevent default behavior (exiting app) after this
-      } else if (
+      if (
         !isModalVisible &&
         navigationRef?.current?.getCurrentRoute()?.name == 'Home'
       ) {
         // Open modal if not already opened
         setModalVisible(true);
-        setBackPressCount(1); // Set count to 1 since back button was pressed once
         return true; // Prevent the default back action
       }
+      return false;
     };
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
@@ -45,7 +42,6 @@ const BackHandlerModal = () => {
 
   const handleModalClose = () => {
     setModalVisible(false);
-    setBackPressCount(0); // Reset the back press count
   };
 
   return (
@@ -85,7 +81,7 @@ const BackHandlerModal = () => {
               alignSelf: 'center',
             }}>
             <TouchableOpacity
-              onPress={() => BackHandler.exitApp()}
+              onPress={() => MusicPlayer?.closeApp()}
               style={[
                 styles.buttonView,
                 {

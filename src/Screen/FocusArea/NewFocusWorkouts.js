@@ -889,7 +889,10 @@ const NewFocusWorkouts = ({route, navigation}) => {
                         alignItems: 'center',
                       }}
                       onPress={() => {
-                        if (!visible) {
+                        if (startSelection) {
+                          handleSelection(item?.exercise_id);
+                          return;
+                        } else if (!visible) {
                           setVisible(true);
                           setitem(item);
                         }
