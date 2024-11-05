@@ -158,27 +158,27 @@ const NewProfile = ({navigation}) => {
     );
   };
   const HandleButtons = (id, value) => {
-    if (id == 3) {
+    if (id == 4) {
       navigation.navigate('Questions', {screenName: 'Home'});
     }
-    if (id == 4) {
+    if (id == 5) {
       navigation.navigate('NewMonthlyAchievement');
-    } else if (id == 5) {
+    } else if (id == 6) {
       analytics().logEvent(
         `CV_FITME_CLICKED_ON_${value?.text1?.replace(' ', '_')}`,
       );
       openMailApp();
-    } else if (id == 6) {
+    } else if (id == 7) {
       AnalyticsConsole(`PRIVACY_BUTTON`);
       navigation.navigate('TermaAndCondition', {
         title: 'Privacy Policy',
       });
-    } else if (id == 7) {
+    } else if (id == 8) {
       AnalyticsConsole(`T_n_CBUTTON`);
       navigation.navigate('TermaAndCondition', {
         title: 'Terms & Conditions',
       });
-    } else if (id == 8) {
+    } else if (id == 9) {
       AnalyticsConsole(`APP_RATING_BUTTON`);
       setRatingVisibilty(true);
       // if (Platform.OS == 'ios') {
@@ -190,9 +190,9 @@ const NewProfile = ({navigation}) => {
       //     'https://play.google.com/store/apps/details?id=fitme.health.fitness.homeworkouts.equipment&hl=en-IN&pli=1',
       //   );
       // }
-    } else if (id == 9) {
-      setModalVisible(true);
     } else if (id == 10) {
+      setModalVisible(true);
+    } else if (id == 11) {
       AnalyticsConsole(`LOGOUT_BUTTON`);
       LogOut(dispatch);
     }
@@ -792,7 +792,7 @@ const NewProfile = ({navigation}) => {
             </Text>
           </View>
           <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
-            {ListData.slice(2).map((v, i) => (
+            {ListData.slice(3).map((v, i) => (
               <TouchableOpacity
                 key={i}
                 style={{
