@@ -73,7 +73,7 @@ import {
   UIArray,
 } from '../Component/Permissions/PermissionMethods';
 import {RESULTS} from 'react-native-permissions';
-import { AuthorizationStatus } from '@notifee/react-native';
+import {AuthorizationStatus} from '@notifee/react-native';
 import DeviceInfo from 'react-native-device-info';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
@@ -110,13 +110,12 @@ const Login = ({navigation}) => {
   }, []);
 
   useEffect(() => {
-    if (isFocused) {
-      DeviceInfo.syncUniqueId().then(uniqueId => {
-        dispatch(setDeviceID(uniqueId))
-      });
-      setAppVersion(VersionNumber.appVersion);
-    }
-  }, [isFocused]);
+    DeviceInfo.syncUniqueId().then(uniqueId => {
+      console.log("LOGIN",uniqueId)
+      dispatch(setDeviceID(uniqueId));
+    });
+    setAppVersion(VersionNumber.appVersion);
+  }, []);
 
   const GoogleSignup = async () => {
     analytics().logEvent('GOOGLE_LOGIN');
@@ -649,10 +648,11 @@ const Login = ({navigation}) => {
             result?.result['android.permission.ACCESS_FINE_LOCATION'] ==
               RESULTS.DENIED) ||
           (isObject(result?.result) &&
-            result?.result['authorizationStatus'] === AuthorizationStatus.DENIED)
+            result?.result['authorizationStatus'] ===
+              AuthorizationStatus.DENIED)
         );
       });
-      console.log('coooonnnss',condition)
+      console.log('coooonnnss', condition);
       if (condition) {
         navigation.navigate('PermissionScreen');
       } else {

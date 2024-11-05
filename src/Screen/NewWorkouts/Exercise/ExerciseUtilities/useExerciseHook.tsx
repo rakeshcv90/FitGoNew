@@ -94,7 +94,7 @@ const useExerciseHook = ({
   const {pauseMusic, playMusic, stopMusic, releaseMusic} = useMusicPlayer({
     song: musicLink,
     // song: resolveImportedAssetOrPath(songs[0]), //LOCAL MUSIC
-    restStart: restStart,
+    restStart: restStart || restSet,
     pause: pause,
     getSoundOffOn: getMusicOffOn,
   });
@@ -197,7 +197,7 @@ const useExerciseHook = ({
     clearTimeout(exerciseTimerRef.current);
     setSeconds(resetTime);
     setCurrentSet(currentSet + 1);
-    console.log('RESET');
+    console.log('RESET SET');
   };
 
   return {

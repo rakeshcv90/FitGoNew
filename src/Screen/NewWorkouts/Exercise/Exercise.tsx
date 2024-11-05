@@ -42,7 +42,6 @@ import TrackPlayer, {
 } from 'react-native-track-player';
 import {
   MyInterstitialAd,
-  NewInterstitialAd,
 } from '../../../Component/BannerAdd';
 import {localImage} from '../../../Component/Image';
 

@@ -132,6 +132,17 @@ class MusicPlayerModule(reactContext: ReactApplicationContext) :
             }
         }
     }
+    @ReactMethod
+    fun stopMusicandReset() {
+        mediaPlayer?.let {
+            if (it.isPlaying || isPaused) {
+            it.pause()  // Pause the playback instead of stopping it
+            it.seekTo(0)  // Reset to the beginning so it can be resumed
+                Log.d("MusicPlayer", "Audio playback stopped.")
+//                releaseMediaPlayer()
+            }
+        }
+    }
 
     // Release media player resources
     @ReactMethod

@@ -352,7 +352,9 @@ const NewFocusWorkouts = ({route, navigation}) => {
     const handleFilterChange = bodyPart => {
       setFilterCriteria(prev =>
         prev.includes(bodyPart)
-          ? prev.filter(item => item !== bodyPart)
+          ? prev.length > 1
+            ? prev.filter(item => item !== bodyPart)
+            : [...prev]
           : [...prev, bodyPart],
       );
     };

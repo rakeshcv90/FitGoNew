@@ -24,27 +24,22 @@ import moment from 'moment';
 import {store} from './ThemeRedux/Store';
 import {PLATFORM_IOS} from './Color';
 
-const DeviceID = store.getState().getDeviceID;
-const getUserDataDetails = store.getState().getUserDataDetails;
-const IsTesting = PLATFORM_IOS
-  ? getUserDataDetails?.social_id != null &&
-    ADS_IOS.includes(getUserDataDetails?.social_id)
-  : DeviceID != '' && ADS_IDs.includes(DeviceID);
-  
-// const IsTesting = __DEV__
-//   ? true
-//   : PLATFORM_IOS
-//   ? getUserDataDetails?.social_id != null &&
-//     ADS_IOS.includes(getUserDataDetails?.social_id)
-//   : DeviceID != '' && ADS_IDs.includes(DeviceID);
 export const BannerAdd = ({bannerAdId}) => {
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
+  const DeviceID = useSelector(state => state.getDeviceID);
+  const getUserDataDetails = useSelector(state => state.getUserDataDetails);
+
+  const IsTesting = PLATFORM_IOS
+    ? getUserDataDetails?.social_id != null &&
+      ADS_IOS.includes(getUserDataDetails?.social_id)
+    : DeviceID != '' && ADS_IDs.includes(DeviceID);
   const isValid = getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD');
-  console.log("TESTINGGGG",DeviceID, IsTesting)
   return (
     <>
       <BannerAd
-        unitId={IsTesting ? bannerAdIdTest : bannerAdId}
+        unitId={
+          __DEV__ ? bannerAdIdTest : IsTesting ? bannerAdIdTest : bannerAdId
+        }
         size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
         requestOptions={{
           requestNonPersonalizedAdsOnly: true,
@@ -150,9 +145,16 @@ export const MyInterstitialAd = () => {
 
 export const MyRewardedAd = () => {
   const adStatus = useRef(null);
+  const DeviceID = useSelector(state => state.getDeviceID);
+  const getUserDataDetails = useSelector(state => state.getUserDataDetails);
+
+  const IsTesting = PLATFORM_IOS
+    ? getUserDataDetails?.social_id != null &&
+      ADS_IOS.includes(getUserDataDetails?.social_id)
+    : DeviceID != '' && ADS_IDs.includes(DeviceID);
   const rewardAdsLoad = useCallback(async () => {
     const rewarded = RewardedAd.createForAdRequest(
-      IsTesting ? rewardedAdIdTest : rewardedAdId,
+      __DEV__ ? rewardedAdIdTest : IsTesting ? rewardedAdIdTest : rewardedAdId,
       {
         requestNonPersonalizedAdsOnly: true,
       },
@@ -246,5 +248,5 @@ export const OpenAppAds = () => {
       });
     });
   };
-  return {initOpenApp, showOpenAppAd,openAdClosed};
+  return {initOpenApp, showOpenAppAd, openAdClosed};
 };

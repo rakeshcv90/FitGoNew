@@ -290,7 +290,7 @@ const NewBanner = ({
     </TouchableOpacity>
   );
 
-  const isJoinedBanner = BannerArray.includes(BANNER_TYPES.JOINED)
+  const isJoinedBanner = BannerArray.filter(item => item.name == BANNER_TYPES.JOINED)
 
   return (
     <>

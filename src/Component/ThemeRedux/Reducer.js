@@ -77,6 +77,7 @@ const intialState = {
   getExerciseOutTime: '',
   getEquipmentExercise: 1,
   getPermissionIos: false,
+  getDeviceID: -1
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
