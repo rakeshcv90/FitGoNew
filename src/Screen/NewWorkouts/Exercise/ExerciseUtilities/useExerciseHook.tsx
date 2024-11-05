@@ -1,7 +1,6 @@
 import {useEffect, useRef, useState} from 'react';
 import Tts from 'react-native-tts';
 import {useSelector} from 'react-redux';
-import TrackPlayer from 'react-native-track-player';
 import {
   handleExerciseChange,
   initTts,
@@ -59,12 +58,6 @@ type ExerciseHookProps = {
   musicLink: string
 };
 
-const StartAudio = async () => {
-  await TrackPlayer.play();
-};
-const PauseAudio = async () => {
-  await TrackPlayer.reset();
-};
 
 const getReadyTime = 10;
 

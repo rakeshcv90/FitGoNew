@@ -550,7 +550,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                       </View>
                     )} */}
 
-                    {values.workout_plans == 'AppCreated' &&
+                    {getUserDataDetails.workout_plans == 'AppCreated' &&
                       values.experience == 'Experienced' && (
                         <>
                           <View
@@ -582,7 +582,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                               }}
                             />
                           </View>
-                          <View
+                          {/* <View
                             style={{
                               marginTop: DeviceHeigth * 0.02,
                               marginLeft: 10,
@@ -602,7 +602,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                               keyboardType="number-pad"
                               placeholder="Target Weight"
                             />
-                          </View>
+                          </View> */}
                         </>
                       )}
                   </KeyboardAvoidingView>

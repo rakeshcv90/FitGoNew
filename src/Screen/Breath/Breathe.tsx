@@ -20,13 +20,6 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import TrackPlayer, {
-  Capability,
-  usePlaybackState,
-  useProgress,
-  State,
-  RepeatMode,
-} from 'react-native-track-player';
 import {localImage} from '../../Component/Image';
 import {Button} from 'react-native-paper';
 import NewButton from '../../Component/NewButton';
@@ -44,6 +37,8 @@ import VersionNumber from 'react-native-version-number';
 import {ArrowLeft} from '../../Component/Utilities/Arrows/Arrow';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import ActivityLoader from '../../Component/ActivityLoader';
+import useMusicPlayer from '../NewWorkouts/Exercise/ExerciseUtilities/useMusicPlayer';
+import { resolveImportedAssetOrPath } from '../NewWorkouts/Exercise/ExerciseUtilities/Helpers';
 interface CircleProps {
   index: number;
   progress: Animated.SharedValue<number>;
@@ -92,7 +87,7 @@ const Breathe = ({navigation, route}) => {
   const cardFallAnimation2 = useSharedValue(-DeviceHeigth);
   const fallLetsStart = useSharedValue(-DeviceHeigth);
   const collectButtonOffset = useSharedValue(0);
-  const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
+  const getUserDataDetails = useSelector((state: any) => state.getUserDataDetails);
   const quitCardAnimation = useSharedValue(-DeviceHeigth);
   const AddCoinsApi = async () => {
     setLoaded(false);
@@ -125,7 +120,7 @@ const Breathe = ({navigation, route}) => {
 
       if (result?.data) {
         const myRank = result.data?.data?.findIndex(
-          item => item?.id == getUserDataDetails?.id, // static for testing purpose
+          (item: any) => item?.id == getUserDataDetails?.id, // static for testing purpose
         );
         setLoaded(true);
         if (type == 'OfferPage') {
@@ -143,43 +138,16 @@ const Breathe = ({navigation, route}) => {
       setLoaded(true);
     }
   };
-  const songs = [
-    {
-      title: 'Breathing Sound',
-      artist: '---',
-      artwork: localImage.breathingSound,
-      url: localImage.breathingSound,
-      // url: getStoreVideoLoc[route.params.item.id],
-    },
-  ];
-  const setupPlayer = async () => {
-    try {
-      await TrackPlayer.reset()
-      await TrackPlayer.add(songs);
-      await TrackPlayer.updateOptions({
-        capabilities: [
-          Capability.Play,
-          Capability.Pause,
-          Capability.SkipToNext,
-          Capability.SkipToPrevious,
-          Capability.Stop,
-        ],
-        compactCapabilities: [Capability.Play, Capability.Pause],
-      });
-      await TrackPlayer.setRepeatMode(RepeatMode.Track);
-    } catch (error) {
-      console.log('Music Player Error Meditation Exercise', error);
-    }
-  };
+
+  const {duration,currentTime,pauseMusic,playMusic,releaseMusic,seekTo,stopMusic} = useMusicPlayer({
+    getSoundOffOn: true,
+    pause: !pause,
+    restStart: false,
+    song: resolveImportedAssetOrPath(localImage.breathingSound)
+  })
 
   const buttonClick = () => {
     setEnableClick(true);
-  };
-  const play = async () => {
-    await TrackPlayer.play();
-  };
-  const pauseMusic = async () => {
-    await TrackPlayer.stop();
   };
   const countdownAnimationStyle = useAnimatedStyle(() => {
     return {
@@ -258,8 +226,7 @@ const Breathe = ({navigation, route}) => {
   }, [start, startBreathing]);
   useEffect(() => {
     if (!pause) {
-      setupPlayer();
-      play();
+      playMusic();
       textYAimation1.value = withTiming(0, {duration: 2500});
       //fade for text1
       textFadeAnimation1.value = withTiming(0, {duration: 2500}, () => {
@@ -314,6 +281,7 @@ const Breathe = ({navigation, route}) => {
     } else {
       pauseMusic();
     }
+    return () => releaseMusic()
   }, [progress, goesDown, pause]);
   const Circle = ({index, progress, goesDown}: CircleProps) => {
     const animationStyle = useAnimatedStyle(() => {

@@ -39,15 +39,13 @@ import {EnteringEventFunction} from '../Event/EnteringEventFunction';
 import Carousel from 'react-native-snap-carousel';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
-import TrackPlayer, {
-  Capability,
-  usePlaybackState,
-} from 'react-native-track-player';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import {findKeyInObject} from '../../Component/Utilities/FindkeyinObject';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
+import useMusicPlayer from '../NewWorkouts/Exercise/ExerciseUtilities/useMusicPlayer';
+import { resolveImportedAssetOrPath } from '../NewWorkouts/Exercise/ExerciseUtilities/Helpers';
 
 const NewSubscription = ({navigation, route}: any) => {
   const {upgrade} = route.params;
@@ -78,19 +76,11 @@ const NewSubscription = ({navigation, route}: any) => {
   const [price, setPrice] = useState<any>('');
   const [refresh, setRefresh] = useState(false);
   const isFocused = useIsFocused();
-  const playbackState = usePlaybackState();
+  const [pause, setPause] = useState(false);
 
-  const songs = [
-    {
-      id: 1,
-      url: require('../../Icon/Images/Subs_sound.wav'),
-    },
-  ];
 
   useEffect(() => {
     if (isFocused) {
-      setupPlayer();
-      // PurchaseDetails();
       const selected =
         getPurchaseHistory?.plan != null
           ? getPurchaseHistory?.plan == 'noob'
@@ -156,23 +146,27 @@ const NewSubscription = ({navigation, route}: any) => {
     };
   }, []);
   //sound
-  const setupPlayer = async () => {
-    try {
-      await TrackPlayer.add(songs);
-      await TrackPlayer.updateOptions({
-        capabilities: [Capability.Play, Capability.Pause],
-        compactCapabilities: [Capability.Play, Capability.Pause],
-      });
-    } catch (error) {
-      console.log('Music Player Error Subscription', error);
-    }
-  };
-  const StartAudio = async (playbackState: any) => {
-    await TrackPlayer.play();
-  };
-  const PauseAudio = async (playbackState: any) => {
-    await TrackPlayer.reset();
-  };
+
+  const {
+    duration,
+    currentTime,
+    pauseMusic,
+    playMusic,
+    releaseMusic,
+    seekTo,
+    stopMusic,
+  } = useMusicPlayer({
+    getSoundOffOn: true,
+    pause: pause,
+    restStart: false,
+    song: resolveImportedAssetOrPath(
+      require('../../Icon/Images/Subs_sound.wav'),
+    ),
+  });
+  useEffect(() => {
+    return () => releaseMusic();
+  }, []);
+
   const restorePurchase = async () => {
     if (getPurchaseHistory?.plan) {
       showMessage({
@@ -466,12 +460,13 @@ const NewSubscription = ({navigation, route}: any) => {
         data,
       });
 
-      StartAudio(playbackState);
+      setPause(true);
+      playMusic();
       if (res.data.message == 'Event created successfully') {
         // PurchaseDetails();
         getUserDetailData();
         setForLoading(false);
-        PauseAudio(playbackState);
+        stopMusic();
         setTimeout(() => {
           navigation.navigate('UpcomingEvent', {eventType: 'current'});
         }, 2500);
@@ -482,7 +477,7 @@ const NewSubscription = ({navigation, route}: any) => {
 
         getUserDetailData();
         setForLoading(false);
-        PauseAudio(playbackState);
+        stopMusic();
         setTimeout(() => {
           navigation.navigate('UpcomingEvent', {eventType: 'current'});
         }, 2500);
@@ -492,7 +487,7 @@ const NewSubscription = ({navigation, route}: any) => {
       ) {
         PurchaseDetails();
         setForLoading(false);
-        PauseAudio(playbackState);
+        stopMusic();
         setTimeout(() => {
           navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
         }, 2500);
@@ -505,6 +500,7 @@ const NewSubscription = ({navigation, route}: any) => {
           floating: true,
         });
       }
+      setPause(false);
     } catch (error) {
       setForLoading(false);
       console.log('Purchase Store Data Error', error, data);

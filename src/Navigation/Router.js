@@ -17,7 +17,6 @@ import SaveDayExercise from '../Screen/NewWorkouts/Exercise/SaveDayExercise';
 import Meals from '../Screen/NewHome/Meals';
 import MealDetails from '../Screen/NewHome/MealDetails';
 import MeditationDetails from '../Screen/NewHome/MeditationDetails';
-import MeditationExerciseDetails from '../Screen/NewHome/MeditationExerciseDetails';
 import AITrainer from '../Screen/NewHome/AITrainer';
 import AIMessageHistory from '../Screen/NewHome/AIMessageHistory';
 import NewMonthlyAchievement from '../Screen/NewHome/NewMonthlyAchievement';

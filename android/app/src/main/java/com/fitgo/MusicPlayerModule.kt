@@ -33,6 +33,19 @@ class MusicPlayerModule(reactContext: ReactApplicationContext) :
                         prepare()
                     }
                 } else {
+                    // FOR LOCAL AUDIOS
+                    val resId = reactApplicationContext.resources.getIdentifier(
+                        audioSource, "raw", reactApplicationContext.packageName
+                    )
+
+                    if (resId != 0) {
+                        // Play the bundled resource by resource ID
+                        mediaPlayer = MediaPlayer.create(reactApplicationContext, resId)
+                        Log.d("MusicPlayer", "Playing audio from resource.")
+                    } else {
+//                        isInitialized = false
+//                        promise.reject("error", "Resource not found: $audioSource")
+
                     mediaPlayer = MediaPlayer().apply {
                         setDataSource(audioSource)  // Set URL directly
                         prepareAsync()  // Use prepareAsync for URL streams
@@ -42,19 +55,7 @@ class MusicPlayerModule(reactContext: ReactApplicationContext) :
                             promise.resolve(isInitialized)
                         }
                     }
-                    // FOR LOCAL AUDIOS
-//                    val resId = reactApplicationContext.resources.getIdentifier(
-//                        audioSource, "raw", reactApplicationContext.packageName
-//                    )
-//
-//                    if (resId != 0) {
-//                        // Play the bundled resource by resource ID
-//                        mediaPlayer = MediaPlayer.create(reactApplicationContext, resId)
-//                        Log.d("MusicPlayer", "Playing audio from resource.")
-//                    } else {
-//                        isInitialized = false
-//                        promise.reject("error", "Resource not found: $audioSource")
-//                    }
+                    }
                 }
                 isInitialized = true
             } catch (e: IOException) {

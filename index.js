@@ -8,7 +8,6 @@ import {name as appName} from './app.json';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import {persister, store} from './src/Component/ThemeRedux/Store';
-import TrackPlayer from 'react-native-track-player';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {useEffect} from 'react';
 import messaging from '@react-native-firebase/messaging';
@@ -352,4 +351,3 @@ AdManager.registerRepository({
 AdManager.subscribe('imageAd', 'onAdPreloadClicked', () => {});
 
 AppRegistry.registerComponent(appName, () => AppRedux);
-TrackPlayer.registerPlaybackService(() => require('./src/service'));

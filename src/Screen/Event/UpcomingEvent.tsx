@@ -39,27 +39,16 @@ import {showMessage} from 'react-native-flash-message';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import VersionNumber, {appVersion} from 'react-native-version-number';
-import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
-import TrackPlayer, {
-  Capability,
-  usePlaybackState,
-} from 'react-native-track-player';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {CountryCurrencies} from '../../Component/Utilities/CountryCurrencies';
+import {resolveImportedAssetOrPath} from '../NewWorkouts/Exercise/ExerciseUtilities/Helpers';
+import useMusicPlayer from '../NewWorkouts/Exercise/ExerciseUtilities/useMusicPlayer';
 
 const UpcomingEvent = ({navigation, route}: any) => {
   const {eventType} = route?.params;
-  const playbackState = usePlaybackState();
 
-  const songs = [
-    {
-      id: 1,
-      url: require('../../Icon/Images/Subs_sound.wav'),
-    },
-  ];
-  // let eventType = 'upcoming';
   const dispatch = useDispatch();
   const enteredUpcomingEvent = useSelector(
     (state: any) => state.enteredUpcomingEvent,
@@ -76,6 +65,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
   const [openChange, setOpenChange] = useState(false);
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
+  const [pause, setPause] = useState(false);
 
   const PlanPurchasetoBackendAPI = async () => {
     setLoading(true);
@@ -96,25 +86,26 @@ const UpcomingEvent = ({navigation, route}: any) => {
         data,
       });
       AnalyticsConsole('JO_UP_EVENT');
-      StartAudio(playbackState);
+      setPause(true);
+      playMusic();
       if (res.data.message == 'Event created successfully') {
-        PauseAudio(playbackState);
+        stopMusic();
         getUserDetailData();
       } else if (
         res.data.message == 'Plan upgraded and new event created successfully'
       ) {
-        PauseAudio(playbackState);
+        stopMusic();
         getUserDetailData();
       } else if (
         res.data.message ==
         'Plan upgraded and existing subscription updated successfully'
       ) {
-        PauseAudio(playbackState);
+        stopMusic();
         getUserDetailData();
       } else if (
         res.data.message == 'Subscription usage updated successfully'
       ) {
-        PauseAudio(playbackState);
+        stopMusic();
         getUserDetailData();
       } else if (
         res.data.message ==
@@ -137,31 +128,31 @@ const UpcomingEvent = ({navigation, route}: any) => {
           floating: true,
         });
       }
+      setPause(false);
     } catch (error) {
       setLoading(false);
     }
   };
-  useEffect(() => {
-    setupPlayer();
-  }, []);
-  const setupPlayer = async () => {
-    try {
-      await TrackPlayer.add(songs);
-      await TrackPlayer.updateOptions({
-        capabilities: [Capability.Play, Capability.Pause],
-        compactCapabilities: [Capability.Play, Capability.Pause],
-      });
-    } catch (error) {
-      console.log('Music Player Error  UpcomingEvent', error);
-    }
-  };
-  const StartAudio = async (playbackState: any) => {
-    await TrackPlayer.play();
-  };
-  const PauseAudio = async (playbackState: any) => {
-    await TrackPlayer.reset();
-  };
 
+  const {
+    duration,
+    currentTime,
+    pauseMusic,
+    playMusic,
+    releaseMusic,
+    seekTo,
+    stopMusic,
+  } = useMusicPlayer({
+    getSoundOffOn: true,
+    pause: pause,
+    restStart: false,
+    song: resolveImportedAssetOrPath(
+      require('../../Icon/Images/Subs_sound.wav'),
+    ),
+  });
+  useEffect(() => {
+    return () => releaseMusic();
+  }, []);
   const getUserDetailData = async () => {
     try {
       const responseData = await axios.get(
@@ -478,15 +469,10 @@ const UpcomingEvent = ({navigation, route}: any) => {
                   <FitText type="Heading" value="₹1000/-" />
                 </View>
               ) : ( */}
-                <View style={{marginLeft: 10}}>
-                  <FitText
-                    type="Heading"
-                    value="Win Voucher"
-                    fontSize={18}
-                  />
-                  <FitText type="normal" value="Earn the amazing price" />
-                </View>
-              
+              <View style={{marginLeft: 10}}>
+                <FitText type="Heading" value="Win Voucher" fontSize={18} />
+                <FitText type="normal" value="Earn the amazing price" />
+              </View>
             </LinearGradient>
             <FitText
               type="SubHeading"
@@ -633,7 +619,10 @@ const UpcomingEvent = ({navigation, route}: any) => {
                     />
                   </View>
                 </View>
-                <Text numberOfLines={1} style={{color: '#3333331A'}} ellipsizeMode='clip'>
+                <Text
+                  numberOfLines={1}
+                  style={{color: '#3333331A'}}
+                  ellipsizeMode="clip">
                   {Array(100).fill('- ')}
                 </Text>
                 {/* {getPurchaseHistory?.plan != 'noob' &&

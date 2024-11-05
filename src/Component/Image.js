@@ -60,6 +60,7 @@ export const localImage = {
   Planning: require('../Icon/Images/NewImage2/planning.png'),
   NewPrfile: require('../Icon/Images/NewImage2/NewProfile.png'),
   NSounds: require('../Icon/Images/NewImage2/NSounds.png'),
+  NMusic: require('../Icon/Images/NewImage2/NMusic.png'),
   NReport: require('../Icon/Images/NewImage2/ReportProfile.png'),
   NContact: require('../Icon/Images/NewImage2/NContact.png'),
   NPrivacy: require('../Icon/Images/NewImage2/NPrivacy.png'),

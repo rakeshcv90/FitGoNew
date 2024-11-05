@@ -29,7 +29,6 @@ import {
   RemoteMessage,
 } from './src/Component/Helper/PushNotification';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
-import TrackPlayer, {State} from 'react-native-track-player';
 import crashlytics from '@react-native-firebase/crashlytics';
 import analytics from '@react-native-firebase/analytics';
 import codePush from 'react-native-code-push';
@@ -103,44 +102,6 @@ const App = () => {
     });
   };
 
-  useEffect(() => {
-    const initializeTrackPlayer = async () => {
-      if (!isPlayerInitializedRef.current) {
-        try {
-          await TrackPlayer.setupPlayer();
-          isPlayerInitializedRef.current = true;
-          setIsTrackPlayerInitialized(true);
-        } catch (error) {
-          console.error('Error initializing Track Player', error);
-        }
-      }
-    };
-
-    const handleAppStateChange = nextAppState => {
-      if (nextAppState === 'active' && !isPlayerInitializedRef.current) {
-        initializeTrackPlayer();
-      }
-    };
-
-    const subscription = AppState.addEventListener(
-      'change',
-      handleAppStateChange,
-    );
-
-    // Initialize player if the app is already in the foreground when the component mounts
-    if (AppState.currentState === 'active' && !isPlayerInitializedRef.current) {
-      initializeTrackPlayer();
-    }
-
-    // Clean up function
-    return () => {
-      subscription.remove();
-      if (isPlayerInitializedRef.current) {
-        TrackPlayer.reset();
-        isPlayerInitializedRef.current = false;
-      }
-    };
-  }, []);
 
   // useEffect(() => {
   //   var updateDialogOptions = {
