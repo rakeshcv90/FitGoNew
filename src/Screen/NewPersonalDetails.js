@@ -27,13 +27,9 @@ import {StatusBar} from 'react-native';
 import {Platform} from 'react-native';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import DeviceInfo from 'react-native-device-info';
 import VersionNumber from 'react-native-version-number';
 import InputText from '../Component/InputText';
 import {localImage} from '../Component/Image';
-import Button from '../Component/Button';
-import {Dropdown, MultiSelect} from 'react-native-element-dropdown';
 import axios from 'axios';
 import ActivityLoader from '../Component/ActivityLoader';
 import {showMessage} from 'react-native-flash-message';
@@ -42,6 +38,7 @@ import NewInputText from '../Component/NewInputText';
 import Wrapper from './WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../Component/Headers/NewHeader1';
 import NewButton from '../Component/NewButton';
+import FitDropdown from '../Component/Utilities/FitDropdown';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -291,7 +288,7 @@ const NewPersonalDetails = ({route, navigation}) => {
             workPlace: getUserDataDetails?.workoutarea,
           }}
           onSubmit={(values, action) => {
-            setEditable(false)
+            setEditable(false);
             handleFormSubmit(values, action);
           }}
           validationSchema={validationSchema}>
@@ -476,7 +473,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                         editable={false}
                       />
                     </View> */}
-                    {values.experience == 'Beginner' && (
+                    {/* {values.experience == 'Beginner' && (
                       <>
                         <View
                           style={{
@@ -521,7 +518,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                           />
                         </View>
                       </>
-                    )}
+                    )} */}
                     {/* {values.experience == 'Experienced' && (
                       <View
                         style={{
@@ -552,58 +549,72 @@ const NewPersonalDetails = ({route, navigation}) => {
 
                     {getUserDataDetails.workout_plans == 'AppCreated' &&
                       values.experience == 'Experienced' && (
-                        <>
-                          <View
-                            style={{
-                              marginTop: DeviceHeigth * 0.02,
+                        <FitDropdown
+                          data={[...goalsData,...goalsData,...goalsData,...goalsData,]}
+                          // listContainerHeight={DeviceHeigth*0.25}
+                          onChange={item => {
+                            setFieldValue('goal', item.goal_title);
+                          }}
+                          floatingText="Fitness Goal"
+                          selectedValue={values.goal}
+                          textDisplayKey={'goal_title'}
+                          imageDisplayKey={'goal_image'}
+                          showItemIcons
+                          // multiSelect
+                          // showLabelsOnMultiSelect
+                        />
+                        // <>
+                        //   <View
+                        //     style={{
+                        //       marginTop: DeviceHeigth * 0.02,
 
-                              alignItems: 'center',
-                            }}>
-                            {renderLabel('Fitness Goal')}
+                        //       alignItems: 'center',
+                        //     }}>
+                        //     {renderLabel('Fitness Goal')}
 
-                            <Dropdown
-                              style={[styles.dropdown]}
-                              placeholderStyle={styles.placeholderStyle}
-                              itemTextStyle={{color: AppColor.BLACK}}
-                              selectedTextStyle={styles.selectedTextStyle}
-                              data={goalsData}
-                              labelField="goal_title"
-                              valueField="goal_title"
-                              placeholder={
-                                getUserDataDetails?.goal_title == null
-                                  ? 'Select Fitness Goal'
-                                  : getUserDataDetails?.goal_title
-                              }
-                              value={values.goal}
-                              onFocus={() => setIsFocus(true)}
-                              onBlur={() => setIsFocus(false)}
-                              onChange={item => {
-                                setFieldValue('goal', item.goal_title);
-                              }}
-                            />
-                          </View>
-                          {/* <View
-                            style={{
-                              marginTop: DeviceHeigth * 0.02,
-                              marginLeft: 10,
-                              paddingBottom: DeviceHeigth * 0.05,
-                            }}>
-                            <InputText
-                              errors={errors.targetWeight}
-                              touched={touched.targetWeight}
-                              value={
-                                values?.targetWeight == 'undefined'
-                                  ? 0
-                                  : values?.targetWeight
-                              }
-                              onBlur={handleBlur('targetWeight')}
-                              onChangeText={handleChange('targetWeight')}
-                              label="Target Weight"
-                              keyboardType="number-pad"
-                              placeholder="Target Weight"
-                            />
-                          </View> */}
-                        </>
+                        //     <Dropdown
+                        //       style={[styles.dropdown]}
+                        //       placeholderStyle={styles.placeholderStyle}
+                        //       itemTextStyle={{color: AppColor.BLACK}}
+                        //       selectedTextStyle={styles.selectedTextStyle}
+                        //       data={goalsData}
+                        //       labelField="goal_title"
+                        //       valueField="goal_title"
+                        //       placeholder={
+                        //         getUserDataDetails?.goal_title == null
+                        //           ? 'Select Fitness Goal'
+                        //           : getUserDataDetails?.goal_title
+                        //       }
+                        //       value={values.goal}
+                        //       onFocus={() => setIsFocus(true)}
+                        //       onBlur={() => setIsFocus(false)}
+                        //       onChange={item => {
+                        //         setFieldValue('goal', item.goal_title);
+                        //       }}
+                        //     />
+                        //   </View>
+                        //   <View
+                        //     style={{
+                        //       marginTop: DeviceHeigth * 0.02,
+                        //       marginLeft: 10,
+                        //       paddingBottom: DeviceHeigth * 0.05,
+                        //     }}>
+                        //     <InputText
+                        //       errors={errors.targetWeight}
+                        //       touched={touched.targetWeight}
+                        //       value={
+                        //         values?.targetWeight == 'undefined'
+                        //           ? 0
+                        //           : values?.targetWeight
+                        //       }
+                        //       onBlur={handleBlur('targetWeight')}
+                        //       onChangeText={handleChange('targetWeight')}
+                        //       label="Target Weight"
+                        //       keyboardType="number-pad"
+                        //       placeholder="Target Weight"
+                        //     />
+                        //   </View>
+                        // </>
                       )}
                   </KeyboardAvoidingView>
                 </ScrollView>

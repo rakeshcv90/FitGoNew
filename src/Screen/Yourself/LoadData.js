@@ -9,12 +9,9 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
-
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
-import AnimatedLottieView from 'lottie-react-native';
 import DeviceInfo from 'react-native-device-info';
-import CircularProgress from 'react-native-circular-progress-indicator';
 
 import {
   DeviceHeigth,
@@ -39,7 +36,8 @@ import {
   setUserProfileData,
 } from '../../Component/ThemeRedux/Actions';
 import {showMessage} from 'react-native-flash-message';
-import {calendarFormat} from 'moment';
+import FitText from '../../Component/Utilities/FitText';
+import CircleProgress from '../../Component/Utilities/ProgressCircle';
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
@@ -150,7 +148,7 @@ const LoadData = ({navigation}) => {
         },
         data: payload,
       });
-       console.log("payload------>",payload)
+      console.log('payload------>', payload);
       if (data?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: data?.data?.msg,
@@ -313,7 +311,7 @@ const LoadData = ({navigation}) => {
           alignSelf: 'center',
           backgroundColor: '#fff',
         }}>
-        <CircularProgress
+        {/* <CircularProgress
           value={loadData}
           radius={70}
           progressValueColor={AppColor.RED}
@@ -331,7 +329,20 @@ const LoadData = ({navigation}) => {
             fontFamily: 'Poppins',
             color: 'rgb(0, 0, 0)',
           }}
-        />
+        /> */}
+        <CircleProgress
+          progress={loadData}
+          strokeWidth={7}
+          secondayCircleColor={AppColor.GRAY2}
+          radius={65}>
+          <FitText
+            type="Heading"
+            value={loadData + '%'}
+            fontSize={40}
+            lineHeight={70}
+            errorType
+          />
+        </CircleProgress>
       </View>
       {/* <Text style={styles.text}>49%</Text> */}
       <Text style={styles.text1}>Creating your personalized plan...</Text>

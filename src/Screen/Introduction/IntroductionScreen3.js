@@ -10,7 +10,6 @@ import React from 'react';
 
 import {AppColor, Fonts} from '../../Component/Color';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
-import {CircularProgressWithChild} from 'react-native-circular-progress-indicator';
 import FitIcon from '../../Component/Utilities/FitIcon';
 import {localImage} from '../../Component/Image';
 import {useDispatch, useSelector} from 'react-redux';
@@ -20,6 +19,7 @@ import {
 } from '../../Component/ThemeRedux/Actions';
 import AnimatedLottieView from 'lottie-react-native';
 import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
+import CircleProgress from '../../Component/Utilities/ProgressCircle';
 
 const IntroductionScreen3 = ({navigation}) => {
   const dispatch = useDispatch();
@@ -183,14 +183,12 @@ const IntroductionScreen3 = ({navigation}) => {
           />
         </TouchableOpacity> */}
         <View style={{width: 50, height: 50}} />
-        <CircularProgressWithChild
-          value={100}
-          activeStrokeColor={'#f0013b'}
+        <CircleProgress
+          progress={0}
           radius={DeviceHeigth >= 1024 ? 35 : 25}
-          initialValue={66}
-          maxValue={100}
-          inActiveStrokeColor={AppColor.WHITE}
-          activeStrokeWidth={3}>
+          secondayCircleColor={AppColor.WHITE}
+          // clockwise
+          strokeWidth={3}>
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => {
@@ -216,7 +214,7 @@ const IntroductionScreen3 = ({navigation}) => {
               color={AppColor.RED}
             />
           </TouchableOpacity>
-        </CircularProgressWithChild>
+        </CircleProgress>
       </View>
     </View>
   );

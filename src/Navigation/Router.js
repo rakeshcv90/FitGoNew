@@ -63,6 +63,7 @@ import PermissionScreen from '../Component/Permissions/PermissionScreen';
 import SplaceNew from '../Screen/SplaceNew';
 import NewExercise from '../Screen/NewWorkouts/Exercise/NewExercise';
 import NewMeditationExercise from '../Screen/NewHome/NewMeditationExercise';
+import Goal from '../Screen/Yourself/Goal';
 const Stack = createStackNavigator();
 
 const screenOptions = {
@@ -98,6 +99,7 @@ export const LoginStack = () => {
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />
       <Stack.Screen name="NewPersonalDetails" component={NewPersonalDetails} />
       <Stack.Screen name="Gender" component={Gender} />
+      <Stack.Screen name="Goal" component={Goal} />
       <Stack.Screen name="PredictionScreen" component={PredictionScreen} />
       <Stack.Screen name="LoadData" component={LoadData} />
       <Stack.Screen name="WorkoutsDescription" component={WorkoutDescription} />

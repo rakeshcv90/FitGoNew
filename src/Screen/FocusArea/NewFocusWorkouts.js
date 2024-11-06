@@ -26,7 +26,6 @@ import FastImage from 'react-native-fast-image';
 import {localImage} from '../../Component/Image';
 import Button from '../../Component/Button';
 import WorkoutsDescription from '../NewWorkouts/WorkoutsDescription';
-import {CircularProgressBase} from 'react-native-circular-progress-indicator';
 
 import {
   setCoreCount,
@@ -964,7 +963,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                               handleIconPress(item, index);
                             }
                           }}>
-                          <CircularProgressBase
+                          {/* <CircularProgressBase
                             value={
                               selectedIndex == index ? downloadProgress : 0
                             }
@@ -984,7 +983,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                                 alignSelf: 'center',
                               }}
                             />
-                          </CircularProgressBase>
+                          </CircularProgressBase> */}
                         </TouchableOpacity>
                       )}
                     </TouchableOpacity>

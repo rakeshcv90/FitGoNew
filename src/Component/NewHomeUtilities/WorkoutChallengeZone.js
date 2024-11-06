@@ -9,13 +9,15 @@ import {
 import React, {useState} from 'react';
 import {DeviceHeigth, DeviceWidth} from '../Config';
 import {AppColor, Fonts} from '../Color';
-import CircularProgress from 'react-native-circular-progress-indicator';
 import {AnalyticsConsole} from '../AnalyticsConsole';
 import {useNavigation} from '@react-navigation/native';
 import FitText from '../Utilities/FitText';
 import FitIcon from '../Utilities/FitIcon';
+import CircleProgress from '../Utilities/ProgressCircle';
+
 const WorkoutChallengeZone = ({day, currentChallenge}) => {
   const navigation = useNavigation();
+  const progress = ((day / currentChallenge[0]?.total_days) * 100).toFixed(0);
   return (
     <View style={styles.container}>
       <View style={styles.box}>
@@ -118,7 +120,7 @@ const WorkoutChallengeZone = ({day, currentChallenge}) => {
                     value="START NOW"
                     color={AppColor.RED}
                     lineHeight={25}
-                    fontWeight='600'
+                    fontWeight="600"
                     marginTop={2}
                   />
                   <FitIcon
@@ -146,27 +148,13 @@ const WorkoutChallengeZone = ({day, currentChallenge}) => {
 
                 marginVertical: 10,
               }}>
-              <CircularProgress
-                value={((day / currentChallenge[0]?.total_days) * 100).toFixed(
-                  0,
-                )}
-                radius={30}
-                progressValueColor={AppColor.RED}
-                inActiveStrokeColor={AppColor.GRAY2}
-                activeStrokeColor={AppColor.RED}
-                inActiveStrokeOpacity={0.3}
-                maxValue={100}
-                valueSuffix={'%'}
-                titleColor={'black'}
-                titleStyle={{
-                  textAlign: 'center',
-                  fontSize: 28,
-                  fontWeight: '700',
-                  lineHeight: 35,
-                  fontFamily: 'Poppins',
-                  color: 'rgb(0, 0, 0)',
-                }}
-              />
+              <CircleProgress
+                progress={100 - progress}
+                strokeWidth={7}
+                secondayCircleColor={AppColor.GRAY2}
+                radius={25}>
+                <FitText type="SubHeading" value={progress + '%'} errorType />
+              </CircleProgress>
             </View>
           </View>
         </View>

@@ -24,7 +24,6 @@ import {StyleSheet} from 'react-native';
 import {AppColor, Fonts, PLATFORM_IOS} from '../../Component/Color';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import AnimatedLottieView from 'lottie-react-native';
-import {CircularProgressBase} from 'react-native-circular-progress-indicator';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icons1 from 'react-native-vector-icons/FontAwesome5';
 import Font from 'react-native-vector-icons/FontAwesome5';
@@ -442,7 +441,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
                         handleIconPress(item, index);
                       }
                     }}>
-                    {isItemDownload && downloadProgress <= 5 ? (
+                    {/* {isItemDownload && downloadProgress <= 5 ? (
                       <ActivityIndicator
                         color={AppColor.NEW_DARK_RED}
                         animating={isItemDownload && downloadProgress <= 5}
@@ -472,7 +471,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
                           }}
                         />
                       </CircularProgressBase>
-                    )}
+                    )} */}
                   </TouchableOpacity>
                 )}
               </TouchableOpacity>

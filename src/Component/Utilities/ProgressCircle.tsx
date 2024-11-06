@@ -88,6 +88,11 @@ type CircleProgressProps = {
    * Fixed Value which will used to get the Stroke Position while animating
    */
   strokeLinecap?: 'round' | 'butt';
+
+  /**
+   * Fixed Category Issue wanted to proper 0 at initial
+   */
+  forCategoryList?: boolean;
 };
 LogBox.ignoreLogs(['No stops in gradient'])
 const CircleProgress: React.FC<CircleProgressProps> = ({
@@ -104,6 +109,7 @@ const CircleProgress: React.FC<CircleProgressProps> = ({
   containerStyle,
   secondayCircleColor,
   strokeLinecap,
+  forCategoryList = false
 }) => {
   const size = radius * 2.5;
   const circumference = 2 * Math.PI * radius;
@@ -119,11 +125,12 @@ const CircleProgress: React.FC<CircleProgressProps> = ({
     }
     Animated.timing(animatedProgress, {
       toValue:
-        Math.round(progress) == 100 ? 0 : Math.round(progress),
+      forCategoryList ? Math.round(progress) > 100 ? 0 : Math.round(progress)
+      :  Math.round(progress) == 100 ? 0 : Math.round(progress),
       duration: 500, // Duration of the animation (500ms)
       useNativeDriver: true,
     }).start();
-  }, [progress]);
+  }, [progress, forCategoryList]);
 
   // Interpolating the animated value to strokeDashoffset
   const strokeDashoffset = animatedProgress.interpolate({
@@ -165,7 +172,7 @@ const CircleProgress: React.FC<CircleProgressProps> = ({
         {!changingColors && <Def />}
         <G rotation={startAngle} origin={`${size / 2}, ${size / 2}`}>
           <Circle
-            stroke={'grey'} // Background Circle Color
+            stroke={secondayCircleColor??'grey'} // Background Circle Color
             fill="none"
             cx={size / 2}
             cy={size / 2}
