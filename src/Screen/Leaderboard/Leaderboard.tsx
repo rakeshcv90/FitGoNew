@@ -34,6 +34,7 @@ import NewHeader1 from '../../Component/Headers/NewHeader1';
 import LeaderBoardTopComponent from './LeaderBoardTopComponent';
 import PastWinnersComponent from './PastWinnersComponent';
 import LeaderBoardProgressComopnent from './LeaderBoardProgressComopnent';
+import NativeAddTest from '../../Component/NativeAddTest';
 
 type TypeData = {
   name: string;
@@ -76,7 +77,9 @@ const Leaderboard = () => {
   const [coins, setCoins] = useState({});
   const [winnerData, setWinnerData] = useState();
   const getBanners = useSelector((state: any) => state?.getBanners);
-  const enteredUpcomingEvent = useSelector((state: any) => state?.enteredUpcomingEvent);
+  const enteredUpcomingEvent = useSelector(
+    (state: any) => state?.enteredUpcomingEvent,
+  );
   const enteredCurrentEvent = useSelector(
     (state: any) => state?.enteredCurrentEvent,
   );
@@ -630,8 +633,16 @@ const Leaderboard = () => {
                     getWeeklyPlansData={getWeeklyPlansData}
                     navigation={navigation}
                   />
-                ) : null
-              ) : enteredUpcomingEvent ? null : (
+                ) : (
+                  <View style={{marginTop: 10}}>
+                    <NativeAddTest media={true} type="image" />
+                  </View>
+                )
+              ) : enteredUpcomingEvent ? (
+                <View style={{marginTop: 10}}>
+                  <NativeAddTest media={true} type="image" />
+                </View>
+              ) : (
                 <View
                   style={{
                     width: '95%',

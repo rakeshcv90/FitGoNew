@@ -290,11 +290,20 @@ const NewBanner = ({
     </TouchableOpacity>
   );
 
-  const isJoinedBanner = BannerArray.filter(item => item.name == BANNER_TYPES.JOINED)
+  const isJoinedBanner = BannerArray.filter(
+    item => item.name == BANNER_TYPES.JOINED,
+  );
 
   return (
     <>
-      <View style={styles.bannerCard}>
+      <View
+        style={[
+          styles.bannerCard,
+          {
+            height: DeviceHeigth * 0.25,
+            marginBottom: isJoinedBanner.length == 0 ? 0 : -20,
+          },
+        ]}>
         <View
           style={{
             width: '100%',
@@ -311,7 +320,7 @@ const NewBanner = ({
             />
           </View>
         </View>
-        {!isJoinedBanner &&<FadeText navigation={navigation} />}
+        {isJoinedBanner.length == 0 && <FadeText navigation={navigation} />}
       </View>
       <NameUpdateModal
         dataType={dataType}
@@ -355,7 +364,6 @@ var styles = StyleSheet.create({
   },
   bannerCard: {
     width: DeviceWidth * 0.95,
-    height: DeviceHeigth * 0.25,
     alignSelf: 'center',
     borderRadius: 20,
     paddingBottom: 5,
