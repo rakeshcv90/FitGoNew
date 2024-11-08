@@ -58,7 +58,16 @@ class MusicPlayer: NSObject {
     audioPlayer?.pause()
     audioPlayer?.seek(to: CMTime.zero)
   }
-
+  
+  @objc(stopMusicandReset)
+  func stopMusicandReset() {
+    if let player = audioPlayer, player.timeControlStatus == .playing || player.rate == 0 {
+      player.pause()
+      player.seek(to: CMTime.zero)
+      print("Audio playback stopped and reset.")
+    }
+  }
+  
   @objc(getMusicDuration:rejecter:)
   func getMusicDuration(resolver: @escaping RCTPromiseResolveBlock, rejecter: @escaping RCTPromiseRejectBlock) {
       if let currentItem = audioPlayer?.currentItem {

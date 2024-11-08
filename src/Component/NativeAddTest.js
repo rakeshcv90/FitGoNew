@@ -59,7 +59,7 @@ const NativeAddTest = ({media, type}) => {
   const onAdImpression = () => {};
 
   const onNativeAdLoaded = event => {
-    setLoading(false);
+    setLoading(true);
     setLoaded(true);
     setError(false);
     setAspectRatio(event.aspectRatio);
@@ -73,7 +73,7 @@ const NativeAddTest = ({media, type}) => {
 
   useEffect(() => {
     if (!adLoadedRef.current && nativeAdRef.current) {
-      setLoading(true);
+      setLoading(false);
       nativeAdRef.current.loadAd(); // Only load the ad once
       console.log('NATIVE AD LOADED');
     }

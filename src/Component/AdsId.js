@@ -33,7 +33,7 @@ export const ADS_IDs = [
 export const ADS_IOS = [
   // SOCIAL_IDs
   '001477.ab2010ce7baf4388bddca64e18eb7c5b.0652', // Apple Ipad
-  '001893.5744463e939d41fbac17fab10a28fc30.0854', // iPhone X
+  '000975.31c6b9db0ce44512954fc43c26ca20a1.0909', // iPhone X nandita@cvinfotech.com ID
   '000577.1a615fb9865b4030a0941abcfec38391.0421', // iPhone 12
   '000443.cbdb762d9ae448999b21de3eadaceecf.1118', // iPhone 14 maybe
 ];

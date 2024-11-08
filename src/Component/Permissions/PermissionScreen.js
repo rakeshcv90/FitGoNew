@@ -12,6 +12,8 @@ import {
   UIArray,
 } from './PermissionMethods';
 import {useNavigation} from '@react-navigation/native';
+import {navigationRef} from '../../../App';
+
 const PermissionScreen = () => {
   const [permissionState, setPermissionState] = useState({
     storage: false,
@@ -26,7 +28,8 @@ const PermissionScreen = () => {
     const subscription = AppState.addEventListener('change', nextAppState => {
       if (
         appState?.current?.match(/inactive|background/) &&
-        nextAppState === 'active'
+        nextAppState === 'active' &&
+        navigationRef?.current?.getCurrentRoute()?.name == 'PermissionScreen'
       ) {
         checkPermissions();
       }
