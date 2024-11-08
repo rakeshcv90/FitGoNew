@@ -478,15 +478,10 @@ const UpcomingEvent = ({navigation, route}: any) => {
                   <FitText type="Heading" value="₹1000/-" />
                 </View>
               ) : ( */}
-                <View style={{marginLeft: 10}}>
-                  <FitText
-                    type="Heading"
-                    value="Win Voucher"
-                    fontSize={18}
-                  />
-                  <FitText type="normal" value="Earn the amazing price" />
-                </View>
-              
+              <View style={{marginLeft: 10}}>
+                <FitText type="Heading" value="Win Voucher" fontSize={18} />
+                <FitText type="normal" value="Earn the amazing price" />
+              </View>
             </LinearGradient>
             <FitText
               type="SubHeading"
@@ -520,6 +515,26 @@ const UpcomingEvent = ({navigation, route}: any) => {
               fontFamily={Fonts.MONTSERRAT_MEDIUM}
               fontWeight="600"
             />
+            <View style={{height: 20,}} />
+            {getPurchaseHistory?.plan != 'noob' && (
+              <FitText
+                type="normal"
+                value={`Allow chance `}
+                // fontSize={12}
+                textAlign="center"
+                color={AppColor.NEW_GREY}
+                fontFamily={Fonts.MONTSERRAT_MEDIUM}
+                fontWeight="600">
+                <FitText
+                  type="normal"
+                  value={`${getPurchaseHistory?.used_plan}/${getPurchaseHistory?.allow_usage}`}
+                  textAlign="center"
+                  color={AppColor.BLACK}
+                  fontFamily={Fonts.MONTSERRAT_MEDIUM}
+                  fontWeight="600"
+                />
+              </FitText>
+            )}
 
             {getPurchaseHistory?.plan != null &&
             getPurchaseHistory?.used_plan < getPurchaseHistory?.allow_usage &&
@@ -528,13 +543,14 @@ const UpcomingEvent = ({navigation, route}: any) => {
               <TouchableOpacity
                 onPress={PlanPurchasetoBackendAPI}
                 style={{
-                  width: DeviceWidth * 0.4,
+                  width: DeviceWidth * 0.8,
                   justifyContent: 'center',
                   alignItems: 'center',
                   borderRadius: 5,
-                  backgroundColor: AppColor.NEW_DARK_RED,
-                  paddingVertical: 10,
-                  marginVertical: 20,
+                  backgroundColor: AppColor.RED,
+                  paddingVertical: 12,
+                  marginBottom: 20,
+                  marginTop: 10,
                 }}>
                 <FitText
                   type="normal"
@@ -633,7 +649,10 @@ const UpcomingEvent = ({navigation, route}: any) => {
                     />
                   </View>
                 </View>
-                <Text numberOfLines={1} style={{color: '#3333331A'}} ellipsizeMode='clip'>
+                <Text
+                  numberOfLines={1}
+                  style={{color: '#3333331A'}}
+                  ellipsizeMode="clip">
                   {Array(100).fill('- ')}
                 </Text>
                 {/* {getPurchaseHistory?.plan != 'noob' &&
