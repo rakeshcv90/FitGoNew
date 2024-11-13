@@ -481,7 +481,7 @@ const NewProfile = ({navigation}) => {
       AnalyticsConsole(`DEL_BUTTON_API`);
       try {
         const res = await axios({
-          url: `${NewAppapi.Delete_Account}/${getUserDataDetails?.id}`,
+          url: `${NewAppapi.Delete_Account}?id=${getUserDataDetails?.id}`,
           method: 'get',
         });
         if (res.data) {

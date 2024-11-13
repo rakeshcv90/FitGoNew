@@ -547,12 +547,11 @@ const WorkoutDays = ({navigation, route}: any) => {
           style={[
             styles.box,
             {
-             opacity: !selected && item?.total_rest != 0 ? 0.9 : 1,
+              opacity: !selected && item?.total_rest != 0 ? 0.9 : 1,
               width: DeviceWidth * 0.95,
               // DeviceHeigth < 1280 ? DeviceWidth * 0.85 : DeviceWidth * 0.89,
               height: DeviceHeigth * 0.085,
               marginTop: 6,
-        
             },
           ]}
           activeOpacity={0.6}
@@ -789,42 +788,29 @@ const WorkoutDays = ({navigation, route}: any) => {
   };
   const noOrNoobPlan =
     getPurchaseHistory?.plan == null || getPurchaseHistory?.plan == 'noob';
-    const getAdsDisplay = (index: number, item: any) => {
-      const daysLength = Object.values(data?.days).length;
-      const isNotLastPosition = index < daysLength - 1;
-    
-      if (daysLength >= 1 && isNotLastPosition) {
-        if (noOrNoobPlan && index === 1) {
-          return getNativeAdsDisplay();
-        } else if ((index + 1) % 10 === 0 && daysLength > 10) {
-          if(index+1 == daysLength) return null
-          return getNativeAdsDisplay();
-        }
+  const getAdsDisplay = (index: number, item: any) => {
+    const daysLength = Object.values(data?.days).length;
+    const isNotLastPosition = index < daysLength - 1;
+
+    if (daysLength >= 1 && isNotLastPosition) {
+      if (index === 1) {
+        return getNativeAdsDisplay();
+      } else if ((index + 1) % 10 === 0 && daysLength > 10) {
+        if (index + 1 == daysLength) return null;
+        return getNativeAdsDisplay();
       }
-    };
-  const getNativeAdsDisplay = () => {
-    if (getPurchaseHistory?.plan != null) {
-        return (
-          <View
-            style={{
-              alignSelf: 'center',
-              alignItems: 'center',
-            }}>
-            <NativeAddTest type="image" media={false} />
-          </View>
-        );
-      
-    } else {
-      return (
-        <View
-          style={{
-            alignSelf: 'center',
-            alignItems: 'center',
-          }}>
-          <NativeAddTest type="image" media={false} />
-        </View>
-      );
     }
+  };
+  const getNativeAdsDisplay = () => {
+    return (
+      <View
+        style={{
+          alignSelf: 'center',
+          alignItems: 'center',
+        }}>
+        <NativeAddTest type="image" media={false} />
+      </View>
+    );
   };
   const checkMealAddCount = () => {
     if (getPurchaseHistory.length > 0) {
@@ -854,53 +840,57 @@ const WorkoutDays = ({navigation, route}: any) => {
   };
   return (
     <View style={styles.container}>
-    <Wrapper styles={{backgroundColor:AppColor.WHITE}}>
-      <NewHeader1 backButton header={data?.workout_title == undefined ? data?.title : data?.workout_title}/>
-    <>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            // flexDirection: 'row',
-            paddingBottom: DeviceHeigth * 0.03,
-            alignItems: 'center',
-          }}>
-          <View style={{top: 10}}>
-            {!refresh &&
-              Object.values(data?.days).map((item: any, index: number) => {
-                return (
-                  <Box
-                    active={
-                      selected != 0 &&
-                      index <= selected &&
-                      data?.days[index + 1]?.total_rest != 0
-                    }
-                    index={index + 1}
-                    item={item}
-                    percent={
-                      challenge
-                        ? selected != 0 && index < selected
-                        : selected != 0 && index < selected
-                    }
-                    selected={
-                      challenge
-                        ? selected != 0 && index == selected - 1
-                        : selected != 0 && index < selected
-                    }
-                    selectedIndex={selected == index}
-                  />
-                );
-              })}
-          </View>
-        </ScrollView>
-      </>
+      <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
+        <NewHeader1
+          backButton
+          header={
+            data?.workout_title == undefined ? data?.title : data?.workout_title
+          }
+        />
+        <>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              // flexDirection: 'row',
+              paddingBottom: DeviceHeigth * 0.03,
+              alignItems: 'center',
+            }}>
+            <View style={{top: 10}}>
+              {!refresh &&
+                Object.values(data?.days).map((item: any, index: number) => {
+                  return (
+                    <Box
+                      active={
+                        selected != 0 &&
+                        index <= selected &&
+                        data?.days[index + 1]?.total_rest != 0
+                      }
+                      index={index + 1}
+                      item={item}
+                      percent={
+                        challenge
+                          ? selected != 0 && index < selected
+                          : selected != 0 && index < selected
+                      }
+                      selected={
+                        challenge
+                          ? selected != 0 && index == selected - 1
+                          : selected != 0 && index < selected
+                      }
+                      selectedIndex={selected == index}
+                    />
+                  );
+                })}
+            </View>
+          </ScrollView>
+        </>
 
-      <View></View>
-      {/* {bannerAdsDisplay()} */}
-      <BannerAdd bannerAdId={bannerAdId} />
-      <ActivityLoader visible={refresh} />
-      <PaddoMeterPermissionModal />
-    </Wrapper>
-
+        <View></View>
+        {/* {bannerAdsDisplay()} */}
+        <BannerAdd bannerAdId={bannerAdId} />
+        <ActivityLoader visible={refresh} />
+        <PaddoMeterPermissionModal />
+      </Wrapper>
     </View>
   );
 };

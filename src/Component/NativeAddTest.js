@@ -59,7 +59,7 @@ const NativeAddTest = ({media, type}) => {
   const onAdImpression = () => {};
 
   const onNativeAdLoaded = event => {
-    setLoading(true);
+    setLoading(false);
     setLoaded(true);
     setError(false);
     setAspectRatio(event.aspectRatio);
@@ -73,7 +73,7 @@ const NativeAddTest = ({media, type}) => {
 
   useEffect(() => {
     if (!adLoadedRef.current && nativeAdRef.current) {
-      setLoading(false);
+      setLoading(true);
       nativeAdRef.current.loadAd(); // Only load the ad once
       console.log('NATIVE AD LOADED');
     }
@@ -129,7 +129,7 @@ const NativeAddTest = ({media, type}) => {
             opacity: !loading && !error && loaded ? 0 : 1,
             zIndex: !loading && !error && loaded ? 10 : 10,
           }}>
-          {!loading && (
+          {loading && (
             <AnimatedLottieView
               // source={{
               //   uri: 'https://assets7.lottiefiles.com/packages/lf20_qgq2nqsy.json',

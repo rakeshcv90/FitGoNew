@@ -34,9 +34,30 @@ export const BannerAdd = ({bannerAdId}) => {
       ADS_IOS.includes(getUserDataDetails?.social_id)
     : DeviceID != '' && ADS_IDs.includes(DeviceID);
   const isValid = getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD');
+  // State to keep track of retries
+  const [adLoadAttempt, setAdLoadAttempt] = useState(0);
+
+  // Function to handle ad reload logic
+  const handleAdFailedToLoad = error => {
+    console.error('Banner ad failed to load:', error);
+    if (adLoadAttempt < 3) {
+      // Limit retries to avoid infinite loops
+      setTimeout(() => {
+        setAdLoadAttempt(prevAttempt => prevAttempt + 1);
+      }, 3000); // Retry after 3 seconds
+    }
+  };
+
+  // Reset ad load attempt when component renders successfully
+  useEffect(() => {
+    if (adLoadAttempt > 0) {
+      console.log('Retrying to load the banner ad. Attempt:', adLoadAttempt);
+    }
+  }, [adLoadAttempt]);
   return (
     <>
       <BannerAd
+        key={adLoadAttempt}
         unitId={
           __DEV__ ? bannerAdIdTest : IsTesting ? bannerAdIdTest : bannerAdId
         }
@@ -44,6 +65,7 @@ export const BannerAdd = ({bannerAdId}) => {
         requestOptions={{
           requestNonPersonalizedAdsOnly: true,
         }}
+        onAdFailedToLoad={handleAdFailedToLoad}
       />
       {/* {getPurchaseHistory?.plan != null ? (
         getPurchaseHistory?.plan != 'noob' && isValid ? null : (

@@ -93,7 +93,7 @@ const RenderItem = ({
   setCurrentIndex,
 }: RenderItemProps) => {
   const time = parseInt(item?.exercise_rest.split(' ')[0]);
-  const showAds = (index + 1) % 8 == 0;
+  const showAds = index + 1 == 2 || (index + 1) % 8 == 0;
   const [visible, setVisible] = useState(false);
 
   const onSelect = () => {
