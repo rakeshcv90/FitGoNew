@@ -16,7 +16,7 @@ import {navigationRef} from '../../../App';
 
 const PermissionScreen = () => {
   const [permissionState, setPermissionState] = useState({
-    storage: false,
+    // storage: false,
     notification: false,
     location: false,
     healthkit: false,
@@ -44,11 +44,10 @@ const PermissionScreen = () => {
     const readyToNavigate = PLATFORM_IOS
       ? permissionState.location &&
         permissionState.notification &&
-        permissionState.storage &&
+        // permissionState.storage &&
         permissionState.healthkit
       : permissionState.location &&
-        permissionState.notification &&
-        permissionState.storage;
+        permissionState.notification 
     if (readyToNavigate) {
       navigation.navigate('BottomTab', {screen: 'Home'});
     }
@@ -127,8 +126,7 @@ const PermissionScreen = () => {
   }) => {
     const isHealthkitAvailable =
       permissionState.location &&
-      permissionState.notification &&
-      permissionState.storage;
+      permissionState.notification 
     return (
       <View>
         <View
@@ -218,8 +216,7 @@ const PermissionScreen = () => {
         <NewButton
           title={
             permissionState.location &&
-            permissionState.notification &&
-            permissionState.storage
+            permissionState.notification 
               ? 'Continue to app'
               : 'Grant All Permissions'
           }
