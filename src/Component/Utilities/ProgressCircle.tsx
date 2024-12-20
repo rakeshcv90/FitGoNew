@@ -99,6 +99,7 @@ const CircleProgress: React.FC<CircleProgressProps> = ({
   radius = 60,
   strokeWidth = 30, // Default strokeWidth
   progress,
+  forCategoryList= false,
   clockwise = false, // Default clockwise direction
   startAngle = 270, // Default start angle
   gradientColors = [],
@@ -109,7 +110,6 @@ const CircleProgress: React.FC<CircleProgressProps> = ({
   containerStyle,
   secondayCircleColor,
   strokeLinecap,
-  forCategoryList = false
 }) => {
   const size = radius * 2.5;
   const circumference = 2 * Math.PI * radius;

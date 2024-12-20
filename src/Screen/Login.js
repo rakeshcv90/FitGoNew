@@ -36,6 +36,7 @@ import {
   Setmealdata,
   setCustomDietData,
   setCustomWorkoutData,
+  setDeviceID,
   setEnteredCurrentEvent,
   setEnteredUpcomingEvent,
   setOfferAgreement,
@@ -61,13 +62,14 @@ import {
 } from '../Component/Helper/PushNotification';
 import analytics from '@react-native-firebase/analytics';
 import {EnteringEventFunction} from './Event/EnteringEventFunction';
-import {CommonActions} from '@react-navigation/native';
+import {CommonActions, useIsFocused} from '@react-navigation/native';
 import {
   permissionMethods,
   UIArray,
 } from '../Component/Permissions/PermissionMethods';
 import {RESULTS} from 'react-native-permissions';
-import { AuthorizationStatus } from '@notifee/react-native';
+import {AuthorizationStatus} from '@notifee/react-native';
+import DeviceInfo from 'react-native-device-info';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
@@ -89,6 +91,8 @@ const Login = ({navigation}) => {
   const [cancelLogin, setCancelLogin] = useState(false);
   const getOfferAgreement = useSelector(state => state?.getOfferAgreement);
   const getFcmToken = useSelector(state => state.getFcmToken);
+  const isFocused = useIsFocused();
+
   useEffect(() => {
     requestPermissionforNotification(dispatch);
     // RemoteMessage();
@@ -99,9 +103,15 @@ const Login = ({navigation}) => {
         '60298593797-kkelutkvu5it955cebn8dhi1n543osi8.apps.googleusercontent.com',
     });
   }, []);
+
   useEffect(() => {
+    DeviceInfo.syncUniqueId().then(uniqueId => {
+      console.log("LOGIN",uniqueId)
+      dispatch(setDeviceID(uniqueId));
+    });
     setAppVersion(VersionNumber.appVersion);
-  });
+  }, []);
+
   const GoogleSignup = async () => {
     analytics().logEvent('GOOGLE_LOGIN');
     try {
@@ -633,10 +643,11 @@ const Login = ({navigation}) => {
             result?.result['android.permission.ACCESS_FINE_LOCATION'] ==
               RESULTS.DENIED) ||
           (isObject(result?.result) &&
-            result?.result['authorizationStatus'] === AuthorizationStatus.DENIED)
+            result?.result['authorizationStatus'] ===
+              AuthorizationStatus.DENIED)
         );
       });
-      console.log('coooonnnss',condition)
+      console.log('coooonnnss', condition);
       if (condition) {
         navigation.navigate('PermissionScreen');
       } else {

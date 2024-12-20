@@ -117,6 +117,7 @@ export const storeAgreementApi = async getUserDataDetails => {
       headers: {'Content-Type': 'multipart/form-data'},
     });
     if (result?.data) {
+      if(result.data?.msg == 'user not found') return "Account Deleted" // Account is Deleted, SignUp again
       return await getAgreementStatus(getUserDataDetails);
     }
   } catch (error) {

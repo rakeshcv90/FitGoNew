@@ -47,7 +47,8 @@ import {
   UIArray,
 } from '../../Component/Permissions/PermissionMethods';
 import {RESULTS} from 'react-native-permissions';
-import { AuthorizationStatus } from '@notifee/react-native';
+import {AuthorizationStatus} from '@notifee/react-native';
+import {LogOut} from '../../Component/LogOut';
 const OfferTerms = ({navigation, route}: any) => {
   const dispatch = useDispatch();
   const [language, setLanguage] = useState('English');
@@ -152,7 +153,8 @@ const OfferTerms = ({navigation, route}: any) => {
             result?.result['android.permission.ACCESS_FINE_LOCATION'] ==
               RESULTS.DENIED) ||
           (isObject(result?.result) &&
-          result?.result['authorizationStatus'] === AuthorizationStatus.DENIED)
+            result?.result['authorizationStatus'] ===
+              AuthorizationStatus.DENIED)
         );
       });
       if (condition) {
@@ -174,8 +176,12 @@ const OfferTerms = ({navigation, route}: any) => {
       });
     } else {
       storeAgreementApi(getUserDataDetails).then(res => {
-        dispatch(setOfferAgreement(res));
-        checkPermissions();
+        if (res == 'Account Deleted') { // Account is Deleted from FITME Website Delete Feature, So, Logout from the App
+          LogOut(dispatch);
+        } else {
+          dispatch(setOfferAgreement(res));
+          checkPermissions();
+        }
       });
     }
   };

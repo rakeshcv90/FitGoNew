@@ -17,7 +17,7 @@ const useMusicPlayer = ({song, restStart, pause, getSoundOffOn}: Props) => {
   useEffect(() => {
     if (getSoundOffOn) {
       if (initialized)
-        restStart ? stopMusic() : pause ? playMusic() : pauseMusic();
+        restStart ? stopMusicandReset() : pause ? playMusic() : pauseMusic();
       else if (song.length != 0) setupMusic();
     } else {
       releaseMusic();
@@ -70,7 +70,10 @@ const useMusicPlayer = ({song, restStart, pause, getSoundOffOn}: Props) => {
     console.log('STOP');
     MusicPlayer?.stopMusic();
   };
-
+  const stopMusicandReset = () => {
+    console.log('STOPandRESET');
+    MusicPlayer?.stopMusicandReset();
+  };
   const releaseMusic = () => {
     console.log('RELEASE');
     setInitialized(false);
@@ -83,9 +86,10 @@ const useMusicPlayer = ({song, restStart, pause, getSoundOffOn}: Props) => {
     pauseMusic,
     stopMusic,
     releaseMusic,
+    stopMusicandReset,
     seekTo,
-    duration,
     currentTime,
+    duration,
   };
 };
 

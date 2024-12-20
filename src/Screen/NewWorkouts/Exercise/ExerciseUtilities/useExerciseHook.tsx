@@ -55,9 +55,8 @@ type ExerciseHookProps = {
   setNumber: Function;
   skip: number;
   setSkip: Function;
-  musicLink: string
+  musicLink: string;
 };
-
 
 const getReadyTime = 10;
 
@@ -77,25 +76,27 @@ const useExerciseHook = ({
   apiCalls,
   skip,
   setSkip,
-  musicLink
+  musicLink,
 }: ExerciseHookProps) => {
   const [restStart, setRestStart] = useState(false);
+  const [restSet, setRestSet] = useState(false);
   const resetTime = parseInt(allExercise[number]?.exercise_rest.split(' ')[0]);
   const NUMBER_OF_SETS = parseInt(allExercise[number]?.exercise_sets);
   const EXERCISE_LENGTH = allExercise.length - 1;
   const hasSets = NUMBER_OF_SETS >= 0;
   const isIOS18 = PLATFORM_IOS && Platform.Version >= 18;
   const getSoundOffOn = useSelector((state: any) => state.getSoundOffOn);
+  const getMusicOffOn = useSelector((state: any) => state.getMusicOffOn);
 
   const [seconds, setSeconds] = useState(!restStart ? getReadyTime : resetTime);
   const exerciseTimerRef = useRef<any>(null);
 
   const {pauseMusic, playMusic, stopMusic, releaseMusic} = useMusicPlayer({
     song: musicLink,
-    // song: resolveImportedAssetOrPath(songs[0]), //LOCAL MUSIC 
-    restStart: restStart,
+    // song: resolveImportedAssetOrPath(songs[0]), //LOCAL MUSIC
+    restStart: restStart || restSet,
     pause: pause,
-    getSoundOffOn: getSoundOffOn
+    getSoundOffOn: getMusicOffOn,
   });
 
   const SPEAK = (words: string) => {
@@ -129,11 +130,13 @@ const useExerciseHook = ({
         else {
           if (hasSets) {
             if (currentSet < NUMBER_OF_SETS) {
-              console.log('LESSS');
-              setCurrentSet(currentSet + 1);
-              setSeconds(restStart ? getReadyTime : resetTime);
-              clearTimeout(exerciseTimerRef.current);
-              setProgressPercent(0);
+              if (restSet) {
+                console.log('LESSS');
+                setReset();
+              } else {
+                setRestSet(true);
+                setSeconds(getReadyTime);
+              }
             } else {
               if (number == EXERCISE_LENGTH) {
                 console.log('DONE');
@@ -141,7 +144,7 @@ const useExerciseHook = ({
                 outNavigation();
               } else {
                 setSeconds(getReadyTime);
-                setRestStart(true)
+                setRestStart(true);
                 apiCalls();
                 clearTimeout(exerciseTimerRef.current);
                 setCurrentSet(1);
@@ -173,20 +176,28 @@ const useExerciseHook = ({
         }
       }
     }
-    // console.warn(seconds, restStart, number, currentSet);
     return () => {
       clearTimeout(exerciseTimerRef.current);
     };
-  }, [seconds, pause, progressPercent, restStart, number, currentSet]);
+  }, [seconds, pause, progressPercent, restStart, number, currentSet, restSet]);
 
   const reset = () => {
-    PauseAudio();
+    // PauseAudio();
     setRestStart(false);
     setProgressPercent(0);
     setSeconds(resetTime);
     setCurrentSet(1);
     setSkip(skip + 1);
     console.log('RESET');
+  };
+  const setReset = () => {
+    // PauseAudio();
+    setRestSet(false);
+    setProgressPercent(0);
+    clearTimeout(exerciseTimerRef.current);
+    setSeconds(resetTime);
+    setCurrentSet(currentSet + 1);
+    console.log('RESET SET');
   };
 
   return {
@@ -196,7 +207,10 @@ const useExerciseHook = ({
     setRestStart,
     setSeconds,
     exerciseTimerRef,
-    releaseMusic
+    releaseMusic,
+    restSet,
+    setRestSet,
+    setReset,
   };
 };
 

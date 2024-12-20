@@ -403,7 +403,15 @@ const CustomWorkout = ({navigation}) => {
   //     }
   //   }
   // };
-
+  const openDirect = async () => {
+    const resultLibrary = await launchImageLibrary({
+      mediaType: 'photo',
+      quality: 0.5,
+      maxWidth: 300,
+      maxHeight: 200,
+    });
+    setWorkoutAvt(resultLibrary.assets[0]);
+  };
   return (
     <>
       <View style={styles.container}>
@@ -452,8 +460,7 @@ const CustomWorkout = ({navigation}) => {
             justifyContent: 'center',
             backgroundColor: 'rgba(0,0,0,.5)',
           }}
-          activeOpacity={1}
-        >
+          activeOpacity={1}>
           <View
             style={{
               width: DeviceWidth * 0.9,
@@ -470,11 +477,13 @@ const CustomWorkout = ({navigation}) => {
                 if (Platform.OS == 'ios') {
                   askPermissionForLibrary(PERMISSIONS.IOS.PHOTO_LIBRARY);
                 } else {
-                  askPermissionForLibrary(
-                    Platform.Version >= 33
-                      ? PERMISSIONS.ANDROID.READ_MEDIA_IMAGES
-                      : PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-                  );
+                  if (Platform.Version >= 33) {
+                    openDirect();
+                  } else {
+                    askPermissionForLibrary(
+                      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+                    );
+                  }
                 }
               }}>
               <Image

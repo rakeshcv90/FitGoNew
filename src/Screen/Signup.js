@@ -39,6 +39,7 @@ import ActivityLoader from '../Component/ActivityLoader';
 import {
   setCustomDietData,
   setCustomWorkoutData,
+  setDeviceID,
   setOfferAgreement,
   setUserId,
   setUserProfileData,
@@ -85,7 +86,10 @@ const Signup = ({navigation}) => {
     name: Yup.string()
       .required('Full Name must contain at least 3 characters')
       .matches(/^[A-Za-z].*/, 'Full Name must start with a character')
-      .matches(/^[a-zA-Z0-9 ]*$/, 'Full Name must not contain special characters')
+      .matches(
+        /^[a-zA-Z0-9 ]*$/,
+        'Full Name must not contain special characters',
+      )
       .min(3, 'Full Name must contain at least 3 characters'),
 
     email: Yup.string()
@@ -118,13 +122,13 @@ const Signup = ({navigation}) => {
   }, []);
 
   useEffect(() => {
-    if (isFocused) {
-      DeviceInfo.syncUniqueId().then(uniqueId => {
-        setDeviceId(uniqueId);
-      });
-      setAppVersion(VersionNumber.appVersion);
-    }
-  }, [isFocused]);
+    DeviceInfo.syncUniqueId().then(uniqueId => {
+      console.log("SIGNUP",uniqueId)
+      setDeviceId(uniqueId);
+      dispatch(setDeviceID(uniqueId));
+    });
+    setAppVersion(VersionNumber.appVersion);
+  }, []);
 
   const GoogleSignup = async () => {
     analytics().logEvent('CV_FITME_GOOGLE_SIGNUP');
@@ -985,7 +989,7 @@ const Signup = ({navigation}) => {
         dispatch(setCustomDietData(responseData?.data?.diet_data));
         //navigationRef.navigate('Yourself');
         setVisible(true);
-        console.log("CONSOLE",visible,responseData.data)
+        console.log('CONSOLE', visible, responseData.data);
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
@@ -1222,7 +1226,6 @@ const Signup = ({navigation}) => {
                         style={{marginBottom: -1}}
                       />
                     }
-                  
                     left={
                       <TextInput.Icon
                         icon={() => (
@@ -1258,7 +1261,6 @@ const Signup = ({navigation}) => {
                         style={{marginBottom: -1}}
                       />
                     }
-                 
                     left={
                       <TextInput.Icon
                         icon={() => (
@@ -1277,7 +1279,6 @@ const Signup = ({navigation}) => {
                 </View>
                 <View style={{marginTop: DeviceHeigth * 0.05}}>
                   <Button buttonText={'Register'} onPresh={handleSubmit} />
-                 
                 </View>
               </>
             )}

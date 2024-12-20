@@ -28,12 +28,15 @@ import BottomControls from './BottomControls';
 import useExerciseHook, {ExerciseData} from './useExerciseHook';
 import {RequestAPI} from '../../../../Component/Utilities/RequestAPI';
 import {OpenAppAds} from '../../../../Component/BannerAdd';
+import RestButtons from './RestButtons';
+import FitText from '../../../../Component/Utilities/FitText';
 
 type ExerciseControlsProps = {
   pause: boolean;
   setPause: Function;
   number: number;
   setNumber: Function;
+  setIsRest: Function;
   back: boolean;
   setBack: Function;
   allExercise: Array<ExerciseData>;
@@ -73,6 +76,7 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
   getStoreVideoLoc,
   back,
   setBack,
+  setIsRest,
   setNumber,
   number,
   isEventPage,
@@ -134,6 +138,9 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
     setSeconds,
     exerciseTimerRef,
     releaseMusic,
+    restSet,
+    setRestSet,
+    setReset
   } = useExerciseHook({
     pause,
     setPause,
@@ -155,15 +162,19 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
 
   const {openAdClosed} = OpenAppAds();
 
+  useEffect(() => {
+    setIsRest(restSet)
+  },[restSet])
+
   const resumeButton = () => {
     setBack(false);
-    setPause(!pause);
+    setPause(true);
   };
   useEffect(() => {
     const subscribe = AppState.addEventListener(
       'change',
       async (state: AppStateStatus) => {
-        if (!restStart) {
+        if (!restStart || !restSet) {
           if (state.match(/background|inactive/)) {
             setPause(false);
           } else if (state.match(/active/)) {
@@ -372,12 +383,13 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
         style={[
           {
             // height: DeviceHeigth * 0.28,
-            paddingTop: 10,
+            paddingTop: restSet ? 30 : 10,
             paddingHorizontal: 20,
             backgroundColor: AppColor.WHITE,
             width: DeviceHeigth >= 1024 ? '95%' : '90%',
             alignSelf: 'center',
             borderRadius: 10,
+            paddingBottom: restSet ? 30 : 0,
           },
           ShadowStyle,
         ]}>
@@ -413,6 +425,13 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
               </TouchableOpacity>
             </CircleProgress>
           </View>
+        ) : restSet ? (
+          <RestButtons
+            reset={setReset}
+            seconds={seconds}
+            setRestSet={setRestSet}
+            setSeconds={setSeconds}
+          />
         ) : (
           <View
             style={{
@@ -442,18 +461,22 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
           </View>
         )}
         <View style={{height: DeviceHeigth >= 1024 ? 20 : 0}} />
-        <BottomControls
-          allExercise={allExercise}
-          restStart={restStart}
-          number={number}
-          setRestStart={setRestStart}
-          setCurrentSet={setCurrentSet}
-          setNumber={setNumber}
-          setProgressPercent={setProgressPercent}
-          setSeconds={setSeconds}
-          setPause={setPause}
-          isEventPage={isEventPage}
-        />
+        {restSet && !restStart ? (
+          <FitText type="Heading" value="Take a Rest" textAlign="center" />
+        ) : (
+          <BottomControls
+            allExercise={allExercise}
+            restStart={restStart}
+            number={number}
+            setRestStart={setRestStart}
+            setCurrentSet={setCurrentSet}
+            setNumber={setNumber}
+            setProgressPercent={setProgressPercent}
+            setSeconds={setSeconds}
+            setPause={setPause}
+            isEventPage={isEventPage}
+          />
+        )}
       </View>
 
       <PauseModal
@@ -470,7 +493,3 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
 };
 
 export default ExerciseControls;
-
-// if (seconds == resetTime) SPEAK('Lets Go');
-// if (seconds == 4) SPEAK('three.            two.');
-// if (seconds == 2) SPEAK('one.    Done');

@@ -12,14 +12,14 @@ import {PLATFORM_IOS} from '../Color';
 import {showMessage} from 'react-native-flash-message';
 // item Array
 export const UIArray = [
-  {
-    img: localImage.gallery_permission,
-    text1: 'Storage',
-    text2: 'Allow Fitme to access file & Media on your device.',
-    key: 'storage',
-    checkPermission: 'checkPermissionForLibarary',
-    askPermission: 'askPermissionForLibrary',
-  },
+  // {
+  //   img: localImage.gallery_permission,
+  //   text1: 'Storage',
+  //   text2: 'Allow Fitme to access file & Media on your device.',
+  //   key: 'storage',
+  //   checkPermission: 'checkPermissionForLibarary',
+  //   askPermission: 'askPermissionForLibrary',
+  // },
   {
     img: localImage.notification_permission,
     text1: 'Notification',
@@ -57,8 +57,8 @@ const {askLocationPermission, checkLocationPermission} = useLocation();
 const {initHealthKit, checkHealthikitPermission} = useHealthkitPermission();
 //permissionMenthods
 export const permissionMethods = {
-  checkPermissionForLibarary,
-  askPermissionForLibrary,
+  // checkPermissionForLibarary,
+  // askPermissionForLibrary,
   checkNotificationPermission,
   askNotificationPermission,
   checkLocationPermission,

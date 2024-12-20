@@ -104,7 +104,7 @@ const NewStore = ({navigation}: any) => {
           style={styles.itemImage}
         />
         <View style={{margin: 10}}>
-          <FitText type="SubHeading" value={item.type_title} />
+          <FitText type="SubHeading" value={item.type_title} textAlign='center' />
         </View>
       </TouchableOpacity>
     );

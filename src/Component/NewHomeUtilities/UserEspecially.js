@@ -28,6 +28,7 @@ import {
 import GradientButton from '../GradientButton';
 import {useLocation} from '../Permissions/PermissionHooks';
 import {AuthorizationStatus} from '@notifee/react-native';
+import Geolocation from '@react-native-community/geolocation';
 
 const data = [
   {
@@ -165,12 +166,44 @@ const UserEspecially = () => {
       let checkAdsShow = AddCountFunction();
       if (checkAdsShow == true) {
         showInterstitialAd();
-        navigation.navigate('GymListing');
+        getCurrentLocation();
+        // navigation.navigate('GymListing');
       } else {
-        navigation.navigate('GymListing');
+        getCurrentLocation();
+        // navigation.navigate('GymListing');
       }
     }
   };
+  const getCurrentLocation = () => {
+    return new Promise((resolve, reject) => {
+      Geolocation.getCurrentPosition(
+        position => {
+          openMaps(position?.coords);
+          // const coords = {
+          //   lat: latitude, // 36.17367911141759, -115.15029443045587 United States
+          //   lng: longitude,
+          // };
+        },
+        error => {
+          reject(error); // Call reject with the error object
+          console.log('coords error---->', error);
+        },
+      );
+    });
+  };
+  
+  const openMaps = currentLocation => {
+    if (currentLocation) {
+      const {latitude, longitude} = currentLocation;
+      const googleMapsUrl = `https://www.google.com/maps/search/gyms/@${latitude},${longitude},15z`;
+      Linking.openURL(googleMapsUrl).catch(err =>
+        Alert.alert('Error', `Failed to open Google Maps: ${err.message}`),
+      );
+    } else {
+      Alert.alert('Error', 'Current location not available');
+    }
+  };
+
   const PermissionModal = ({locationP, setLocationP}) => {
     return (
       <Modal

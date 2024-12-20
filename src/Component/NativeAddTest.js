@@ -34,11 +34,18 @@ const NativeAddTest = ({media, type}) => {
   const adLoadedRef = useRef(false); // Track ad loading state
   const DeviceID = useSelector(state => state.getDeviceID);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
-  
-  const IsTesting = __DEV__ ? true : PLATFORM_IOS
+
+  const IsTesting = __DEV__
+    ? true
+    : PLATFORM_IOS
     ? getUserDataDetails?.social_id != null &&
       ADS_IOS.includes(getUserDataDetails?.social_id)
-    : DeviceID != '' && ADS_IDs.includes(DeviceID)
+    : DeviceID != '' && ADS_IDs.includes(DeviceID);
+
+  // const IsTesting = PLATFORM_IOS
+  //   ? getUserDataDetails?.social_id != null &&
+  //     ADS_IOS.includes(getUserDataDetails?.social_id)
+  //   : DeviceID != '' && ADS_IDs.includes(DeviceID)
 
   const onAdFailedToLoad = event => {
     setError(true);
@@ -109,7 +116,7 @@ const NativeAddTest = ({media, type}) => {
           width: '100%',
           alignItems: 'center',
           backgroundColor: '#fff',
-          marginVertical: 10
+          marginVertical: 10,
         }}>
         <View
           style={{
@@ -122,7 +129,7 @@ const NativeAddTest = ({media, type}) => {
             opacity: !loading && !error && loaded ? 0 : 1,
             zIndex: !loading && !error && loaded ? 10 : 10,
           }}>
-          {!loading && (
+          {loading && (
             <AnimatedLottieView
               // source={{
               //   uri: 'https://assets7.lottiefiles.com/packages/lf20_qgq2nqsy.json',

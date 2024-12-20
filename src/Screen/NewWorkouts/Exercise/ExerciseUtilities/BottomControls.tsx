@@ -1,8 +1,18 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {AppColor, Fonts} from '../../../../Component/Color';
-import {DeviceHeigth} from '../../../../Component/Config';
-import {setSoundOnOff} from '../../../../Component/ThemeRedux/Actions';
+import {DeviceHeigth, DeviceWidth} from '../../../../Component/Config';
+import {
+  setMusicOnOff,
+  setSoundOnOff,
+} from '../../../../Component/ThemeRedux/Actions';
 import FitText from '../../../../Component/Utilities/FitText';
 import {localImage} from '../../../../Component/Image';
 import {useDispatch, useSelector} from 'react-redux';
@@ -11,6 +21,10 @@ import WorkoutsDescription from '../../WorkoutsDescription';
 import FitToggle from '../../../../Component/Utilities/FitToggle';
 import BottomSheet from 'react-native-easy-bottomsheet';
 import BottomSheetContent from './BottomSheetContent';
+import FitIcon from '../../../../Component/Utilities/FitIcon';
+import NativeAddTest from '../../../../Component/NativeAddTest';
+import {BlurView} from '@react-native-community/blur';
+import {ShadowStyle} from '../../../../Component/Utilities/ShadowStyle';
 
 type BottomControlsProps = {
   restStart: boolean;
@@ -23,6 +37,108 @@ type BottomControlsProps = {
   setProgressPercent: Function;
   isEventPage?: boolean | false;
   setPause: Function;
+};
+
+const Buttons = [
+  {
+    id: 1,
+    name: 'Voice Assistant',
+    image: localImage.NSounds,
+  },
+  {
+    id: 2,
+    name: 'Music',
+    image: localImage.NMusic,
+  },
+];
+
+type MusicPopupProps = {
+  openMusic: boolean;
+  setOpenMusic: Function;
+  sound: boolean;
+  music: boolean;
+  handleButtons: (value: boolean, name?: string) => void | any;
+};
+const MusicPopup = ({
+  openMusic,
+  setOpenMusic,
+  handleButtons,
+  music,
+  sound,
+}: MusicPopupProps) => {
+  return (
+    <Modal
+      visible={openMusic}
+      onRequestClose={() => setOpenMusic(false)}
+      animationType="slide">
+      <View style={{backgroundColor: `rgba(0,0,0,0)`, flex: 1}}>
+        <BlurView
+          style={styles.modalContainer1}
+          blurType="dark"
+          blurAmount={1}
+          reducedTransparencyFallbackColor="white"
+        />
+        <View
+          style={{
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            backgroundColor: AppColor.WHITE,
+            bottom: 0,
+            // height: DeviceHeigth * 0.6,
+            padding: 10,
+            position: 'absolute',
+            width: DeviceWidth,
+            ...ShadowStyle,
+          }}>
+          <View style={[styles.row, {marginVertical: 10}]}>
+            <FitText type="Heading" value="Sound Setting" />
+            <FitIcon
+              onPress={() => setOpenMusic(false)}
+              size={30}
+              type="MaterialCommunityIcons"
+              name="close"
+              color="black"
+            />
+          </View>
+          {Buttons.map((v, i) => (
+            <View
+              key={i}
+              style={{
+                flexDirection: 'row',
+                marginVertical: 10,
+                justifyContent: 'space-between',
+              }}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Image
+                  source={v.image}
+                  style={{height: 35, width: 35}}
+                  resizeMode="contain"
+                />
+                <Text
+                  style={{
+                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                    fontSize: 16,
+                    marginLeft: 10,
+                    color: AppColor.BLACK,
+                  }}>
+                  {v.name}
+                </Text>
+              </View>
+              <View style={{alignSelf: 'center'}}>
+                <FitToggle
+                  key={v.id}
+                  value={v.id == 1 ? sound : music}
+                  name={v.name}
+                  onChange={handleButtons}
+                />
+              </View>
+            </View>
+          ))}
+          <NativeAddTest media={true} type="video" />
+        </View>
+      </View>
+    </Modal>
+  );
 };
 
 const BottomControls = ({
@@ -39,13 +155,21 @@ const BottomControls = ({
 }: BottomControlsProps) => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
+  const [openMusic, setOpenMusic] = useState(false);
   const [openSheet, setOpenSheet] = useState(false);
   const getSoundOffOn = useSelector((state: any) => state.getSoundOffOn);
+  const getMusicOffOn = useSelector((state: any) => state.getMusicOffOn);
   const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
 
   useEffect(() => {
-    open ? setPause(false) : setPause(true);
-  }, [open]);
+    open || openMusic ? setPause(false) : setPause(true);
+  }, [open, openMusic]);
+
+  const handleButtons = (value: boolean, name?: string) => {
+    name == 'Sound'
+      ? dispatch(setSoundOnOff(!value))
+      : dispatch(setMusicOnOff(!value));
+  };
 
   return (
     <View>
@@ -75,17 +199,15 @@ const BottomControls = ({
               alignItems: 'center',
               width:
                 DeviceHeigth >= 1024
-                  ? isEventPage
+                  ? isEventPage || allExercise.length <= 1
                     ? '70%'
                     : '50%'
-                  : isEventPage
+                  : isEventPage || allExercise.length <= 1
                   ? '90%'
                   : '70%',
             }}>
             <TouchableOpacity
-              onPress={() => {
-                dispatch(setSoundOnOff(!getSoundOffOn));
-              }}
+              onPress={() => setOpenMusic(true)}
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -93,10 +215,14 @@ const BottomControls = ({
                 flexDirection: 'row',
                 paddingRight: 5,
               }}>
-              <FitToggle value={getSoundOffOn} />
+              <Image
+                source={require('../../../../Icon/Images/soundSettings.png')}
+                style={{marginRight: 5, width: 15, height: 15}}
+              />
               <FitText
                 type="normal"
-                value={!getSoundOffOn ? ' Sound Off' : ' Sound On'}
+                // value={!getSoundOffOn ? ' Sound Off' : ' Sound On'}
+                value="Sound Setting"
                 color="#6B7280"
                 fontFamily={Fonts.HELVETICA_REGULAR}
                 lineHeight={30}
@@ -135,7 +261,7 @@ const BottomControls = ({
               />
             </TouchableOpacity>
           </View>
-          {!isEventPage && (
+          {!isEventPage && allExercise.length > 1 && (
             <TouchableOpacity
               onPress={() => {
                 setRestStart(false);
@@ -159,6 +285,13 @@ const BottomControls = ({
         </View>
       )}
 
+      <MusicPopup
+        handleButtons={handleButtons}
+        music={getMusicOffOn}
+        openMusic={openMusic}
+        setOpenMusic={setOpenMusic}
+        sound={getSoundOffOn}
+      />
       <BottomSheet
         bottomSheetTitle={'Next Exercises'}
         bottomSheetIconColor="#000000"
@@ -222,5 +355,16 @@ const styles = StyleSheet.create({
     marginTop: 6,
     position: 'absolute',
     zIndex: 1,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  modalContainer1: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // Semi-transparent background
   },
 });

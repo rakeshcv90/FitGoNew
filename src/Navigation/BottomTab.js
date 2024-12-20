@@ -14,7 +14,7 @@ import Workouts from '../Screen/NewHome/Workouts';
 
 import Trainer from '../Screen/NewHome/Trainer';
 import {View, Text} from 'react-native';
-import {BannerAdd, MyInterstitialAd, OpenAppAds} from '../Component/BannerAdd';
+import {BannerAdd, MyInterstitialAd} from '../Component/BannerAdd';
 import {bannerAdId} from '../Component/AdsId';
 import {DeviceHeigth, DeviceWidth} from '../Component/Config';
 import {useDispatch, useSelector} from 'react-redux';

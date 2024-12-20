@@ -22,6 +22,8 @@ RCT_EXTERN_METHOD(pause)
 // Expose the stopMusic method
 RCT_EXTERN_METHOD(stopMusic)
 
+RCT_EXTERN_METHOD(stopMusicandReset)
+
 // Expose the getMusicDuration method
 RCT_EXTERN_METHOD(getMusicDuration:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromiseRejectBlock)rejecter)
 

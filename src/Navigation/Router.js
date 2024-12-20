@@ -64,6 +64,7 @@ import SplaceNew from '../Screen/SplaceNew';
 import NewExercise from '../Screen/NewWorkouts/Exercise/NewExercise';
 import NewMeditationExercise from '../Screen/NewHome/NewMeditationExercise';
 import Goal from '../Screen/Yourself/Goal';
+import NewCategories from '../Screen/NewWorkoutCategories/NewCategories';
 const Stack = createStackNavigator();
 
 const screenOptions = {
@@ -142,7 +143,7 @@ export const LoginStack = () => {
       <Stack.Screen name="GymListing" component={GymListing} />
       <Stack.Screen name="Trainer" component={Trainer} />
       <Stack.Screen name="NewFocusWorkouts" component={NewFocusWorkouts} />
-      <Stack.Screen name="WorkoutCategories" component={WorkoutCategories} />
+      <Stack.Screen name="WorkoutCategories" component={NewCategories} />
       <Stack.Screen name="UpcomingEvent" component={UpcomingEvent} />
       <Stack.Screen name="NewSubscription" component={NewSubscription} />
       <Stack.Screen name="AddWorkouts" component={AddWorkouts} />

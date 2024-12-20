@@ -506,6 +506,26 @@ const UpcomingEvent = ({navigation, route}: any) => {
               fontFamily={Fonts.MONTSERRAT_MEDIUM}
               fontWeight="600"
             />
+            <View style={{height: 20,}} />
+            {getPurchaseHistory?.plan != 'noob' && (
+              <FitText
+                type="normal"
+                value={`Allow chance `}
+                // fontSize={12}
+                textAlign="center"
+                color={AppColor.NEW_GREY}
+                fontFamily={Fonts.MONTSERRAT_MEDIUM}
+                fontWeight="600">
+                <FitText
+                  type="normal"
+                  value={`${getPurchaseHistory?.used_plan}/${getPurchaseHistory?.allow_usage}`}
+                  textAlign="center"
+                  color={AppColor.BLACK}
+                  fontFamily={Fonts.MONTSERRAT_MEDIUM}
+                  fontWeight="600"
+                />
+              </FitText>
+            )}
 
             {getPurchaseHistory?.plan != null &&
             getPurchaseHistory?.used_plan < getPurchaseHistory?.allow_usage &&
@@ -514,13 +534,14 @@ const UpcomingEvent = ({navigation, route}: any) => {
               <TouchableOpacity
                 onPress={PlanPurchasetoBackendAPI}
                 style={{
-                  width: DeviceWidth * 0.4,
+                  width: DeviceWidth * 0.8,
                   justifyContent: 'center',
                   alignItems: 'center',
                   borderRadius: 5,
-                  backgroundColor: AppColor.NEW_DARK_RED,
-                  paddingVertical: 10,
-                  marginVertical: 20,
+                  backgroundColor: AppColor.RED,
+                  paddingVertical: 12,
+                  marginBottom: 20,
+                  marginTop: 10,
                 }}>
                 <FitText
                   type="normal"

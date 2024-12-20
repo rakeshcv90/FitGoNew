@@ -20,6 +20,15 @@ class MusicPlayerModule(reactContext: ReactApplicationContext) :
         return "MusicPlayer"
     }
 
+    // Kill the App as a whole
+    @ReactMethod
+    fun closeApp() {
+    val currentActivity = currentActivity ?: return
+    currentActivity.runOnUiThread {
+        currentActivity.finishAffinity()  // Closes all activities in the task
+    }
+}
+
     // Method to Setup Music Player
     @ReactMethod
     fun setupPlayer(audioSource: String, promise: Promise) {
@@ -136,6 +145,17 @@ class MusicPlayerModule(reactContext: ReactApplicationContext) :
         mediaPlayer?.let {
             if (it.isPlaying || isPaused) {
                 it.stop()
+                Log.d("MusicPlayer", "Audio playback stopped.")
+//                releaseMediaPlayer()
+            }
+        }
+    }
+    @ReactMethod
+    fun stopMusicandReset() {
+        mediaPlayer?.let {
+            if (it.isPlaying || isPaused) {
+            it.pause()  // Pause the playback instead of stopping it
+            it.seekTo(0)  // Reset to the beginning so it can be resumed
                 Log.d("MusicPlayer", "Audio playback stopped.")
 //                releaseMediaPlayer()
             }

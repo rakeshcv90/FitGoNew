@@ -135,7 +135,7 @@ const Products = ({navigation, route}: any) => {
           style={styles.itemImage}
         />
         <View style={{margin: 10, alignItems: 'center'}}>
-          <FitText type="SubHeading" value={item.product_title} />
+          <FitText type="SubHeading" value={item.product_title} textAlign='center' />
         </View>
       </TouchableOpacity>
     );

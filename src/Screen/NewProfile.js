@@ -40,6 +40,7 @@ import KeepAwake from 'react-native-keep-awake';
 
 import {
   setIsAlarmEnabled,
+  setMusicOnOff,
   setProfileImg_Data,
   setScreenAwake,
   setSoundOnOff,
@@ -157,8 +158,9 @@ const NewProfile = ({navigation}) => {
       'mailto:thefitnessandworkout@gmail.com?subject=Feedback&body=Hello%20there!',
     );
   };
-  const HandleButtons = (id, value) => {
-    if (id == 4) {
+  const HandleButtons = (ids, value) => {
+    const id = ids - 1;
+    if (id == 3) {
       navigation.navigate('Questions', {screenName: 'Home'});
     }
     if (id == 5) {
@@ -444,7 +446,7 @@ const NewProfile = ({navigation}) => {
       AnalyticsConsole(`DEL_BUTTON_API`);
       try {
         const res = await axios({
-          url: `${NewAppapi.Delete_Account}/${getUserDataDetails?.id}`,
+          url: `${NewAppapi.Delete_Account}?id=${getUserDataDetails?.id}`,
           method: 'get',
         });
         if (res.data) {
@@ -583,6 +585,7 @@ const NewProfile = ({navigation}) => {
       </Modal>
     );
   };
+
   const onChange = (value, name) => {
     const isSound = name == 'Sound' ? 'Sound' : 'Music';
     AnalyticsConsole(`${isSound}_ON_OFF`);
@@ -738,7 +741,7 @@ const NewProfile = ({navigation}) => {
           showsVerticalScrollIndicator={false}
           style={{marginBottom: DeviceHeigth * 0.025}}>
           <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
-          {ListData.slice(0, 3).map((v, i) => (
+            {ListData.slice(0, 3).map((v, i) => (
               <View
                 key={i}
                 style={{
