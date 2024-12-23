@@ -307,7 +307,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
       : getPurchaseHistory?.event_start_date_current;
 
   const currency =
-    getOfferAgreement?.location != ''
+    getOfferAgreement?.location != null  
       ? CountryCurrencies[getOfferAgreement?.location]
       : '';
 

@@ -129,7 +129,11 @@ const MusicPopup = ({
                   key={v.id}
                   value={v.id == 1 ? sound : music}
                   name={v.name}
-                  onChange={handleButtons}
+                  onChange={() =>
+                    v.id == 1
+                      ? handleButtons(sound, 'Sound')
+                      : handleButtons(music, 'Music')
+                  }
                 />
               </View>
             </View>

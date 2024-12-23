@@ -207,7 +207,7 @@ const useExerciseHook = ({
     setRestStart,
     setSeconds,
     exerciseTimerRef,
-    releaseMusic,
+    releaseMusic: stopMusic,
     restSet,
     setRestSet,
     setReset,

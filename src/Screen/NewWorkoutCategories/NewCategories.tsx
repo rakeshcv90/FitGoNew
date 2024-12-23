@@ -16,6 +16,7 @@ import {showMessage} from 'react-native-flash-message';
 import {downloadVideos} from './categoriesHelper';
 import BottomSheet1 from '../../Component/BottomSheet';
 import BottomSheetContent from './BottomSheetContent';
+import {useIsFocused} from '@react-navigation/native';
 
 const NewCategories = ({navigation, route}: any) => {
   const {categoryExercise, CategoryDetails} = route?.params;
@@ -32,10 +33,14 @@ const NewCategories = ({navigation, route}: any) => {
   const getEquipmentExercise = useSelector(
     (state: any) => state.getEquipmentExercise,
   );
+  const focused = useIsFocused();
 
   useEffect(() => {
     filterExercises(getEquipmentExercise);
-  }, []);
+    if (focused) {
+      setProgressPercent(0);
+    }
+  }, [focused]);
 
   const filterExercises = (adjust: number) => {
     // Define the equipment filter logic

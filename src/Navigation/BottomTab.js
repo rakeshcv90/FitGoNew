@@ -308,7 +308,7 @@ const BottomTab = () => {
         }}>
         <BannerAdd bannerAdId={bannerAdId} />
       </View>
-      <BackHandlerModal />
+      {/* <BackHandlerModal /> */}
     </>
   );
 };

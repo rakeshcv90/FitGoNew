@@ -20,7 +20,7 @@ const NewMeditationExercise = ({navigation, route}: any) => {
           translucent={false}
         />
         <NewHeader1
-          header={allMeditation[number]?.name}
+          header={allMeditation[number]?.exercise_mindset_title}
           fillColor={AppColor.WHITE}
           headerStyle={{
             color: AppColor.WHITE,

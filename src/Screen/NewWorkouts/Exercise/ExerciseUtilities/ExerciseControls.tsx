@@ -415,7 +415,7 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
               // strokeLinecap={timer == 0 ? 'butt' : 'round'}
               strokeWidth={25}
               changingColorsArray={['#530014', '#F0013B']}
-              secondayCircleColor="#F0013B">
+              secondayCircleColor={AppColor.LIGHTGREY2}>
               <TouchableOpacity onPress={reset}>
                 <Image
                   source={require('../../../../Icon/Images/InAppRewards/SkipButton.png')}

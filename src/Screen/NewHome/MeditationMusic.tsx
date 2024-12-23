@@ -1,4 +1,10 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  AppState,
+  AppStateStatus,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import FitSlider from '../../Component/Utilities/FitSlider';
 import {AppColor} from '../../Component/Color';
@@ -6,6 +12,7 @@ import {DeviceHeigth} from '../../Component/Config';
 import FitIcon from '../../Component/Utilities/FitIcon';
 import useMusicPlayer from '../NewWorkouts/Exercise/ExerciseUtilities/useMusicPlayer';
 import {navigationRef} from '../../../App';
+import { OpenAppAds } from '../../Component/BannerAdd';
 
 type MindsetData = {
   exercise_mindset_area: string;
@@ -54,6 +61,23 @@ const MeditationMusic = ({
     getSoundOffOn: true,
     restStart: false,
   });
+
+  const {openAdClosed} = OpenAppAds();
+
+  useEffect(() => {
+    const subscribe = AppState.addEventListener(
+      'change',
+      async (state: AppStateStatus) => {
+        if (state.match(/background|inactive/)) {
+          setPause(false);
+        } else if (state.match(/active/)) {
+          const isClosed = await openAdClosed();
+          isClosed && setPause(true);
+        }
+      },
+    );
+    return () => subscribe.remove();
+  }, []);
   useEffect(() => {
     if (backPressed) {
       releaseMusic();

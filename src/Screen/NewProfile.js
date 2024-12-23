@@ -159,8 +159,8 @@ const NewProfile = ({navigation}) => {
     );
   };
   const HandleButtons = (ids, value) => {
-    const id = ids - 1;
-    if (id == 3) {
+    const id = ids;
+    if (id == 4) {
       navigation.navigate('Questions', {screenName: 'Home'});
     }
     if (id == 5) {
