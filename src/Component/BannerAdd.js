@@ -24,12 +24,14 @@ import moment from 'moment';
 import {store} from './ThemeRedux/Store';
 import {PLATFORM_IOS} from './Color';
 
+let IsTesting = false;
+
 export const BannerAdd = ({bannerAdId}) => {
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const DeviceID = useSelector(state => state.getDeviceID);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
 
-  const IsTesting = PLATFORM_IOS
+  IsTesting = PLATFORM_IOS
     ? getUserDataDetails?.social_id != null &&
       ADS_IOS.includes(getUserDataDetails?.social_id)
     : DeviceID != '' && ADS_IDs.includes(DeviceID);
@@ -222,15 +224,18 @@ let interAdStatusRef = null;
 export const MyInterstitialAd = () => {
   const initInterstitial = testing => {
     return new Promise((resolve, reject) => {
+      // console.error("init ",interAdStatusRef)
       if (interAdStatusRef) return resolve(); // Ad is already initialized
       const interstitialAd = InterstitialAd.createForAdRequest(
         testing ? interstitialAdIdTest : interstitialAdId,
       );
       interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
+        // console.error(interstitialAd,"LOADED")
         interAdStatusRef = interstitialAd;
         resolve(); // Resolve when the ad is loaded
       });
       interstitialAd.addAdEventListener(AdEventType.ERROR, error => {
+        // console.error('INIT ERRR',error)
         resolve(); // resolve the promise in case of an error
       });
       interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {
@@ -254,10 +259,12 @@ export const MyInterstitialAd = () => {
           resolve();
         });
         interAdStatusRef.addAdEventListener(AdEventType.ERROR, error => {
+          initInterstitial(__DEV__ ?? IsTesting);
           resolve(); // resolve the promise if there's an error showing the ad
         });
         interAdStatusRef.show();
       } else {
+        initInterstitial(__DEV__ ?? IsTesting);
         resolve(); // Resolve if no ad is available
       }
     });

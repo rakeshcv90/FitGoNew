@@ -15,7 +15,6 @@ import {AppColor, Fonts, PLATFORM_IOS} from '../../Component/Color';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import {QuestionsArray, QuestionsArrayType} from './QuestionsArray';
 import {useSelector} from 'react-redux';
-import FastImage from 'react-native-fast-image';
 import FitText from '../../Component/Utilities/FitText';
 import {localImage} from '../../Component/Image';
 import moment from 'moment';
@@ -101,15 +100,12 @@ const ChatBot = ({navigation, route}: any) => {
               </View>
             ) : (
               <View style={styles.imgContainer}>
-                <FastImage
+                <Image
                   style={styles.mainImage}
                   source={{
-                    uri: getUserDataDetails?.image_path,
-                    headers: {Authorization: 'someAuthToken'},
-                    priority: FastImage.priority.high,
+                    uri: getUserDataDetails?.image_path ?? localImage.NOWORKOUT,
                   }}
-                  resizeMode={FastImage.resizeMode.cover}
-                  defaultSource={localImage.NOWORKOUT}
+                  resizeMode={'cover'}
                 />
               </View>
             )}

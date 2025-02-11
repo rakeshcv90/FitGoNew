@@ -49,7 +49,6 @@ import moment from 'moment';
 import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
 import NativeAddTest from '../../Component/NativeAddTest';
-import FastImage from 'react-native-fast-image';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import GradientButton from '../../Component/GradientButton';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -369,8 +368,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
                 activeOpacity={switchButton ? 0.8 : 1}
                 style={styles.boxContainer}>
                 <View style={styles.boxImage}>
-                  <FastImage
-                    // fallback={true}
+                  <Image
                     style={{
                       width: '100%',
                       height: '100%',
@@ -378,12 +376,9 @@ const WorkoutCategories = ({navigation, route}: any) => {
                       alignSelf: 'center',
                     }}
                     source={{
-                      uri: item?.exercise_image_link,
-                      headers: {Authorization: 'someAuthToken'},
-                      priority: FastImage.priority.high,
+                      uri: item?.exercise_image_link??localImage.NOWORKOUT,
                     }}
-                    resizeMode={FastImage.resizeMode.contain}
-                    defaultSource={localImage.NOWORKOUT}
+                    resizeMode={'contain'}
                   />
                 </View>
                 <View

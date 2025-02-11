@@ -17,7 +17,6 @@ import FitText from '../../Component/Utilities/FitText';
 import {StepsArray, StepsArrayType} from './StepsArray';
 import GradientButton from '../../Component/GradientButton';
 import {useSelector} from 'react-redux';
-import FastImage from 'react-native-fast-image';
 import {RequestAPI} from '../../Component/Utilities/RequestAPI';
 import VersionNumber from 'react-native-version-number';
 import FitIcon from '../../Component/Utilities/FitIcon';

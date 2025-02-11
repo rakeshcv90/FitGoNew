@@ -37,7 +37,6 @@ import AnimatedLottieView from 'lottie-react-native';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import {MyInterstitialAd} from '../../Component/BannerAdd';
 import moment from 'moment';
-import FastImage from 'react-native-fast-image';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import FocusArea from '../FocusArea';
 import ActivityLoader from '../../Component/ActivityLoader';

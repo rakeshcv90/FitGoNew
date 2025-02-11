@@ -35,7 +35,6 @@ import {bannerAdId} from '../../Component/AdsId';
 import NativeAddTest from '../../Component/NativeAddTest';
 import moment from 'moment';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
-import FastImage from 'react-native-fast-image';
 import RewardModal from '../../Component/Utilities/RewardModal';
 import UpcomingEventModal from '../../Component/Utilities/UpcomingEventModal';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
@@ -127,8 +126,7 @@ const CustomWorkout = ({navigation}) => {
                 navigation.navigate('CustomWorkoutDetails', {item: item});
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <FastImage
-                  fallback={true}
+                <Image
                   style={{
                     width: 70,
                     height: 70,
@@ -139,12 +137,9 @@ const CustomWorkout = ({navigation}) => {
                     borderColor: '#D9D9D9',
                   }}
                   source={{
-                    uri: item?.image,
-                    headers: {Authorization: 'someAuthToken'},
-                    priority: FastImage.priority.high,
+                    uri: item?.image??localImage.NOWORKOUT,
                   }}
-                  resizeMode={FastImage.resizeMode.cover}
-                  defaultSource={localImage.NOWORKOUT}
+                  resizeMode={'cover'}
                 />
                 <View
                   style={{

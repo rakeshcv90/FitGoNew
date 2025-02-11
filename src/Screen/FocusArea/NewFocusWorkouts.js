@@ -22,7 +22,6 @@ import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AnimatedLottieView from 'lottie-react-native';
-import FastImage from 'react-native-fast-image';
 import {localImage} from '../../Component/Image';
 import Button from '../../Component/Button';
 import WorkoutsDescription from '../NewWorkouts/WorkoutsDescription';
@@ -897,8 +896,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                           setitem(item);
                         }
                       }}>
-                      <FastImage
-                        fallback={true}
+                      <Image
                         style={{
                           width: 75,
                           height: 75,
@@ -909,12 +907,9 @@ const NewFocusWorkouts = ({route, navigation}) => {
                           borderColor: '#D9D9D9',
                         }}
                         source={{
-                          uri: item?.exercise_image_link,
-                          headers: {Authorization: 'someAuthToken'},
-                          priority: FastImage.priority.high,
+                          uri: item?.exercise_image_link??localImage.NOWORKOUT,
                         }}
-                        resizeMode={FastImage.resizeMode.contain}
-                        defaultSource={localImage.NOWORKOUT}
+                        resizeMode={'contain'}
                       />
                       <View
                         style={{

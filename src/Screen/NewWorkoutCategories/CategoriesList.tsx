@@ -12,7 +12,6 @@ import FitText from '../../Component/Utilities/FitText';
 import NativeAddTest from '../../Component/NativeAddTest';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {AppColor, Fonts} from '../../Component/Color';
-import FastImage from 'react-native-fast-image';
 import {localImage} from '../../Component/Image';
 import FitIcon from '../../Component/Utilities/FitIcon';
 import {showMessage} from 'react-native-flash-message';
@@ -112,7 +111,7 @@ const RenderItem = ({
         activeOpacity={switchButton ? 0.8 : 1}
         style={styles.boxContainer}>
         <View style={styles.boxImage}>
-          <FastImage
+          <Image
             style={{
               width: '100%',
               height: '100%',
@@ -120,12 +119,9 @@ const RenderItem = ({
               alignSelf: 'center',
             }}
             source={{
-              uri: item?.exercise_image_link,
-              headers: {Authorization: 'someAuthToken'},
-              priority: FastImage.priority.high,
+              uri: item?.exercise_image_link??localImage.NOWORKOUT,
             }}
-            resizeMode={FastImage.resizeMode.contain}
-            defaultSource={localImage.NOWORKOUT}
+            resizeMode={'contain'}
           />
         </View>
         <View

@@ -36,7 +36,7 @@ import {
 } from '../../Component/ThemeRedux/Actions';
 import {useIsFocused} from '@react-navigation/native';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
-import Carousel from 'react-native-snap-carousel';
+// import Carousel from 'react-native-snap-carousel';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import VersionNumber, {appVersion} from 'react-native-version-number';
@@ -45,7 +45,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import useMusicPlayer from '../NewWorkouts/Exercise/ExerciseUtilities/useMusicPlayer';
-import { resolveImportedAssetOrPath } from '../NewWorkouts/Exercise/ExerciseUtilities/Helpers';
+import {resolveImportedAssetOrPath} from '../NewWorkouts/Exercise/ExerciseUtilities/Helpers';
 
 const NewSubscription = ({navigation, route}: any) => {
   const {upgrade} = route.params;
@@ -77,7 +77,6 @@ const NewSubscription = ({navigation, route}: any) => {
   const [refresh, setRefresh] = useState(false);
   const isFocused = useIsFocused();
   const [pause, setPause] = useState(false);
-
 
   useEffect(() => {
     if (isFocused) {
@@ -650,14 +649,14 @@ const NewSubscription = ({navigation, route}: any) => {
       (item: any) => getPurchaseHistory?.product_id == item?.productId,
     );
     const Line = () => (
-      <Text numberOfLines={1} style={{color: '#3333331A'}} ellipsizeMode='clip' >
+      <Text numberOfLines={1} style={{color: '#3333331A'}} ellipsizeMode="clip">
         {Array(80).fill('- ')}
       </Text>
     );
     return (
       <View
         style={{
-          flex: 1,
+          // flex: 1,
           padding: 10,
           borderColor: color,
           borderRadius: 5,
@@ -672,8 +671,9 @@ const NewSubscription = ({navigation, route}: any) => {
           // getPurchaseHistory?.plan_value == null
           //   ? DeviceHeigth * 0.65
           //   : DeviceHeigth * 0.55,
-          width: '95%',
+          width: DeviceWidth * 0.85,
           alignSelf: 'center',
+          margin: 10
         }}>
         {getPurchaseHistory?.plan != null &&
           planName == getPurchaseHistory?.plan && (
@@ -1022,22 +1022,40 @@ const NewSubscription = ({navigation, route}: any) => {
               </TouchableOpacity>
             </View>
             {sortedSubscriptions && (
-              <Carousel
+              <FlatList
                 data={sortedSubscriptions}
                 keyExtractor={(_, index) => index.toString()}
-                itemWidth={
-                  DeviceHeigth >= 1024 ? DeviceWidth * 0.95 : DeviceWidth * 0.9
-                }
-                sliderWidth={
-                  DeviceHeigth >= 1024 ? DeviceWidth * 0.95 : DeviceWidth * 0.9
-                }
-                onBeforeSnapToItem={index => setCurrentSelected(index)}
-                enableSnap
-                activeSlideAlignment="start"
-                firstItem={currentSelected}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                renderItem={({item, index}: any) => RenderItem({item, index})}
+                pagingEnabled
+                snapToAlignment="start"
+                snapToInterval={
+                  DeviceHeigth >= 1024 ? DeviceWidth * 0.95 : DeviceWidth * 0.9
+                }
+                decelerationRate="fast"
+                onMomentumScrollEnd={event => {
+                  const index = Math.round(
+                    event.nativeEvent.contentOffset.x /
+                      (DeviceHeigth >= 1024
+                        ? DeviceWidth * 0.95
+                        : DeviceWidth * 0.9),
+                  );
+                  setCurrentSelected(index);
+                }}
+                initialScrollIndex={currentSelected}
+                getItemLayout={(data, index) => ({
+                  length:
+                    DeviceHeigth >= 1024
+                      ? DeviceWidth * 0.95
+                      : DeviceWidth * 0.9,
+                  offset:
+                    index *
+                    (DeviceHeigth >= 1024
+                      ? DeviceWidth * 0.95
+                      : DeviceWidth * 0.9),
+                  index,
+                })}
+                renderItem={({item, index}) => RenderItem({item, index})}
               />
             )}
 

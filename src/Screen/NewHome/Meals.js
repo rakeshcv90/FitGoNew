@@ -28,7 +28,7 @@ import moment from 'moment';
 import axios from 'axios';
 import RNFetchBlob from 'rn-fetch-blob';
 import {bannerAdId} from '../../Component/AdsId';
-import Carousel from 'react-native-snap-carousel';
+// import Carousel from 'react-native-snap-carousel';
 import {Item} from 'react-native-paper/lib/typescript/components/Drawer/Drawer';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 

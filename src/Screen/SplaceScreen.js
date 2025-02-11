@@ -127,24 +127,26 @@ const SplaceScreen = ({navigation, route}) => {
       // For non-iOS platforms, fetch the unique ID
       DeviceInfo.syncUniqueId().then(uniqueId => {
         dispatch(setDeviceID(uniqueId));
-        if (ADS_IDs.includes(uniqueId)||__DEV__) {
+        if (ADS_IDs.includes(uniqueId) || __DEV__) {
           callAds(true);
         } else {
           // callAds(__DEV__ ? true : false);
-          callAds(false)
+          callAds(false);
         }
       });
     }
-    dispatch(setExerciseOutTime(''))
-    dispatch(setExerciseInTime(''))
+    dispatch(setExerciseOutTime(''));
+    dispatch(setExerciseInTime(''));
   }, []);
   // function to call ads
   const callAds = condition => {
     initInterstitial(condition);
     initOpenApp(condition).then(() => {
-      showOpenAppAd().then(() => {
-        afterAdFunction();
-      });
+      showOpenAppAd()
+        .then(() => {
+          afterAdFunction();
+        })
+        .catch(afterAdFunction);
     });
   };
 

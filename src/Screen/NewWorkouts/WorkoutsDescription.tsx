@@ -17,7 +17,6 @@ import Tts from 'react-native-tts';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useSelector, useDispatch} from 'react-redux';
 import AnimatedLottieView from 'lottie-react-native';
-import FastImage from 'react-native-fast-image';
 import {localImage} from '../../Component/Image';
 import {setSoundOnOff} from '../../Component/ThemeRedux/Actions';
 import Video from 'react-native-video';
@@ -187,37 +186,6 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
           //     : data?.exercise_image_link
           // }
         />
-        {/* <FastImage
-          fallback={true}
-          // onError={onError}
-          // onLoadEnd={onLoadEnd}
-          // onLoadStart={onLoadStart}
-          // onLoad={() => setIsLoading(false)}
-          style={{
-            height: DeviceWidth * 0.7,
-            width: DeviceWidth * 0.95,
-            alignSelf: 'center',
-
-            marginTop: 10,
-            top: -DeviceHeigth * 0.07,
-            zIndex: -1,
-          }}
-          source={{
-            uri:
-              getStoreVideoLoc[data?.exercise_title + 'Image'] != undefined
-                ? 'file://' + getStoreVideoLoc[data?.exercise_title + 'Image']
-                : getStoreVideoLoc[data?.workout_title + 'Image'] != undefined
-                ? 'file://' + getStoreVideoLoc[data?.workout_title + 'Image']
-                : data?.exercise_image?.includes('https')
-                ? data?.exercise_image
-                : data?.exercise_image_link,
-
-            headers: {Authorization: 'someAuthToken'},
-            priority: FastImage.priority.high,
-          }}
-          resizeMode={FastImage.resizeMode.contain}
-          defaultSource={localImage.NOWORKOUT}
-        /> */}
         <View style={styles.container}>
           <View style={styles.content}>
             <Text

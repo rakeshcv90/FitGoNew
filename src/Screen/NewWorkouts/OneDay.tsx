@@ -53,7 +53,6 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {MyRewardedAd} from '../../Component/BannerAdd';
 import RNFetchBlob from 'rn-fetch-blob';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
-import FastImage from 'react-native-fast-image';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import OverExerciseModal from '../../Component/Utilities/OverExercise';
 import {ArrowLeft} from '../../Component/Utilities/Arrows/Arrow';
@@ -289,7 +288,7 @@ const OneDay = ({navigation, route}: any) => {
               trackerData: res?.data?.inserted_data,
               type: 'day',
               challenge: true,
-              isEventPage: false
+              isEventPage: false,
             });
           } else {
             setOpen(false);
@@ -306,7 +305,7 @@ const OneDay = ({navigation, route}: any) => {
               trackerData: trackerData,
               type: 'day',
               challenge: true,
-              isEventPage: false
+              isEventPage: false,
             });
           }
         }
@@ -343,19 +342,15 @@ const OneDay = ({navigation, route}: any) => {
                 borderWidth: 1,
                 borderColor: '#D9D9D9',
               }}>
-              <FastImage
-                fallback={true}
+              <Image
                 style={{height: 75, width: 75, alignSelf: 'center'}}
                 source={{
                   uri:
                     item.exercise_image_link != ''
                       ? item.exercise_image
-                      : item.exercise_image_link,
-                  headers: {Authorization: 'someAuthToken'},
-                  priority: FastImage.priority.high,
+                      : item.exercise_image_link ?? localImage.NOWORKOUT,
                 }}
-                resizeMode={FastImage.resizeMode.contain}
-                defaultSource={localImage.NOWORKOUT}
+                resizeMode={'contain'}
               />
               {trackerData[index - 1]?.exercise_status == 'completed' && (
                 <Image
@@ -386,9 +381,7 @@ const OneDay = ({navigation, route}: any) => {
                 marginHorizontal: 20,
               }}>
               <View>
-                <Text style={styles.small2}>
-                  {item?.exercise_title}
-                </Text>
+                <Text style={styles.small2}>{item?.exercise_title}</Text>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <Text style={styles.small}>
                     {'Time - ' +

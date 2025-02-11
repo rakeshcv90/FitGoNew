@@ -32,7 +32,6 @@ import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
 import NativeAddTest from '../../Component/NativeAddTest';
 import moment from 'moment';
-import FastImage from 'react-native-fast-image';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import VersionNumber, {appVersion} from 'react-native-version-number';
@@ -117,8 +116,7 @@ const CreateWorkout = ({navigation, route}) => {
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}>
-                  <FastImage
-                    fallback={true}
+                  <Image
                     style={{
                       width: 60,
                       height: 60,
@@ -131,12 +129,9 @@ const CreateWorkout = ({navigation, route}) => {
                       uri: getStoreVideoLoc[item?.exercise_title + 'Image']
                         ? 'file://' +
                           getStoreVideoLoc[item?.exercise_title + 'Image']
-                        : item.exercise_image_link,
-                      headers: {Authorization: 'someAuthToken'},
-                      priority: FastImage.priority.high,
+                        : item.exercise_image_link ?? localImage.NOWORKOUT,
                     }}
-                    resizeMode={FastImage.resizeMode.contain}
-                    defaultSource={localImage.NOWORKOUT}
+                    resizeMode={'contain'}
                   />
                 </View>
                 <View
@@ -332,7 +327,7 @@ const CreateWorkout = ({navigation, route}) => {
     }
   };
   const nav = () => navigation.goBack();
-  
+
   const getUserDetailData = async () => {
     try {
       const responseData = await axios.get(

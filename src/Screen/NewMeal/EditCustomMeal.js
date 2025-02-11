@@ -26,8 +26,7 @@ import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
 import FitText from '../../Component/Utilities/FitText';
-import {localImage} from '../../Component/Image';
-import FastImage from 'react-native-fast-image';
+import {localImage} from '../../Component/Image'
 import VersionNumber from 'react-native-version-number';
 import {showMessage} from 'react-native-flash-message';
 import axios from 'axios';
@@ -78,8 +77,7 @@ const EditCustomMeal = ({navigation, route}) => {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
               }}>
-              <FastImage
-                fallback={true}
+              <Image
                 style={{
                   width: 100,
                   height: 100,
@@ -88,12 +86,9 @@ const EditCustomMeal = ({navigation, route}) => {
                   borderRadius: 10,
                 }}
                 source={{
-                  uri: item.diet_image,
-                  headers: {Authorization: 'someAuthToken'},
-                  priority: FastImage.priority.high,
+                  uri: item.diet_image??localImage.NOWORKOUT,
                 }}
-                resizeMode={FastImage.resizeMode.cover}
-                defaultSource={localImage.NOWORKOUT}
+                resizeMode={'cover'}
               />
               <View
                 style={{

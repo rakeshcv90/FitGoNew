@@ -18,7 +18,6 @@ import {Image} from 'react-native';
 import {localImage} from '../../Component/Image';
 import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
-import FastImage from 'react-native-fast-image';
 import {showMessage} from 'react-native-flash-message';
 
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
@@ -308,8 +307,7 @@ const CustomMealList = ({navigation, route}) => {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
               }}>
-              <FastImage
-                fallback={true}
+              <Image
                 style={{
                   width: 100,
                   height: 100,
@@ -318,12 +316,9 @@ const CustomMealList = ({navigation, route}) => {
                   borderRadius: 10,
                 }}
                 source={{
-                  uri: item.diet_image,
-                  headers: {Authorization: 'someAuthToken'},
-                  priority: FastImage.priority.high,
+                  uri: item.diet_image??localImage.NOWORKOUT,
                 }}
-                resizeMode={FastImage.resizeMode.cover}
-                defaultSource={localImage.NOWORKOUT}
+                resizeMode={'cover'}
               />
               <View
                 style={{

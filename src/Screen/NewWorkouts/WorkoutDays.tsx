@@ -38,7 +38,6 @@ import RNFetchBlob from 'rn-fetch-blob';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import {bannerAdId} from '../../Component/AdsId';
 import NativeAddTest from '../../Component/NativeAddTest';
-import FastImage from 'react-native-fast-image';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 import NewHeader from '../../Component/Headers/NewHeader';

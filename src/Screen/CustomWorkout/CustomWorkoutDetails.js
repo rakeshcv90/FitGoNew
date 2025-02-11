@@ -34,7 +34,6 @@ import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
 import GradientButton from '../../Component/GradientButton';
 import moment from 'moment';
-import FastImage from 'react-native-fast-image';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import NewButton from '../../Component/NewButton';
@@ -254,12 +253,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                     marginHorizontal: -12,
                     justifyContent: 'center',
                   }}>
-                  <FastImage
-                    fallback={true}
-                    // onError={onError}
-                    // onLoadEnd={onLoadEnd}
-                    // onLoadStart={onLoadStart}
-
+                  <Image
                     style={{
                       width: 60,
                       height: 60,
@@ -267,12 +261,9 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                       alignSelf: 'center',
                     }}
                     source={{
-                      uri: item?.exercise_image_link,
-                      headers: {Authorization: 'someAuthToken'},
-                      priority: FastImage.priority.high,
+                      uri: item?.exercise_image_link??localImage.NOWORKOUT,
                     }}
-                    resizeMode={FastImage.resizeMode.contain}
-                    defaultSource={localImage.NOWORKOUT}
+                    resizeMode={'contain'}
                   />
                 </View>
                 <View
