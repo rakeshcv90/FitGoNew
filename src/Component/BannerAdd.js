@@ -128,42 +128,42 @@ export const NewInterstitialAd = setClosed => {
 
   return {initInterstitial, showInterstitialAd};
 };
-let interstitialAdRef1 = null; // Persistent ad reference
-let interstitialAdStatus = null; // Persistent ad status
-let interstitialJustClosed = false;
-export const MyInterstitialAd = () => {
-  const initInterstitial = async isTesting => {
-    if (interstitialAdRef1?._loaded) return;
-    const interstitialAd = InterstitialAd.createForAdRequest(
-      isTesting ? interstitialAdIdTest : interstitialAdId,
-      {
-        requestNonPersonalizedAdsOnly: true,
-      },
-    );
-    interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
-      interstitialAdStatus = interstitialAd;
-      interstitialAdRef1 = interstitialAd;
-    });
-    interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {
-      interstitialAd.load();
-      interstitialJustClosed = true;
-      setTimeout(() => {
-        interstitialJustClosed = false;
-      }, 3000);
-    });
-    interstitialAd.addAdEventListener(AdEventType.CLICKED, () => {});
-    interstitialAd.addAdEventListener(AdEventType.ERROR, error => {});
-    interstitialAd.load();
-    console.log('INTER LOADER');
-  };
+// let interstitialAdRef1 = null; // Persistent ad reference
+// let interstitialAdStatus = null; // Persistent ad status
+// let interstitialJustClosed = false;
+// export const MyInterstitialAd = () => {
+//   const initInterstitial = async isTesting => {
+//     if (interstitialAdRef1?._loaded) return;
+//     const interstitialAd = InterstitialAd.createForAdRequest(
+//       isTesting ? interstitialAdIdTest : interstitialAdId,
+//       {
+//         requestNonPersonalizedAdsOnly: true,
+//       },
+//     );
+//     interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
+//       interstitialAdStatus = interstitialAd;
+//       interstitialAdRef1 = interstitialAd;
+//     });
+//     interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {
+//       interstitialAd.load();
+//       interstitialJustClosed = true;
+//       setTimeout(() => {
+//         interstitialJustClosed = false;
+//       }, 3000);
+//     });
+//     interstitialAd.addAdEventListener(AdEventType.CLICKED, () => {});
+//     interstitialAd.addAdEventListener(AdEventType.ERROR, error => {});
+//     interstitialAd.load();
+//     console.log('INTER LOADER');
+//   };
 
-  const showInterstitialAd = async () => {
-    if (interstitialAdStatus?._loaded) {
-      await interstitialAdStatus?.show();
-    }
-  };
-  return {initInterstitial, showInterstitialAd};
-};
+//   const showInterstitialAd = async () => {
+//     if (interstitialAdStatus?._loaded) {
+//       await interstitialAdStatus?.show();
+//     }
+//   };
+//   return {initInterstitial, showInterstitialAd};
+// };
 
 export const MyRewardedAd = () => {
   const adStatus = useRef(null);
@@ -216,6 +216,55 @@ export const MyRewardedAd = () => {
     []);
   return {rewardAdsLoad, showRewardAds};
 };
+var isInterAdBeingShown = false;
+let interAdStatusRef = null;
+
+export const MyInterstitialAd = () => {
+  const initInterstitial = testing => {
+    return new Promise((resolve, reject) => {
+      if (interAdStatusRef) return resolve(); // Ad is already initialized
+      const interstitialAd = InterstitialAd.createForAdRequest(
+        testing ? interstitialAdIdTest : interstitialAdId,
+      );
+      interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
+        interAdStatusRef = interstitialAd;
+        resolve(); // Resolve when the ad is loaded
+      });
+      interstitialAd.addAdEventListener(AdEventType.ERROR, error => {
+        resolve(); // resolve the promise in case of an error
+      });
+      interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {
+        isInterAdBeingShown = false;
+        interstitialAd.load();
+      });
+      interstitialAd.addAdEventListener(AdEventType.OPENED, () => {
+        isInterAdBeingShown = true;
+      });
+      interstitialAd.load();
+    });
+  };
+
+  const showInterstitialAd = async () => {
+    return new Promise((resolve, reject) => {
+      if (isInterAdBeingShown) return resolve(); // Return if ad shouldn't be shown
+      if (interAdStatusRef?._loaded) {
+        interAdStatusRef.addAdEventListener(AdEventType.OPENED, () => {});
+        // resovlve or fail listeners
+        interAdStatusRef.addAdEventListener(AdEventType.CLOSED, () => {
+          resolve();
+        });
+        interAdStatusRef.addAdEventListener(AdEventType.ERROR, error => {
+          resolve(); // resolve the promise if there's an error showing the ad
+        });
+        interAdStatusRef.show();
+      } else {
+        resolve(); // Resolve if no ad is available
+      }
+    });
+  };
+  return {initInterstitial, showInterstitialAd};
+};
+
 var isAdBeingShown = false;
 let adStatusRef = null;
 
