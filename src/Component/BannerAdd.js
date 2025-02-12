@@ -218,6 +218,7 @@ export const MyRewardedAd = () => {
 };
 var isInterAdBeingShown = false;
 let interAdStatusRef = null;
+let interstitialJustClosed = false;
 
 export const MyInterstitialAd = () => {
   const initInterstitial = testing => {
@@ -231,6 +232,10 @@ export const MyInterstitialAd = () => {
         resolve(); // Resolve when the ad is loaded
       });
       interstitialAd.addAdEventListener(AdEventType.ERROR, error => {
+        interstitialJustClosed = true;
+        setTimeout(() => {
+          interstitialJustClosed = false;
+        }, 3000);
         resolve(); // resolve the promise in case of an error
       });
       interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {
@@ -251,6 +256,10 @@ export const MyInterstitialAd = () => {
         interAdStatusRef.addAdEventListener(AdEventType.OPENED, () => {});
         // resovlve or fail listeners
         interAdStatusRef.addAdEventListener(AdEventType.CLOSED, () => {
+          interstitialJustClosed = true;
+          setTimeout(() => {
+            interstitialJustClosed = false;
+          }, 3000);
           resolve();
         });
         interAdStatusRef.addAdEventListener(AdEventType.ERROR, error => {

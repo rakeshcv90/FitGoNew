@@ -120,8 +120,8 @@ const SplaceScreen = ({navigation, route}) => {
           callAds(false);
         }
       } else {
-        // callAds(__DEV__ ? true : false); // load live ad if null
-        callAds(false); // load live ad if null
+        callAds(__DEV__ ? true : false); // load live ad if null
+        // callAds(false); // load live ad if null
       }
     } else {
       // For non-iOS platforms, fetch the unique ID
