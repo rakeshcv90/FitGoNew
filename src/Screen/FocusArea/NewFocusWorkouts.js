@@ -417,7 +417,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
             alignSelf: 'center',
           }}
         />
-        {!isFullBody && (
+        {isFullBody && (
           <Text
             style={{
               fontSize: 16,
@@ -540,7 +540,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
             }}
           />
         </View>
-        {!isFullBody && (
+        {isFullBody && (
           <View
             style={{
               width: DeviceWidth,
@@ -1043,6 +1043,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                   ? 'Select Exercises'
                   : 'Start Workout'
               }
+              fontSize={20}
               withAnimation={downloaded > 0}
               download={downloaded}
               onPress={() => {

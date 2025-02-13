@@ -117,7 +117,7 @@ const WorkoutChallengeZone = ({day, currentChallenge}) => {
                   }}>
                   <FitText
                     type="normal"
-                    value="START NOW"
+                    value="Start now"
                     color={AppColor.RED}
                     lineHeight={25}
                     fontWeight="600"

@@ -616,12 +616,12 @@ const NewHome = ({navigation}) => {
                 }}
                 style={{
                   // width: 150,
-                  height: 40,
+                  // height: 40,
                   borderRadius: 6,
                   alignItems: 'center',
                   flexDirection: 'row',
-                  paddingLeft: 5,
-                  paddingRight: 5,
+                  padding: 10,
+                  marginRight: 10,
                   //justifyContent: 'center',
                   backgroundColor: '#DBEAFE',
                 }}>
@@ -630,7 +630,7 @@ const NewHome = ({navigation}) => {
                   style={{height: 15, width: 15}}
                   resizeMode="contain"
                 />
-                <Text style={styles.cointxt}>Leaderboard</Text>
+                {/* <Text style={styles.cointxt}>Leaderboard</Text> */}
               </TouchableOpacity>
             )}
           </View>
@@ -746,7 +746,7 @@ const NewHome = ({navigation}) => {
               marginBottom: 8,
               alignSelf: 'center',
             }}>
-            Past Winners
+            Event Winners
           </Text>
           <PastWinnersComponent
             pastWinners={getPastWinners}

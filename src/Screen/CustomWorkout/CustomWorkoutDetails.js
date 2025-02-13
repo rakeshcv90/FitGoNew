@@ -37,6 +37,9 @@ import moment from 'moment';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import NewButton from '../../Component/NewButton';
+import NewHeader1 from '../../Component/Headers/NewHeader1';
+import Wrapper from '../WorkoutCompleteScreen/Wrapper';
+import {ArrowLeft} from '../../Component/Utilities/Arrows/Arrow';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -190,7 +193,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
               trackerData: res?.data?.inserted_data,
               type: 'custom',
               challenge: false,
-              isEventPage: false
+              isEventPage: false,
             });
           } else {
             setDownloade(false);
@@ -207,7 +210,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
               trackerData: trackerData,
               type: 'custom',
               challenge: false,
-              isEventPage: false
+              isEventPage: false,
             });
           }
         }
@@ -261,7 +264,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                       alignSelf: 'center',
                     }}
                     source={{
-                      uri: item?.exercise_image_link??localImage.NOWORKOUT,
+                      uri: item?.exercise_image_link ?? localImage.NOWORKOUT,
                     }}
                     resizeMode={'contain'}
                   />
@@ -477,148 +480,159 @@ const CustomWorkoutDetails = ({navigation, route}) => {
   }, []);
   return (
     <>
-      <DietPlanHeader
-        //header={route?.params?.item?.workout_name}
-        header={'Custom Workout'}
-        SearchButton={false}
-        backPressCheck={backBlock}
-        onPress={() => {
-          if (backBlock) {
-            showMessage({
-              message:
-                'Please wait, downloading in progress. Do not press back.',
-              type: 'info',
-              animationDuration: 500,
-              floating: true,
-              icon: {icon: 'auto', position: 'left'},
-            });
-          } else {
-            navigation?.goBack();
-          }
-        }}
-      />
-      {forLoading ? <ActivityLoader /> : ''}
-      <View style={styles.container}>
-        <View style={{width: '98%', alignSelf: 'center'}}>
-          <View
-            style={{
-              width: '100%',
-              borderRadius: 10,
-              backgroundColor: '#FDFDFD',
-              marginVertical: 8,
-              flexDirection: 'row',
-              alignSelf: 'center',
-              justifyContent: 'space-between',
-              paddingHorizontal: 20,
-              padding: 5,
+      <Wrapper>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: 10
+          }}>
+          <TouchableOpacity
+            onPress={() => {
+              if (backBlock) {
+                showMessage({
+                  message:
+                    'Please wait, downloading in progress. Do not press back.',
+                  type: 'info',
+                  animationDuration: 500,
+                  floating: true,
+                  icon: {icon: 'auto', position: 'left'},
+                });
+              } else {
+                navigation?.goBack();
+              }
             }}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image
-                // source={{uri: data.workout_image_link}}
-                source={
-                  data?.image == '' ? localImage.NOWORKOUT : {uri: data?.image}
-                }
-                defaultSource={localImage.NOWORKOUT}
-                style={{
-                  width: 70,
-                  height: 70,
-                  justifyContent: 'center',
-                  alignSelf: 'center',
-                  borderRadius: 10,
+            <ArrowLeft fillColor={AppColor.BLACK} />
+          </TouchableOpacity>
 
-                  marginHorizontal: -7,
-                }}
-                resizeMode="cover"
-              />
-              <View
-                style={{
-                  marginHorizontal: 25,
-                  justifyContent: 'center',
-                  width: DeviceWidth * 0.5,
-                }}>
-                <Text
-                  numberOfLines={1}
+          <TouchableOpacity
+            onPress={() => {
+              setIsMenuOpen(true);
+            }}>
+            <Icons name="dots-vertical" size={30} color={'#000'} />
+          </TouchableOpacity>
+        </View>
+        {forLoading ? <ActivityLoader /> : ''}
+        <View style={styles.container}>
+          <View style={{width: '98%', alignSelf: 'center'}}>
+            <View
+              style={{
+                width: '100%',
+                borderRadius: 10,
+                backgroundColor: '#FDFDFD',
+                marginVertical: 8,
+                flexDirection: 'row',
+                alignSelf: 'center',
+                justifyContent: 'space-between',
+                paddingHorizontal: 20,
+                padding: 5,
+              }}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Image
+                  // source={{uri: data.workout_image_link}}
+                  source={
+                    data?.image == ''
+                      ? localImage.NOWORKOUT
+                      : {uri: data?.image}
+                  }
+                  defaultSource={localImage.NOWORKOUT}
                   style={{
-                    fontSize: 17,
-                    fontWeight: '600',
-                    color: '#202020',
-                    lineHeight: 25,
-                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                  }}>
-                  {data?.workout_name}
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontWeight: '600',
-                    color: '#202020',
-                    lineHeight: 30,
+                    width: 70,
+                    height: 70,
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    borderRadius: 10,
 
-                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                    marginHorizontal: -7,
+                  }}
+                  resizeMode="cover"
+                />
+                <View
+                  style={{
+                    marginHorizontal: 25,
+                    justifyContent: 'center',
+                    width: DeviceWidth * 0.5,
                   }}>
-                  {data?.total_exercises}
-                  {' Exercises'}
-                </Text>
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      fontSize: 17,
+                      fontWeight: '600',
+                      color: '#202020',
+                      lineHeight: 25,
+                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                    }}>
+                    {data?.workout_name}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      fontWeight: '600',
+                      color: '#202020',
+                      lineHeight: 30,
+
+                      fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                    }}>
+                    {data?.total_exercises}
+                    {' Exercises'}
+                  </Text>
+                </View>
               </View>
             </View>
-            <TouchableOpacity
-              style={{top: 10}}
+            <View style={{width: '95%', alignSelf: 'center', top: -20}}>
+              <Text
+                style={{
+                  color: AppColor.BLACK,
+                  fontFamily: 'Montserrat-SemiBold',
+                  fontWeight: '700',
+                  lineHeight: 20,
+                  fontSize: 20,
+                  top: 15,
+                  marginVertical: 15,
+                  alignItems: 'center',
+                }}>
+                Exercises
+              </Text>
+            </View>
+            <View style={{paddingBottom: 10}}>
+              <FlatList
+                data={data?.exercise_data}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={renderItem}
+                ListEmptyComponent={emptyComponent}
+                initialNumToRender={10}
+                maxToRenderPerBatch={10}
+                updateCellsBatchingPeriod={100}
+                removeClippedSubviews={true}
+                contentContainerStyle={{paddingBottom: DeviceHeigth * 0.35}}
+                showsVerticalScrollIndicator={false}
+              />
+            </View>
+          </View>
+          {data?.exercise_data.length > 0 && (
+            <NewButton
+              position={'absolute'}
+              title={'Start Workout'}
+              bottom={20}
+              pV={10}
+              pH={10}
+              ButtonWidth={DeviceWidth * 0.4}
+              bR={10}
+              fontFamily={Fonts.HELVETICA_BOLD}
+              right={16}
+              withAnimation
+              download={VideoDownload}
               onPress={() => {
-                setIsMenuOpen(true);
-              }}>
-              <Icons name="dots-vertical" size={30} color={'#000'} />
-            </TouchableOpacity>
-          </View>
-          <View style={{width: '95%', alignSelf: 'center', top: -20}}>
-            <Text
-              style={{
-                color: AppColor.BLACK,
-                fontFamily: 'Montserrat-SemiBold',
-                fontWeight: '700',
-                lineHeight: 20,
-                fontSize: 20,
-                top: 15,
-                marginVertical: 15,
-                alignItems: 'center',
-              }}>
-              Exercises
-            </Text>
-          </View>
-          <View style={{paddingBottom: 10}}>
-            <FlatList
-              data={data?.exercise_data}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={renderItem}
-              ListEmptyComponent={emptyComponent}
-              initialNumToRender={10}
-              maxToRenderPerBatch={10}
-              updateCellsBatchingPeriod={100}
-              removeClippedSubviews={true}
-              contentContainerStyle={{paddingBottom: DeviceHeigth * 0.35}}
-              showsVerticalScrollIndicator={false}
+                setBackBlock(true);
+                postCurrentDayAPI();
+              }}
             />
-          </View>
+          )}
         </View>
-        {data?.exercise_data.length > 0 && (
-          <NewButton
-            position={'absolute'}
-            title={'Start Workout'}
-            bottom={20}
-            pV={10}
-            pH={10}
-            ButtonWidth={DeviceWidth * 0.4}
-            bR={10}
-            fontFamily={Fonts.HELVETICA_BOLD}
-            right={16}
-            withAnimation
-            download={VideoDownload}
-            onPress={() => {
-              setBackBlock(true);
-              postCurrentDayAPI();
-            }}
-          />
-        )}
-      </View>
+        {/* {bannerAdsDisplay()} */}
+        <BannerAdd bannerAdId={bannerAdId} />
+      </Wrapper>
       <Modal
         animationType="slide"
         visible={isMenuOpen}
@@ -695,8 +709,6 @@ const CustomWorkoutDetails = ({navigation, route}) => {
           </TouchableOpacity>
         </BlurView>
       </Modal>
-      {/* {bannerAdsDisplay()} */}
-      <BannerAdd bannerAdId={bannerAdId} />
     </>
   );
 };

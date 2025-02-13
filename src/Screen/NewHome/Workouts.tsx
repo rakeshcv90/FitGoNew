@@ -207,7 +207,7 @@ const Workouts = ({navigation}: any) => {
     },
     {
       id: 240,
-      title: 'Full Body',
+      title: 'Stretch',
       image: require('../../Icon/Images/NewImage2/fullBody.png'),
 
       searchCriteria: [],
@@ -619,10 +619,13 @@ const Workouts = ({navigation}: any) => {
         });
       }
     } else {
+      const stretchEx = getAllExercise.filter((item: any) =>
+        item?.exercise_title?.toLowerCase()?.includes('stretch'),
+      );
       if (checkAdsShow == true) {
         showInterstitialAd();
         navigation.navigate('NewFocusWorkouts', {
-          focusExercises: getAllExercise,
+          focusExercises: stretchEx,
           focusedPart: data?.title,
           searchCriteria: [],
           searchCriteriaRedux: [],
@@ -630,7 +633,7 @@ const Workouts = ({navigation}: any) => {
         });
       } else {
         navigation.navigate('NewFocusWorkouts', {
-          focusExercises: getAllExercise,
+          focusExercises: stretchEx,
           focusedPart: data?.title,
           searchCriteria: [],
           searchCriteriaRedux: [],
@@ -669,7 +672,7 @@ const Workouts = ({navigation}: any) => {
     <>
       <View style={styles.container}>
         <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
-          <NewHeader1 header={'Workouts'} />
+          <NewHeader1 header={''} />
           <FlatList
             data={[1, 2, 3, 4]}
             showsVerticalScrollIndicator={false}

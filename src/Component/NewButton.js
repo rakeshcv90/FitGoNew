@@ -47,6 +47,7 @@ const NewButton = ({
   svgArrowLeft,
   svgArrowRight,
   svgArrowColor,
+  fontSize
 }) => {
   const [isClicked, setIsClicked] = useState(false);
   const handlePress = () => {
@@ -116,6 +117,7 @@ const NewButton = ({
             {
               color: titleColor ?? AppColor.WHITE,
               fontFamily: fontFamily ?? 'Helvetica',
+              fontSize: fontSize ?? 15
             },
           ]}>
           {withAnimation

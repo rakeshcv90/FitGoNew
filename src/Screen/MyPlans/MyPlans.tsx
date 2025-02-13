@@ -1238,7 +1238,7 @@ const MyPlans = ({navigation}: any) => {
         <FitText
           type="Heading"
           fontSize={20}
-          value="Weekly Plan"
+          value=""
           marginVertical={10}
           textAlign="center"
         />

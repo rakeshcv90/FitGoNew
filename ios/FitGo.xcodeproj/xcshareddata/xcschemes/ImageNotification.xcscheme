@@ -30,8 +30,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "FitGo.app"
-               BlueprintName = "FitGo"
+               BuildableName = "FitGoNew.app"
+               BlueprintName = "FitGoNew"
                ReferencedContainer = "container:FitGo.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -61,8 +61,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "FitGo.app"
-            BlueprintName = "FitGo"
+            BuildableName = "FitGoNew.app"
+            BlueprintName = "FitGoNew"
             ReferencedContainer = "container:FitGo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -80,8 +80,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "FitGo.app"
-            BlueprintName = "FitGo"
+            BuildableName = "FitGoNew.app"
+            BlueprintName = "FitGoNew"
             ReferencedContainer = "container:FitGo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

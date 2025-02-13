@@ -223,7 +223,7 @@ const StepGuide = ({navigation}: any) => {
                 />
               </View>
             </View> */}
-            <FitText type="Heading" value="Past Winners" />
+            <FitText type="Heading" value="Event Winners" />
             <WithoutEvent pastWinners={getPastWinner} pV={0} noText />
             {/* <FitText
               type="SubHeading"

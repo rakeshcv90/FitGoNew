@@ -97,7 +97,7 @@ android {
         missingDimensionStrategy "store", "play"
         def date = new Date();
         def newName = date.format('MMM-dd-yyyy')
-        setProperty("archivesBaseName","my_app"+versionName+"_"+newName)
+        setProperty("archivesBaseName","Fitme"+versionName+"_"+newName)
     }
      signingConfigs {
          release {

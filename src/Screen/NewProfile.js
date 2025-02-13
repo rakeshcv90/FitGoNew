@@ -615,7 +615,7 @@ const NewProfile = ({navigation}) => {
   return (
     <View style={styles.Container}>
       <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
-        <NewHeader1 header={'Profile'} />
+        <NewHeader1 header={''} />
         <View style={styles.ProfileContainer}>
           <View style={[styles.profileView, {}]}>
             <Image

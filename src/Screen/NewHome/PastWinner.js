@@ -41,7 +41,7 @@ const PastWinner = ({route}) => {
         barStyle={'dark-content'}
       />
       <Wrapper>
-        <NewHeader1 header={'Past Winners'} backButton />
+        <NewHeader1 header={'Event Winners'} backButton />
         <ScrollView
           keyboardDismissMode="interactive"
           showsVerticalScrollIndicator={false}

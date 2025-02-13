@@ -411,7 +411,7 @@ const CustomWorkout = ({navigation}) => {
     <>
       <View style={styles.container}>
         <Wrapper>
-          <NewHeader1 header={'Create Custom Workout'} backButton />
+          <NewHeader1 header={'Custom Made'} backButton />
           <View style={[styles.meditionBox, {marginTop: 10}]}>
             <FlatList
               data={customWorkoutData}

@@ -142,11 +142,7 @@ const SplaceScreen = ({navigation, route}) => {
   const callAds = condition => {
     initInterstitial(condition);
     initOpenApp(condition).then(() => {
-      showOpenAppAd()
-        .then(() => {
-          afterAdFunction();
-        })
-        .catch(afterAdFunction);
+      showOpenAppAd().then(afterAdFunction).catch(afterAdFunction);
     });
   };
 

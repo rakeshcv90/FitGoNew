@@ -42,9 +42,9 @@ const PastWinnersComponent = ({pastWinners, navigation}) => {
         ))}
       </View>
       <NewButton
-        ButtonWidth={DeviceWidth * 0.42}
+        ButtonWidth={DeviceWidth * 0.32}
         pV={6}
-        title={'View Past Winners'}
+        title={'View More'}
         buttonColor={'#E9ECEF'}
         titleColor={'#343A40'}
         fontFamily={Fonts.HELVETICA_BOLD}

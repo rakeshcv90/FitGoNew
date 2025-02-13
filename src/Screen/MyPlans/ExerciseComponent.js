@@ -46,6 +46,7 @@ export const ExerciseComponetWithoutEvents = ({
             download={download}
             isClicked={isClicked}
             setIsClicked={setIsClicked}
+            fontSize={20}
           />
           <Text
             style={[
@@ -267,6 +268,7 @@ export const ExerciseComponentWithEvent = ({
               onPress={onPress}
               withAnimation={overExerciseVisible}
               download={download}
+              fontSize={20}
             />
           ) : null}
           <Text

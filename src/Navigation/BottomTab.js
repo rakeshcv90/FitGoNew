@@ -187,7 +187,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                 <Text
                   style={{
                     color: AppColor.RED,
-                    fontFamily: Fonts.HELVETICA_REGULAR,
+                    fontFamily: Fonts.HELVETICA_BOLD,
                     fontSize: 12,
                     lineHeight: 14.63,
                     fontWeight: '600',
@@ -226,7 +226,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                     fontSize: 12,
                     lineHeight: 14.63,
                     fontWeight: '500',
-                    fontFamily: Fonts.HELVETICA_BOLD,
+                    fontFamily: Fonts.HELVETICA_REGULAR,
                     marginTop: 5,
                     textAlign: 'center',
                   }}>

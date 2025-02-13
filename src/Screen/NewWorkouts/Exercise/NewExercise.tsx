@@ -19,6 +19,7 @@ import {BannerAdd} from '../../../Component/BannerAdd';
 import {bannerAdId} from '../../../Component/AdsId';
 import Wrapper from '../../WorkoutCompleteScreen/Wrapper';
 import NativeAddTest from '../../../Component/NativeAddTest';
+import ActivityLoader from '../../../Component/ActivityLoader';
 
 const NewExercise = ({navigation, route}: any) => {
   const {
@@ -138,7 +139,7 @@ const NewExercise = ({navigation, route}: any) => {
               ]}>
               {isRest ? (
                 <NativeAddTest media={true} type="video" />
-              ) : (
+              ) : pause ? (
                 <Video
                   source={{
                     uri: getStoreVideoLoc[allExercise[number]?.exercise_title],
@@ -150,9 +151,6 @@ const NewExercise = ({navigation, route}: any) => {
                     setPause(true);
                   }}
                   paused={!pause}
-                  onPlaybackResume={() => {
-                    setPause(true);
-                  }}
                   repeat={true}
                   resizeMode="contain"
                   style={{
@@ -162,6 +160,8 @@ const NewExercise = ({navigation, route}: any) => {
                     top: 30,
                   }}
                 />
+              ) : (
+                <ActivityLoader visible={!pause} />
               )}
             </View>
           </View>

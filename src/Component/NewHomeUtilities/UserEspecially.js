@@ -39,7 +39,7 @@ const data = [
   },
   {
     id: 2,
-    title: 'Nearby Gyms',
+    title: 'Gyms',
     image: require('../../Icon/Images/NewHome/back1.png'),
     text: 'Discover fitness centers close to you',
   },

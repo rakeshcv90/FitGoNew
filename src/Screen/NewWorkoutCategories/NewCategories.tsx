@@ -174,6 +174,7 @@ const NewCategories = ({navigation, route}: any) => {
                 ? `Start Workout`
                 : 'Select Exercises'
             }
+            fontSize={20}
             disabled={switchButton && selectedExIDs.length == 0}
             buttonColor={
               switchButton
