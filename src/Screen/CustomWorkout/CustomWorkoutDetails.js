@@ -169,7 +169,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
         const res = await axios({
           url: NewAppapi.CURRENT_DAY_EXERCISE,
           method: 'Post',
-          data: {user_details: datas},
+          data: {user_details: datas,type: 'custom'},
         });
 
         if (res.data) {

@@ -133,4 +133,6 @@ export const NewAppapi = {
   SEND_BREATHE_COINS:NewApi+'add_breathinout_coins',
   GET_CARDIO_STATUS:NewApi+'cardio_status',
   GET_MUSIC_DETAILS:NewApi+'music_details',
+  POST_NEW_LOGIN:NewApi+'loginnew',
+  CARDIO_STATUS_WITHOUT_EVENT:NewApi+'withoutevent_cardio_status',
 };

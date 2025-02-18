@@ -1,12 +1,19 @@
-import {StyleProp, StyleSheet, Text, TextStyle, View} from 'react-native';
+import {ColorValue, TextStyle, View} from 'react-native';
 import React, {FC} from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {AppColor} from '../Color';
 
-type IconTypes = {
-  type: 'MaterialCommunityIcons' | 'AntDesign' | 'MaterialIcons' | 'FontAwesome5';
+export type FitIconTypes = {
+  type:
+    | 'MaterialCommunityIcons'
+    | 'AntDesign'
+    | 'Ionicons'
+    | 'MaterialIcons'
+    | 'FontAwesome5';
   color?: string;
   size: number;
   onPress?: () => void;
@@ -14,9 +21,15 @@ type IconTypes = {
   mL?: number;
   mR?: number;
   style?: TextStyle;
+  roundIcon?: boolean;
+  bR?: number;
+  bC?: ColorValue;
+  roundBackground?: ColorValue;
+  bW?: number;
+  roundPadding?: number;
 };
 
-const FitIcon: FC<IconTypes> = ({
+const FitIcon: FC<FitIconTypes> = ({
   size,
   type,
   color,
@@ -25,15 +38,32 @@ const FitIcon: FC<IconTypes> = ({
   mR,
   mL,
   style,
+  bC,
+  bR,
+  bW,
+  roundPadding,
+  roundIcon = false,
+  roundBackground,
 }) => {
+  const TEXT_THEME = AppColor.BLACK;
+  const BACKGROUND_THEME = AppColor.RED;
   return (
-    <View>
+    <View
+      style={[
+        roundIcon && {
+          padding: roundPadding ?? 10,
+          borderRadius: bR ?? 100,
+          borderWidth: bW ?? 1,
+          borderColor: bC ?? color,
+          backgroundColor: roundBackground ?? BACKGROUND_THEME,
+        },
+      ]}>
       {type == 'AntDesign' ? (
         <AntDesign
           name={name}
           size={size}
           onPress={onPress}
-          color={color}
+          color={color ?? TEXT_THEME}
           style={[style ? style : {marginLeft: mL ?? 0, marginRight: mR ?? 0}]}
         />
       ) : type == 'MaterialIcons' ? (
@@ -41,23 +71,31 @@ const FitIcon: FC<IconTypes> = ({
           name={name}
           size={size}
           onPress={onPress}
-          color={color}
+          color={color ?? TEXT_THEME}
           style={[style ? style : {marginLeft: mL ?? 0, marginRight: mR ?? 0}]}
         />
-      ) : type == 'MaterialCommunityIcons'? (
+      ) : type == 'MaterialCommunityIcons' ? (
         <MaterialCommunityIcons
           name={name}
           size={size}
           onPress={onPress}
-          color={color}
+          color={color ?? TEXT_THEME}
           style={[style ? style : {marginLeft: mL ?? 0, marginRight: mR ?? 0}]}
         />
-      ): (
+      ) : type == 'Ionicons' ? (
+        <Ionicons
+          name={name}
+          size={size}
+          onPress={onPress}
+          color={color ?? TEXT_THEME}
+          style={[style ? style : {marginLeft: mL ?? 0, marginRight: mR ?? 0}]}
+        />
+      ) : (
         <FontAwesome5
           name={name}
           size={size}
           onPress={onPress}
-          color={color}
+          color={color ?? TEXT_THEME}
           style={[style ? style : {marginLeft: mL ?? 0, marginRight: mR ?? 0}]}
         />
       )}
@@ -66,5 +104,3 @@ const FitIcon: FC<IconTypes> = ({
 };
 
 export default FitIcon;
-
-const styles = StyleSheet.create({});

@@ -38,7 +38,8 @@ import {ArrowLeft} from '../../Component/Utilities/Arrows/Arrow';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import ActivityLoader from '../../Component/ActivityLoader';
 import useMusicPlayer from '../NewWorkouts/Exercise/ExerciseUtilities/useMusicPlayer';
-import { resolveImportedAssetOrPath } from '../NewWorkouts/Exercise/ExerciseUtilities/Helpers';
+import {resolveImportedAssetOrPath} from '../NewWorkouts/Exercise/ExerciseUtilities/Helpers';
+import {goBack} from '../../Component/Utilities/NavigationUtil';
 interface CircleProps {
   index: number;
   progress: Animated.SharedValue<number>;
@@ -87,8 +88,13 @@ const Breathe = ({navigation, route}) => {
   const cardFallAnimation2 = useSharedValue(-DeviceHeigth);
   const fallLetsStart = useSharedValue(-DeviceHeigth);
   const collectButtonOffset = useSharedValue(0);
-  const getUserDataDetails = useSelector((state: any) => state.getUserDataDetails);
+  const getUserDataDetails = useSelector(
+    (state: any) => state.getUserDataDetails,
+  );
   const quitCardAnimation = useSharedValue(-DeviceHeigth);
+  const enteredCurrentEvent = useSelector(
+    (state: any) => state.enteredCurrentEvent,
+  );
   const AddCoinsApi = async () => {
     setLoaded(false);
     let payload = new FormData();
@@ -139,12 +145,20 @@ const Breathe = ({navigation, route}) => {
     }
   };
 
-  const {duration,currentTime,pauseMusic,playMusic,releaseMusic,seekTo,stopMusic} = useMusicPlayer({
+  const {
+    duration,
+    currentTime,
+    pauseMusic,
+    playMusic,
+    releaseMusic,
+    seekTo,
+    stopMusic,
+  } = useMusicPlayer({
     getSoundOffOn: true,
     pause: !pause,
     restStart: false,
-    song: resolveImportedAssetOrPath(localImage.breathingSound)
-  })
+    song: resolveImportedAssetOrPath(localImage.breathingSound),
+  });
 
   const buttonClick = () => {
     setEnableClick(true);
@@ -281,7 +295,7 @@ const Breathe = ({navigation, route}) => {
     } else {
       pauseMusic();
     }
-    return () => releaseMusic()
+    return () => releaseMusic();
   }, [progress, goesDown, pause]);
   const Circle = ({index, progress, goesDown}: CircleProps) => {
     const animationStyle = useAnimatedStyle(() => {
@@ -671,7 +685,7 @@ const Breathe = ({navigation, route}) => {
               pV={12}
               onPress={() => {
                 console.log('clicked');
-                AddCoinsApi();
+                enteredCurrentEvent ? AddCoinsApi() : goBack();
               }}
             />
           </Animated.View>

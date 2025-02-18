@@ -46,6 +46,7 @@ import NewHeader1 from '../../Component/Headers/NewHeader1';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import useMusicPlayer from '../NewWorkouts/Exercise/ExerciseUtilities/useMusicPlayer';
 import {resolveImportedAssetOrPath} from '../NewWorkouts/Exercise/ExerciseUtilities/Helpers';
+import {MyRewardedAd} from '../../Component/BannerAdd';
 
 const NewSubscription = ({navigation, route}: any) => {
   const {upgrade} = route.params;
@@ -54,7 +55,7 @@ const NewSubscription = ({navigation, route}: any) => {
   const getOfferAgreement = useSelector(
     (state: any) => state.getOfferAgreement,
   );
-
+  const {initRewarded, rewardAdClosed, showRewardedAd} = MyRewardedAd();
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
   );
@@ -163,6 +164,7 @@ const NewSubscription = ({navigation, route}: any) => {
     ),
   });
   useEffect(() => {
+    initRewarded();
     return () => releaseMusic();
   }, []);
 
@@ -673,7 +675,7 @@ const NewSubscription = ({navigation, route}: any) => {
           //   : DeviceHeigth * 0.55,
           width: DeviceWidth * 0.85,
           alignSelf: 'center',
-          margin: 10
+          margin: 10,
         }}>
         {getPurchaseHistory?.plan != null &&
           planName == getPurchaseHistory?.plan && (
@@ -1002,11 +1004,24 @@ const NewSubscription = ({navigation, route}: any) => {
               />
               <TouchableOpacity
                 onPress={() => {
-                  PLATFORM_IOS
-                    ? restorePurchase()
-                    : Linking.openURL(
-                        'https://play.google.com/store/account/subscriptions',
-                      );
+                  // PLATFORM_IOS
+                  //   ? restorePurchase()
+                  //   : Linking.openURL(
+                  //       'https://play.google.com/store/account/subscriptions',
+                  //     );
+                  showRewardedAd();
+                  rewardAdClosed().then(isClosed => {
+                    if (isClosed) {
+                      PlanPurchasetoBackendAPI({
+                        user_id: getUserDataDetails.id,
+                        transaction_id: 'free',
+                        plan: 'free',
+                        platform: Platform.OS,
+                        product_id: 'fitme_free',
+                        plan_value: 0,
+                      });
+                    }
+                  });
                 }}>
                 <Text
                   style={{

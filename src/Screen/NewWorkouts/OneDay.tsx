@@ -267,7 +267,7 @@ const OneDay = ({navigation, route}: any) => {
             ? NewAppapi.CURRENT_DAY_CHALLENGE_EXERCISE
             : NewAppapi.CURRENT_DAY_EXERCISE,
           method: 'Post',
-          data: {user_details: datas},
+          data: {user_details: datas,type: 'day'},
         });
         if (res.data) {
           if (

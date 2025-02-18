@@ -264,6 +264,7 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
     payload.append('id', trackerData[number]?.id);
 
     payload.append('day', type == 'day' ? day : WeekArray[day]);
+    payload.append('type', type);
     payload.append(
       'workout_id',
       type == 'day'
@@ -284,6 +285,7 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
           'Content-Type': 'multipart/form-data',
         },
       });
+      console.log(res.data,payload)
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,

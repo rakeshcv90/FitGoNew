@@ -65,6 +65,7 @@ import NewExercise from '../Screen/NewWorkouts/Exercise/NewExercise';
 import NewMeditationExercise from '../Screen/NewHome/NewMeditationExercise';
 import Goal from '../Screen/Yourself/Goal';
 import NewCategories from '../Screen/NewWorkoutCategories/NewCategories';
+import NewLogin from '../Screen/NewLogin';
 const Stack = createStackNavigator();
 
 const screenOptions = {
@@ -93,7 +94,7 @@ export const LoginStack = () => {
         name="IntroductionScreen3"
         component={IntroductionScreen3}
       />
-      <Stack.Screen name="LogSignUp" component={LogSignUp} />
+      <Stack.Screen name="LogSignUp" component={NewLogin} />
       <Stack.Screen name="Yourself" component={Yourself} />
       <Stack.Screen name="Name" component={Name} />
       <Stack.Screen name="Experience" component={Experience} />

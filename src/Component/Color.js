@@ -69,7 +69,11 @@ export const AppColor = {
   BAR2COLOR:'#FFEBC2',
   BAR3COLOR:'#DFCFCC',
   GOLD1:'#FF9100',
-  GOLD2:'#FFD54F'
+  GOLD2:'#FFD54F',
+
+
+  // NEW COLORS
+  NEW_LIGHT_GRAY: '#9A9C95'
 
 };
 export const Fonts = {

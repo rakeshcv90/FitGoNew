@@ -409,7 +409,7 @@ const MyPlans = ({navigation}: any) => {
       const res = await axios({
         url: NewAppapi.CURRENT_DAY_EXERCISE,
         method: 'Post',
-        data: {user_details: datas},
+        data: {user_details: datas,type: 'weekly'},
       });
       if (
         res.data?.msg == 'Exercise Status for All Users Inserted Successfully'

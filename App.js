@@ -40,8 +40,8 @@ import {MyInterstitialAd, OpenAppAds} from './src/Component/BannerAdd';
 import DeviceInfo from 'react-native-device-info';
 import { AppColor } from './src/Component/Color';
 import CircularProgress from 'react-native-circular-progress-indicator';
+import { navigationRef } from './src/Component/Utilities/NavigationUtil';
 
-export const navigationRef = createNavigationContainerRef();
 // also use before use code Push (appcenter login)
 // codepush release of ios , appcenter codepush release-react -a thefitnessandworkout-gmail.com/FitmeIos -d Production
 // codepush release of android  appcenter codepush release-react -a thefitnessandworkout-gmail.com/FitmeAndroid -d Production

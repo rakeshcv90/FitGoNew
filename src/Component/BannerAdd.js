@@ -167,57 +167,67 @@ export const NewInterstitialAd = setClosed => {
 //   return {initInterstitial, showInterstitialAd};
 // };
 
+var isRewardAdBeingShown = false;
+let rewardAdStatusRef = null;
+
 export const MyRewardedAd = () => {
-  const adStatus = useRef(null);
-  const DeviceID = useSelector(state => state.getDeviceID);
-  const getUserDataDetails = useSelector(state => state.getUserDataDetails);
-
-  const IsTesting = PLATFORM_IOS
-    ? getUserDataDetails?.social_id != null &&
-      ADS_IOS.includes(getUserDataDetails?.social_id)
-    : DeviceID != '' && ADS_IDs.includes(DeviceID);
-  const rewardAdsLoad = useCallback(async () => {
-    const rewarded = RewardedAd.createForAdRequest(
-      __DEV__ ? rewardedAdIdTest : IsTesting ? rewardedAdIdTest : rewardedAdId,
-      {
-        requestNonPersonalizedAdsOnly: true,
-      },
-    );
-
-    rewarded.addAdEventListener(RewardedAdEventType.LOADED, () => {
-      console.log('Ad loaded');
-      adStatus.current = rewarded;
+  const initRewarded = testing => {
+    return new Promise((resolve, reject) => {
+      // console.error("init ",interAdStatusRef)
+      if (rewardAdStatusRef) return resolve(); // Ad is already initialized
+      const reward = RewardedAd.createForAdRequest(
+        testing ? rewardedAdIdTest : rewardedAdId,
+      );
+      reward.addAdEventListener(AdEventType.LOADED, () => {
+        // console.error(reward,"LOADED")
+        rewardAdStatusRef = reward;
+        resolve(); // Resolve when the ad is loaded
+      });
+      reward.addAdEventListener(AdEventType.ERROR, error => {
+        // console.error('INIT ERRR',error)
+        resolve(); // resolve the promise in case of an error
+      });
+      reward.addAdEventListener(AdEventType.CLOSED, () => {
+        isRewardAdBeingShown = false;
+        reward.load();
+      });
+      reward.addAdEventListener(AdEventType.OPENED, () => {
+        isRewardAdBeingShown = true;
+      });
+      reward.load();
     });
+  };
 
-    rewarded.addAdEventListener(RewardedAdEventType.EARNED_REWARD, reward => {
-      console.log('User earned a reward:', reward);
-    });
-
-    rewarded.addAdEventListener(AdEventType.CLOSED, () => {
-      console.log('Ad closed');
-      rewarded.load(); // Reload the ad after it is closed
-    });
-
-    rewarded.addAdEventListener(AdEventType.ERROR, error => {
-      console.error('Ad error:', error);
-      rewarded.load(); // Attempt to reload the ad if there is an error
-    });
-
-    rewarded.load(); // Ensure the ad starts loading
-  }, []);
-
-  const showRewardAds =
-    (async () => {
-      if (adStatus.current && adStatus.current) {
-        console.log('Showing ad');
-        await adStatus.current.show();
+  const showRewardedAd = async () => {
+    return new Promise((resolve, reject) => {
+      if (isRewardAdBeingShown) return resolve(); // Return if ad shouldn't be shown
+      if (rewardAdStatusRef?._loaded) {
+        rewardAdStatusRef.addAdEventListener(AdEventType.OPENED, () => {});
+        // resovlve or fail listeners
+        rewardAdStatusRef.addAdEventListener(AdEventType.CLOSED, () => {
+          resolve();
+        });
+        rewardAdStatusRef.addAdEventListener(AdEventType.ERROR, error => {
+          initRewarded(__DEV__ ?? IsTesting);
+          resolve(); // resolve the promise if there's an error showing the ad
+        });
+        rewardAdStatusRef.show();
       } else {
-        console.log('Ad not ready');
+        initRewarded(__DEV__ ?? IsTesting);
+        resolve(); // Resolve if no ad is available
       }
-    },
-    []);
-  return {rewardAdsLoad, showRewardAds};
+    });
+  };
+  const rewardAdClosed = async () => {
+    return new Promise(resolve => {
+      rewardAdStatusRef.addAdEventListener(AdEventType.CLOSED, () => {
+        resolve(true);
+      });
+    });
+  };
+  return {initRewarded, showRewardedAd, rewardAdClosed};
 };
+
 var isInterAdBeingShown = false;
 let interAdStatusRef = null;
 

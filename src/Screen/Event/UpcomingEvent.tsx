@@ -66,7 +66,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [pause, setPause] = useState(false);
-
+console.log(getPurchaseHistory)
   const PlanPurchasetoBackendAPI = async () => {
     setLoading(true);
     const data = {

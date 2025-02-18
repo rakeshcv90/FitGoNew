@@ -1,11 +1,11 @@
-import {StyleSheet, Text, TextProps, TextStyle, View} from 'react-native';
+import {ColorValue, StyleSheet, Text, TextProps, TextStyle, View} from 'react-native';
 import React, {FC, ReactNode} from 'react';
 import {AppColor, Fonts} from '../Color';
 
-type Props = TextProps & {
+export type FitTextProps = TextProps & {
   customStyle?: TextStyle;
   type: 'normal' | 'SubHeading' | 'Heading' | 'none';
-  color?: string;
+  color?: ColorValue;
   value: string;
   errorType?: boolean;
   textAlign?: 'center' | 'left' | 'right' | 'justify';
@@ -25,7 +25,7 @@ type Props = TextProps & {
   marginTop?:number;
 };
 
-const FitText: FC<Props> = ({
+const FitText: FC<FitTextProps> = ({
   value,
   color,
   customStyle,
