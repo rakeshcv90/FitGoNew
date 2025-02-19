@@ -29,6 +29,7 @@ import GradientButton from '../GradientButton';
 import {useLocation} from '../Permissions/PermissionHooks';
 import {AuthorizationStatus} from '@notifee/react-native';
 import Geolocation from '@react-native-community/geolocation';
+import { navigate } from '../Utilities/NavigationUtil';
 
 const data = [
   {
@@ -76,7 +77,8 @@ const UserEspecially = () => {
         navigation.navigate('CustomWorkout');
       }
     } else if (index == 2) {
-      locationPermission();
+      // locationPermission();
+      navigate('NewHistory')
     } else if (index == 3) {
       AnalyticsConsole(`MEALS_BUTTON`);
       let checkAdsShow = AddCountFunction();

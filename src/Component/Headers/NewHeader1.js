@@ -6,6 +6,19 @@ import {localImage} from '../Image';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import FitIcon from '../Utilities/FitIcon';
+
+export const defaultVal = {
+  onBackPress: undefined,
+  icon: undefined,
+  iconType: undefined,
+  iconSource: undefined,
+  onIconPress: undefined,
+  materialIconName: undefined,
+  IconComponent: undefined,
+  fillColor: undefined,
+  headerStyle: undefined,
+  workoutCat: undefined,
+};
 const NewHeader1 = ({
   header,
   backButton,
@@ -33,7 +46,12 @@ const NewHeader1 = ({
             })
           }>
           {workoutCat ? (
-            <FitIcon type='MaterialCommunityIcons' name={'close'} size={25} color={AppColor.INPUTTEXTCOLOR} />
+            <FitIcon
+              type="MaterialCommunityIcons"
+              name={'close'}
+              size={25}
+              color={AppColor.INPUTTEXTCOLOR}
+            />
           ) : (
             <ArrowLeft fillColor={fillColor ?? AppColor.BLACK} />
           )}
@@ -61,7 +79,7 @@ const NewHeader1 = ({
 };
 const styles = StyleSheet.create({
   container: {
-    marginVertical:PLATFORM_IOS? 13 : 10,
+    marginVertical: PLATFORM_IOS ? 13 : 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

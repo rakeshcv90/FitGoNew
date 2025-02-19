@@ -6,6 +6,8 @@ import VersionNumber from 'react-native-version-number';
 import {showMessage} from 'react-native-flash-message';
 import {setUserProfileData} from '../Component/ThemeRedux/Actions';
 import {store} from '../Component/ThemeRedux/Store';
+import {historyData} from './responseTypes';
+import {Dispatch, SetStateAction} from 'react';
 
 let deviceID = '';
 DeviceInfo.syncUniqueId().then(uniqueId => {
@@ -116,4 +118,44 @@ export const API_CALLS = {
       ),
     );
   }, 300),
+  getHistoryDetails: debounce(
+    (
+      user_id: string,
+      date: string,
+      setData: Dispatch<SetStateAction<historyData>>,
+    ) => {
+      return new Promise((resolve, reject) =>
+        RequestAPI.makeRequest(
+          'GET',
+          NewAppapi.GET_ALL_HISTORY,
+          {
+            user_id,
+            date,
+            version: VersionNumber.appVersion,
+          },
+          ({data, errors, status, message}) => {
+            if (data?.status) {
+              console.log('DATA', data?.data?.normal_exercises,user_id);
+              // showMessage({
+              //   message: data?.message,
+              //   type: 'success',
+              //   animationDuration: 500,
+              //   floating: true,
+              // });
+              setData(data?.data);
+            } else {
+              // showMessage({
+              //   message: 'Something went wrong Try Again OR Upgrade your App',
+              //   type: 'danger',
+              //   animationDuration: 500,
+              //   floating: true,
+              // });
+              reject('Something went wrong Try Again');
+            }
+          },
+        ),
+      );
+    },
+    500,
+  ),
 };

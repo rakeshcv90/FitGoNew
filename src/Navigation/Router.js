@@ -66,6 +66,7 @@ import NewMeditationExercise from '../Screen/NewHome/NewMeditationExercise';
 import Goal from '../Screen/Yourself/Goal';
 import NewCategories from '../Screen/NewWorkoutCategories/NewCategories';
 import NewLogin from '../Screen/NewLogin';
+import NewHistory from '../Screen/WorkoutHistory/NewHistory';
 const Stack = createStackNavigator();
 
 const screenOptions = {
@@ -176,6 +177,7 @@ export const LoginStack = () => {
         options={{detachPreviousScreen: true}}
       />
       <Stack.Screen name='PermissionScreen' component={PermissionScreen}/>
+      <Stack.Screen name='NewHistory' component={NewHistory}/>
     </Stack.Navigator>
   );
 };
