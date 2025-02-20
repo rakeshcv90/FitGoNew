@@ -1,4 +1,4 @@
-import {ColorValue, TextStyle, View} from 'react-native';
+import {ColorValue, TextStyle, TouchableOpacityProps, View} from 'react-native';
 import React, {FC} from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -27,6 +27,7 @@ export type FitIconTypes = {
   roundBackground?: ColorValue;
   bW?: number;
   roundPadding?: number;
+  buttonProps?: TouchableOpacityProps
 };
 
 const FitIcon: FC<FitIconTypes> = ({
@@ -44,6 +45,7 @@ const FitIcon: FC<FitIconTypes> = ({
   roundPadding,
   roundIcon = false,
   roundBackground,
+  buttonProps
 }) => {
   const TEXT_THEME = AppColor.BLACK;
   const BACKGROUND_THEME = AppColor.RED;
@@ -65,6 +67,7 @@ const FitIcon: FC<FitIconTypes> = ({
           onPress={onPress}
           color={color ?? TEXT_THEME}
           style={[style ? style : {marginLeft: mL ?? 0, marginRight: mR ?? 0}]}
+          {...buttonProps}
         />
       ) : type == 'MaterialIcons' ? (
         <MaterialIcons
@@ -73,6 +76,7 @@ const FitIcon: FC<FitIconTypes> = ({
           onPress={onPress}
           color={color ?? TEXT_THEME}
           style={[style ? style : {marginLeft: mL ?? 0, marginRight: mR ?? 0}]}
+          {...buttonProps}
         />
       ) : type == 'MaterialCommunityIcons' ? (
         <MaterialCommunityIcons
@@ -81,6 +85,7 @@ const FitIcon: FC<FitIconTypes> = ({
           onPress={onPress}
           color={color ?? TEXT_THEME}
           style={[style ? style : {marginLeft: mL ?? 0, marginRight: mR ?? 0}]}
+          {...buttonProps}
         />
       ) : type == 'Ionicons' ? (
         <Ionicons
@@ -89,6 +94,7 @@ const FitIcon: FC<FitIconTypes> = ({
           onPress={onPress}
           color={color ?? TEXT_THEME}
           style={[style ? style : {marginLeft: mL ?? 0, marginRight: mR ?? 0}]}
+          {...buttonProps}
         />
       ) : (
         <FontAwesome5
@@ -97,6 +103,7 @@ const FitIcon: FC<FitIconTypes> = ({
           onPress={onPress}
           color={color ?? TEXT_THEME}
           style={[style ? style : {marginLeft: mL ?? 0, marginRight: mR ?? 0}]}
+          {...buttonProps}
         />
       )}
     </View>

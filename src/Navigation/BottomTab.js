@@ -38,6 +38,7 @@ import {showMessage} from 'react-native-flash-message';
 import AnimatedLottieView from 'lottie-react-native';
 import NewHome from '../Screen/NewHome/NewHome';
 import BackHandlerModal from './BackHandlerModal';
+import Home from '../Screen/NewHome/Home';
 const Tabs = createBottomTabNavigator();
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
@@ -271,7 +272,7 @@ const BottomTab = () => {
         }}>
         <Tabs.Screen
           name="Home"
-          component={NewHome}
+          component={Home}
           options={{tabBarShowLabel: false}}
         />
         <Tabs.Screen

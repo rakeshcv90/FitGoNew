@@ -2,7 +2,7 @@ import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1, {defaultVal} from '../../Component/Headers/NewHeader1';
-import {AppColor} from '../../Component/Color';
+import {AppColor, PLATFORM_IOS} from '../../Component/Color';
 import moment from 'moment';
 import {DeviceWidth} from '../../Component/Config';
 import CustomCalendar from './CustomCalendar';
@@ -17,10 +17,15 @@ import {useSelector} from 'react-redux';
 import {historyData} from '../../API/responseTypes';
 import {ExerciseData} from '../NewWorkouts/Exercise/ExerciseUtilities/useExerciseHook';
 
-const staticData = {
+const staticData: historyData = {
   normal_exercises: {
-    exercise_data: [{exercise_id: 0}],
-    summary: {},
+    exercise_data: [],
+    summary: {
+      formatted_time: moment().format('YYYY-MM-DD'),
+      total_calories: 0,
+      total_exercises: 0,
+      total_time_seconds: 0,
+    },
   },
   step_count: {
     calories: 0,
@@ -32,7 +37,7 @@ const staticData = {
 const NewHistory = () => {
   const [historyData, setHistoryData] = useState<historyData>(staticData);
   const getAllExercise = useSelector((state: any) => state.getAllExercise);
-  const [exerciseData, setExerciseData] = useState<Array<ExerciseData>>(getAllExercise);
+  const [exerciseData, setExerciseData] = useState<Array<ExerciseData>>([]);
   const [date, setDate] = useState(moment().format('YYYY-MM-DD'));
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
@@ -44,7 +49,6 @@ const NewHistory = () => {
   }, [date]);
 
   const getExercises = useCallback(() => {
-    
     // const newData = getAllExercise?.filter(
     //   (item: ExerciseData) => item.exercise_id == exerciseID,
     // );
@@ -55,7 +59,7 @@ const NewHistory = () => {
   //   console.log(historyData?.normal_exercises)
   return (
     <Wrapper styles={{}}>
-      <NewHeader1 header={'Custom Made'} backButton {...defaultVal} />
+      <NewHeader1 header={'Workout History'} backButton {...defaultVal} />
       <ScrollView
         contentContainerStyle={{
           flex: 1,
@@ -63,7 +67,7 @@ const NewHistory = () => {
           paddingHorizontal: 20,
         }}>
         <CustomCalendar {...{date, setDate}} />
-        <StepCountView data={12} />
+        {PLATFORM_IOS && <StepCountView data={12} />}
         {exerciseData && exerciseData.length > 0 && (
           <View style={styles.container}>
             <View style={[PredefinedStyles.rowBetween, {padding: 10}]}>
@@ -78,7 +82,7 @@ const NewHistory = () => {
                 <ExerciseTime />
                 <FitText
                   type="normal"
-                  value={13 + 's'}
+                  value={historyData.normal_exercises.summary.total_time_seconds?.toString()}
                   fontSize={16}
                   marginHorizontal={5}
                   marginTop={5}
@@ -95,7 +99,10 @@ const NewHistory = () => {
                 <ExerciseCount />
                 <FitText
                   type="normal"
-                  value="exercise"
+                  value={
+                    historyData?.normal_exercises?.summary.total_exercises +
+                    ' exercise'
+                  }
                   marginHorizontal={5}
                   color={AppColor.SecondaryTextColor}
                 />
@@ -104,24 +111,32 @@ const NewHistory = () => {
                 <ExerciseKcal />
                 <FitText
                   type="normal"
-                  value="kcal"
+                  value={
+                    historyData?.normal_exercises?.summary.total_calories +
+                    ' kcal'
+                  }
                   marginHorizontal={5}
                   color={AppColor.SecondaryTextColor}
                 />
               </View>
             </View>
             {exerciseData?.map((item, index) => {
-              console.log(item);
               return (
-                <View style={[PredefinedStyles.rowBetween]}>
+                <View
+                  style={[
+                    PredefinedStyles.rowCenter,
+                    {
+                      justifyContent: 'flex-start',
+                    },
+                  ]}>
                   <Image
                     source={{uri: item.exercise_image_link}}
                     style={{width: 50, height: 50}}
                     resizeMode="contain"
                   />
                   <FitText
-                    type="SubHeading"
-                    fontWeight="700"
+                    type="normal"
+                    // fontWeight="700"
                     value={item.exercise_title}
                     marginHorizontal={5}
                   />

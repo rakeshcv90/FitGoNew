@@ -69,9 +69,9 @@ const FocuseMind = () => {
         }}>
         <View
           style={{
-            width: 100,
-            height: 100,
-            borderRadius: 100,
+            width: 60,
+            height: 60,
+            borderRadius: 60,
            
           }}>
           <Image
@@ -81,9 +81,9 @@ const FocuseMind = () => {
                 : localImage.Noimage
             }
             style={{
-              width: 100,
-              height: 100,
-              borderRadius: 100,
+              width: 60,
+              height: 60,
+              borderRadius: 60,
              
             }}
           />
@@ -188,11 +188,12 @@ const FocuseMind = () => {
           }}>
           <Text
             style={{
-              color: AppColor.HEADERTEXTCOLOR,
+              color: AppColor.PrimaryTextColor,
               fontFamily: Fonts.MONTSERRAT_BOLD,
               fontWeight: '600',
               lineHeight: 30,
-              fontSize: 18,
+              fontSize: 16,
+              marginLeft: 10
             }}>
             Focus Mind
           </Text>
@@ -208,7 +209,8 @@ const FocuseMind = () => {
                 fontSize: 14,
                 lineHeight: 20,
                 color: AppColor.SecondaryTextColor,
-                textDecorationLine:'underline'
+                textDecorationLine:'underline',
+                marginRight: 10
               }}>
               View More
             </Text>

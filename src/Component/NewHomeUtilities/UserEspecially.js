@@ -7,6 +7,7 @@ import {
   Modal,
   Linking,
   Platform,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {DeviceHeigth, DeviceWidth} from '../Config';
@@ -29,7 +30,14 @@ import GradientButton from '../GradientButton';
 import {useLocation} from '../Permissions/PermissionHooks';
 import {AuthorizationStatus} from '@notifee/react-native';
 import Geolocation from '@react-native-community/geolocation';
-import { navigate } from '../Utilities/NavigationUtil';
+import {navigate} from '../Utilities/NavigationUtil';
+import {localImage} from '../Image';
+import FitText from '../Utilities/FitText';
+import PredefinedStyles from '../Utilities/PredefineStyles';
+import {ExerciseTime} from '../../Icon/ExerciseTime';
+import FitButton from '../Utilities/FitButton';
+import {useSelector} from 'react-redux';
+import {API_CALLS} from '../../API/API_CALLS';
 
 const data = [
   {
@@ -61,9 +69,21 @@ const data = [
 const UserEspecially = () => {
   const {showInterstitialAd} = MyInterstitialAd();
   const navigation = useNavigation();
-  const isFocused = useIsFocused();
   const [locationP, setLocationP] = useState(false);
+  const [breatheData, setBreatheData] = useState({
+    coins: 0,
+    active: false,
+  });
   const {checkLocationPermission} = useLocation();
+  const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
+  const getUserDataDetails = useSelector(state => state.getUserDataDetails);
+
+  const openBreathe = enteredCurrentEvent ? breatheData.active : true;
+
+  useEffect(() => {
+    API_CALLS.getBreatheTime(getUserDataDetails?.id, setBreatheData);
+  }, [enteredCurrentEvent]);
+
   const HandelClick = index => {
     if (index == 1) {
       AnalyticsConsole(`CustomWrk_FR_Home`);
@@ -77,8 +97,7 @@ const UserEspecially = () => {
         navigation.navigate('CustomWorkout');
       }
     } else if (index == 2) {
-      // locationPermission();
-      navigate('NewHistory')
+      locationPermission();
     } else if (index == 3) {
       AnalyticsConsole(`MEALS_BUTTON`);
       let checkAdsShow = AddCountFunction();
@@ -133,7 +152,7 @@ const UserEspecially = () => {
                 fontFamily: Fonts.HELVETICA_BOLD,
                 fontSize: 15,
                 lineHeight: 20,
-                color: AppColor.WHITE,
+                color: AppColor.PrimaryTextColor,
               }}>
               {item.title}
             </Text>
@@ -147,7 +166,7 @@ const UserEspecially = () => {
                   fontFamily: Fonts.HELVETICA_REGULAR,
                   fontSize: 13,
                   lineHeight: 20,
-                  color: AppColor.WHITE,
+                  color: AppColor.SecondaryTextColor,
                 }}>
                 {item.text}
               </Text>
@@ -193,7 +212,7 @@ const UserEspecially = () => {
       );
     });
   };
-  
+
   const openMaps = currentLocation => {
     if (currentLocation) {
       const {latitude, longitude} = currentLocation;
@@ -320,11 +339,62 @@ const UserEspecially = () => {
             fontFamily: Fonts.MONTSERRAT_BOLD,
             fontWeight: '600',
             lineHeight: 30,
-            fontSize: 18,
-            marginBottom: 10,
+            fontSize: 16,
+            marginBottom: 5,
+            marginLeft: 10,
           }}>
           Especially For You
         </Text>
+        {openBreathe && (
+          <ImageBackground
+            source={localImage.breathHome}
+            resizeMode="cover"
+            style={{
+              width: '100%',
+              height: PLATFORM_IOS ? DeviceHeigth * 0.15 : DeviceHeigth * 0.125,
+              marginBottom: 5,
+            }}
+            imageStyle={{width: '100%', height: '100%'}}>
+            <View
+              style={{
+                paddingVertical: DeviceWidth * 0.04,
+                marginLeft: DeviceWidth * 0.05,
+                alignSelf: 'flex-start',
+              }}>
+              <FitText
+                type="SubHeading"
+                fontWeight="700"
+                value="Breath in and out"
+              />
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <ExerciseTime />
+                <FitText type="normal" value=" 30 sec" marginTop={2} />
+              </View>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: AppColor.RED,
+                  borderRadius: 20,
+                  paddingHorizontal: 7,
+                  padding: 2,
+                  width: '30%',
+                  marginTop: 5,
+                }}
+                onPress={() =>
+                  navigate('Breathe', {slotCoins: breatheData?.coins})
+                }>
+                <FitText
+                  {...{
+                    type: 'normal',
+                    value: 'START NOW',
+                    color: AppColor.WHITE,
+
+                    fontSize: 12,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+          </ImageBackground>
+        )}
         <View
           style={{
             width: '100%',

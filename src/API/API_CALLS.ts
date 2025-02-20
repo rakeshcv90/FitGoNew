@@ -135,7 +135,7 @@ export const API_CALLS = {
           },
           ({data, errors, status, message}) => {
             if (data?.status) {
-              console.log('DATA', data?.data?.normal_exercises,user_id);
+              console.log('DATA', data?.data?.normal_exercises, user_id);
               // showMessage({
               //   message: data?.message,
               //   type: 'success',
@@ -151,6 +151,140 @@ export const API_CALLS = {
               //   floating: true,
               // });
               reject('Something went wrong Try Again');
+            }
+          },
+        ),
+      );
+    },
+    500,
+  ),
+  getBreatheTime: debounce(
+    (user_id: string, setData: Dispatch<SetStateAction<any>>) => {
+      return new Promise((resolve, reject) =>
+        RequestAPI.makeRequest(
+          'GET',
+          NewAppapi.GET_BREATH_SESSION,
+          {
+            user_id,
+          },
+          ({data, errors, status, message}) => {
+            if (data) {
+              const activeIndex = data?.sessions?.findIndex(
+                (item: any) => item.status == 'open',
+              );
+              if (activeIndex != -1) {
+                setData({
+                  active: true,
+                  coins: data?.sessions[activeIndex],
+                });
+              }
+              resolve('');
+            } else {
+              setData({
+                active: false,
+                coins: 0,
+              });
+              reject('');
+            }
+          },
+        ),
+      );
+    },
+    500,
+  ),
+  getHomeHistory: debounce(
+    (user_id: string, setData: Dispatch<SetStateAction<any>>) => {
+      return new Promise((resolve, reject) =>
+        RequestAPI.makeRequest(
+          'GET',
+          NewAppapi.GET_BOTH_HISTORY,
+          {
+            user_id,
+            version: VersionNumber.appVersion,
+          },
+          ({data, errors, status, message}) => {
+            if (status) {
+              setData(data?.data);
+              resolve('');
+            } else {
+              setData({
+                total_calories: 0,
+                total_exercise_count: 0,
+                total_time: 0,
+              });
+              reject('');
+            }
+          },
+        ),
+      );
+    },
+    500,
+  ),
+  getLeaderboardData: debounce(
+    (user_id: string, setData: Dispatch<SetStateAction<any>>) => {
+      return new Promise((resolve, reject) =>
+        RequestAPI.makeRequest(
+          'GET',
+          NewAppapi.GET_LEADERBOARD,
+          {
+            user_id,
+            version: VersionNumber.appVersion,
+          },
+          ({data, errors, status, message}) => {
+            if (data) {
+              setData(data?.data);
+              resolve('');
+            } else {
+              setData([]);
+              reject('');
+            }
+          },
+        ),
+      );
+    },
+    500,
+  ),
+  getEventEarnedCoins: debounce(
+    (user_id: string, day: string, setData: Dispatch<SetStateAction<any>>) => {
+      return new Promise((resolve, reject) =>
+        RequestAPI.makeRequest(
+          'GET',
+          NewAppapi.GET_COINS,
+          {
+            version: VersionNumber.appVersion,
+            user_id,
+            day,
+          },
+          ({data, errors, status, message}) => {
+            if (data) {
+              setData(data?.responses);
+              resolve('');
+            } else {
+              setData([]);
+              reject('');
+            }
+          },
+        ),
+      );
+    },
+    500,
+  ),
+  getReferralCode: debounce(
+    (user_id: string, setData: Dispatch<SetStateAction<any>>) => {
+      return new Promise((resolve, reject) =>
+        RequestAPI.makeRequest(
+          'POST',
+          NewAppapi.GENERATE_REFERRAL_CODE,
+          {
+            user_id,
+          },
+          ({data, errors, status, message}) => {
+            if (data) {
+              setData(data?.code?.toUpperCase());
+              resolve('');
+            } else {
+              setData('');
+              reject('');
             }
           },
         ),

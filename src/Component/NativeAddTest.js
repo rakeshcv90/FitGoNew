@@ -23,7 +23,7 @@ import {AppColor, PLATFORM_IOS} from './Color';
 import {useSelector} from 'react-redux';
 // import {adUnitIDs} from './utils';
 
-const NativeAddTest = ({media, type}) => {
+const NativeAddTest = ({media, type, width = 'auto'}) => {
   const [aspectRatio, setAspectRatio] = useState(1.5);
   const [loading, setLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -174,6 +174,7 @@ const NativeAddTest = ({media, type}) => {
             style={{
               paddingHorizontal: 6,
               flexShrink: 1,
+              width,
             }}>
             <HeadlineView
               style={{

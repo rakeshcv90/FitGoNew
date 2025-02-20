@@ -169,5 +169,6 @@ export const localImage = {
   notification_permission:require('../Icon/Images/NewImage/notification_permission.png'),
   gallery_permission:require('../Icon/Images/NewImage/gallery_permission.png'),
   location_permission:require('../Icon/Images/NewImage/location_permission1.png'),
-  health_permission:require('../Icon/Images/NewImage/health_permission.png')
+  health_permission:require('../Icon/Images/NewImage/health_permission.png'),
+  breathHome:require('../Icon/Images/NewHome/breathHome.png'),
 };
