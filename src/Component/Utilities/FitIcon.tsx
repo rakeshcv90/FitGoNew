@@ -1,4 +1,4 @@
-import {ColorValue, TextStyle, TouchableOpacityProps, View} from 'react-native';
+import {ColorValue, TextStyle, TouchableOpacityProps, View, ViewStyle} from 'react-native';
 import React, {FC} from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -14,13 +14,14 @@ export type FitIconTypes = {
     | 'Ionicons'
     | 'MaterialIcons'
     | 'FontAwesome5';
-  color?: string;
+  color?: ColorValue;
   size: number;
   onPress?: () => void;
   name: string;
   mL?: number;
   mR?: number;
   style?: TextStyle;
+  containerStyle?: ViewStyle;
   roundIcon?: boolean;
   bR?: number;
   bC?: ColorValue;
@@ -45,6 +46,7 @@ const FitIcon: FC<FitIconTypes> = ({
   roundPadding,
   roundIcon = false,
   roundBackground,
+  containerStyle,
   buttonProps
 }) => {
   const TEXT_THEME = AppColor.BLACK;
@@ -59,6 +61,7 @@ const FitIcon: FC<FitIconTypes> = ({
           borderColor: bC ?? color,
           backgroundColor: roundBackground ?? BACKGROUND_THEME,
         },
+        containerStyle
       ]}>
       {type == 'AntDesign' ? (
         <AntDesign

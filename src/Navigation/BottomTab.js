@@ -247,7 +247,7 @@ const BottomTab = () => {
   return (
     <>
       <Tabs.Navigator
-        initialRouteName={'NewHome'}
+        initialRouteName={'Home'}
         tabBar={props => <CustomTab {...props} />}
         screenOptions={{
           activeTintColor: '#D01818',

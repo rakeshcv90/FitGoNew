@@ -1,5 +1,6 @@
 import moment from 'moment';
 import {Action} from 'redux';
+import {setPurchaseHistory} from '../../Component/ThemeRedux/Actions';
 
 type Data = {
   allow_usage: number;
@@ -21,6 +22,7 @@ type Data = {
   upcoming_day_status: number;
   current_day_status: number;
   current_day: number;
+  free_status: boolean;
 };
 
 export const EnteringEventFunction = (
@@ -31,6 +33,7 @@ export const EnteringEventFunction = (
   setPlanType: any,
 ) => {
   if (data?.plan_value != null) {
+    dispatch(setPurchaseHistory(data));
     dispatch(setPlanType(data?.plan_value));
     if (data?.current_day_status == 1) {
       dispatch(setEnteredCurrentEvent(true));
@@ -46,5 +49,18 @@ export const EnteringEventFunction = (
     dispatch(setPlanType(-1));
     dispatch(setEnteredCurrentEvent(false));
     dispatch(setEnteredUpcomingEvent(false));
+    dispatch(setPurchaseHistory({}));
+  }
+};
+
+export const hasFreeEvent = (data: Data) => {
+  if (data?.allow_usage == 1 && data?.free_status) {
+    if (data?.current_day_status == 0 && data?.upcoming_day_status == 0) {
+      return data?.free_status;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
   }
 };

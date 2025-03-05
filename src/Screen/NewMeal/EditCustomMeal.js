@@ -258,26 +258,6 @@ const EditCustomMeal = ({navigation, route}) => {
 
         dispatch(setUserProfileData(responseData?.data?.profile));
         dispatch(setCustomDietData(responseData?.data?.diet_data));
-
-        if (responseData?.data.event_details == 'Not any subscription') {
-          dispatch(setPurchaseHistory([]));
-          EnteringEventFunction(
-            dispatch,
-            [],
-            setEnteredCurrentEvent,
-            setEnteredUpcomingEvent,
-            setPlanType,
-          );
-        } else {
-          dispatch(setPurchaseHistory(responseData?.data.event_details));
-          EnteringEventFunction(
-            dispatch,
-            responseData?.data.event_details,
-            setEnteredCurrentEvent,
-            setEnteredUpcomingEvent,
-            setPlanType,
-          );
-        }
         navigation?.goBack();
       }
     } catch (error) {

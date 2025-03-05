@@ -120,7 +120,7 @@ const HomeHeader = ({leaderboardData}: Props) => {
             }
             style={{
               padding: 5,
-              width: DeviceWidth / 4,
+              width: DeviceWidth / 3,
               backgroundColor: AppColor.RED,
               borderRadius: 20,
               ...PredefinedStyles.rowCenter,

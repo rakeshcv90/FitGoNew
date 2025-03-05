@@ -19,7 +19,7 @@ import setDefaultAlarm from '../../Component/Utilities/setDefaultAlarm';
 import PredefinedStyles from '../../Component/Utilities/PredefineStyles';
 import HomeHeader from './HomeHeader';
 import UserEspecially from '../../Component/NewHomeUtilities/UserEspecially';
-import {AppColor, Fonts} from '../../Component/Color';
+import {AppColor, Fonts, PLATFORM_IOS} from '../../Component/Color';
 import FocuseMind from '../../Component/NewHomeUtilities/FocuseMind';
 import NativeAdBanner from './NativeAdBanner';
 import PastWinnersComponent from '../Leaderboard/PastWinnersComponent';
@@ -34,6 +34,7 @@ import {ArrowRight} from '../../Component/Utilities/Arrows/Arrow';
 import FitIcon from '../../Component/Utilities/FitIcon';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import FitButton from '../../Component/Utilities/FitButton';
+import AdEventPopup from './AdEventPopup';
 
 const Home = () => {
   const getUserDataDetails = useSelector(
@@ -53,6 +54,7 @@ const Home = () => {
   useEffect(() => {
     API_CALLS.getLeaderboardData(getUserDataDetails?.id, setLeaderboardData);
     API_CALLS.getReferralCode(getUserDataDetails?.id, setReferralCode);
+    API_CALLS.getSubscriptionDetails(getUserDataDetails?.id);
   }, [loader]);
 
   setDefaultAlarm();
@@ -101,23 +103,11 @@ const Home = () => {
             </View>
           </View>
         )}
+        <View style={styles.whiteBox}>
+          <Progress />
+        </View>
         {enteredCurrentEvent ? (
-          <View style={styles.whiteBox}>
-            <View style={PredefinedStyles.rowBetween}>
-              <FitText
-                type="SubHeading"
-                fontWeight="700"
-                value="Your Progress"
-              />
-              <FitText
-                type="normal"
-                value="Best Offer"
-                textDecorationLine="underline"
-                onPress={() => navigate('OfferPage')}
-              />
-            </View>
-            <Progress />
-          </View>
+          <></>
         ) : (
           <View style={{padding: 10, backgroundColor: AppColor.WHITE}}>
             <FitText
@@ -260,6 +250,7 @@ const Home = () => {
           color={AppColor.RED}
         />
       </TouchableOpacity>
+      <AdEventPopup />
     </Wrapper>
   );
 };

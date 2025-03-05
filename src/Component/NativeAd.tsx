@@ -1,4 +1,11 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  DimensionValue,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {AppColor, PLATFORM_IOS} from './Color';
@@ -17,9 +24,10 @@ import {MediaView} from './MediaView';
 type Props = {
   type: 'image' | 'video';
   media?: boolean;
+  width?: DimensionValue;
 };
 
-const NativeAdsView = ({type, media = false}: Props) => {
+const NativeAdsView = ({type, media = false, width = '100%'}: Props) => {
   const [aspectRatio, setAspectRatio] = useState(1.5);
   const [loading, setLoading] = useState(true);
   const [nativeAd, setNativeAd] = useState<NativeAd | null>(null);
@@ -36,19 +44,19 @@ const NativeAdsView = ({type, media = false}: Props) => {
       ADS_IOS.includes(getUserDataDetails?.social_id)
     : DeviceID != '' && ADS_IDs.includes(DeviceID);
 
-  const NativeID =
-    type === 'image'
-      ? IsTesting
-        ? adUnitIDsTest.image
-        : adUnitIDs.image
-      : IsTesting
-      ? adUnitIDsTest.video
-      : adUnitIDs.video;
+  const NativeID = 'ca-app-pub-3940256099942544/2247696110';
+  // type === 'image'
+  //   ? IsTesting
+  //     ? adUnitIDsTest.image
+  //     : adUnitIDs.image
+  //   : IsTesting
+  //   ? adUnitIDsTest.video
+  //   : adUnitIDs.video;
 
   useEffect(() => {
     NativeAd.createForAdRequest(NativeID)
       .then((ad: NativeAd) => {
-        console.log(ad);
+        // console.log(ad);
         setNativeAd(ad);
         setAspectRatio(ad.mediaContent?.aspectRatio || 1.5);
         setLoading(false);
@@ -62,18 +70,20 @@ const NativeAdsView = ({type, media = false}: Props) => {
 
   useEffect(() => {
     nativeAd?.addAdEventListener(NativeAdEventType.CLICKED, () => {
-      console.log('click')
+      console.log('click');
     });
     nativeAd?.addAdEventListener(NativeAdEventType.CLOSED, () => {});
     nativeAd?.addAdEventListener(NativeAdEventType.OPENED, () => {});
     nativeAd?.addAdEventListener(NativeAdEventType.IMPRESSION, () => {});
-    // Inspector()
+    Inspector();
   }, []);
 
   const Inspector = async () => {
     try {
       await MobileAds().initialize();
-      const ad = MobileAds().openAdInspector();
+      const ad = await MobileAds().setRequestConfiguration({
+        testDeviceIdentifiers: [DeviceID],
+      });
       console.log(ad);
     } catch (error) {
       console.log(error);
@@ -81,7 +91,7 @@ const NativeAdsView = ({type, media = false}: Props) => {
   };
 
   return (
-    <>
+    <View style={{width, alignItems: 'center'}}>
       {loading && (
         <View style={styles.loaderContainer}>
           <AnimatedLottieView
@@ -131,13 +141,16 @@ const NativeAdsView = ({type, media = false}: Props) => {
                 </NativeAsset>
 
                 <NativeAsset assetType={NativeAssetType.CALL_TO_ACTION}>
-                    <Text style={{color: AppColor.WHITE,
+                  <Text
+                    style={{
+                      color: AppColor.WHITE,
                       padding: 7,
                       backgroundColor: '#4284f3',
                       paddingHorizontal: 20,
-                      borderRadius: 5,}}>
-                      {nativeAd.callToAction}
-                    </Text>
+                      borderRadius: 5,
+                    }}>
+                    {nativeAd.callToAction}
+                  </Text>
                 </NativeAsset>
               </View>
             </View>
@@ -149,7 +162,7 @@ const NativeAdsView = ({type, media = false}: Props) => {
           )}
         </NativeAdView>
       )}
-    </>
+    </View>
   );
 };
 

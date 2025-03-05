@@ -158,25 +158,6 @@ const NameUpdateModal = ({
         dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
         dispatch(setOfferAgreement(responseData?.data?.additional_data));
         dispatch(setUserProfileData(responseData?.data?.profile));
-        if (responseData?.data.event_details == 'Not any subscription') {
-          dispatch(setPurchaseHistory([]));
-          EnteringEventFunction(
-            dispatch,
-            [],
-            setEnteredCurrentEvent,
-            setEnteredUpcomingEvent,
-            setPlanType,
-          );
-        } else {
-          dispatch(setPurchaseHistory(responseData?.data.event_details));
-          EnteringEventFunction(
-            dispatch,
-            responseData?.data.event_details,
-            setEnteredCurrentEvent,
-            setEnteredUpcomingEvent,
-            setPlanType,
-          );
-        }
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);

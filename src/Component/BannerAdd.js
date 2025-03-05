@@ -173,8 +173,8 @@ let rewardAdStatusRef = null;
 export const MyRewardedAd = () => {
   const initRewarded = testing => {
     return new Promise((resolve, reject) => {
-      // console.error("init ",interAdStatusRef)
       if (rewardAdStatusRef) return resolve(); // Ad is already initialized
+      console.error("init ",rewardAdStatusRef)
       const reward = RewardedAd.createForAdRequest(
         testing ? rewardedAdIdTest : rewardedAdId,
       );
@@ -200,6 +200,7 @@ export const MyRewardedAd = () => {
 
   const showRewardedAd = async () => {
     return new Promise((resolve, reject) => {
+      console.log("RE SHOW ",rewardAdStatusRef),isRewardAdBeingShown
       if (isRewardAdBeingShown) return resolve(); // Return if ad shouldn't be shown
       if (rewardAdStatusRef?._loaded) {
         rewardAdStatusRef.addAdEventListener(AdEventType.OPENED, () => {});
@@ -208,12 +209,12 @@ export const MyRewardedAd = () => {
           resolve();
         });
         rewardAdStatusRef.addAdEventListener(AdEventType.ERROR, error => {
-          initRewarded(__DEV__ ?? IsTesting);
+          // initRewarded(__DEV__ ?? IsTesting);
           resolve(); // resolve the promise if there's an error showing the ad
         });
         rewardAdStatusRef.show();
       } else {
-        initRewarded(__DEV__ ?? IsTesting);
+        // initRewarded(__DEV__ ?? IsTesting);
         resolve(); // Resolve if no ad is available
       }
     });

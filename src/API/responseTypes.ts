@@ -14,3 +14,12 @@ export type historyData = {
     distance: number;
   };
 };
+
+export type postSubsData = {
+  user_id: number;
+  transaction_id: string;
+  plan: string;
+  platform: string;
+  product_id: string;
+  plan_value: number;
+};

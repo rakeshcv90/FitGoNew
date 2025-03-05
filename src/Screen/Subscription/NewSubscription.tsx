@@ -52,9 +52,9 @@ const NewSubscription = ({navigation, route}: any) => {
   const {upgrade} = route.params;
   const dispatch = useDispatch();
   const getInAppPurchase = useSelector((state: any) => state.getInAppPurchase);
-  const getOfferAgreement = useSelector(
-    (state: any) => state.getOfferAgreement,
-  );
+  // const getOfferAgreement = useSelector(
+  //   (state: any) => state.getOfferAgreement,
+  // );
   const {initRewarded, rewardAdClosed, showRewardedAd} = MyRewardedAd();
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
@@ -510,9 +510,13 @@ const NewSubscription = ({navigation, route}: any) => {
 
   const PurchaseDetails = async () => {
     try {
-      const result = await axios(
-        `${NewAppapi.EVENT_SUBSCRIPTION_GET}/${getUserDataDetails?.id}`,
-      );
+      const result = await axios({
+        url: `${NewAppapi.EVENT_SUBSCRIPTION_GET}/${getUserDataDetails?.id}`,
+        params: {
+          version: VersionNumber.appVersion,
+        },
+        method: 'GET',
+      });
       setRefresh(false);
       if (result.data?.message == 'Not any subscription') {
         dispatch(setPurchaseHistory([]));

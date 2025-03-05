@@ -400,6 +400,7 @@ const UserEspecially = () => {
             width: '100%',
             flexDirection: 'row',
             justifyContent: 'space-between',
+            marginTop: 10
           }}>
           {data.slice(0, 2).map((item, index) => (
             <Items item={item} index={index} />

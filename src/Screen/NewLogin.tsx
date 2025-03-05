@@ -44,15 +44,19 @@ const NewLogin = () => {
       // status => Issue in API or Version incorrect
       // term => Offer not acceepted
       if (res?.status) {
-        API_CALLS.getUserDataDetails(res?.user_id).then(() => {
-          if (res?.allcompleted) {
-            navigate('BottomTab');
-          } else if (res?.status && !res?.term) {
-            navigate('Yourself');
-          } else if (!res?.term) {
-            navigate('OfferTerms');
+        API_CALLS.getUserDataDetails(res?.user_id).then((data: any) => {
+          if (data) {
+            API_CALLS.getSubscriptionDetails(res?.user_id).then(() => {
+              if (res?.allcompleted) {
+                navigate('BottomTab');
+              } else if (res?.status && !res?.term) {
+                navigate('Yourself');
+              } else if (!res?.term) {
+                navigate('OfferTerms');
+              }
+              action.resetForm();
+            });
           }
-          action.resetForm();
         });
       }
     });
