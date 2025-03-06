@@ -52,12 +52,14 @@ export const API_CALLS = {
             device_id: deviceID,
           },
           ({data, errors, status, message}) => {
-            console.log(
-              name,
-              email,
-              Platform.OS,
-              VersionNumber.appVersion,
-              deviceID,)
+            // console.log(
+            //   name,
+            //   email,
+            //   Platform.OS,
+            //   VersionNumber.appVersion,
+            //   deviceID,
+            //   data,
+            // );
             if (data && status == 200) {
               noMessage &&
                 showMessage({
@@ -352,7 +354,7 @@ export const API_CALLS = {
         NewAppapi.EVENT_SUBSCRIPTION_POST,
         data,
         ({data, errors, status, message}) => {
-          console.log(data,status)
+          console.log(data, status);
           if (status == 200) {
             if (
               data?.message == 'Event created successfully' ||

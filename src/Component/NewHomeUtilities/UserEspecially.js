@@ -127,10 +127,11 @@ const UserEspecially = () => {
           HandelClick(index + 1);
         }}
         style={{
-          width: '50%',
+          width: '45%',
           height: PLATFORM_IOS ? DeviceHeigth * 0.15 : DeviceHeigth * 0.125,
           alignItems: 'center',
           justifyContent: 'center',
+          marginRight: (index+1) % 2 == 0 ? 0 : 10,
         }}>
         <ImageBackground
           source={item.image}
@@ -331,7 +332,7 @@ const UserEspecially = () => {
     );
   };
   return (
-    <View style={styles.container}>
+    <>
       <View style={styles.box}>
         <Text
           style={{
@@ -341,20 +342,21 @@ const UserEspecially = () => {
             lineHeight: 30,
             fontSize: 16,
             marginBottom: 5,
-            marginLeft: 10,
+            marginLeft: 20,
           }}>
           Especially For You
         </Text>
         {openBreathe && (
           <ImageBackground
             source={localImage.breathHome}
-            resizeMode="cover"
+            resizeMode="contain"
             style={{
-              width: '100%',
+              width: '95%',
               height: PLATFORM_IOS ? DeviceHeigth * 0.15 : DeviceHeigth * 0.125,
               marginBottom: 5,
+              marginLeft: 15
             }}
-            imageStyle={{width: '100%', height: '100%'}}>
+            imageStyle={{width: '95%', height: '100%'}}>
             <View
               style={{
                 paddingVertical: DeviceWidth * 0.04,
@@ -365,10 +367,11 @@ const UserEspecially = () => {
                 type="SubHeading"
                 fontWeight="700"
                 value="Breath in and out"
+                color={AppColor.WHITE}
               />
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <ExerciseTime />
-                <FitText type="normal" value=" 30 sec" marginTop={2} />
+                <ExerciseTime stroke={AppColor.WHITE} />
+                <FitText type="normal" value=" 30 sec" marginTop={2} color={AppColor.WHITE} />
               </View>
               <TouchableOpacity
                 style={{
@@ -395,45 +398,29 @@ const UserEspecially = () => {
             </View>
           </ImageBackground>
         )}
-        <View
-          style={{
-            width: '100%',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginTop: 10
-          }}>
-          {data.slice(0, 2).map((item, index) => (
+        <View style={[PredefinedStyles.rowCenter, {flexWrap: 'wrap'}]}>
+          {data.map((item, index) => (
             <Items item={item} index={index} />
-          ))}
-        </View>
-        <View
-          style={{
-            width: '100%',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          {data.slice(2).map((item, index) => (
-            <Items item={item} index={index + 2} />
           ))}
         </View>
       </View>
 
       <PermissionModal locationP={locationP} setLocationP={setLocationP} />
-    </View>
+    </>
   );
 };
 const styles = StyleSheet.create({
   container: {
-    width: DeviceWidth,
+    width: DeviceWidth * 0.95,
 
-    backgroundColor: AppColor.WHITE,
     marginVertical: 2,
   },
   box: {
     width: DeviceWidth * 0.95,
-
+    backgroundColor: AppColor.WHITE,
     alignSelf: 'center',
     paddingVertical: 10,
+    borderRadius: 10,
   },
   modalContainer: {
     flex: 1,

@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
   container: {
     width: DeviceWidth,
 
-    backgroundColor: AppColor.WHITE,
+    // backgroundColor: AppColor.WHITE,
     marginVertical: 15,
   },
   box: {

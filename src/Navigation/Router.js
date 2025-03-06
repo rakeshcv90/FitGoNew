@@ -67,6 +67,7 @@ import Goal from '../Screen/Yourself/Goal';
 import NewCategories from '../Screen/NewWorkoutCategories/NewCategories';
 import NewLogin from '../Screen/NewLogin';
 import NewHistory from '../Screen/WorkoutHistory/NewHistory';
+import NewDiet from '../Screen/NewHome/NewDiet';
 const Stack = createStackNavigator();
 
 const screenOptions = {
@@ -157,7 +158,7 @@ export const LoginStack = () => {
         name="EventExerciseHistory"
         component={EventExerciseHistory}
       />
-      <Stack.Screen name="DietPlatTabBar" component={DietPlatTabBar} />
+      <Stack.Screen name="DietPlatTabBar" component={NewDiet} />
       <Stack.Screen name="CustomMealList" component={CustomMealList} />
       <Stack.Screen name="EditCustomMeal" component={EditCustomMeal} />
       <Stack.Screen name="PastWinner" component={PastWinner} />

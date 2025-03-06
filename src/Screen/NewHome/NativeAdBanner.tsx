@@ -10,22 +10,41 @@ import {API_CALLS} from '../../API/API_CALLS';
 import {useSelector} from 'react-redux';
 import NativeAdsView from '../../Component/NativeAd';
 import {useIsFocused} from '@react-navigation/native';
+import NewBanner from '../../Component/NewHomeUtilities/NewBanner';
 
 type Props = {
   loader: boolean;
 };
 
-
 const NativeAdBanner = ({loader}: Props) => {
   const scrollViewRef = useRef<ScrollView>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  const enteredCurrentEvent = useSelector(
+    (state: any) => state?.enteredCurrentEvent,
+  );
+  const getUserDataDetails = useSelector(
+    (state: any) => state?.getUserDataDetails,
+  );
+  const enteredUpcomingEvent = useSelector(
+    (state: any) => state?.enteredUpcomingEvent,
+  );
+  const getPurchaseHistory = useSelector(
+    (state: any) => state.getPurchaseHistory,
+  );
+  const Sat = getPurchaseHistory?.currentDay == 6;
+  const Sun = getPurchaseHistory?.currentDay == 0;
+
   return (
-    <ImageBackground
-      source={require('./BG.png')}
-      resizeMode="cover"
-      style={{padding: 20}}>
-      <View style={styles.container}>
+    <View style={{padding: 20}}>
+      <View
+        style={[
+          styles.container,
+          {
+            backgroundColor: currentIndex == 1 ? AppColor.WHITE : 'transparent',
+            borderRadius: 20,
+          },
+        ]}>
         <ScrollView
           ref={scrollViewRef}
           horizontal
@@ -38,22 +57,20 @@ const NativeAdBanner = ({loader}: Props) => {
             setCurrentIndex(newIndex);
           }}
           scrollEventThrottle={16}>
-          <View style={[styles.page, {width: DeviceWidth, padding: 10}]}>
-            <FitText
-              type="SubHeading"
-              marginHorizontal={10}
-              fontWeight="700"
-              value="Daily Progress"
-            />
-            <FitText
-              type="normal"
-              marginHorizontal={10}
-              value="Check your daily progress report"
-            />
-          </View>
-          <View style={[styles.page, {width: DeviceWidth}]}>
-            <NativeAdsView width={'90%'} media={false} type="image" />
-          </View>
+          <NewBanner
+            purchaseHistory={getPurchaseHistory}
+            userDetails={getUserDataDetails}
+            setLocation={() => {}}
+            Sat={Sat}
+            Sun={Sun}
+            enteredCurrentEvent={enteredCurrentEvent}
+            enteredUpcomingEvent={enteredUpcomingEvent}
+          />
+          <NativeAdsView
+            width={DeviceWidth * 0.95}
+            media={false}
+            type="image"
+          />
         </ScrollView>
       </View>
       <View style={[PredefinedStyles.rowCenter, {marginTop: 15}]}>
@@ -69,7 +86,7 @@ const NativeAdBanner = ({loader}: Props) => {
           />
         ))}
       </View>
-    </ImageBackground>
+    </View>
   );
 };
 
@@ -78,8 +95,8 @@ export default NativeAdBanner;
 const styles = StyleSheet.create({
   container: {
     borderRadius: 20,
-    backgroundColor: AppColor.WHITE,
-    // padding: 10,
+    height: DeviceWidth * 0.35,
+    width: DeviceWidth * 0.9,
     overflow: 'hidden',
   },
   page: {

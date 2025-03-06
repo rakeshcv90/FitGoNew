@@ -25,8 +25,8 @@ type NewBannerProps = {
   enteredCurrentEvent: Object | any;
   enteredUpcomingEvent: Object | any;
   setLocation: Function;
-  Sat: string;
-  Sun: string;
+  Sat: boolean;
+  Sun: boolean;
 };
 
 const BANNER_TYPES = {
@@ -82,10 +82,10 @@ const NewBanner = ({
   const getReqBanner = useCallback(
     (BArray: Array<BannerArrayType>) => {
       if (enteredCurrentEvent) {
-        BArray.push({
-          name: BANNER_TYPES.ONGOING,
-          image: getBanners[BANNER_TYPES.ONGOING],
-        });
+        // BArray.push({
+        //   name: BANNER_TYPES.ONGOING,
+        //   image: getBanners[BANNER_TYPES.ONGOING],
+        // });
         if (enteredUpcomingEvent) {
           BArray.push({
             name: BANNER_TYPES.JOINED,
@@ -217,7 +217,7 @@ const NewBanner = ({
     //     duration: 500,
     //     type: 'danger',
     //   });
-    // } 
+    // }
     else if (item.name == BANNER_TYPES.JOINED) {
       AnalyticsConsole('JN_BANNER');
       navigation.navigate('UpcomingEvent', {eventType: 'current'});
@@ -252,7 +252,7 @@ const NewBanner = ({
       onPress={() => handleEventClicks(item)}
       style={{
         height: '100%',
-        width: DeviceWidth * 0.95,
+        width: DeviceWidth * 0.9,
         alignSelf: 'center',
 
         justifyContent: 'center',
@@ -277,10 +277,7 @@ const NewBanner = ({
           width: '100%',
           height: '100%',
           overflow: 'hidden',
-          borderTopLeftRadius: 20,
-          borderTopRightRadius: 20,
-          borderBottomLeftRadius: item.name == BANNER_TYPES.JOINED ? 20 : 0,
-          borderBottomRightRadius: item.name == BANNER_TYPES.JOINED ? 20 : 0,
+          borderRadius: 20,
         }}
         resizeMode="stretch"
         source={{uri: item.image}}
@@ -302,6 +299,7 @@ const NewBanner = ({
           {
             height: DeviceHeigth * 0.25,
             marginBottom: isJoinedBanner.length == 0 ? 0 : -20,
+            overflow: 'hidden',
           },
         ]}>
         <View

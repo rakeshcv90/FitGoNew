@@ -56,7 +56,7 @@ const NewHistory = () => {
     // setExerciseData(newData);
   }, [historyData]);
 
-  //   console.log(historyData?.normal_exercises)
+    console.log(historyData?.normal_exercises)
   return (
     <Wrapper styles={{}}>
       <NewHeader1 header={'Workout History'} backButton {...defaultVal} />

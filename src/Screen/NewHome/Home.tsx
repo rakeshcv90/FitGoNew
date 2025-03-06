@@ -1,19 +1,15 @@
 import {
   Image,
-  ImageBackground,
   Platform,
   RefreshControl,
   ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
-import {localImage} from '../../Component/Image';
 import {useSelector} from 'react-redux';
 import setDefaultAlarm from '../../Component/Utilities/setDefaultAlarm';
 import PredefinedStyles from '../../Component/Utilities/PredefineStyles';
@@ -26,15 +22,14 @@ import PastWinnersComponent from '../Leaderboard/PastWinnersComponent';
 import {navigate} from '../../Component/Utilities/NavigationUtil';
 import FitText from '../../Component/Utilities/FitText';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
-import {showMessage} from 'react-native-flash-message';
 import {API_CALLS} from '../../API/API_CALLS';
 import Progress from './Progress';
 import {Trophy} from '../../Icon/Trophy';
-import {ArrowRight} from '../../Component/Utilities/Arrows/Arrow';
 import FitIcon from '../../Component/Utilities/FitIcon';
-import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import FitButton from '../../Component/Utilities/FitButton';
 import AdEventPopup from './AdEventPopup';
+import OfferAnimation from './OfferAnimation';
+import {AppleHealthKitData} from '../../Component/TransferStepCounterData';
 
 const Home = () => {
   const getUserDataDetails = useSelector(
@@ -55,10 +50,10 @@ const Home = () => {
     API_CALLS.getLeaderboardData(getUserDataDetails?.id, setLeaderboardData);
     API_CALLS.getReferralCode(getUserDataDetails?.id, setReferralCode);
     API_CALLS.getSubscriptionDetails(getUserDataDetails?.id);
+    AppleHealthKitData();
   }, [loader]);
 
   setDefaultAlarm();
-
   return (
     <Wrapper styles={{backgroundColor: '#f7f7f7'}}>
       <StatusBar backgroundColor={AppColor.WHITE} barStyle={'dark-content'} />
@@ -76,6 +71,7 @@ const Home = () => {
             colors={[AppColor.RED, AppColor.RED]}
           />
         }>
+        {enteredCurrentEvent && <OfferAnimation />}
         <NativeAdBanner loader={loader} />
         {!enteredUpcomingEvent && (
           <View style={[PredefinedStyles.rowBetween, styles.whiteBox]}>
@@ -104,96 +100,9 @@ const Home = () => {
           </View>
         )}
         <View style={styles.whiteBox}>
-          <Progress />
+          <Progress myPlans={false} />
         </View>
-        {enteredCurrentEvent ? (
-          <></>
-        ) : (
-          <View style={{padding: 10, backgroundColor: AppColor.WHITE}}>
-            <FitText
-              type="SubHeading"
-              fontWeight="700"
-              value="Winners & Top Player"
-            />
-            <View
-              style={{
-                alignSelf: 'center',
-                width: DeviceWidth * 0.95,
-                height: DeviceWidth / 2,
-                marginVertical: -20,
-                ...PredefinedStyles.rowBetween,
-              }}>
-              <TouchableOpacity style={{width: '50%'}}>
-                <ImageBackground
-                  source={require('./Card.png')}
-                  style={{width: '100%', height: '100%', zIndex: -1}}
-                  resizeMode="contain"
-                />
-                <View
-                  style={{
-                    position: 'absolute',
-                    top: DeviceHeigth * 0.05,
-                    marginLeft: 20,
-                    width: '80%',
-                  }}>
-                  <View style={{marginBottom: DeviceWidth / 8}}>
-                    {getPastWinners
-                      ?.slice(0, 4)
-                      ?.map((item: any, index: number) => (
-                        <View
-                          key={index}
-                          style={[styles.imageView, {left: index * 25}]}>
-                          {index == 3 ? (
-                            <Text
-                              style={{
-                                fontFamily: Fonts.HELVETICA_BOLD,
-                                color: AppColor.WHITE,
-                              }}>
-                              +{getPastWinners?.length - 3}
-                            </Text>
-                          ) : item?.image != null ? (
-                            <Image
-                              source={{uri: item?.image}}
-                              style={{width: 40, height: 40}}
-                              resizeMode="cover"
-                            />
-                          ) : (
-                            <Text
-                              style={{
-                                fontFamily: Fonts.HELVETICA_BOLD,
-                                color: AppColor.WHITE,
-                              }}>
-                              {item?.name.substring(0, 1).toUpperCase()}
-                            </Text>
-                          )}
-                        </View>
-                      ))}
-                  </View>
-                  <FitText
-                    type="SubHeading"
-                    value={`Our past winner’s`}
-                    color={AppColor.WHITE}
-                    fontWeight="700"
-                  />
-                  <FitText
-                    type="normal"
-                    fontSize={13}
-                    lineHeight={18}
-                    value={`Explore Our Past Winners and Top Players`}
-                    color={AppColor.WHITE}
-                  />
-                </View>
-              </TouchableOpacity>
-              <TouchableWithoutFeedback onPress={() => navigate('Leaderboard')}>
-                <Image
-                  source={require('./LeaderboardImage.png')}
-                  style={{width: '50%', height: '100%'}}
-                  resizeMode="contain"
-                />
-              </TouchableWithoutFeedback>
-            </View>
-          </View>
-        )}
+        <PastWinnersComponent pastWinners={getPastWinners} />
         <UserEspecially />
         <FocuseMind />
         <View
@@ -275,6 +184,9 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: AppColor.WHITE,
     marginVertical: 10,
+    width: '95%',
+    alignSelf: 'center',
+    borderRadius: 10,
   },
   chat: {
     width: 56,

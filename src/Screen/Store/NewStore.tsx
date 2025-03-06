@@ -20,6 +20,7 @@ import AnimatedLottieView from 'lottie-react-native';
 import {localImage} from '../../Component/Image';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import {ShadowStyle} from '../../Component/Utilities/ShadowStyle';
+import PredefinedStyles from '../../Component/Utilities/PredefineStyles';
 
 type StoreItemProps = {
   type_id: number;
@@ -94,7 +95,7 @@ const NewStore = ({navigation}: any) => {
     };
     return (
       <TouchableOpacity
-        style={styles.itemContainer}
+        style={[styles.itemContainer, PredefinedStyles.ShadowStyle]}
         activeOpacity={0.5}
         onPress={onPress}>
         <Image
@@ -103,8 +104,12 @@ const NewStore = ({navigation}: any) => {
           resizeMode="contain"
           style={styles.itemImage}
         />
-        <View style={{margin: 10}}>
-          <FitText type="SubHeading" value={item.type_title} textAlign='center' />
+        <View style={{padding: 5, backgroundColor: AppColor.WHITE}}>
+          <FitText
+            type="SubHeading"
+            value={item.type_title}
+            textAlign="center"
+          />
         </View>
       </TouchableOpacity>
     );
@@ -116,18 +121,15 @@ const NewStore = ({navigation}: any) => {
       <Wrapper styles={{backgroundColor: '#F9F9F9'}}>
         <NewHeader1 header={'Store'} backButton />
         {SearchBar}
-        <View style={[styles.mainContainer, styles.centerStyle, ShadowStyle]}>
-          <FitText type="Heading" value="Shop by categories" fontSize={14} />
-          <FlatList
-            data={filteredCategories}
-            renderItem={renderItem}
-            keyExtractor={(_, index) => index.toString()}
-            numColumns={2}
-            showsVerticalScrollIndicator={false}
-            style={{flex: 1}}
-            ListEmptyComponent={emptyComponent}
-          />
-        </View>
+        <FlatList
+          data={filteredCategories}
+          renderItem={renderItem}
+          keyExtractor={(_, index) => index.toString()}
+          numColumns={2}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{alignItems: 'center'}}
+          ListEmptyComponent={emptyComponent}
+        />
       </Wrapper>
     </View>
   );
@@ -159,11 +161,11 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     borderRadius: 10,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#f7f7f7',
     overflow: 'hidden',
-    width: '50%',
-    margin: 10,
-    flex: 1,
+    width: DeviceWidth * 0.45,
+    margin: 7,
+    // flex: 1,
   },
   itemImage: {
     width: '80%',

@@ -126,7 +126,7 @@ const options: Object = {
   ),
   endDate: new Date(),
 };
-const AppleHealthKitData = async () => {
+export const AppleHealthKitData = async () => {
   try {
     await AppleHealthKit.isAvailable((err, available) => {
       if (err) {

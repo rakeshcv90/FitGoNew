@@ -17,107 +17,115 @@ export const ExerciseComponetWithoutEvents = ({
   download,
   isClicked,
   setIsClicked,
-  overExerciseVisible
+  overExerciseVisible,
 }) => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
   return (
-    <View style={styles.View1}>
+    <View>
       {!WeekStatus.includes(day) ? (
         <>
-          <View style={[styles.View2, {justifyContent: 'flex-start'}]}>
-            <Image
-              source={{uri: dayObject?.image}}
-              style={styles.img}
-              resizeMode="contain"
-              defaultSource={localImage?.NOWORKOUT}
-            />
-            <View style={styles.View3}>
-              <Text style={styles.txt1}>
-                {dayObject?.title ?? 'Power hour'}
-              </Text>
-              <Text style={styles.txt2}>{day ?? 'Monday'}</Text>
+          <View style={styles.View1}>
+            <View style={[styles.View2, {justifyContent: 'flex-start'}]}>
+              <Image
+                source={{uri: dayObject?.image}}
+                style={styles.img}
+                resizeMode="contain"
+                defaultSource={localImage?.NOWORKOUT}
+              />
+              <View style={styles.View3}>
+                <Text style={styles.txt1}>
+                  {dayObject?.title ?? 'Power hour'}
+                </Text>
+                <Text style={styles.txt2}>{day ?? 'Monday'}</Text>
+              </View>
             </View>
+            <NewButton
+              title={'Start Workout'}
+              onPress={onPress}
+              withAnimation={overExerciseVisible}
+              download={download}
+              isClicked={isClicked}
+              setIsClicked={setIsClicked}
+              fontSize={20}
+              bR={50}
+              buttonColor={AppColor.RED}
+            />
           </View>
-          <NewButton
-            title={'Start Workout'}
-            onPress={onPress}
-            withAnimation={overExerciseVisible}
-            download={download}
-            isClicked={isClicked}
-            setIsClicked={setIsClicked}
-            fontSize={20}
-          />
-          <Text
-            style={[
-              styles.txt3,
-              {
+          <View style={styles.View1}>
+            <Text
+              style={[
+                styles.txt3,
+                {
+                  width: DeviceWidth * 0.9,
+                  alignSelf: 'center',
+                  marginVertical: 15,
+                },
+              ]}>
+              {dayObject?.exercises?.length
+                ? dayObject?.exercises?.length + ' Exercises'
+                : '10 Exercises'}
+            </Text>
+            <FlatList
+              data={dayObject?.exercises}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                paddingBottom:
+                  DeviceHeigth <= 667
+                    ? DeviceHeigth * 0.5
+                    : DeviceHeigth * 0.42,
+              }}
+              style={{
                 width: DeviceWidth * 0.9,
                 alignSelf: 'center',
-                marginVertical: 15,
-              },
-            ]}>
-            {dayObject?.exercises?.length
-              ? dayObject?.exercises?.length + ' Exercises'
-              : '10 Exercises'}
-          </Text>
-          <FlatList
-            data={dayObject?.exercises}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              paddingBottom:
-                DeviceHeigth <= 667 ? DeviceHeigth * 0.5 : DeviceHeigth * 0.42,
-            }}
-            style={{
-              width: DeviceWidth * 0.9,
-              alignSelf: 'center',
-            }}
-            keyExtractor={(item)=> item?.exercise_id?.toString()}
-            renderItem={({item, index}) => {
-              const time = parseInt(item?.exercise_rest.split(' ')[0]);
-              return (
-                <View key={index}>
-                  <TouchableOpacity
-                    style={[styles.button, {justifyContent: 'flex-start'}]}
-                    onPress={() => {
-                      setData(item);
-                      setOpen(true);
-                    }}>
-                    <View style={[styles.View4]}>
-                      <Image
-                        source={{uri: item?.exercise_image_link}}
-                        style={{height: 70, width: 70}}
-                        resizeMode="contain"
-                        defaultSource={localImage.NOWORKOUT}
-                      />
-                    </View>
-                    <View style={{marginLeft: 15}}>
-                      <Text style={[styles.txt3, {marginVertical: 6}]}>
-                        {item?.exercise_title}
-                      </Text>
-                      <View
-                        style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <Text style={styles.txt2}>
-                          {'Time - ' +
-                            '1 x ' +
-                            (time > 60
-                              ? Math.floor(time / 60) + ' min'
-                              : time + ' sec')}{' '}
-                          |{' '}
-                        </Text>
-                        <Text style={styles.txt2}>
-                          {'Set - ' + item?.exercise_sets}
-                        </Text>
+              }}
+              keyExtractor={item => item?.exercise_id?.toString()}
+              renderItem={({item, index}) => {
+                const time = parseInt(item?.exercise_rest.split(' ')[0]);
+                return (
+                  <View key={index}>
+                    <TouchableOpacity
+                      style={[styles.button, {justifyContent: 'flex-start'}]}
+                      onPress={() => {
+                        setData(item);
+                        setOpen(true);
+                      }}>
+                      <View style={[styles.View4]}>
+                        <Image
+                          source={{uri: item?.exercise_image_link}}
+                          style={{height: 70, width: 70}}
+                          resizeMode="contain"
+                          defaultSource={localImage.NOWORKOUT}
+                        />
                       </View>
-                    </View>
-                  </TouchableOpacity>
-                  {dayObject?.exercises.length - 1 == index ? null : (
-                    <View style={styles.border} />
-                  )}
-                </View>
-              );
-            }}
-          />
+                      <View style={{marginLeft: 15}}>
+                        <Text style={[styles.txt3, {marginVertical: 6}]}>
+                          {item?.exercise_title}
+                        </Text>
+                        <View
+                          style={{flexDirection: 'row', alignItems: 'center'}}>
+                          <Text style={styles.txt2}>
+                            {'Time - ' +
+                              '1 x ' +
+                              (time > 60
+                                ? Math.floor(time / 60) + ' min'
+                                : time + ' sec')}{' '}
+                            |{' '}
+                          </Text>
+                          <Text style={styles.txt2}>
+                            {'Set - ' + item?.exercise_sets}
+                          </Text>
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                    {dayObject?.exercises.length - 1 == index ? null : (
+                      <View style={styles.border} />
+                    )}
+                  </View>
+                );
+              }}
+            />
+          </View>
           <WorkoutsDescription data={data} open={open} setOpen={setOpen} />
         </>
       ) : (
@@ -223,30 +231,31 @@ export const ExerciseComponentWithEvent = ({
   selectedDay,
   currentDay,
   download,
-  overExerciseVisible
+  overExerciseVisible,
 }) => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
 
   return (
-    <View style={styles.View1}>
+    <View>
       {dayWiseCoins[day] == null || dayWiseCoins[day] < 0 ? (
         <>
-          <View style={styles.View2}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image
-                source={{uri: dayObject?.image}}
-                style={styles.img}
-                resizeMode="contain"
-              />
-              <View style={styles.View3}>
-                <Text style={styles.txt1}>
-                  {dayObject?.title ?? 'Power hour'}
-                </Text>
-                <Text style={styles.txt2}>{day ?? '--'}</Text>
+          <View style={styles.View1}>
+            <View style={styles.View2}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Image
+                  source={{uri: dayObject?.image}}
+                  style={styles.img}
+                  resizeMode="contain"
+                />
+                <View style={styles.View3}>
+                  <Text style={styles.txt1}>
+                    {dayObject?.title ?? 'Power hour'}
+                  </Text>
+                  <Text style={styles.txt2}>{day ?? '--'}</Text>
+                </View>
               </View>
-            </View>
-            {/* <TouchableOpacity
+              {/* <TouchableOpacity
               style={{}}
               onPress={() => {
                 AnalyticsConsole(`O_EWS`);
@@ -261,89 +270,102 @@ export const ExerciseComponentWithEvent = ({
                 <Image source={localImage.EditPen} style={styles.edit} />
               ) : null}
             </TouchableOpacity> */}
+            </View>
+            {day == WeekArray[currentDay] ? (
+              <NewButton
+                title={'Start Workout'}
+                onPress={onPress}
+                withAnimation={overExerciseVisible}
+                download={download}
+                fontSize={20}
+                bR={50}
+                buttonColor={AppColor.RED}
+                ButtonWidth={DeviceWidth * 0.8}
+              />
+            ) : null}
           </View>
-          {day == WeekArray[currentDay] ? (
-            <NewButton
-              title={'Start Workout'}
-              onPress={onPress}
-              withAnimation={overExerciseVisible}
-              download={download}
-              fontSize={20}
-            />
-          ) : null}
-          <Text
-            style={[
-              styles.txt3,
-              {
+          <View style={styles.View1}>
+            <Text
+              style={[
+                styles.txt3,
+                {
+                  width: DeviceWidth * 0.9,
+                  alignSelf: 'center',
+                  marginVertical: 15,
+                },
+              ]}>
+              {dayObject?.exercises?.length
+                ? dayObject?.exercises?.length + ' Exercises'
+                : '10 Exercises'}
+            </Text>
+            <FlatList
+              data={dayObject?.exercises}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                paddingBottom:
+                  DeviceHeigth <= 667
+                    ? DeviceHeigth * 0.5
+                    : DeviceHeigth * 0.42,
+              }}
+              style={{
                 width: DeviceWidth * 0.9,
                 alignSelf: 'center',
-                marginVertical: 15,
-              },
-            ]}>
-            {dayObject?.exercises?.length
-              ? dayObject?.exercises?.length + ' Exercises'
-              : '10 Exercises'}
-          </Text>
-          <FlatList
-            data={dayObject?.exercises}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              paddingBottom:
-                DeviceHeigth <= 667 ? DeviceHeigth * 0.5 : DeviceHeigth * 0.42,
-            }}
-            style={{
-              width: DeviceWidth * 0.9,
-              alignSelf: 'center',
-              // marginBottom: DeviceHeigth * 0.35,
-            }}
-            keyExtractor={(item)=> item?.exercise_id?.toString()}
-            renderItem={({item, index}) => {
-              const time = parseInt(item?.exercise_rest.split(' ')[0]);
-              return (
-                <View key={index}>
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => {
-                      setData(item);
-                      setOpen(true);
-                    }}>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <View style={styles.View4}>
-                        <Image
-                          source={{uri: item?.exercise_image_link}}
-                          style={{height: 70, width: 70}}
-                          resizeMode="contain"
-                          defaultSource={localImage.NOWORKOUT}
-                        />
-                      </View>
-                      <View style={{marginLeft: 15, width: DeviceWidth * 0.55}}>
-                        <Text style={[styles.txt3]}>
-                          {item?.exercise_title}
-                        </Text>
+                // marginBottom: DeviceHeigth * 0.35,
+              }}
+              keyExtractor={item => item?.exercise_id?.toString()}
+              renderItem={({item, index}) => {
+                const time = parseInt(item?.exercise_rest.split(' ')[0]);
+                return (
+                  <View key={index}>
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={() => {
+                        setData(item);
+                        setOpen(true);
+                      }}>
+                      <View
+                        style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <View style={styles.View4}>
+                          <Image
+                            source={{uri: item?.exercise_image_link}}
+                            style={{height: 70, width: 70}}
+                            resizeMode="contain"
+                            defaultSource={localImage.NOWORKOUT}
+                          />
+                        </View>
                         <View
-                          style={{flexDirection: 'row', alignItems: 'center'}}>
-                          <Text style={styles.txt2}>
-                            {'Time - ' +
-                              '1 x ' +
-                              (time > 60
-                                ? Math.floor(time / 60) + ' min'
-                                : time + ' sec')}{' '}
-                            |{' '}
+                          style={{marginLeft: 15, width: DeviceWidth * 0.55}}>
+                          <Text style={[styles.txt3]}>
+                            {item?.exercise_title}
                           </Text>
-                          <Text style={styles.txt2}>
-                            {'Set - ' + item?.exercise_sets}
-                          </Text>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                            }}>
+                            <Text style={styles.txt2}>
+                              {'Time - ' +
+                                '1 x ' +
+                                (time > 60
+                                  ? Math.floor(time / 60) + ' min'
+                                  : time + ' sec')}{' '}
+                              |{' '}
+                            </Text>
+                            <Text style={styles.txt2}>
+                              {'Set - ' + item?.exercise_sets}
+                            </Text>
+                          </View>
                         </View>
                       </View>
-                    </View>
-                  </TouchableOpacity>
-                  {dayObject?.exercises.length - 1 == index ? null : (
-                    <View style={styles.border} />
-                  )}
-                </View>
-              );
-            }}
-          />
+                    </TouchableOpacity>
+                    {dayObject?.exercises.length - 1 == index ? null : (
+                      <View style={styles.border} />
+                    )}
+                  </View>
+                );
+              }}
+            />
+          </View>
           <WorkoutsDescription data={data} open={open} setOpen={setOpen} />
         </>
       ) : (
@@ -430,7 +452,7 @@ export const ExerciseComponentWithEvent = ({
                 }}
                 resizeMode="contain"
               />
-           
+
               <Text
                 style={{
                   fontFamily: Fonts.MONTSERRAT_BOLD,
@@ -454,11 +476,15 @@ const styles = StyleSheet.create({
   View1: {
     width: DeviceWidth * 0.95,
     alignSelf: 'center',
+    borderRadius: 10,
+    backgroundColor: AppColor.WHITE,
+    marginVertical: 10,
+    paddingBottom: 20,
   },
   View2: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 20,
+    marginVertical: 10,
     width: DeviceWidth * 0.9,
     alignSelf: 'center',
     justifyContent: 'space-between',

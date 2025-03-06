@@ -5,6 +5,7 @@ import {DeviceWidth} from '../../Component/Config';
 import moment from 'moment';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import {Calendar} from 'react-native-calendars';
+import {Theme} from 'react-native-calendars/src/types';
 
 type Props = {
   date: string;
@@ -13,22 +14,49 @@ type Props = {
 
 const CustomCalendar = ({date, setDate}: Props) => {
   const [isLoaded, setIsLoaded] = useState(false);
-
-  const theme = useMemo(() => {
+  const today = moment().format('YYYY-MM-DD');
+  const theme: Theme = useMemo(() => {
     return {
       calendarBackground: AppColor.WHITE,
-      selectedDayBackgroundColor: '#f0013b',
+      selectedDayBackgroundColor: AppColor.RED,
       selectedDayTextColor: AppColor.WHITE,
       todayTextColor: AppColor.BLACK,
-      arrowColor: '#f0013b',
-      monthTextColor: '#f0013b',
-      indicatorColor: '#f0013b',
+      arrowColor: '#000',
+      monthTextColor: '#000',
+      indicatorColor: '#000',
       textMonthFontSize: 17,
       textDayFontFamily: Fonts.MONTSERRAT_BOLD,
       textMonthFontFamily: Fonts.MONTSERRAT_BOLD,
       dayTextColor: AppColor.BLACK,
+      disabledMonthTextColor: AppColor.GRAY, // Add disabled month text color
+      disabledDayTextColor: AppColor.GRAY, // Add disabled day text color
     };
   }, []);
+
+  const getDisabledDays = () => {
+    const disabledDays: any = {};
+    const today = moment();
+    const maxDate = today.clone().add(100, 'years'); // Prevent infinite loop.
+
+    for (
+      let m = today.clone();
+      m.isSameOrBefore(maxDate, 'month');
+      m.add(1, 'month')
+    ) {
+      const monthStr = m.format('YYYY-MM');
+      const daysInMonth = m.daysInMonth();
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dayStr = `${monthStr}-${d < 10 ? '0' + d : d}`;
+        if (moment(dayStr).isAfter(today, 'day')) {
+          disabledDays[dayStr] = {disabled: true};
+        }
+      }
+    }
+    return disabledDays;
+  };
+
+  const disabledDays = useMemo(() => getDisabledDays(), []);
   return (
     <Calendar
       onDayPress={(day: any) => {
@@ -42,6 +70,7 @@ const CustomCalendar = ({date, setDate}: Props) => {
       hideExtraDays={true}
       hideDayNames={false}
       markedDates={{
+        ...disabledDays,
         [date]: {
           startingDay: true,
           color: '#f0013b',

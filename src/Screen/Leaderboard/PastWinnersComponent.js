@@ -3,9 +3,10 @@ import React from 'react';
 import {DeviceWidth} from '../../Component/Config';
 import {AppColor, Fonts, PLATFORM_IOS} from '../../Component/Color';
 import NewButton from '../../Component/NewButton';
-const PastWinnersComponent = ({pastWinners, navigation}) => {
+import { navigate } from '../../Component/Utilities/NavigationUtil';
+const PastWinnersComponent = ({pastWinners}) => {
   const handleButtonPress = () => {
-    navigation.navigate('PastWinner', {
+    navigate('PastWinner', {
       pastWinners: pastWinners,
     });
   };
@@ -42,9 +43,9 @@ const PastWinnersComponent = ({pastWinners, navigation}) => {
         ))}
       </View>
       <NewButton
-        ButtonWidth={DeviceWidth * 0.32}
+        ButtonWidth={DeviceWidth * 0.42}
         pV={6}
-        title={'View More'}
+        title={'View Past Winners'}
         buttonColor={'#E9ECEF'}
         titleColor={'#343A40'}
         fontFamily={Fonts.HELVETICA_BOLD}
@@ -61,6 +62,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingHorizontal: 8,
     paddingVertical: 5,
+    marginBottom: 10,
     // ...Platform.select({
     //   ios: {
     //     //shadowColor: '#000000',

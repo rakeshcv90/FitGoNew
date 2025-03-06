@@ -29,7 +29,7 @@ const WeekArrayWithoutEvent = Array(7)
         .subtract(moment().isoWeekday() - 1, 'days')
         .format('dddd')),
   );
-const Progress = () => {
+const Progress = ({myPlans}: {myPlans: boolean}) => {
   const getWeeklyPlansData = useSelector(
     (state: any) => state.getWeeklyPlansData,
   );
@@ -154,7 +154,7 @@ const Progress = () => {
 
   return (
     <View>
-      {enteredCurrentEvent && (
+      {enteredCurrentEvent && !myPlans && (
         <FitText
           type="SubHeading"
           fontWeight="600"
@@ -232,7 +232,7 @@ const Progress = () => {
           </>
         )}
       </View>
-      {enteredCurrentEvent && (
+      {enteredCurrentEvent && !myPlans && (
         <FitButton
           titleText={'START NOW'}
           w={'35%'}
@@ -241,7 +241,7 @@ const Progress = () => {
           onPress={() => navigate('MyPlans')}
         />
       )}
-      <DailyProgress currentEvent={enteredCurrentEvent} />
+      {!myPlans && <DailyProgress currentEvent={enteredCurrentEvent} />}
     </View>
   );
 };

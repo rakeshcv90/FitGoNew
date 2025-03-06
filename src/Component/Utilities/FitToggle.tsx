@@ -35,20 +35,20 @@ const FitToggle = ({
       style={[
         styles.container,
         {
-          width: toggleContainerWidth ?? 45,
+          width: toggleContainerWidth ?? 50,
           alignItems: value ? 'flex-end' : 'flex-start',
           backgroundColor: value ? '#F8809D' : '#3C3C434D',
           paddingHorizontal: 2,
-          height: toggleHeight ?? 22,
+          height: toggleHeight ?? 27,
         },
       ]}>
       <View
         style={[
           styles.circle,
           {
-            backgroundColor: value ? AppColor.RED : AppColor.WHITE,
-            width: toggleHeight ? toggleHeight - 4 : 18,
-            height: toggleHeight ? toggleHeight - 4 : 18,
+            backgroundColor: value ? AppColor.WHITE : AppColor.WHITE,
+            width: toggleHeight ? toggleHeight - 4 : 22,
+            height: toggleHeight ? toggleHeight - 4 : 22,
           },
           //   ShadowStyle
         ]}>

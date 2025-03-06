@@ -1,11 +1,4 @@
-import {
-  DimensionValue,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {DimensionValue, Image, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {AppColor, PLATFORM_IOS} from './Color';
@@ -44,8 +37,8 @@ const NativeAdsView = ({type, media = false, width = '100%'}: Props) => {
       ADS_IOS.includes(getUserDataDetails?.social_id)
     : DeviceID != '' && ADS_IDs.includes(DeviceID);
 
-  const NativeID = 'ca-app-pub-3940256099942544/2247696110';
-  // type === 'image'
+  const NativeID = 'ca-app-pub-3940256099942544/2247696110'; // Replace with your production ad unit ID
+  // const NativeID = type === 'image'
   //   ? IsTesting
   //     ? adUnitIDsTest.image
   //     : adUnitIDs.image
@@ -56,7 +49,6 @@ const NativeAdsView = ({type, media = false, width = '100%'}: Props) => {
   useEffect(() => {
     NativeAd.createForAdRequest(NativeID)
       .then((ad: NativeAd) => {
-        // console.log(ad);
         setNativeAd(ad);
         setAspectRatio(ad.mediaContent?.aspectRatio || 1.5);
         setLoading(false);
@@ -76,7 +68,7 @@ const NativeAdsView = ({type, media = false, width = '100%'}: Props) => {
     nativeAd?.addAdEventListener(NativeAdEventType.OPENED, () => {});
     nativeAd?.addAdEventListener(NativeAdEventType.IMPRESSION, () => {});
     Inspector();
-  }, []);
+  }, [nativeAd]);
 
   const Inspector = async () => {
     try {
@@ -91,7 +83,13 @@ const NativeAdsView = ({type, media = false, width = '100%'}: Props) => {
   };
 
   return (
-    <View style={{width, alignItems: 'center'}}>
+    <View
+      style={{
+        width,
+        justifyContent: 'center',
+        alignSelf: 'center',
+        marginRight: 20,
+      }}>
       {loading && (
         <View style={styles.loaderContainer}>
           <AnimatedLottieView
@@ -112,6 +110,7 @@ const NativeAdsView = ({type, media = false, width = '100%'}: Props) => {
                 <Image
                   style={styles.adIcon}
                   source={{uri: nativeAd.icon.url}}
+                  resizeMode="contain"
                 />
               </NativeAsset>
             )}
@@ -122,44 +121,42 @@ const NativeAdsView = ({type, media = false, width = '100%'}: Props) => {
               <NativeAsset assetType={NativeAssetType.BODY}>
                 <Text style={styles.adDescription}>{nativeAd.body}</Text>
               </NativeAsset>
-              <NativeAsset assetType={NativeAssetType.STORE}>
-                <Text style={styles.adRating}>
-                  {nativeAd.store + ' '}
-                  <NativeAsset assetType={NativeAssetType.ADVERTISER}>
-                    <Text style={styles.adPrice}>{nativeAd.advertiser}</Text>
-                  </NativeAsset>
-                </Text>
-              </NativeAsset>
+              <View style={styles.row}>
+                <NativeAsset assetType={NativeAssetType.STORE}>
+                  <Text style={styles.adRating}>{nativeAd.store + ' '}</Text>
+                </NativeAsset>
+                <NativeAsset assetType={NativeAssetType.ADVERTISER}>
+                  <Text style={styles.adPrice}>{nativeAd.advertiser}</Text>
+                </NativeAsset>
+              </View>
               <View style={styles.row}>
                 <NativeAsset assetType={NativeAssetType.STAR_RATING}>
                   <Text style={styles.adRating}>
                     ⭐ {nativeAd.starRating + ' '}
-                    <NativeAsset assetType={NativeAssetType.PRICE}>
-                      <Text style={styles.adPrice}>{nativeAd.price}</Text>
-                    </NativeAsset>
                   </Text>
                 </NativeAsset>
-
-                <NativeAsset assetType={NativeAssetType.CALL_TO_ACTION}>
-                  <Text
-                    style={{
-                      color: AppColor.WHITE,
-                      padding: 7,
-                      backgroundColor: '#4284f3',
-                      paddingHorizontal: 20,
-                      borderRadius: 5,
-                    }}>
-                    {nativeAd.callToAction}
-                  </Text>
-                </NativeAsset>
+                {/* <NativeAsset assetType={NativeAssetType.PRICE}>
+                  <Text style={styles.adPrice}>{nativeAd.price}</Text>
+                </NativeAsset> */}
+              <NativeAsset assetType={NativeAssetType.CALL_TO_ACTION}>
+                <Text
+                  style={{
+                    color: AppColor.WHITE,
+                    padding: 7,
+                    backgroundColor: '#4284f3',
+                    paddingHorizontal: 20,
+                    borderRadius: 5,
+                    width: '40%',
+                  }}>
+                  {nativeAd.callToAction}
+                </Text>
+              </NativeAsset>
               </View>
+
             </View>
           </View>
 
-          {nativeAd.mediaContent && media && (
-            // <NativeMediaView resizeMode={'contain'} style={{aspectRatio}} />
-            <MediaView />
-          )}
+          {nativeAd.mediaContent && media && <MediaView />}
         </NativeAdView>
       )}
     </View>
@@ -199,10 +196,12 @@ const styles = StyleSheet.create({
   adIcon: {
     width: 80,
     height: 80,
-    marginRight: 20,
   },
   textContainer: {
     width: '80%',
+    marginRight: 30,
+    marginLeft: 10,
+    paddingRight: 10
   },
   adTitle: {
     fontSize: 16,

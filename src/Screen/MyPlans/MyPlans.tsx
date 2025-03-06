@@ -70,6 +70,10 @@ import OverExerciseModal from '../../Component/Utilities/OverExercise';
 import FitText from '../../Component/Utilities/FitText';
 import Equipment from '../Yourself/Equipment';
 import {useEvent} from 'react-native-reanimated';
+import Progress from '../NewHome/Progress';
+import FitIcon, {FitIconTypes} from '../../Component/Utilities/FitIcon';
+import {navigate} from '../../Component/Utilities/NavigationUtil';
+import PredefinedStyles from '../../Component/Utilities/PredefineStyles';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -409,7 +413,7 @@ const MyPlans = ({navigation}: any) => {
       const res = await axios({
         url: NewAppapi.CURRENT_DAY_EXERCISE,
         method: 'Post',
-        data: {user_details: datas,type: 'weekly'},
+        data: {user_details: datas, type: 'weekly'},
       });
       if (
         res.data?.msg == 'Exercise Status for All Users Inserted Successfully'
@@ -1127,130 +1131,13 @@ const MyPlans = ({navigation}: any) => {
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: AppColor.WHITE,
+        backgroundColor: '#f7f7f7',
       }}>
-      <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      {enteredCurrentEvent ? (
-        <>
-          <View
-            style={{
-              width: DeviceWidth * 0.98,
-              height: DeviceHeigth * 0.1,
-              alignSelf: 'center',
-
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              backgroundColor: AppColor.WHITE,
-              // paddingTop:
-              //   Platform.OS == 'android'
-              //     ? DeviceHeigth * 0.03
-              //     : DeviceHeigth * 0.01,
-            }}>
-            <View
-              style={{width: '50%', height: '100%', justifyContent: 'center'}}>
-              <Text
-                style={{
-                  fontFamily: Fonts.HELVETICA_BOLD,
-                  fontSize: 16,
-                  lineHeight: 19,
-                  color: AppColor.PrimaryTextColor,
-                }}>
-                Weekly Challenge
-              </Text>
-            </View>
-            <View
-              style={{
-                width: '50%',
-                height: '100%',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-              }}>
-              <>
-                <TouchableOpacity
-                  activeOpacity={0.6}
-                  disabled={totalData.length > 0 ? false : true}
-                  onPress={() => {
-                    if (totalData.length > 0) {
-                      AnalyticsConsole('LB');
-                      navigation.navigate('Leaderboard');
-                    } else {
-                      showMessage({
-                        message: 'No one has joined the event yet',
-                        type: 'info',
-                        animationDuration: 500,
-                        floating: true,
-                        icon: {icon: 'auto', position: 'left'},
-                      });
-                    }
-                  }}
-                  style={{
-                    width: 70,
-                    height: 40,
-                    borderRadius: 6,
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                    backgroundColor: '#DBEAFE',
-                    marginHorizontal: 10,
-                    paddingLeft: 5,
-                    justifyContent: 'center',
-                  }}>
-                  <Image
-                    source={require('../../Icon/Images/NewHome/cup.png')}
-                    style={{height: 15, width: 15}}
-                    resizeMode="contain"
-                  />
-                  <Text style={styles.cointxt}>#{myRank}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  activeOpacity={0.6}
-                  disabled={(Sat || Sun) == true}
-                  onPress={() => {
-                    AnalyticsConsole('HB');
-                    navigation.navigate('WorkoutHistory');
-                  }}
-                  style={{
-                    width: 70,
-                    height: 40,
-                    borderRadius: 6,
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                    paddingLeft: 5,
-                    justifyContent: 'center',
-                    backgroundColor: AppColor.orangeColor,
-                  }}>
-                  <Image
-                    source={localImage.FitCoin}
-                    style={{height: 20, width: 20}}
-                    resizeMode="contain"
-                  />
-                  <Text
-                    style={[styles.cointxt, {color: AppColor.orangeColor1}]}>
-                    {fitCoins <= 0 ? 0 : fitCoins}
-                  </Text>
-                </TouchableOpacity>
-              </>
-            </View>
-          </View>
-        </>
-      ) : (
-        <FitText
-          type="Heading"
-          fontSize={20}
-          value=""
-          marginVertical={10}
-          textAlign="center"
-        />
-      )}
+      <StatusBar barStyle={'dark-content'} backgroundColor={'#f7f7f7'} />
 
       <View
         style={{
           flex: 1,
-          // marginTop:
-          //   Platform.OS == 'ios'
-          //     ? DeviceHeigth < 1024 - DeviceWidth * 0.05
-          //     : -DeviceWidth * 0.0,
         }}>
         {loader ? (
           <View
@@ -1272,25 +1159,69 @@ const MyPlans = ({navigation}: any) => {
             <>
               <View
                 style={{
-                  flexDirection: 'row',
-                  width: DeviceWidth * 0.9,
-                  justifyContent: 'space-between',
+                  width: DeviceWidth * 0.95,
                   alignItems: 'center',
                   alignSelf: 'center',
-                  marginBottom: DeviceWidth * 0.05,
+                  marginVertical: DeviceWidth * 0.05,
+                  borderRadius: 10,
+                  backgroundColor: AppColor.WHITE,
                 }}>
-                {WeekArrayWithEvent.map((item: any, index: number) => (
-                  <WeekTabWithEvents
-                    day={item}
-                    dayIndex={index}
-                    selectedDay={selectedDay}
-                    setSelectedDay={setSelectedDay}
-                    WeekStatus={WeekStatus}
-                    WeekArray={WeekArrayWithEvent}
-                    dayObject={getWeeklyPlansData}
-                    dayWiseCoins={coins}
+                <View
+                  style={[
+                    PredefinedStyles.rowBetween,
+                    {width: '90%', marginTop: 10},
+                  ]}>
+                  <FitText
+                    type="SubHeading"
+                    value="Weekly Challenge"
+                    fontWeight="700"
                   />
-                ))}
+                  <View style={[PredefinedStyles.rowBetween]}>
+                    <TouchableOpacity
+                      activeOpacity={0.6}
+                      disabled={(Sat || Sun) == true}
+                      onPress={() => {
+                        AnalyticsConsole('HB');
+                        navigate('WorkoutHistory');
+                      }}
+                      style={[styles.eventContainer, {marginHorizontal: 10}]}>
+                      <Image
+                        source={localImage.FitCoin}
+                        style={{height: 20, width: 20}}
+                        resizeMode="contain"
+                      />
+                      <Text
+                        style={[
+                          styles.cointxt,
+                          {color: AppColor.PrimaryTextColor},
+                        ]}>
+                        {fitCoins <= 0 ? 0 : fitCoins ?? 0}
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      activeOpacity={0.6}
+                      disabled={(Sat || Sun) == true}
+                      onPress={() => {
+                        AnalyticsConsole('HB');
+                        navigate('WorkoutHistory');
+                      }}
+                      style={styles.eventContainer}>
+                      <Image
+                        source={require('../NewHome/LeaderboardIMG.png')}
+                        style={{height: 20, width: 20}}
+                        resizeMode="contain"
+                      />
+                      <Text
+                        style={[
+                          styles.cointxt,
+                          {color: AppColor.PrimaryTextColor},
+                        ]}>
+                        {`#${myRank ?? 0} `}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                <Progress myPlans />
               </View>
               <ExerciseComponentWithEvent
                 dayObject={
@@ -1315,23 +1246,20 @@ const MyPlans = ({navigation}: any) => {
             <>
               <View
                 style={{
-                  flexDirection: 'row',
-                  width: DeviceWidth * 0.9,
-                  justifyContent: 'space-between',
+                  width: DeviceWidth * 0.95,
                   alignItems: 'center',
                   alignSelf: 'center',
-                  marginBottom: DeviceWidth * 0.05,
+                  marginVertical: DeviceWidth * 0.05,
+                  borderRadius: 10,
+                  backgroundColor: AppColor.WHITE,
+                  paddingTop: 10
                 }}>
-                {WeekArray.map((item: any, index: number) => (
-                  <WeekTabWithoutEvent
-                    day={item}
-                    dayIndex={index}
-                    selectedDay={selectedDay}
-                    setSelectedDay={setSelectedDay}
-                    WeekStatus={WeekStatus}
-                    WeekArray={WeekArray}
-                  />
-                ))}
+                <FitText
+                  type="SubHeading"
+                  value="Weekly Challenge"
+                  fontWeight="700"
+                />
+                <Progress myPlans />
               </View>
               <ExerciseComponetWithoutEvents
                 dayObject={getWeeklyPlansData[WeekArray[selectedDay]]}
@@ -1482,9 +1410,19 @@ const styles = StyleSheet.create({
   cointxt: {
     color: '#1E40AF',
     fontSize: 16,
-    fontFamily: Fonts.HELVETICA_BOLD,
+    fontFamily: Fonts.HELVETICA_REGULAR,
+    fontWeight: '600',
     lineHeight: 30,
     // marginTop: 5,
     marginHorizontal: 5,
+  },
+  eventContainer: {
+    width: 60,
+    height: 40,
+    borderRadius: 30,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    backgroundColor: '#f7f7f7',
   },
 });

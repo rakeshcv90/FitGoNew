@@ -7,7 +7,7 @@ import {localImage} from '../../Component/Image';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import {AppColor, Fonts} from '../../Component/Color';
 import {navigate} from '../../Component/Utilities/NavigationUtil';
-import FitIcon from '../../Component/Utilities/FitIcon';
+import FitIcon, {FitIconTypes} from '../../Component/Utilities/FitIcon';
 import FitText from '../../Component/Utilities/FitText';
 import moment from 'moment';
 import {DeviceWidth} from '../../Component/Config';
@@ -63,133 +63,110 @@ const HomeHeader = ({leaderboardData}: Props) => {
     leaderboardData &&
     leaderboardData.filter(item => item?.id == getUserDataDetails?.id);
 
+  const currentTime = parseInt(moment().format('HH'));
+  const greeting =
+    currentTime < 12
+      ? 'Good Morning'
+      : currentTime > 12 && currentTime < 17
+      ? 'Good Afternoon'
+      : 'Good Evening';
+
+  const historyIcon: FitIconTypes = {
+    name: 'history',
+    size: 20,
+    type: 'MaterialCommunityIcons',
+    color: AppColor.PrimaryTextColor,
+    bW: 0,
+    bR: 20,
+    roundBackground: AppColor.WHITE,
+    buttonProps: {
+      disabled: (Sat || Sun) == true,
+      activeOpacity: 0.6,
+    },
+    onPress: () => {
+      AnalyticsConsole('HB');
+      navigate('WorkoutHistory');
+    },
+  };
+
   return (
     <View style={[PredefinedStyles.rowBetween, styles.container]}>
-      <View style={{width: '15%'}}>
-        <Image
-          source={
-            getUserDataDetails.image_path == null
-              ? localImage.avt
-              : {uri: getUserDataDetails.image_path}
+      <View style={{width: '45%'}}>
+        <FitText type="SubHeading" value={greeting} />
+        <FitText
+          type="Heading"
+          value={
+            getUserDataDetails?.name == null
+              ? 'Guest'
+              : getUserDataDetails?.name.split(' ')[0]
           }
-          resizeMode="cover"
-          style={{
-            width: 40,
-            height: 40,
-            borderRadius: 80 / 2,
-          }}
+          color={AppColor.RED}
+          fontWeight="700"
         />
       </View>
-      {enteredUpcomingEvent && !enteredCurrentEvent ? (
-        <View>
-          <FitText
-            type="SubHeading"
-            value="Event will start"
-            color={AppColor.RED}
-            fontWeight="700"
-          />
-          <View
-            style={{
-              padding: 5,
-              backgroundColor: '#E9ECEF',
-              borderRadius: 10,
-              alignItems: 'center',
-            }}>
-            <FitText
-              type="SubHeading"
-              value={totalDaysLeft}
-              color={AppColor.PrimaryTextColor}
+      {!enteredCurrentEvent ? (
+        <View style={[PredefinedStyles.rowBetween, {width: '50%'}]}>
+          <FitIcon {...historyIcon} roundIcon />
+          <TouchableOpacity
+            activeOpacity={0.6}
+            disabled={(Sat || Sun) == true}
+            onPress={() => {
+              AnalyticsConsole('HB');
+              navigate('WorkoutHistory');
+            }}
+            style={[styles.eventContainer, {marginHorizontal: 5}]}>
+            <Image
+              source={localImage.FitCoin}
+              style={{height: 20, width: 20}}
+              resizeMode="contain"
             />
-          </View>
+            <Text style={[styles.cointxt, {color: AppColor.PrimaryTextColor}]}>
+              {fitCoins <= 0 ? 0 : fitCoins ?? 0}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            disabled={(Sat || Sun) == true}
+            onPress={() => {
+              AnalyticsConsole('HB');
+              navigate('WorkoutHistory');
+            }}
+            style={styles.eventContainer}>
+            <Image
+              source={require('./LeaderboardIMG.png')}
+              style={{height: 20, width: 20}}
+              resizeMode="contain"
+            />
+            <Text style={[styles.cointxt, {color: AppColor.PrimaryTextColor}]}>
+              {`#${myRank[0]?.rank ?? 0} `}
+            </Text>
+          </TouchableOpacity>
         </View>
       ) : (
-        <View style={{alignItems: 'center'}}>
-          <FitText
-            type="SubHeading"
-            value={
-              enteredCurrentEvent ? 'Check your rank' : 'Earn amazing rewards'
-            }
-            color={AppColor.RED}
-            fontWeight="700"
+        <View style={[PredefinedStyles.rowBetween, {width: '30%'}]}>
+          <FitIcon
+            {...historyIcon}
+            onPress={() => {
+              AnalyticsConsole('HB');
+              navigate('NewHistory');
+            }}
+            roundIcon
           />
           <TouchableOpacity
-            onPress={() =>
-              enteredCurrentEvent
-                ? navigate('Leaderboard')
-                : navigate('UpcomingEvent', {eventType: 'upcoming'})
-            }
-            style={{
-              padding: 5,
-              width: DeviceWidth / 3,
-              backgroundColor: AppColor.RED,
-              borderRadius: 20,
-              ...PredefinedStyles.rowCenter,
-            }}>
-            <FitText
-              type="SubHeading"
-              value={
-                enteredCurrentEvent
-                  ? `#${myRank[0]?.rank ?? 0} `
-                  : 'JOIN EVENT '
-              }
-              fontWeight="700"
-              color={AppColor.WHITE}
-            />
-            <FitIcon
-              type={enteredCurrentEvent ? 'Ionicons' : 'FontAwesome5'}
-              name={enteredCurrentEvent ? 'trophy-sharp' : 'crown'}
-              size={15}
-              color={AppColor.WHITE}
+            activeOpacity={0.6}
+            disabled={(Sat || Sun) == true}
+            onPress={() => {
+              AnalyticsConsole('HB');
+              navigate('WorkoutHistory');
+            }}
+            style={styles.normalContainer}>
+            <Image
+              source={require('./LeaderboardIMG.png')}
+              style={{height: 25, width: 25}}
+              resizeMode="contain"
             />
           </TouchableOpacity>
         </View>
-      )}
-      {enteredCurrentEvent ? (
-        <TouchableOpacity
-          activeOpacity={0.6}
-          disabled={(Sat || Sun) == true}
-          onPress={() => {
-            AnalyticsConsole('HB');
-            navigate('WorkoutHistory');
-          }}
-          style={{
-            width: 70,
-            height: 40,
-            borderRadius: 6,
-            alignItems: 'center',
-            flexDirection: 'row',
-            // paddingLeft: 10,
-            justifyContent: 'center',
-            backgroundColor: AppColor.orangeColor,
-          }}>
-          <Image
-            source={localImage.FitCoin}
-            style={{height: 20, width: 20}}
-            resizeMode="contain"
-          />
-          <Text style={[styles.cointxt, {color: AppColor.orangeColor1}]}>
-            {fitCoins <= 0 ? 0 : fitCoins ?? 0}
-          </Text>
-        </TouchableOpacity>
-      ) : (
-        <FitIcon
-          name="history"
-          size={20}
-          type="MaterialCommunityIcons"
-          color="#E38100"
-          bW={0}
-          bR={10}
-          roundBackground={AppColor.orangeColor}
-          buttonProps={{
-            disabled: (Sat || Sun) == true,
-            activeOpacity: 0.6,
-          }}
-          onPress={() => {
-            AnalyticsConsole('HB');
-            navigate('WorkoutHistory');
-          }}
-          roundIcon
-        />
       )}
     </View>
   );
@@ -201,14 +178,32 @@ const styles = StyleSheet.create({
   container: {
     padding: 15,
     paddingVertical: 20,
-    backgroundColor: AppColor.WHITE,
+    backgroundColor: AppColor.Background_New,
   },
   cointxt: {
     color: '#1E40AF',
     fontSize: 16,
-    fontFamily: Fonts.HELVETICA_BOLD,
+    fontFamily: Fonts.HELVETICA_REGULAR,
+    fontWeight: '600',
     lineHeight: 30,
     // marginTop: 5,
-    marginHorizontal: 5,
+    marginLeft: 5,
+  },
+  eventContainer: {
+    width: 60,
+    height: 40,
+    borderRadius: 30,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    backgroundColor: AppColor.WHITE,
+  },
+  normalContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: AppColor.WHITE,
   },
 });

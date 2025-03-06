@@ -23,6 +23,7 @@ import {localImage} from '../../Component/Image';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import LoadingScreen from '../../Component/NewHomeUtilities/LoadingScreen';
 import {RequestAPI} from '../../Component/Utilities/RequestAPI';
+import PredefinedStyles from '../../Component/Utilities/PredefineStyles';
 
 type StoreItemProps = {
   type_id: number;
@@ -124,6 +125,7 @@ const Products = ({navigation, route}: any) => {
       <TouchableOpacity
         style={[
           styles.itemContainer,
+          PredefinedStyles.ShadowStyle,
           {flex: isLastOdd ? 0 : 1, width: isLastOdd ? '45%' : '50%'},
         ]}
         activeOpacity={0.5}
@@ -134,8 +136,12 @@ const Products = ({navigation, route}: any) => {
           resizeMode="contain"
           style={styles.itemImage}
         />
-        <View style={{margin: 10, alignItems: 'center'}}>
-          <FitText type="SubHeading" value={item.product_title} textAlign='center' />
+        <View style={{padding: 5, backgroundColor: AppColor.WHITE}}>
+          <FitText
+            type="SubHeading"
+            value={item.product_title}
+            textAlign="center"
+          />
         </View>
       </TouchableOpacity>
     );
@@ -175,7 +181,7 @@ const Products = ({navigation, route}: any) => {
                   flex: 1,
                   alignItems: 'center',
                   justifyContent: 'center',
-                  marginTop: -50
+                  marginTop: -50,
                 }}>
                 <AnimatedLottieView
                   source={require('../../Icon/Images/NewImage/NoData.json')}
@@ -223,9 +229,10 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     borderRadius: 15,
-    backgroundColor: AppColor.WHITE,
+    backgroundColor: '#f7f7f7',
     overflow: 'hidden',
-    margin: 10,
+    width: DeviceWidth * 0.45,
+    margin: 7,
   },
   itemImage: {
     width: '80%',

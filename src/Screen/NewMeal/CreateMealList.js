@@ -9,7 +9,7 @@ import {localImage} from '../../Component/Image';
 import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
 import Icons from 'react-native-vector-icons/FontAwesome5';
-const CreateMealList = ({navigation}) => {
+const CreateMealList = () => {
   const getCustomDietData = useSelector(state => state.getCustomDietData);
   const mealData = useSelector(state => state.mealData);
   return (
@@ -180,7 +180,7 @@ const CreateMealList = ({navigation}) => {
                 right: 5,
                 justifyContent: 'center',
                 alignItems: 'center',
-                
+
                 shadowColor: 'rgba(0, 0, 0, 1)',
                 ...Platform.select({
                   ios: {
