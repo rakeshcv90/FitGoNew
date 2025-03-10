@@ -73,32 +73,6 @@ const Home = () => {
         }>
         {enteredCurrentEvent && <OfferAnimation />}
         <NativeAdBanner loader={loader} />
-        {!enteredUpcomingEvent && (
-          <View style={[PredefinedStyles.rowBetween, styles.whiteBox]}>
-            <View style={PredefinedStyles.rowBetween}>
-              <Trophy />
-              <FitText
-                type="SubHeading"
-                value="Join your event again"
-                marginHorizontal={10}
-              />
-            </View>
-            <View style={PredefinedStyles.rowBetween}>
-              <FitText
-                type="SubHeading"
-                textTransform="uppercase"
-                value={'Join Again '}
-                color={AppColor.RED}
-              />
-              <FitIcon
-                name="right"
-                size={15}
-                type="AntDesign"
-                color={AppColor.RED}
-              />
-            </View>
-          </View>
-        )}
         <View style={styles.whiteBox}>
           <Progress myPlans={false} />
         </View>

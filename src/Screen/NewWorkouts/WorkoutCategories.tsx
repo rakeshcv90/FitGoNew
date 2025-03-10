@@ -48,7 +48,7 @@ import VersionNumber, {appVersion} from 'react-native-version-number';
 import moment from 'moment';
 import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
-import NativeAddTest from '../../Component/NativeAddTest';
+import NativeAddTest from '../../Component/NativeAd';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import GradientButton from '../../Component/GradientButton';
 import RNFetchBlob from 'rn-fetch-blob';

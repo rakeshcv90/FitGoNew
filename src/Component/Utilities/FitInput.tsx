@@ -23,8 +23,8 @@ export type Props = TextInputProps & {
   IconLComp?: ReactNode;
   IconRComp?: ReactNode;
   labelText?: FitTextProps | string;
-  errors?: string | undefined;
-  touched?: boolean;
+  errors?: string | any;
+  touched?: boolean | any;
   bgColor?: string;
   bColor?: string;
   bR?: number;
@@ -93,7 +93,7 @@ const AppInput: FC<Props> = ({
         )}
         <TextInput
           {...props}
-          style={[textInputStyle, {width: '80%',color: 'black',}]}
+          style={[textInputStyle, {width: '80%', color: 'black'}]}
         />
         {(IconRight || IconRComp) && (
           <View style={{width: '10%'}}>

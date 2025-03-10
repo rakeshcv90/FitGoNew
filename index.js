@@ -20,7 +20,7 @@ import notifee, {
   RepeatFrequency,
   TriggerType,
 } from '@notifee/react-native';
-import {AdManager, TestIds} from 'react-native-admob-native-ads';
+// import {AdManager, TestIds} from 'react-native-admob-native-ads';
 import {AlarmNotification} from './src/Component/Reminder';
 import {
   DeleteWeeklyDataAPIStart,
@@ -332,22 +332,22 @@ const AppRedux = () => {
     </Provider>
   );
 };
-AdManager.setRequestConfiguration({
-  tagForChildDirectedTreatment: false,
-});
-AdManager.registerRepository({
-  name: 'imageAd',
-  adUnitId: TestIds.Video,
-  // adUnitId: adUnitIDs,
-  numOfAds: 3,
-  nonPersonalizedAdsOnly: false,
-  videoOptions: {
-    mute: false,
-  },
-  expirationPeriod: 3600000, // in milliseconds (optional)
-  mediationEnabled: false,
-}).then(result => {});
+// AdManager.setRequestConfiguration({
+//   tagForChildDirectedTreatment: false,
+// });
+// AdManager.registerRepository({
+//   name: 'imageAd',
+//   adUnitId: TestIds.Video,
+//   // adUnitId: adUnitIDs,
+//   numOfAds: 3,
+//   nonPersonalizedAdsOnly: false,
+//   videoOptions: {
+//     mute: false,
+//   },
+//   expirationPeriod: 3600000, // in milliseconds (optional)
+//   mediationEnabled: false,
+// }).then(result => {});
 
-AdManager.subscribe('imageAd', 'onAdPreloadClicked', () => {});
+// AdManager.subscribe('imageAd', 'onAdPreloadClicked', () => {});
 
 AppRegistry.registerComponent(appName, () => AppRedux);

@@ -399,7 +399,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                             onChangeText={handleChange('name')}
                             placeholder="Full Name"
                             placeholderTextColor={'grey'}
-                            editable={isEditible}
+                            // editable={isEditible}
                           />
                           <TouchableOpacity onPress={handleIconPress}>
                             <Image

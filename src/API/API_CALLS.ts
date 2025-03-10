@@ -5,12 +5,21 @@ import DeviceInfo from 'react-native-device-info';
 import VersionNumber from 'react-native-version-number';
 import {showMessage} from 'react-native-flash-message';
 import {
+  setAgreementContent,
+  setAllExercise,
+  setAllWorkoutData,
+  setBanners,
+  setChallengesData,
+  setCompleteProfileData,
   setCustomWorkoutData,
+  setDynamicPopupValues,
   setEnteredCurrentEvent,
   setEnteredUpcomingEvent,
+  Setmealdata,
   setOfferAgreement,
   setPlanType,
   setPurchaseHistory,
+  setStoreData,
   setUserProfileData,
 } from '../Component/ThemeRedux/Actions';
 import {store} from '../Component/ThemeRedux/Store';
@@ -18,6 +27,7 @@ import {historyData, postSubsData} from './responseTypes';
 import {Dispatch, SetStateAction, version} from 'react';
 import {EnteringEventFunction} from '../Screen/Event/EnteringEventFunction';
 import {navigate} from '../Component/Utilities/NavigationUtil';
+import {downloadImages} from '../Screen/Splash/downloadBanner';
 
 let deviceID = '';
 DeviceInfo.syncUniqueId().then(uniqueId => {
@@ -78,6 +88,51 @@ export const API_CALLS = {
     },
     300,
   ),
+  updateEmailOnLogin: debounce(
+    (
+      name: string,
+      email: string,
+      insertedEmail: string,
+      noMessage?: boolean | true,
+    ) => {
+      return new Promise((resolve, reject) =>
+        RequestAPI.makeRequest(
+          'POST',
+          NewAppapi.POST_UPDATE_EMAIL,
+          {
+            name,
+            old_email: email,
+            new_email: insertedEmail,
+            version: VersionNumber.appVersion,
+            device_id: deviceID,
+          },
+          ({data, errors, status, message}) => {
+            // console.log(
+            //   name,
+            //   email,
+            //   Platform.OS,
+            //   VersionNumber.appVersion,
+            //   deviceID,
+            //   data,
+            // );
+            if (data && status == 200) {
+              noMessage &&
+                showMessage({
+                  message: data?.message,
+                  type: 'success',
+                  animationDuration: 500,
+                  floating: true,
+                });
+              resolve(data);
+            } else {
+              reject(UpgradeAppResponse());
+            }
+          },
+        ),
+      );
+    },
+    300,
+  ),
   getUserDataDetails: debounce((userID: string) => {
     return new Promise((resolve, reject) =>
       RequestAPI.makeRequest(
@@ -85,7 +140,7 @@ export const API_CALLS = {
         `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userID}`,
         {},
         ({data, errors, status, message}) => {
-          console.log(data, 'USER DETAILS');
+          // console.log(data, 'USER DETAILS');
           if (data?.msg != 'Please update the app to the latest version.') {
             // showMessage({
             //   message: data?.message,
@@ -380,6 +435,122 @@ export const API_CALLS = {
             }
           } else {
             reject(UpgradeAppResponse());
+          }
+        },
+      ),
+    );
+  }, 500),
+  getMajorData: debounce(() => {
+    return new Promise((resolve, reject) =>
+      RequestAPI.makeRequest(
+        'GET',
+        NewAppapi.GET_ALL_IN_ONE,
+        {
+          version: VersionNumber.appVersion,
+        },
+        ({data, errors, status, message}) => {
+          if (
+            data?.msg == 'Please update the app to the latest version.' ||
+            data?.msg == 'version is required'
+          ) {
+            reject(UpgradeAppResponse());
+          } else if (status == 200) {
+            const objects: any = {};
+            data?.data?.forEach((item: any) => {
+              objects[item?.type] = item?.image;
+            });
+            downloadImages(data?.custom_dailog_data[0], dispatch);
+            dispatch(setDynamicPopupValues(data?.custom_dailog_data[0]));
+
+            dispatch(setBanners(objects));
+            dispatch(setAgreementContent(data?.terms[0]));
+            dispatch(Setmealdata(data?.diets));
+            dispatch(setStoreData(data?.types));
+            dispatch(setCompleteProfileData(data?.additional_data));
+            resolve(status);
+          } else {
+            reject(UpgradeAppResponse());
+          }
+        },
+      ),
+    );
+  }, 300),
+  getAllExercisesData: debounce((user_id: string) => {
+    return new Promise((resolve, reject) =>
+      RequestAPI.makeRequest(
+        'GET',
+        NewAppapi.ALL_USER_WITH_CONDITION,
+        {
+          user_id,
+          version: VersionNumber.appVersion,
+        },
+        ({data, errors, status, message}) => {
+          if (
+            data?.msg == 'user id is required' ||
+            data?.msg == 'version is required'
+          ) {
+            reject(UpgradeAppResponse());
+          } else if (status == 200) {
+            dispatch(setChallengesData(data?.challenge_data));
+            dispatch(setAllExercise(data?.data));
+            resolve(status);
+          } else {
+            reject(UpgradeAppResponse());
+          }
+        },
+      ),
+    );
+  }, 300),
+  getAllWorkouts: debounce((id: string) => {
+    return new Promise((resolve, reject) =>
+      RequestAPI.makeRequest(
+        'POST',
+        NewAppapi.ALL_WORKOUTS,
+        {
+          id,
+          version: VersionNumber.appVersion,
+        },
+        ({data, errors, status, message}) => {
+          console.log("Worko", data)
+          if (
+            data?.msg == 'user id is required' ||
+            data?.msg == 'Please update the app to the latest version.'
+          ) {
+            reject(UpgradeAppResponse());
+          } else if (status == 200) {
+            dispatch(setAllWorkoutData(data));
+            resolve(status);
+          } else {
+            reject(UpgradeAppResponse());
+          }
+        },
+      ),
+    );
+  }, 300),
+  updateUserDetails: debounce((data: any) => {
+    return new Promise((resolve, reject) =>
+      RequestAPI.makeRequest(
+        'POST',
+        NewAppapi.UpdateUserProfile,
+        {
+          ...data,
+          version: VersionNumber.appVersion,
+        },
+        ({data, errors, status, message}) => {
+          console.log(data);
+          if (data?.msg == 'Please update the app to the latest version.')
+            UpgradeAppResponse();
+          else if (data.msg == 'User Updated Successfully') {
+            resolve(data.profile);
+            showMessage({
+              message: 'Details updated successfully.',
+              floating: true,
+              type: 'success',
+              animationDuration: 750,
+            });
+          } else {
+            console.log(errors, 'rrrr');
+            UpgradeAppResponse();
           }
         },
       ),

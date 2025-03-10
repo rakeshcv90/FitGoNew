@@ -9,7 +9,7 @@ import {
 import React, {useCallback, useState} from 'react';
 import {ExerciseData} from '../NewWorkouts/Exercise/ExerciseUtilities/useExerciseHook';
 import FitText from '../../Component/Utilities/FitText';
-import NativeAddTest from '../../Component/NativeAddTest';
+import NativeAddTest from '../../Component/NativeAd';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {AppColor, Fonts} from '../../Component/Color';
 import {localImage} from '../../Component/Image';

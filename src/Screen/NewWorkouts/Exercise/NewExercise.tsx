@@ -18,7 +18,7 @@ import ExerciseControls from './ExerciseUtilities/ExerciseControls';
 import {BannerAdd} from '../../../Component/BannerAdd';
 import {bannerAdId} from '../../../Component/AdsId';
 import Wrapper from '../../WorkoutCompleteScreen/Wrapper';
-import NativeAddTest from '../../../Component/NativeAddTest';
+import NativeAddTest from '../../../Component/NativeAd';
 import ActivityLoader from '../../../Component/ActivityLoader';
 
 const NewExercise = ({navigation, route}: any) => {

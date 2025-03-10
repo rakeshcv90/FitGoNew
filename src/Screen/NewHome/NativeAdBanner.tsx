@@ -5,7 +5,7 @@ import PredefinedStyles from '../../Component/Utilities/PredefineStyles';
 import FitText from '../../Component/Utilities/FitText';
 import {ScrollView} from 'react-native';
 import {DeviceWidth} from '../../Component/Config';
-import NativeAddTest from '../../Component/NativeAddTest';
+import NativeAddTest from '../../Component/NativeAd';
 import {API_CALLS} from '../../API/API_CALLS';
 import {useSelector} from 'react-redux';
 import NativeAdsView from '../../Component/NativeAd';

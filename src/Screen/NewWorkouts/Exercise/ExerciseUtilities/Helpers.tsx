@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import Tts from 'react-native-tts';
 import {AppColor} from '../../../../Component/Color';
-import NativeAddTest from '../../../../Component/NativeAddTest';
+import NativeAddTest from '../../../../Component/NativeAd';
 import {DeviceWidth} from '../../../../Component/Config';
 import ProgreesButton from '../../../../Component/ProgressButton';
 import {ActivityIndicator} from 'react-native';

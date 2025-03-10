@@ -25,7 +25,7 @@ import AnimatedLottieView from 'lottie-react-native';
 import axios from 'axios';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import moment from 'moment';
-import NativeAddTest from '../../Component/NativeAddTest';
+import NativeAddTest from '../../Component/NativeAd';
 import {setVideoLocation} from '../../Component/ThemeRedux/Actions';
 import RNFetchBlob from 'rn-fetch-blob';
 import {BannerAdd} from '../../Component/BannerAdd';

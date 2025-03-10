@@ -12,7 +12,7 @@ import {
   Linking,
   PermissionsAndroid,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import NewHeader from '../Component/Headers/NewHeader';
 import {AppColor, Fonts} from '../Component/Color';
 import {useDispatch, useSelector} from 'react-redux';
@@ -55,6 +55,9 @@ import NewHeader1 from '../Component/Headers/NewHeader1';
 import NewButton from '../Component/NewButton';
 import {useGalleryPermission} from '../Component/Permissions/PermissionHooks';
 import FitToggle from '../Component/Utilities/FitToggle';
+import PersonalDetails from './PersonalDetails';
+import FitSheet from '../Component/Utilities/FitSheet';
+
 const NewProfile = ({navigation}) => {
   useEffect(() => {
     notifee.getTriggerNotifications().then(res => {
@@ -83,6 +86,9 @@ const NewProfile = ({navigation}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const getSoundOffOn = useSelector(state => state.getSoundOffOn);
   const getScreenAwake = useSelector(state => state.getScreenAwake);
+  const bottomRef = useRef(null);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [snapPoints, setSnapPoints] = useState(0.5);
   const {launchLibrary} = useGalleryPermission();
   const setAlarmIsEnabled = data => {
     dispatch(setIsAlarmEnabled(data));
@@ -94,7 +100,9 @@ const NewProfile = ({navigation}) => {
       KeepAwake.deactivate();
     }
   }, [getScreenAwake]);
-
+  useEffect(() => {
+    !isSheetOpen && setSnapPoints(0.5);
+  }, [isSheetOpen]);
   const CardData = [
     {
       id: 1,
@@ -141,7 +149,9 @@ const NewProfile = ({navigation}) => {
       navigation.navigate('NewSubscription', {upgrade: false});
     } else if (id == 3) {
       AnalyticsConsole(`PERSO_DETAILS_BUTTON`);
-      navigation.navigate('NewPersonalDetails');
+      // navigation.navigate('NewPersonalDetails');
+
+      bottomRef.current && bottomRef.current?.open();
     }
   };
   const handleCardDataPress1 = id => {
@@ -611,67 +621,102 @@ const NewProfile = ({navigation}) => {
       ? dispatch(setSoundOnOff(!value))
       : dispatch(setMusicOnOff(!value));
   };
-
   return (
-    <View style={styles.Container}>
-      <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
-        <NewHeader1 header={''} />
-        <View style={styles.ProfileContainer}>
-          <View style={[styles.profileView, {}]}>
-            <Image
-              source={
-                getUserDataDetails.image_path == null
-                  ? localImage.avt
-                  : {uri: getUserDataDetails.image_path}
-              }
-              style={styles.img}
-              onLoad={() => setIsLoading(false)}
-              resizeMode="cover"
-            />
-            <TouchableOpacity
-              style={styles.pen}
-              onPress={() => setUpadteScreenVisibilty(true)}
-              activeOpacity={0.5}>
+    <>
+      <View style={styles.Container}>
+        <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
+          <NewHeader1 header={''} />
+          <View style={styles.ProfileContainer}>
+            <View style={[styles.profileView, {}]}>
               <Image
-                source={localImage.NewPen}
-                style={{height: 17, width: 15}}
-                resizeMode="contain"
+                source={
+                  getUserDataDetails.image_path == null
+                    ? localImage.avt
+                    : {uri: getUserDataDetails.image_path}
+                }
+                style={styles.img}
+                onLoad={() => setIsLoading(false)}
+                resizeMode="cover"
               />
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.pen}
+                onPress={() => setUpadteScreenVisibilty(true)}
+                activeOpacity={0.5}>
+                <Image
+                  source={localImage.NewPen}
+                  style={{height: 17, width: 15}}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={{marginLeft: 15}}>
+              <Text
+                style={{
+                  fontFamily: Fonts.MONTSERRAT_BOLD,
+                  color: AppColor.BLACK,
+                  fontSize: 20,
+                }}>
+                {getUserDataDetails?.name == null
+                  ? 'Guest'
+                  : getUserDataDetails?.name}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: Fonts.MONTSERRAT_REGULAR,
+                  color: AppColor.BLACK,
+                  fontSize: 14,
+                  fontWeight: '500',
+                  maxWidth: DeviceWidth * 0.65,
+                }}>
+                {getUserDataDetails?.email == null
+                  ? 'guest@gmail.com'
+                  : getUserDataDetails?.email}
+              </Text>
+            </View>
           </View>
-          <View style={{marginLeft: 15}}>
-            <Text
-              style={{
-                fontFamily: Fonts.MONTSERRAT_BOLD,
-                color: AppColor.BLACK,
-                fontSize: 20,
-              }}>
-              {getUserDataDetails?.name == null
-                ? 'Guest'
-                : getUserDataDetails?.name}
-            </Text>
-            <Text
-              style={{
-                fontFamily: Fonts.MONTSERRAT_REGULAR,
-                color: AppColor.BLACK,
-                fontSize: 14,
-                fontWeight: '500',
-                maxWidth: DeviceWidth * 0.65,
-              }}>
-              {getUserDataDetails?.email == null
-                ? 'guest@gmail.com'
-                : getUserDataDetails?.email}
-            </Text>
-          </View>
-        </View>
-        <View style={styles.card}>
-          {getUserDataDetails.email != null
-            ? CardData?.map((v, i) => {
-                return (
+          <View style={styles.card}>
+            {getUserDataDetails.email != null
+              ? CardData?.map((v, i) => {
+                  return (
+                    <TouchableOpacity
+                      key={i}
+                      style={{justifyContent: 'center', alignItems: 'center'}}
+                      onPress={() => handleCardDataPress(v.id)}>
+                      <Image
+                        source={v.img}
+                        style={{height: 35, width: 35}}
+                        resizeMode="contain"
+                      />
+                      <Text
+                        style={{
+                          textAlign: 'center',
+                          fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                          fontWeight: '600',
+                          marginTop: 10,
+                          color: AppColor.BLACK,
+                        }}>
+                        {v.txt}
+                      </Text>
+                      {v.txt1 == 'Invalid date' ? null : (
+                        <Text
+                          style={{
+                            textAlign: 'center',
+                            fontFamily: Fonts.MONTSERRAT_REGULAR,
+                            fontWeight: '500',
+                            marginTop: 6,
+                            color: AppColor.RED1,
+                          }}>
+                          {v.txt1}
+                        </Text>
+                      )}
+                    </TouchableOpacity>
+                  );
+                })
+              : CardData1?.map((v, i) => (
                   <TouchableOpacity
                     key={i}
                     style={{justifyContent: 'center', alignItems: 'center'}}
-                    onPress={() => handleCardDataPress(v.id)}>
+                    onPress={() => handleCardDataPress1(v.id)}>
                     <Image
                       source={v.img}
                       style={{height: 35, width: 35}}
@@ -694,142 +739,120 @@ const NewProfile = ({navigation}) => {
                           fontFamily: Fonts.MONTSERRAT_REGULAR,
                           fontWeight: '500',
                           marginTop: 6,
-                          color: AppColor.RED1,
+                          color: '#f0013b',
                         }}>
                         {v.txt1}
                       </Text>
                     )}
                   </TouchableOpacity>
-                );
-              })
-            : CardData1?.map((v, i) => (
-                <TouchableOpacity
+                ))}
+          </View>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            style={{marginBottom: DeviceHeigth * 0.025}}>
+            <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
+              {ListData.slice(0, 3).map((v, i) => (
+                <View
                   key={i}
-                  style={{justifyContent: 'center', alignItems: 'center'}}
-                  onPress={() => handleCardDataPress1(v.id)}>
-                  <Image
-                    source={v.img}
-                    style={{height: 35, width: 35}}
-                    resizeMode="contain"
-                  />
-                  <Text
-                    style={{
-                      textAlign: 'center',
-                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                      fontWeight: '600',
-                      marginTop: 10,
-                      color: AppColor.BLACK,
-                    }}>
-                    {v.txt}
-                  </Text>
-                  {v.txt1 == 'Invalid date' ? null : (
+                  style={{
+                    flexDirection: 'row',
+                    marginVertical: 10,
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Image
+                      source={v.img}
+                      style={{height: 35, width: 35}}
+                      resizeMode="contain"
+                    />
                     <Text
                       style={{
-                        textAlign: 'center',
-                        fontFamily: Fonts.MONTSERRAT_REGULAR,
-                        fontWeight: '500',
-                        marginTop: 6,
-                        color: '#f0013b',
+                        fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                        fontSize: 16,
+                        marginLeft: 10,
+                        color: AppColor.BLACK,
                       }}>
-                      {v.txt1}
+                      {v.txt}
                     </Text>
-                  )}
-                </TouchableOpacity>
+                  </View>
+                  <View style={{alignSelf: 'center'}}>
+                    <FitToggle
+                      key={v.id}
+                      value={
+                        v.id == 1
+                          ? getSoundOffOn
+                          : v.id == 2
+                          ? getMusicOffOn
+                          : getScreenAwake
+                      }
+                      name={
+                        v.id == 1 ? 'Sound' : v.id == 2 ? 'Music' : 'Screen'
+                      }
+                      onChange={onChange}
+                    />
+                  </View>
+                </View>
               ))}
-        </View>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          style={{marginBottom: DeviceHeigth * 0.025}}>
-          <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
-            {ListData.slice(0, 3).map((v, i) => (
-              <View
-                key={i}
+            </View>
+            <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
+              <Text
                 style={{
-                  flexDirection: 'row',
+                  fontFamily: Fonts.MONTSERRAT_BOLD,
+                  fontSize: 18,
                   marginVertical: 10,
-                  justifyContent: 'space-between',
+                  color: AppColor.BLACK,
                 }}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                Others
+              </Text>
+            </View>
+            <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
+              {ListData.slice(3).map((v, i) => (
+                <TouchableOpacity
+                  key={i}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginVertical: 10,
+                  }}
+                  onPress={() => HandleButtons(v.id, v.txt)}>
                   <Image
                     source={v.img}
                     style={{height: 35, width: 35}}
                     resizeMode="contain"
                   />
-                  <Text
-                    style={{
-                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                      fontSize: 16,
-                      marginLeft: 10,
-                      color: AppColor.BLACK,
-                    }}>
-                    {v.txt}
-                  </Text>
-                </View>
-                <View style={{alignSelf: 'center'}}>
-                  <FitToggle
-                    key={v.id}
-                    value={
-                      v.id == 1
-                        ? getSoundOffOn
-                        : v.id == 2
-                        ? getMusicOffOn
-                        : getScreenAwake
-                    }
-                    name={v.id == 1 ? 'Sound' : v.id == 2 ? 'Music' : 'Screen'}
-                    onChange={onChange}
-                  />
-                </View>
-              </View>
-            ))}
-
-          </View>
-          <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
-            <Text
-              style={{
-                fontFamily: Fonts.MONTSERRAT_BOLD,
-                fontSize: 18,
-                marginVertical: 10,
-                color: AppColor.BLACK,
-              }}>
-              Others
-            </Text>
-          </View>
-          <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
-            {ListData.slice(3).map((v, i) => (
-              <TouchableOpacity
-                key={i}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  marginVertical: 10,
-                }}
-                onPress={() => HandleButtons(v.id, v.txt)}>
-                <Image
-                  source={v.img}
-                  style={{height: 35, width: 35}}
-                  resizeMode="contain"
-                />
-                <Text style={styles.ListText}>{v.txt}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-          <Reminder
-            visible={visible}
-            setVisible={setVisible}
-            setAlarmIsEnabled={setAlarmIsEnabled}
-            setNotificationTimer={setNotificationTimer}
-          />
-        </ScrollView>
-        {UpdateScreenVisibility ? <UpdateProfileModal /> : null}
-        {ratingVisibilty ? (
-          <RatingModal
-            setModalVisibilty={setRatingVisibilty}
-            getVisibility={ratingVisibilty}
-          />
-        ) : null}
-        <DeleteAccount />
-      </Wrapper>
-    </View>
+                  <Text style={styles.ListText}>{v.txt}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+            <Reminder
+              visible={visible}
+              setVisible={setVisible}
+              setAlarmIsEnabled={setAlarmIsEnabled}
+              setNotificationTimer={setNotificationTimer}
+            />
+          </ScrollView>
+          {UpdateScreenVisibility ? <UpdateProfileModal /> : null}
+          {ratingVisibilty ? (
+            <RatingModal
+              setModalVisibilty={setRatingVisibilty}
+              getVisibility={ratingVisibilty}
+            />
+          ) : null}
+          <DeleteAccount />
+        </Wrapper>
+      </View>
+      <FitSheet
+        ref={bottomRef}
+        isOpen={isSheetOpen}
+        onOpenChange={setIsSheetOpen}
+        initialSnapPoint={snapPoints} // Open halfway by default
+        minHeight={200}>
+        <PersonalDetails
+          changeSheetPoint={setSnapPoints}
+          setIsSheetOpen={setIsSheetOpen}
+        />
+      </FitSheet>
+    </>
   );
 };
 const styles = StyleSheet.create({

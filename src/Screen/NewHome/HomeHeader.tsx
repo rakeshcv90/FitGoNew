@@ -38,8 +38,10 @@ const HomeHeader = ({leaderboardData}: Props) => {
   );
   const fitCoins = useSelector((state: any) => state.fitCoins);
 
-  const Sat = getPurchaseHistory?.currentDay == 6;
-  const Sun = getPurchaseHistory?.currentDay == 0;
+  const Sat =
+    getPurchaseHistory?.currentDay && getPurchaseHistory?.currentDay == 6;
+  const Sun =
+    getPurchaseHistory?.currentDay && getPurchaseHistory?.currentDay == 0;
   const dayLeft =
     getPurchaseHistory?.upcoming_day_status == 1 &&
     getPurchaseHistory?.event_start_date_upcoming != null

@@ -13,7 +13,7 @@ import {
 import FitText from '../Component/Utilities/FitText';
 import {navigationRef} from '../../App';
 import {DeviceWidth} from '../Component/Config';
-import NativeAddTest from '../Component/NativeAddTest';
+import NativeAddTest from '../Component/NativeAd';
 import {AppColor, Fonts} from '../Component/Color';
 
 const BackHandlerModal = () => {

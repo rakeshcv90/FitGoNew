@@ -30,7 +30,7 @@ import {setCustomWorkoutData} from '../../Component/ThemeRedux/Actions';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
-import NativeAddTest from '../../Component/NativeAddTest';
+import NativeAddTest from '../../Component/NativeAd';
 import moment from 'moment';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';

@@ -68,6 +68,7 @@ import NewCategories from '../Screen/NewWorkoutCategories/NewCategories';
 import NewLogin from '../Screen/NewLogin';
 import NewHistory from '../Screen/WorkoutHistory/NewHistory';
 import NewDiet from '../Screen/NewHome/NewDiet';
+import NewSplash from '../Screen/Splash/NewSplash';
 const Stack = createStackNavigator();
 
 const screenOptions = {
@@ -82,7 +83,7 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
+      <Stack.Screen name="SplaceScreen" component={NewSplash} />
       <Stack.Screen name="SplaceNew" component={SplaceNew} />
       <Stack.Screen
         name="IntroductionScreen1"

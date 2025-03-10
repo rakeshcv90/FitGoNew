@@ -22,7 +22,7 @@ import FitToggle from '../../../../Component/Utilities/FitToggle';
 import BottomSheet from 'react-native-easy-bottomsheet';
 import BottomSheetContent from './BottomSheetContent';
 import FitIcon from '../../../../Component/Utilities/FitIcon';
-import NativeAddTest from '../../../../Component/NativeAddTest';
+import NativeAddTest from '../../../../Component/NativeAd';
 import {BlurView} from '@react-native-community/blur';
 import {ShadowStyle} from '../../../../Component/Utilities/ShadowStyle';
 

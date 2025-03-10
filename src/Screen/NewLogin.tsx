@@ -10,9 +10,11 @@ import FitButton from '../Component/Utilities/FitButton';
 import {Formik, FormikHelpers} from 'formik';
 import ActivityLoader from '../Component/ActivityLoader';
 import PredefinedStyles from '../Component/Utilities/PredefineStyles';
-import {DeviceHeigth} from '../Component/Config';
+import {DeviceHeigth, DeviceWidth} from '../Component/Config';
 import {API_CALLS} from '../API/API_CALLS';
 import {navigate} from '../Component/Utilities/NavigationUtil';
+import {showMessage} from 'react-native-flash-message';
+import {Modal} from 'react-native-paper';
 
 const validationSchema = Yup.object().shape({
   // name: Yup.string().required('Full Name is required'),
@@ -34,16 +36,22 @@ type Values = {
 
 const NewLogin = () => {
   const [loader, setLoader] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [allData, setAllData] = useState({
+    email: '',
+    insertedEmail: '',
+    name: '',
+  });
 
-  const handleFormSubmit = (values: Values, action: FormikHelpers<Values>) => {
-    console.log(values);
+  const handleFormSubmit = (values: Values, action?: FormikHelpers<Values>) => {
+    setVisible(false);
     API_CALLS.postLogin(values.name, values.email).then((res: any) => {
       console.log(res, 'LOGIN');
       // {"allcompleted": false, "message": "user not exist", "status": true,"term": false}
       // allcompleted => Everything Right
       // status => Issue in API or Version incorrect
       // term => Offer not acceepted
-      if (res?.status) {
+      if (res?.status && !res?.email) {
         API_CALLS.getUserDataDetails(res?.user_id).then((data: any) => {
           if (data) {
             API_CALLS.getSubscriptionDetails(res?.user_id).then(() => {
@@ -54,13 +62,99 @@ const NewLogin = () => {
               } else if (!res?.term) {
                 navigate('OfferTerms');
               }
-              action.resetForm();
+              action?.resetForm();
             });
           }
         });
+      } else {
+        showMessage({
+          message: `Multiple User with same userID ${res?.email}`,
+          type: 'danger',
+          floating: true,
+        });
+        setAllData({
+          email: res?.email ?? '',
+          insertedEmail: values.email,
+          name: values.name,
+        });
+        setVisible(true);
       }
     });
   };
+
+  const UpdateEmail = () => (
+    <Modal visible={visible} onDismiss={() => setVisible(false)}>
+      <View
+        style={[
+          PredefinedStyles.FlexCenter,
+          {backgroundColor: AppColor.BACKGROUNG},
+        ]}>
+        <View
+          style={{
+            backgroundColor: AppColor.WHITE,
+            borderRadius: 20,
+            padding: 20,
+            width: DeviceWidth * 0.9,
+            height: DeviceHeigth / 3,
+          }}>
+          <View style={PredefinedStyles.rowBetween}>
+            <View />
+            <FitText type="Heading" value="Update Email" />
+
+            <FitIcon
+              name="close"
+              size={25}
+              type="MaterialCommunityIcons"
+              onPress={() => setVisible(false)}
+            />
+          </View>
+          <FitText
+            type="SubHeading"
+            fontSize={16}
+            lineHeight={20}
+            value={
+              'You already have a account with ' +
+              allData.email +
+              '. But you have used ' +
+              allData.insertedEmail +
+              '. Do you want to use your new Email as default email'
+            }
+            marginVertical={10}
+          />
+          <View
+            style={[
+              PredefinedStyles.rowBetween,
+              {position: 'absolute', bottom: 20, alignSelf: 'center'},
+            ]}>
+            <FitButton
+              onPress={() =>
+                handleFormSubmit({name: allData.name, email: allData.email})
+              }
+              w={'half'}
+              titleText="Continue"
+              textColor={AppColor.WHITE}
+              bgColor={AppColor.RED1}
+              mH={0}
+            />
+            <FitButton
+              onPress={() =>
+                API_CALLS.updateEmailOnLogin(
+                  allData.name,
+                  allData.email,
+                  allData.insertedEmail,
+                ).finally(() =>
+                  handleFormSubmit({name: allData.name, email: allData.email}),
+                )
+              }
+              w={'half'}
+              titleText="Update"
+              textColor={AppColor.WHITE}
+            />
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
 
   return (
     <Wrapper styles={{paddingTop: DeviceHeigth * 0.15}}>
@@ -121,7 +215,7 @@ const NewLogin = () => {
               />
               <FitButton
                 titleText={`Let's Start`}
-                onPress={handleSubmit}
+                onPress={() => handleSubmit()}
                 textColor={AppColor.WHITE}
                 w={'contain'}
                 style={{position: 'absolute', bottom: 50}}
@@ -130,6 +224,7 @@ const NewLogin = () => {
           )}
         </Formik>
       </View>
+      <UpdateEmail />
     </Wrapper>
   );
 };

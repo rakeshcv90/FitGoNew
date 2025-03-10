@@ -156,7 +156,7 @@ const NativeAdsView = ({type, media = false, width = '100%'}: Props) => {
             </View>
           </View>
 
-          {nativeAd.mediaContent && media && <MediaView />}
+          {/* {nativeAd.mediaContent && media && <MediaView />} */}
         </NativeAdView>
       )}
     </View>
