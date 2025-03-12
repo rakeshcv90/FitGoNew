@@ -39,9 +39,6 @@ const Home = () => {
   const enteredCurrentEvent = useSelector(
     (state: any) => state?.enteredCurrentEvent,
   );
-  const enteredUpcomingEvent = useSelector(
-    (state: any) => state?.enteredUpcomingEvent,
-  );
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [loader, setLoader] = useState(false);
   const [referralCode, setReferralCode] = useState('');
@@ -79,45 +76,48 @@ const Home = () => {
         <PastWinnersComponent pastWinners={getPastWinners} />
         <UserEspecially />
         <FocuseMind />
-        <View
-          style={[
-            PredefinedStyles.rowBetween,
-            styles.whiteBox,
-            {paddingVertical: 0},
-          ]}>
+        {enteredCurrentEvent && (
           <View
-            style={{width: '50%', alignItems: 'flex-start', paddingLeft: 20}}>
-            <FitText
-              type="SubHeading"
-              fontWeight="700"
-              value="Invite friend to get amazing voucher"
-              color={AppColor.PrimaryTextColor}
-            />
-            <FitText
-              type="normal"
-              value="Copy your refer code"
-              color={AppColor.SecondaryTextColor}
-            />
-            <FitText
-              type="normal"
-              fontWeight="700"
-              value={referralCode}
-              color={AppColor.PrimaryTextColor}
-            />
-            <FitButton
-              onPress={() => navigate('Referral')}
-              titleText={'Invite'}
-              textColor={AppColor.WHITE}
-              w={'half'}
-              padV={7}
+            style={[
+              PredefinedStyles.rowBetween,
+              styles.whiteBox,
+              {paddingVertical: 0},
+            ]}>
+            <View
+              style={{width: '50%', alignItems: 'flex-start', paddingLeft: 20}}>
+              <FitText
+                type="SubHeading"
+                fontWeight="700"
+                value="Invite friend to get amazing voucher"
+                color={AppColor.PrimaryTextColor}
+              />
+              <FitText
+                type="normal"
+                value="Copy your refer code"
+                color={AppColor.SecondaryTextColor}
+              />
+              <FitText
+                type="normal"
+                fontWeight="700"
+                value={referralCode}
+                color={AppColor.PrimaryTextColor}
+              />
+              <FitButton
+                onPress={() => navigate('Referral')}
+                titleText={'Invite'}
+                textColor={AppColor.WHITE}
+                w={'half'}
+                padV={7}
+                style={{alignSelf: 'flex-start'}}
+              />
+            </View>
+            <Image
+              source={require('./InviteImage.png')}
+              style={{width: '50%', bottom: 0}}
+              resizeMode="contain"
             />
           </View>
-          <Image
-            source={require('./InviteImage.png')}
-            style={{width: '50%', bottom: 0}}
-            resizeMode="contain"
-          />
-        </View>
+        )}
       </ScrollView>
       <TouchableOpacity
         activeOpacity={0.7}

@@ -416,7 +416,7 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
               progress={progressPercent}
               // strokeLinecap={timer == 0 ? 'butt' : 'round'}
               strokeWidth={25}
-              changingColorsArray={['#530014', '#F0013B']}
+              changingColorsArray={['#E35178', '#7F274C']}
               secondayCircleColor={AppColor.LIGHTGREY2}>
               <TouchableOpacity onPress={reset}>
                 <Image

@@ -20,7 +20,7 @@ type Props = {
   width?: DimensionValue;
 };
 
-const NativeAdsView = ({type, media = false, width = '100%'}: Props) => {
+const NativeAdsView = ({type, media = false, width = DeviceWidth * 0.95}: Props) => {
   const [aspectRatio, setAspectRatio] = useState(1.5);
   const [loading, setLoading] = useState(true);
   const [nativeAd, setNativeAd] = useState<NativeAd | null>(null);
@@ -37,14 +37,14 @@ const NativeAdsView = ({type, media = false, width = '100%'}: Props) => {
       ADS_IOS.includes(getUserDataDetails?.social_id)
     : DeviceID != '' && ADS_IDs.includes(DeviceID);
 
-  const NativeID = 'ca-app-pub-3940256099942544/2247696110'; // Replace with your production ad unit ID
-  // const NativeID = type === 'image'
-  //   ? IsTesting
-  //     ? adUnitIDsTest.image
-  //     : adUnitIDs.image
-  //   : IsTesting
-  //   ? adUnitIDsTest.video
-  //   : adUnitIDs.video;
+  // const NativeID = 'ca-app-pub-3940256099942544/2247696110'; // Replace with your production ad unit ID
+  const NativeID = type === 'image'
+    ? IsTesting
+      ? adUnitIDsTest.image
+      : adUnitIDs.image
+    : IsTesting
+    ? adUnitIDsTest.video
+    : adUnitIDs.video;
 
   useEffect(() => {
     NativeAd.createForAdRequest(NativeID)

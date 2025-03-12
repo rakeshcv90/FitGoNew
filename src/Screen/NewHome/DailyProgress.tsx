@@ -96,14 +96,14 @@ const DailyProgress = ({currentEvent}: any) => {
   );
 
   useEffect(() => {
-    !currentEvent
+    currentEvent
       ? API_CALLS.getHomeHistory(getUserDataDetails?.id, setEventData)
       : API_CALLS.getHistoryDetails(
           getUserDataDetails?.id,
           moment().format('dddd'),
           setNormalData,
         );
-  }, []);
+  }, [currentEvent]);
 
   const setApiData = (index: number) => {
     const steps = currentEvent

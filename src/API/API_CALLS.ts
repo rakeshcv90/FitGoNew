@@ -15,8 +15,10 @@ import {
   setDynamicPopupValues,
   setEnteredCurrentEvent,
   setEnteredUpcomingEvent,
+  setFitCoins,
   Setmealdata,
   setOfferAgreement,
+  setPastWinners,
   setPlanType,
   setPurchaseHistory,
   setStoreData,
@@ -310,6 +312,12 @@ export const API_CALLS = {
           ({data, errors, status, message}) => {
             if (data) {
               setData(data?.data);
+              const myRank = data?.data?.findIndex(
+                (item: any) => item?.id == user_id,
+              );
+              dispatch(
+                setFitCoins(myRank != -1 ? data?.data[myRank]?.fit_coins : 0),
+              );
               resolve('');
             } else {
               setData([]);
@@ -410,7 +418,7 @@ export const API_CALLS = {
         data,
         ({data, errors, status, message}) => {
           console.log(data, status);
-          if (status == 200) {
+          if (status != 200) {
             if (
               data?.message == 'Event created successfully' ||
               data?.message ==
@@ -511,7 +519,6 @@ export const API_CALLS = {
           version: VersionNumber.appVersion,
         },
         ({data, errors, status, message}) => {
-          console.log("Worko", data)
           if (
             data?.msg == 'user id is required' ||
             data?.msg == 'Please update the app to the latest version.'
@@ -527,17 +534,41 @@ export const API_CALLS = {
       ),
     );
   }, 300),
-  updateUserDetails: debounce((data: any) => {
+  pastWinners: debounce(() => {
+    return new Promise((resolve, reject) =>
+      RequestAPI.makeRequest(
+        'POST',
+        NewAppapi.GET_PAST_WINNERS,
+        {
+          version: VersionNumber.appVersion,
+        },
+        ({data, errors, status, message}) => {
+          if (
+            data?.msg == 'user id is required' ||
+            data?.msg == 'Please update the app to the latest version.'
+          ) {
+            reject(UpgradeAppResponse());
+          } else if (status == 200) {
+            dispatch(setPastWinners(data?.data));
+            resolve(status);
+          } else {
+            reject(UpgradeAppResponse());
+          }
+        },
+      ),
+    );
+  }, 300),
+  updateUserDetails: debounce((input: any) => {
     return new Promise((resolve, reject) =>
       RequestAPI.makeRequest(
         'POST',
         NewAppapi.UpdateUserProfile,
         {
-          ...data,
+          ...input,
           version: VersionNumber.appVersion,
         },
         ({data, errors, status, message}) => {
-          console.log(data);
+          console.log(data,input);
           if (data?.msg == 'Please update the app to the latest version.')
             UpgradeAppResponse();
           else if (data.msg == 'User Updated Successfully') {

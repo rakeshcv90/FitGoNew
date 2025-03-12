@@ -43,6 +43,7 @@ const NewSplash = ({navigation}: any) => {
     API_CALLS.postLogin(getUserDataDetails?.name, getUserDataDetails?.email);
     API_CALLS.getUserDataDetails(getUserDataDetails?.id);
     API_CALLS.getAllWorkouts(getUserDataDetails?.id)
+    API_CALLS.pastWinners()
     getAllExercise &&
       getChallengesData &&
       API_CALLS.getAllExercisesData(getUserDataDetails?.id);

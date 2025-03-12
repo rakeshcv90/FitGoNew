@@ -260,11 +260,11 @@ const NewProfile = ({navigation}) => {
       txt: 'Delete Account',
       img: localImage.NDelete,
     },
-    {
-      id: 11,
-      txt: 'Log Out',
-      img: localImage.NLogOut,
-    },
+    // {
+    //   id: 11,
+    //   txt: 'Log Out',
+    //   img: localImage.NLogOut,
+    // },
   ];
   const UpdateProfileModal = () => {
     const [modalImageUploaded, setModalImageUploaded] = useState(false);

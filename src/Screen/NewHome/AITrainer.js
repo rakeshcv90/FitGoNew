@@ -38,6 +38,7 @@ import {ArrowLeft} from '../../Component/Utilities/Arrows/Arrow';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import { ReviewApp } from '../../Component/ReviewApp';
+import useRewardedAd from '../../Utils/Ads/useRewardedAd';
 // const apiKey = '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';
 // const apiKey = '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';
 const systemMessage = {
@@ -47,7 +48,8 @@ const systemMessage = {
 };
 const AITrainer = ({navigation}) => {
   const dispatch = useDispatch();
-  const {rewardAdsLoad, showRewardAds} = MyRewardedAd();
+  // const {rewardAdsLoad, showRewardAds} = MyRewardedAd();
+  const {isAdReady, showAd} = useRewardedAd();
   const isFocused = useIsFocused();
   const [ttsSound, setTtsSound] = useState(
     `Hello! I am your personal fitness instructor. I am here to assist you in your fitness journey.
@@ -73,9 +75,6 @@ const AITrainer = ({navigation}) => {
   const [speechPitch, setSpeechPitch] = useState(1);
   const getSoundOffOn = useSelector(state => state.getSoundOffOn);
 
-  useEffect(() => {
-    rewardAdsLoad(); // Load the ad when the component mounts
-  }, []);
   useEffect(() => {
     Tts.addEventListener('tts-start', _event => setTtsStatus('started'));
     Tts.addEventListener('tts-finish', _event => setTtsStatus('finished'));
@@ -131,7 +130,7 @@ const AITrainer = ({navigation}) => {
               text: 'Yes',
               onPress: async () => {
                 dispatch(setRewardedCount(0));
-                await showRewardAds();
+                await showAd();
               },
             },
           ],

@@ -48,18 +48,7 @@ const HomeHeader = ({leaderboardData}: Props) => {
       ? getPurchaseHistory?.event_start_date_upcoming
       : getPurchaseHistory?.event_start_date_current;
 
-  const totalDaysLeft =
-    getPurchaseHistory?.upcoming_day_status == 1
-      ? `${moment(dayLeft).diff(
-          moment().day(getPurchaseHistory?.currentDay).format('YYYY-MM-DD'),
-          'days',
-        )} days left`
-      : `${moment(dayLeft)
-          .add(7, 'days')
-          .diff(
-            moment().day(getPurchaseHistory?.currentDay).format('YYYY-MM-DD'),
-            'days',
-          )} days left`;
+
 
   const myRank =
     leaderboardData &&
@@ -106,7 +95,7 @@ const HomeHeader = ({leaderboardData}: Props) => {
           fontWeight="700"
         />
       </View>
-      {!enteredCurrentEvent ? (
+      {enteredCurrentEvent ? (
         <View style={[PredefinedStyles.rowBetween, {width: '50%'}]}>
           <FitIcon {...historyIcon} roundIcon />
           <TouchableOpacity
@@ -123,7 +112,7 @@ const HomeHeader = ({leaderboardData}: Props) => {
               resizeMode="contain"
             />
             <Text style={[styles.cointxt, {color: AppColor.PrimaryTextColor}]}>
-              {fitCoins <= 0 ? 0 : fitCoins ?? 0}
+              { fitCoins ?? 0}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity

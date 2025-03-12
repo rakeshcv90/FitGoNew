@@ -49,7 +49,7 @@ export const EnteringEventFunction = (
     dispatch(setPlanType(-1));
     dispatch(setEnteredCurrentEvent(false));
     dispatch(setEnteredUpcomingEvent(false));
-    dispatch(setPurchaseHistory({}));
+    dispatch(setPurchaseHistory(data));
   }
 };
 
@@ -61,6 +61,6 @@ export const hasFreeEvent = (data: Data) => {
       return false;
     }
   } else {
-    return false;
+    return data?.free_status;
   }
 };

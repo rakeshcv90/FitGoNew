@@ -20,6 +20,7 @@ import {bannerAdId} from '../../../Component/AdsId';
 import Wrapper from '../../WorkoutCompleteScreen/Wrapper';
 import NativeAddTest from '../../../Component/NativeAd';
 import ActivityLoader from '../../../Component/ActivityLoader';
+import PredefinedStyles from '../../../Component/Utilities/PredefineStyles';
 
 const NewExercise = ({navigation, route}: any) => {
   const {
@@ -138,7 +139,7 @@ const NewExercise = ({navigation, route}: any) => {
                 ShadowStyle,
               ]}>
               {isRest ? (
-                <NativeAddTest media={true} type="video" />
+                <NativeAddTest media={false} type="image" />
               ) : pause ? (
                 <Video
                   source={{
@@ -161,7 +162,9 @@ const NewExercise = ({navigation, route}: any) => {
                   }}
                 />
               ) : (
-                <ActivityLoader visible={!pause} />
+                <View style={PredefinedStyles.NormalCenter}>
+                  <ActivityLoader visible={!pause} />
+                </View>
               )}
             </View>
           </View>

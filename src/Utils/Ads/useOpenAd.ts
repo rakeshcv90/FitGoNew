@@ -1,8 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {
-  AdEventType,
-  AppOpenAd,
-} from 'react-native-google-mobile-ads';
+import {AdEventType, AppOpenAd} from 'react-native-google-mobile-ads';
 import {useSelector} from 'react-redux';
 import {PLATFORM_IOS} from '../../Component/Color';
 import {
@@ -11,6 +8,7 @@ import {
   OPENAPP_ID,
   OPENAPP_IDTest,
 } from '../../Component/AdsId';
+import DeviceInfo from 'react-native-device-info';
 
 // Enum for Ad States
 enum AdState {
@@ -67,13 +65,10 @@ class AppOpenAdManager {
         const ad = this.getAdInstance(adUnitId);
 
         // Listener for successful load
-        const loadListener = ad.addAdEventListener(
-          AdEventType.LOADED,
-          () => {
-            loadListener();
-            resolve(ad);
-          },
-        );
+        const loadListener = ad.addAdEventListener(AdEventType.LOADED, () => {
+          loadListener();
+          resolve(ad);
+        });
 
         // Listener for load errors
         const errorListener = ad.addAdEventListener(
@@ -112,6 +107,7 @@ export const useOpenAd = (): UseOpenAdReturn => {
   const [isAdReady, setIsAdReady] = useState(false);
 
   const DeviceID = useSelector((state: any) => state.DeviceID);
+  const [DeviceId, setDeviceId] = useState('');
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
@@ -122,9 +118,9 @@ export const useOpenAd = (): UseOpenAdReturn => {
       : PLATFORM_IOS
       ? getUserDataDetails?.social_id != null &&
         ADS_IOS.includes(getUserDataDetails?.social_id)
-      : DeviceID != '' && ADS_IDs.includes(DeviceID);
+      : DeviceId != '' && ADS_IDs.includes(DeviceId);
     return IsTesting ? OPENAPP_IDTest : OPENAPP_ID;
-  }, []);
+  }, [DeviceId]);
 
   // Load the ad
   const loadAd = useCallback(async (): Promise<boolean> => {
@@ -171,7 +167,7 @@ export const useOpenAd = (): UseOpenAdReturn => {
 
       return false;
     }
-  }, [adState, getAdUnitId, isAdReady]);
+  }, [adState, getAdUnitId, isAdReady,DeviceId]);
 
   // Show the ad
   const showAd = useCallback(
@@ -222,6 +218,9 @@ export const useOpenAd = (): UseOpenAdReturn => {
 
   // Initial load when hook is first used
   useEffect(() => {
+    DeviceInfo.syncUniqueId().then(uniqueId => {
+      setDeviceId(uniqueId);
+    });
     loadAd();
   }, [loadAd]);
 
