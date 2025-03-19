@@ -18,9 +18,10 @@ type Props = {
   type: 'image' | 'video';
   media?: boolean;
   width?: DimensionValue;
+  marginRight?: number
 };
 
-const NativeAdsView = ({type, media = false, width = DeviceWidth * 0.95}: Props) => {
+const NativeAdsView = ({type, media = false,marginRight = 20, width = DeviceWidth * 0.95}: Props) => {
   const [aspectRatio, setAspectRatio] = useState(1.5);
   const [loading, setLoading] = useState(true);
   const [nativeAd, setNativeAd] = useState<NativeAd | null>(null);
@@ -37,14 +38,14 @@ const NativeAdsView = ({type, media = false, width = DeviceWidth * 0.95}: Props)
       ADS_IOS.includes(getUserDataDetails?.social_id)
     : DeviceID != '' && ADS_IDs.includes(DeviceID);
 
-  // const NativeID = 'ca-app-pub-3940256099942544/2247696110'; // Replace with your production ad unit ID
-  const NativeID = type === 'image'
-    ? IsTesting
-      ? adUnitIDsTest.image
-      : adUnitIDs.image
-    : IsTesting
-    ? adUnitIDsTest.video
-    : adUnitIDs.video;
+  const NativeID = 'ca-app-pub-3940256099942544/2247696110'; // Replace with your production ad unit ID
+  // const NativeID = type === 'image'
+  //   ? IsTesting
+  //     ? adUnitIDsTest.image
+  //     : adUnitIDs.image
+  //   : IsTesting
+  //   ? adUnitIDsTest.video
+  //   : adUnitIDs.video;
 
   useEffect(() => {
     NativeAd.createForAdRequest(NativeID)
@@ -88,7 +89,7 @@ const NativeAdsView = ({type, media = false, width = DeviceWidth * 0.95}: Props)
         width,
         justifyContent: 'center',
         alignSelf: 'center',
-        marginRight: 20,
+        marginRight,
       }}>
       {loading && (
         <View style={styles.loaderContainer}>

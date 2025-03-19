@@ -74,8 +74,8 @@ const NewButton = ({
           backgroundColor: withAnimation
             ? isClicked
               ? 'darkgrey'
-              : buttonColor ?? '#f0013b'
-            : buttonColor ?? '#f0013b',
+              : buttonColor ?? AppColor.RED
+            : buttonColor ?? AppColor.RED,
           marginVertical: mV ?? 0,
           overflow: 'hidden', // Ensure contents don't overflow during animation
           position: position ?? 'relative',

@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   DimensionValue,
   TextStyle,
+  ColorValue,
 } from 'react-native';
 import FitIcon, {FitIconTypes} from './FitIcon';
 import FitText, {FitTextProps} from './FitText';
@@ -34,6 +35,7 @@ export type Props = TextInputProps & {
   shadow?: boolean;
   bottomLine?: boolean;
   textInputStyle?: TextStyle;
+  placeholderTextColor?: ColorValue
 };
 const AppInput: FC<Props> = ({
   labelText,
@@ -54,6 +56,7 @@ const AppInput: FC<Props> = ({
   iconW,
   textInputStyle,
   bottomLine = false,
+  placeholderTextColor = '#9A9C95',
   ...props
 }) => {
   const width =
@@ -92,6 +95,7 @@ const AppInput: FC<Props> = ({
           </View>
         )}
         <TextInput
+        placeholderTextColor={placeholderTextColor}
           {...props}
           style={[textInputStyle, {width: '80%', color: 'black'}]}
         />

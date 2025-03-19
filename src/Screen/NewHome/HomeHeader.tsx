@@ -48,8 +48,6 @@ const HomeHeader = ({leaderboardData}: Props) => {
       ? getPurchaseHistory?.event_start_date_upcoming
       : getPurchaseHistory?.event_start_date_current;
 
-
-
   const myRank =
     leaderboardData &&
     leaderboardData.filter(item => item?.id == getUserDataDetails?.id);
@@ -112,15 +110,15 @@ const HomeHeader = ({leaderboardData}: Props) => {
               resizeMode="contain"
             />
             <Text style={[styles.cointxt, {color: AppColor.PrimaryTextColor}]}>
-              { fitCoins ?? 0}
+              {fitCoins ?? 0}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.6}
             disabled={(Sat || Sun) == true}
             onPress={() => {
-              AnalyticsConsole('HB');
-              navigate('WorkoutHistory');
+              AnalyticsConsole('LB');
+              navigate('Leaderboard');
             }}
             style={styles.eventContainer}>
             <Image

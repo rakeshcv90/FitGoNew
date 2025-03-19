@@ -123,7 +123,7 @@ const useInterstitialAd = (): UseInterstitialAdReturn => {
       ? getUserDataDetails?.social_id != null &&
         ADS_IOS.includes(getUserDataDetails?.social_id)
       : DeviceID != '' && ADS_IDs.includes(DeviceID);
-    return IsTesting ? rewardedAdIdTest : rewardedAdId;
+    return true ? rewardedAdIdTest : rewardedAdId;
   }, []);
 
   // Load the ad

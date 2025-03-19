@@ -31,10 +31,11 @@ export const BannerAdd = ({bannerAdId}) => {
   const DeviceID = useSelector(state => state.getDeviceID);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
 
-  IsTesting = PLATFORM_IOS
-    ? getUserDataDetails?.social_id != null &&
-      ADS_IOS.includes(getUserDataDetails?.social_id)
-    : DeviceID != '' && ADS_IDs.includes(DeviceID);
+  IsTesting = true
+  // IsTesting = PLATFORM_IOS
+  //   ? getUserDataDetails?.social_id != null &&
+  //     ADS_IOS.includes(getUserDataDetails?.social_id)
+  //   : DeviceID != '' && ADS_IDs.includes(DeviceID);
   const isValid = getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD');
   // State to keep track of retries
   const [adLoadAttempt, setAdLoadAttempt] = useState(0);

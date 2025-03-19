@@ -1202,8 +1202,8 @@ const MyPlans = ({navigation}: any) => {
                       activeOpacity={0.6}
                       disabled={(Sat || Sun) == true}
                       onPress={() => {
-                        AnalyticsConsole('HB');
-                        navigate('WorkoutHistory');
+                        AnalyticsConsole('LB');
+                        navigate('Leaderboard');
                       }}
                       style={styles.eventContainer}>
                       <Image
@@ -1252,7 +1252,7 @@ const MyPlans = ({navigation}: any) => {
                   marginVertical: DeviceWidth * 0.05,
                   borderRadius: 10,
                   backgroundColor: AppColor.WHITE,
-                  paddingTop: 10
+                  paddingTop: 10,
                 }}>
                 <FitText
                   type="SubHeading"

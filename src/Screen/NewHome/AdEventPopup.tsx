@@ -36,9 +36,11 @@ const AdEventPopup = () => {
   const {isAdReady, showAd} = useRewardedAd();
 
   useEffect(() => {
-    console.log("Has free event:", hasFreeEvent(getPurchaseHistory));
-    if (hasFreeEvent(getPurchaseHistory)) {
-      setModalVisible(true);
+    console.log('Has free event:', hasFreeEvent(getPurchaseHistory));
+    if (getPurchaseHistory && hasFreeEvent(getPurchaseHistory)) {
+      setTimeout(() => {
+        setModalVisible(true);
+      }, 3000);
     }
   }, [getPurchaseHistory]);
 
@@ -138,19 +140,18 @@ const AdEventPopup = () => {
             }}
             hasIcon
           />
-            <FitButton
-              onPress={adSubscriptionAPI}
-              w={'half'}
-              bgColor="#28A745"
-              textColor={AppColor.WHITE}
-              titleText="WATCH ADS "
-              loaderColor={AppColor.RED}
-              loader={loader || !isAdReady}
-              style={{marginBottom: 20, flexDirection: 'row-reverse'}}
-              IconLComp={<Ad />}
-              hasIcon={isAdReady}
-            />
-          
+          <FitButton
+            onPress={adSubscriptionAPI}
+            w={'half'}
+            bgColor="#28A745"
+            textColor={AppColor.WHITE}
+            titleText="WATCH ADS "
+            loaderColor={AppColor.RED}
+            loader={loader || !isAdReady}
+            style={{marginBottom: 20, flexDirection: 'row-reverse'}}
+            IconLComp={<Ad />}
+            hasIcon={isAdReady}
+          />
         </View>
       </View>
     </Modal>

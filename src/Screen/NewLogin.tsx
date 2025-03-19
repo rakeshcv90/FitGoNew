@@ -15,6 +15,8 @@ import {API_CALLS} from '../API/API_CALLS';
 import {navigate} from '../Component/Utilities/NavigationUtil';
 import {showMessage} from 'react-native-flash-message';
 import {Modal} from 'react-native-paper';
+import {BannerAdd} from '../Component/BannerAdd';
+import {bannerAdIdTest} from '../Component/AdsId';
 
 const validationSchema = Yup.object().shape({
   // name: Yup.string().required('Full Name is required'),
@@ -52,6 +54,7 @@ const NewLogin = () => {
       // status => Issue in API or Version incorrect
       // term => Offer not acceepted
       if (res?.status && !res?.email) {
+        API_CALLS.getAllWorkouts(res?.user_id)
         API_CALLS.getUserDataDetails(res?.user_id).then((data: any) => {
           if (data) {
             API_CALLS.getSubscriptionDetails(res?.user_id).then(() => {
@@ -133,7 +136,6 @@ const NewLogin = () => {
               w={'half'}
               titleText="Continue"
               textColor={AppColor.WHITE}
-              bgColor={AppColor.RED1}
               mH={0}
             />
             <FitButton
@@ -149,6 +151,7 @@ const NewLogin = () => {
               w={'half'}
               titleText="Update"
               textColor={AppColor.WHITE}
+              bgColor={AppColor.GREEN}
             />
           </View>
         </View>
@@ -157,7 +160,7 @@ const NewLogin = () => {
   );
 
   return (
-    <Wrapper styles={{paddingTop: DeviceHeigth * 0.15}}>
+    <Wrapper styles={{paddingTop: DeviceHeigth * 0.1}}>
       <View
         style={[PredefinedStyles.FlexCenter, {justifyContent: 'flex-start'}]}>
         <FitText type="Heading" value="Enter your details" />
@@ -213,13 +216,16 @@ const NewLogin = () => {
                 w={'90%'}
                 bottomLine
               />
-              <FitButton
-                titleText={`Let's Start`}
-                onPress={() => handleSubmit()}
-                textColor={AppColor.WHITE}
-                w={'contain'}
-                style={{position: 'absolute', bottom: 50}}
-              />
+              <View style={{position: 'absolute', bottom: 0}}>
+                <FitButton
+                  titleText={`Let's Start`}
+                  onPress={() => handleSubmit()}
+                  textColor={AppColor.WHITE}
+                  w={'contain'}
+                  mV={20}
+                />
+                <BannerAdd bannerAdId={bannerAdIdTest} />
+              </View>
             </>
           )}
         </Formik>

@@ -119,7 +119,7 @@ export const useOpenAd = (): UseOpenAdReturn => {
       ? getUserDataDetails?.social_id != null &&
         ADS_IOS.includes(getUserDataDetails?.social_id)
       : DeviceId != '' && ADS_IDs.includes(DeviceId);
-    return IsTesting ? OPENAPP_IDTest : OPENAPP_ID;
+    return true ? OPENAPP_IDTest : OPENAPP_ID;
   }, [DeviceId]);
 
   // Load the ad

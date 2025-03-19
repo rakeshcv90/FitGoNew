@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import Svg, {Circle, Defs, G, LinearGradient, Stop} from 'react-native-svg';
+import { AppColor } from '../Color';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -180,7 +181,7 @@ const CircleProgress: React.FC<CircleProgressProps> = ({
             strokeWidth={strokeWidth}
           />
           <AnimatedCircle
-            stroke={'red'} // Progress Circle Color
+            stroke={AppColor.RED} // Progress Circle Color
             // stroke={changingColors ? strokeColor : 'url(#grad)'} // Progress Circle Color
             fill="none"
             cx={size / 2}

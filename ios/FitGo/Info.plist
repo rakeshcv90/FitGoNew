@@ -53,8 +53,12 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<!-- <key>CodePushDeploymentKey</key>
+	<string>m5Lx0xad7uqrqZ05foy7cf8JyFXDjS7pfUcyv</string>  APPCENTER key -->
 	<key>CodePushDeploymentKey</key>
-	<string>m5Lx0xad7uqrqZ05foy7cf8JyFXDjS7pfUcyv</string>
+	<string>8muak9HnrJvDxnc83si3IgcS6FZkNJuEEt0c-g</string>
+	<key>CodePushServerURL</key>
+	<string>https://api.revopush.org</string>
 	<key>FacebookAppID</key>
 	<string>1530298334174272</string>
 	<key>FacebookClientToken</key>

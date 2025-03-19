@@ -78,7 +78,7 @@ const TripView = ({data, val}: {data: (typeof arr)[0]; val: number}) => (
     </View>
     <FitText
       type="SubHeading"
-      value={val + ''}
+      value={val ?val + '': '0'}
       color={AppColor.PrimaryTextColor}
     />
     <FitText

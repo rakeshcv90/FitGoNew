@@ -111,16 +111,16 @@ const App = () => {
         'A mandatory update is available. Please update to continue using the app.',
       mandatoryContinueButtonLabel: 'Update Now',
     };
-    codePush.sync(
-      {
-        updateDialog: updateDialogOptions,
-        installMode: codePush.InstallMode.IMMEDIATE,
-        //installMode: codePush.InstallMode.MANUAL,
-      },
+    // codePush.sync(
+    //   {
+    //     updateDialog: updateDialogOptions,
+    //     installMode: codePush.InstallMode.IMMEDIATE,
+    //     //installMode: codePush.InstallMode.MANUAL,
+    //   },
 
-      codePushStatusDidChange,
-      codePushDownloadDidProgress,
-    );
+    //   codePushStatusDidChange,
+    //   codePushDownloadDidProgress,
+    // );
   }, []);
   const codePushStatusDidChange = syncStatus => {
     switch (syncStatus) {
@@ -304,6 +304,6 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
 });
-// export default App;
+export default App;
 
-export default codePush(codePushOptions)(App);
+// export default codePush(codePushOptions)(App);

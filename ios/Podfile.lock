@@ -1438,9 +1438,6 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-admob-native-ads (0.7.6):
-    - Google-Mobile-Ads-SDK
-    - React-Core
   - react-native-blur (4.4.1):
     - DoubleConversion
     - glog
@@ -2402,7 +2399,6 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
-  - react-native-admob-native-ads (from `../node_modules/react-native-admob-native-ads`)
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
@@ -2574,8 +2570,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   React-microtasksnativemodule:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/microtasks"
-  react-native-admob-native-ads:
-    :path: "../node_modules/react-native-admob-native-ads"
   react-native-blur:
     :path: "../node_modules/@react-native-community/blur"
   react-native-geolocation:
@@ -2764,7 +2758,6 @@ SPEC CHECKSUMS:
   React-logger: d42a53754a7252cc7a851315f0da2e46b450ea92
   React-Mapbuffer: 89885d1518433a462fe64b68bf5e097997380090
   React-microtasksnativemodule: 36341e09dcd1df535503e6ed2ddf88f10da56d52
-  react-native-admob-native-ads: 852633937a61cf2c1cff352bd1ffd59f8f9a6834
   react-native-blur: d480b382e8ddb4d0c29cd5c4ebacd9f3eb997cc3
   react-native-geolocation: 79343c06877301c296102ceef9d64e7e077a2af0
   react-native-image-picker: 91f4e8dd458db2acdb278479e960bc224cbf0217
