@@ -73,7 +73,7 @@ const CustomCalendar = ({date, setDate}: Props) => {
         ...disabledDays,
         [date]: {
           startingDay: true,
-          color: '#f0013b',
+          color: AppColor.RED,
           endingDay: true,
           textColor: AppColor.WHITE,
         },

@@ -301,7 +301,7 @@ const CustomWorkout = ({navigation}) => {
               alignItems: 'center',
               marginBottom: 100,
               top: DeviceHeigth * 0.05,
-              backgroundColor: '#f0013b',
+              backgroundColor: AppColor.RED,
               //  Platform.OS == 'android' ? -40 : DeviceHeigth >= 1024 ? 30 : -40,
             }}>
             <TouchableOpacity
@@ -549,7 +549,7 @@ const CustomWorkout = ({navigation}) => {
                 <Text
                   style={{
                     marginHorizontal: 10,
-                    color: '#f0013b',
+                    color: AppColor.RED,
                     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                     fontSize: 16,
                     lineHeight: 30,
@@ -589,7 +589,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     bottom: DeviceHeigth * 0.015,
     right: 10,
-    backgroundColor: '#f0013b',
+    backgroundColor: AppColor.RED,
   },
   button: {
     fontSize: 15,

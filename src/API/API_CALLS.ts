@@ -109,15 +109,15 @@ export const API_CALLS = {
             device_id: deviceID,
           },
           ({data, errors, status, message}) => {
-            // console.log(
-            //   name,
-            //   email,
-            //   Platform.OS,
-            //   VersionNumber.appVersion,
-            //   deviceID,
-            //   data,
-            // );
-            if (data && status == 200) {
+            console.log(
+              name,
+              email,
+              Platform.OS,
+              VersionNumber.appVersion,
+              deviceID,
+              data,
+            );
+            if (status == 200) {
               noMessage &&
                 showMessage({
                   message: data?.message,

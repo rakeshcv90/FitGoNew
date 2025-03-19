@@ -24,7 +24,7 @@ const Button = ({buttonText, onPresh}) => {
 };
 const styles = StyleSheet.create({
   buttonStyle: {
-    backgroundColor: '#f0013b',
+    backgroundColor: AppColor.RED,
     width: DeviceWidth * 0.62,
     height: DeviceHeigth * 0.07,
  borderRadius: 10,

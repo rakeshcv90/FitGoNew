@@ -171,7 +171,7 @@ const CreateWorkout = ({navigation, route}) => {
                 source={isSelected ? localImage.Minus : localImage.Plus}
                 style={{width: 20, height: 20}}
                 resizeMode="contain"
-                tintColor={'#f0013b'}
+                tintColor={AppColor.RED}
               />
             </TouchableOpacity>
             {index !== completeProfileData?.focusarea?.length - 1 && (
@@ -456,7 +456,7 @@ const CreateWorkout = ({navigation, route}) => {
                       color:
                         bodyPart != item.bodypart_title
                           ? '#333333E5'
-                          : '#f0013b',
+                          : AppColor.RED,
                       fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                     }}>
                     {item.bodypart_title}
@@ -491,7 +491,7 @@ const CreateWorkout = ({navigation, route}) => {
             paddingLeft: 20,
             paddingRight: 20,
             height: 45,
-            backgroundColor: '#f0013b',
+            backgroundColor: AppColor.RED,
             borderRadius: 10,
             justifyContent: 'center',
             alignItems: 'center',

@@ -98,7 +98,7 @@ const PauseModal = ({
             style={{
               fontWeight: '600',
               fontSize: 32,
-              color: '#f0013b',
+              color: AppColor.RED,
             }}>
             Keep Going!
           </Text>
@@ -106,7 +106,7 @@ const PauseModal = ({
             style={{
               fontWeight: '600',
               fontSize: 32,
-              color: '#f0013b',
+              color: AppColor.RED,
             }}>
             Don't Give Up!
           </Text>
@@ -121,12 +121,12 @@ const PauseModal = ({
             color: AppColor.BLACK,
           }}>
           {`You have finished `}
-          <Text style={{color: '#f0013b'}}>
+          <Text style={{color: AppColor.RED}}>
             {((number / exerciseLength) * 100).toFixed(0) + '%'}
           </Text>
           {'\n'}
           {' only '}
-          <Text style={{color: '#f0013b'}}>
+          <Text style={{color: AppColor.RED}}>
             {exerciseLength - number + ' Exercises'}
           </Text>
           {' left '}

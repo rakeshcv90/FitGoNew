@@ -176,7 +176,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                   }>
                   <Image
                     source={localImage[route.name + 'Red']}
-                    // tintColor={'#f0013b'}
+                    // tintColor={AppColor.RED}
                     resizeMode="contain"
                     style={{
                       width: 30,

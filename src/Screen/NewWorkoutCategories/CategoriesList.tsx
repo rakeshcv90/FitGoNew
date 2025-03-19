@@ -159,8 +159,8 @@ const RenderItem = ({
             style={[
               styles.boxIconView,
               {
-                backgroundColor: isSelected ? '#f0013b' : 'white',
-                borderColor: isSelected ? '#f0013b' : '#33333399',
+                backgroundColor: isSelected ? AppColor.RED : 'white',
+                borderColor: isSelected ? AppColor.RED : '#33333399',
               },
             ]}>
             {isSelected && (

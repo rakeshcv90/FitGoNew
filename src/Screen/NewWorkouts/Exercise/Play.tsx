@@ -114,7 +114,7 @@ const Play: FC<Props> = ({...props}) => {
             <TouchableOpacity
               style={{
                 zIndex: 1,
-                backgroundColor: '#f0013b',
+                backgroundColor: AppColor.RED,
                 borderRadius: 30,
                 padding: 10,
               }}

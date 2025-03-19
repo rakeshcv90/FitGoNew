@@ -605,7 +605,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                     fontFamily: Fonts.MONTSERRAT_MEDIUM,
                     fontSize: 32,
                     lineHeight: 40,
-                    color: selectedIndex ? '#f0013b' : '#333333B2',
+                    color: selectedIndex ? AppColor.RED : '#333333B2',
                   }}>
                   {index < 10 ? `0${index}` : index}
                 </Text>
@@ -684,7 +684,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                   size={25}
                   color={
                     percent && item?.total_rest != 0
-                      ? '#f0013b'
+                      ? AppColor.RED
                       : !selectedIndex && item?.total_rest != 0
                       ? '#33333380'
                       : AppColor.BLACK

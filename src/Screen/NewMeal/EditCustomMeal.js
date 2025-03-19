@@ -145,7 +145,7 @@ const EditCustomMeal = ({navigation, route}) => {
                   alignSelf: 'center',
                 }}
                 resizeMode="contain"
-                tintColor={'#f0013b'}
+                tintColor={AppColor.RED}
               />
             </TouchableOpacity>
             {index !== (route?.params?.totalMealData).length - 1 && (

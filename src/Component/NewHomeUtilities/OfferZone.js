@@ -37,7 +37,7 @@ const OfferZone = () => {
         <LinearGradient
           start={{x: 1, y: 0}}
           end={{x: 0, y: 1}}
-          colors={['#F0013B', '#F42B5C']}
+          colors={[AppColor.RED, '#F42B5C']}
           style={{
             width: '100%',
             height: '70%',

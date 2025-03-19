@@ -389,7 +389,7 @@ const Workouts = ({navigation}: any) => {
               }}>
               <ImageBackground
                 source={localImage.CalenderNew}
-                tintColor={'#f0013b'}
+                tintColor={AppColor.RED}
                 style={{
                   width: 60,
                   height: 110,

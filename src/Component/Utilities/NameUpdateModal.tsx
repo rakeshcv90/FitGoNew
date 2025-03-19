@@ -358,7 +358,7 @@ const NameUpdateModal = ({
                     width: DeviceWidth * 0.6,
                     justifyContent: 'center',
                     alignItems: 'center',
-                    backgroundColor: '#f0013b',
+                    backgroundColor: AppColor.RED,
                     padding: 10,
                     position: 'absolute',
                     bottom: 20,

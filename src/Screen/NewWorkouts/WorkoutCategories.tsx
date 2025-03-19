@@ -420,8 +420,8 @@ const WorkoutCategories = ({navigation, route}: any) => {
                       style={[
                         styles.boxIconView,
                         {
-                          backgroundColor: isSelected ? '#f0013b' : 'white',
-                          borderColor: isSelected ? '#f0013b' : '#33333399',
+                          backgroundColor: isSelected ? AppColor.RED : 'white',
+                          borderColor: isSelected ? AppColor.RED : '#33333399',
                         },
                       ]}>
                       {isSelected && <Font name="check" color="white" />}
@@ -767,7 +767,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
                     : 'Select Exercises'
                 }
                 h={50}
-                colors={['#f0013b', '#f0013b']}
+                colors={[AppColor.RED, AppColor.RED]}
                 textStyle={styles.buttonText}
                 alignSelf
                 bR={6}

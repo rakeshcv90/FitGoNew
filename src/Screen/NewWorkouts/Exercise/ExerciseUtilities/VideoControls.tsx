@@ -92,7 +92,7 @@ const VideoControls = ({
         progress={progressPercent}
         strokeLinecap={seconds == 0 ? 'butt' : 'round'}
         strokeWidth={25}
-        changingColorsArray={['#530014', '#F0013B']}
+        changingColorsArray={['#530014', AppColor.RED]}
         secondayCircleColor={AppColor.LIGHTGREY2}>
         <TouchableOpacity onPress={() => setPause(!pause)}>
           <FitIcon

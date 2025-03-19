@@ -691,14 +691,14 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                   marginHorizontal: 20,
                   alignItems: 'center',
                 }}>
-                <Icons name="delete" size={20} color={'#f0013b'} />
+                <Icons name="delete" size={20} color={AppColor.RED} />
                 <Text
                   style={{
                     fontWeight: '600',
                     fontSize: 14,
                     lineHeight: 18,
                     marginHorizontal: 10,
-                    color: '#f0013b',
+                    color: AppColor.RED,
                     textAlign: 'center',
                     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                   }}>

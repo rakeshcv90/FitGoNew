@@ -243,7 +243,7 @@ const StepGuide = ({navigation}: any) => {
       <View style={styles.btmButton}>
         <GradientButton
           text="Join Challenge"
-          colors={['#F0013B', '#F0013B']}
+          colors={[AppColor.RED, AppColor.RED]}
           bR={10}
           h={50}
           onPress={() => {

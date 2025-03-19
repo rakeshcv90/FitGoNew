@@ -739,7 +739,7 @@ const NewProfile = ({navigation}) => {
                           fontFamily: Fonts.MONTSERRAT_REGULAR,
                           fontWeight: '500',
                           marginTop: 6,
-                          color: '#f0013b',
+                          color: AppColor.RED,
                         }}>
                         {v.txt1}
                       </Text>

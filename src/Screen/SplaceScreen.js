@@ -87,7 +87,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import { API_CALLS } from '../API/API_CALLS';
+import {API_CALLS} from '../API/API_CALLS';
 
 const products = Platform.select({
   ios: ['fitme_noob', 'fitme_pro', 'fitme_legend'],
@@ -203,7 +203,11 @@ const SplaceScreen = ({navigation, route}) => {
       getUserDataDetails?.length > 0 ||
       Object.keys(getUserDataDetails)?.length > 0
     ) {
-      API_CALLS.postLogin(getUserDataDetails?.name,getUserDataDetails?.email, false)
+      API_CALLS.postLogin(
+        getUserDataDetails?.name,
+        getUserDataDetails?.email,
+        false,
+      );
       getUserDetailData(getUserDataDetails?.id);
     }
   }, []);

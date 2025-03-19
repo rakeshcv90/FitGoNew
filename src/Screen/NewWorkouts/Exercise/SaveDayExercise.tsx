@@ -223,7 +223,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
         }}>
         <Text
           style={{
-            color: '#f0013b',
+            color: AppColor.RED,
             fontSize: 28,
             lineHeight: 40,
             fontWeight: '600',

@@ -798,7 +798,7 @@ const OneDay = ({navigation, route}: any) => {
           // mB={80}
           bottm={40}
           // weeklyAnimation={downloaded}
-          colors={['#f0013b', '#f0013b']}
+          colors={[AppColor.RED, AppColor.RED]}
           alignSelf
           bR={6}
           normalAnimation={downloaded > 0}

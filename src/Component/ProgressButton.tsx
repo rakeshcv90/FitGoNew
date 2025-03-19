@@ -44,7 +44,7 @@ const ProgreesButton: FC<Props> = ({...props}) => {
       <LinearGradient
         start={{x: 1, y: 0}}
         end={{x: 0, y: 1}}
-        colors={props.colors ? props.colors : ['#f0013b', '#f0013b']}
+        colors={props.colors ? props.colors : [AppColor.RED, AppColor.RED]}
         style={[
           styles.nextButton,
           {
