@@ -76,7 +76,6 @@ const positions = data.map(
 );
 const Age = ({route, navigation}: any) => {
   const {nextScreen} = route.params;
-  console.log('center, index', nextScreen);
   const translateLevel = useRef(new Animated.Value(0)).current;
 
   const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
@@ -100,7 +99,7 @@ const Age = ({route, navigation}: any) => {
     for (let index = 0; index < positions.length; index++) {
       const {start, end} = positions[index];
       if (center + 25 >= start && center - 25 <= end) {
-        // console.log(center, index);
+      
         // setSelected(index);
       }
     }
@@ -110,6 +109,16 @@ const Age = ({route, navigation}: any) => {
     if (selected.length == 0) {
       showMessage({
         message: 'Please Enter your Age!!!',
+        type: 'danger',
+        animationDuration: 500,
+        floating: true,
+        icon: {icon: 'auto', position: 'left'},
+      });
+      return;
+    }
+    else if (parseInt(selected)<15) {
+      showMessage({
+        message: 'You are below 15 !!!',
         type: 'danger',
         animationDuration: 500,
         floating: true,
@@ -178,7 +187,7 @@ const Age = ({route, navigation}: any) => {
           }}
           onFocus={setFocused}
           cursorColor={AppColor.RED}
-          placeholder="18"
+          placeholder="15"
           autoFocus
           placeholderTextColor={AppColor.GRAY2}
           style={{

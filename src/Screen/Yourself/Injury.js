@@ -21,7 +21,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {showMessage} from 'react-native-flash-message';
 import {useDispatch, useSelector} from 'react-redux';
 import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
-
+import analytics from '@react-native-firebase/analytics';
 const Injury = ({route, navigation}) => {
   const dispatch = useDispatch();
   const {nextScreen} = route.params;
@@ -39,10 +39,9 @@ const Injury = ({route, navigation}) => {
     const currentData = {
       injury: imageView,
     };
-    {
-      console.log('Injury Screen Data', [...getLaterButtonData, currentData]);
-    }
+   
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
+    analytics().logEvent(`CV_FITME_INJURY_${imageView}`)
     navigation.navigate('Height', {nextScreen: screen + 1});
   };
 
@@ -152,7 +151,7 @@ const Injury = ({route, navigation}) => {
         <Bulb
           screen={'Do you have Injury in any body part?'}
           header={
-            'We will filter unsuitable workouts for you, Also you can select 1 or 2 Injuries only'
+            'This info will help us guide you to your fitness goals safely and quickly'
           }
         />
       </View>

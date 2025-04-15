@@ -17,9 +17,10 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useSelector, useDispatch} from 'react-redux';
 const WorkoutsDescription = ({data, open, setOpen}: any) => {
   const [ttsInitialized, setTtsInitialized] = useState(false);
-  const TextSpeech = `${data?.workout_description}`;
+
+  const TextSpeech = `${data?.exercise_instructions}`;
   const [description, SetDescription] = useState('');
-  // console.log(data?.workout_description);
+
   const {
     getSoundOffOn
   } = useSelector(state => state);
@@ -27,10 +28,11 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
   useEffect(() => {
     const initTts = async () => {
       const ttsStatus = await Tts.getInitStatus();
-    //  Tts.voices().then((voices)=>console.log("voicess====>",voices.map((values)=>values.id)))
+   
+ 
       if (!ttsStatus.isInitialized) {
         try {
-          await Tts.setDefaultVoice(Platform.OS=='android'?'hi-in-x-hid-local':'com.apple.voice.compact.en-IN.Rishi');
+         await Tts.setDefaultVoice(Platform.OS=='android'?'en-GB-default':'com.apple.voice.compact.en-IN.Rishi');
           await Tts.setDefaultLanguage('en-IN');
           await Tts.setDucking(true);
           await Tts.setIgnoreSilentSwitch('ignore');

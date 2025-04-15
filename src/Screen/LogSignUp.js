@@ -6,6 +6,7 @@ import {
   StatusBar,
   TouchableOpacity,
   Platform,
+  BackHandler,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {AppColor} from '../Component/Color';
@@ -20,6 +21,20 @@ import {navigationRef} from '../../App';
 const Tab = createMaterialTopTabNavigator();
 const LogSignUp = () => {
   const [showLogin, setShowLogin] = useState('Welcome');
+
+  useEffect(() => {
+    // Add an event listener to handle the hardware back press
+    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+    // Remove the event listener when the component is unmounted
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+    };
+  }, []);
+  const handleBackPress = () => {
+    // Do nothing to stop the hardware back press
+    return true;
+  };
 
   function MyTabBar({state, descriptors, navigation}) {
     return (
@@ -97,7 +112,7 @@ const LogSignUp = () => {
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <TouchableOpacity
       onPress={()=>{
-       // navigationRef.navigate('Yourself');
+      //  navigationRef.navigate('Yourself');
    
       }}
         style={{

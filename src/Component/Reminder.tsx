@@ -17,6 +17,7 @@ import notifee, {
 import moment from 'moment';
 import {DeviceHeigth, DeviceWidth} from './Config';
 import {AppColor} from './Color';
+import {showMessage} from 'react-native-flash-message';
 
 const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
   const typeData = ['AM', 'PM'];
@@ -59,59 +60,73 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
     //   type: TriggerType.TIMESTAMP,
     //   timestamp: tomorrow.unix(), // fire in 3 hours
     // };
-    const date = new Date(Date.now());
-    date.setHours(selectedHours);
-    date.setMinutes(selectedMinutes);
-    // date.setHours(selectedHours+5);
-    // date.setMinutes(selectedMinutes+30);
+    const currentTime = new Date(Date.now());
+    const selectedTime = new Date(Date.now());
+    selectedTime.setHours(selectedHours);
+    selectedTime.setMinutes(selectedMinutes);
+    // if (selectedTime < currentTime) {
+    //   // If the selected time is before the current time, schedule it for the next day
+    //   selectedTime.setDate(selectedTime.getDate() + 1); // Move to the next day
+    // }
+    // currentTime.setHours(selectedHours+5);
+    // currentTime.setMinutes(selectedMinutes+30);
 
     // Create a time-based trigger
     const trigger: TimestampTrigger = {
       type: TriggerType.TIMESTAMP,
-      timestamp: date.getTime(), // fire at 11:10am (10 minutes before meeting)
+      timestamp: selectedTime.getTime(), // fire at 11:10am (10 minutes before meeting)
       repeatFrequency: RepeatFrequency.DAILY,
     };
-   
-
     // Create a trigger notification
-    await notifee.createTriggerNotification(
-      {
-        title: 'Exercise Time',
-        body: `It's time to Exercise`,
-        android: {
-          channelId: 'temporary_channel',
-          importance: AndroidImportance.MIN,
-          pressAction: {
-            id: 'default',
-          },
-          actions: [
-            {
-              title: 'Action 1',
-              pressAction: {
-                id: 'action_1',
-              },
+    try {
+      await notifee.createTriggerNotification(
+        {
+          title: 'Exercise Time',
+          body: `It's time to Exercise`,
+          android: {
+            channelId: 'Time',
+            importance: AndroidImportance.HIGH,
+            pressAction: {
+              id: 'Alarm',
             },
-            {
-              title: 'Action 2',
-              pressAction: {
-                id: 'action_2',
+            actions: [
+              {
+                title: 'Add +5',
+                pressAction: {
+                  id: 'Plus_Five',
+                },
               },
-            },
-            // Add more actions as needed
-          ],
-        },
-        ios: {
-          categoryId: 'Alarm',
-          foregroundPresentationOptions: {
-            badge: true,
-            banner: true,
-            sound: false,
+              {
+                title: 'Stop',
+                pressAction: {
+                  id: 'Stop',
+                },
+              },
+              // Add more actions as needed
+            ],
           },
+          ios: {
+            categoryId: 'Alarm',
+            foregroundPresentationOptions: {
+              badge: true,
+              banner: true,
+              sound: false,
+            },
+          },
+          id: 'Timer',
         },
-        id: 'Timer',
-      },
-      trigger,
-    );
+        trigger,
+      );
+    } catch (error) {
+      showMessage({
+        message: 'Time should be greater than Current Time',
+        type: 'success',
+        animationDuration: 500,
+
+        floating: true,
+        icon: {icon: 'auto', position: 'left'},
+      });
+    }
     setAlarmIsEnabled(true);
     setVisible(false);
   }
@@ -175,7 +190,7 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
                 setHours(itemValue);
               }}>
               {hourData.map((hr: any) => (
-                <Picker.Item label={hr} value={hr} />
+                <Picker.Item label={hr} value={hr} color={AppColor.BLACK} />
               ))}
             </Picker>
             <Picker
@@ -185,7 +200,7 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
                 setMin(itemValue);
               }}>
               {minData.map((hr: any) => (
-                <Picker.Item label={hr} value={hr} />
+                <Picker.Item label={hr} value={hr} color={AppColor.BLACK} />
               ))}
             </Picker>
             <Picker
@@ -195,7 +210,7 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
                 setType(itemValue);
               }}>
               {typeData.map((hr: any) => (
-                <Picker.Item label={hr} value={hr} />
+                <Picker.Item label={hr} value={hr} color={AppColor.BLACK} />
               ))}
             </Picker>
           </View>

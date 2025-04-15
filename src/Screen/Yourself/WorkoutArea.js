@@ -20,7 +20,8 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {localImage} from '../../Component/Image';
 import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
 import { showMessage } from 'react-native-flash-message';
-
+import analytics from '@react-native-firebase/analytics';
+import { image } from 'd3';
 const WorkoutArea = ({route, navigation}) => {
   const {nextScreen} = route.params;
   const [screen, setScreen] = useState(nextScreen);
@@ -40,10 +41,8 @@ const WorkoutArea = ({route, navigation}) => {
     };
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
     navigation.navigate('PredictionScreen', {nextScreen: screen + 1});
-    console.log('WorkoutArea Screen Data', [
-      ...getLaterButtonData,
-      currentData,
-    ]);
+    analytics().logEvent(`CV_FITME_WORKOUT_AREA_${imageView[0]?.replace(" ","_")}`)
+   
   };
 
   useEffect(() => {
@@ -145,7 +144,7 @@ const WorkoutArea = ({route, navigation}) => {
         }}>
         <Bulb
           screen={'What’s your comfort place to workout ?'}
-          header={'You can select any 2 options among below given options'}
+          header={'This will help us to create your personalized workout'}
         />
       </View>
       {/* <View

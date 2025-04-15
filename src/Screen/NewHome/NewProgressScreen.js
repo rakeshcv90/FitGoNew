@@ -8,7 +8,6 @@ import {
   ScrollView,
   Modal,
   TextInput,
-  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useMemo, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -16,47 +15,62 @@ import {AppColor} from '../../Component/Color';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {localImage} from '../../Component/Image';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
-import {Svg, Circle, Line} from 'react-native-svg';
+import {Circle, Line} from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
 import {Dropdown} from 'react-native-element-dropdown';
 import axios from 'axios';
 import {useSelector, useDispatch} from 'react-redux';
 import {BlurView} from '@react-native-community/blur';
 import AppleHealthKit from 'react-native-health';
-import {setBmi} from '../../Component/ThemeRedux/Actions';
+import {setFitmeAdsCount} from '../../Component/ThemeRedux/Actions';
 import {Calendar} from 'react-native-calendars';
 import AnimatedLottieView from 'lottie-react-native';
-import crashlytics from '@react-native-firebase/crashlytics';
+
+import GoogleFit from 'react-native-google-fit';
 import {
   VictoryBar,
   VictoryChart,
   VictoryAxis,
   VictoryTheme,
-  VictoryDefs,
 } from 'victory-native';
-import {
-  LineChart,
-  BarChart,
-  PieChart,
-  ProgressChart,
-  ContributionGraph,
-  StackedBarChart,
-} from 'react-native-chart-kit';
-import {dispatch, index, local} from 'd3';
+import {LineChart} from 'react-native-chart-kit';
+
 import moment from 'moment';
-import Button from '../../Component/Button';
+
 import {showMessage} from 'react-native-flash-message';
+import {Linking} from 'react-native';
+
+import analytics from '@react-native-firebase/analytics';
+
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
+import {MyInterstitialAd} from '../../Component/BannerAdd';
+
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
+
 const NewProgressScreen = ({navigation}) => {
-  const {
-    getUserDataDetails,
-    ProfilePhoto,
-    getHomeGraphData,
-    getCustttomeTimeCal,
-    getHealthData,
-  } = useSelector(state => state);
+  // const {
+  //   getUserDataDetails,
+  //   ProfilePhoto,
+  //   getHomeGraphData,
+  //   getCustttomeTimeCal,
+  //   getHealthData,
+  //   getStepCounterOnoff,
+  //   getFitmeAdsCount,
+  //   getPurchaseHistory,
+  // } = useSelector(state => state);
+
+  const getUserDataDetails = useSelector(state => state.getUserDataDetails);
+  const ProfilePhoto = useSelector(state => state.ProfilePhoto);
+  const getHomeGraphData = useSelector(state => state.getHomeGraphData);
+  const getCustttomeTimeCal = useSelector(state => state.getCustttomeTimeCal);
+  const getHealthData = useSelector(state => state.getHealthData);
+  const getStepCounterOnoff = useSelector(state => state.getStepCounterOnoff);
+  const getFitmeAdsCount = useSelector(state => state.getFitmeAdsCount);
+  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const [getDate, setDate] = useState(moment().format('YYYY-MM-DD'));
   const [selected, setSelected] = useState(false);
-  // console.log("datata==>",getCustttomeTimeCal,getHealthData)
+
   const [dates, setDates] = useState([]);
   const [value, setValue] = useState('Weekly');
   const [value1, setValue1] = useState('Weekly');
@@ -66,56 +80,26 @@ const NewProgressScreen = ({navigation}) => {
   const [Calories, setCalories] = useState(0);
   const [Wtime, setWtime] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const avatarRef = React.createRef();
+  let data1 = useIsFocused();
+  const dispatch = useDispatch();
   let arrayForData = [];
   let arrayForData1 = [];
   useEffect(() => {
     setBmi(
-      (
-        getUserDataDetails?.weight /
-        (getUserDataDetails?.height * 0.3048) ** 2
-      ).toFixed(2),
+      getUserDataDetails?.weight
+        ? (
+            getUserDataDetails?.weight /
+            (getUserDataDetails?.height * 0.3048) ** 2
+          ).toFixed(2)
+        : 0,
     );
-    // userData();
-    // dispatch(setBmi(getBmi))
   }, []);
-  const userData = async () => {
-    try {
-      const res = await axios({
-        url: NewAppapi.total_Calories,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          user_id: 111,
-        },
-      });
-      if (res) {
-        // for (i = 1; i < 7; i++) {
-        //   const dayWiseWeight = res.data.data.filter(
-        //     value => value.user_day == i,
-        //   );
-        //   if (dayWiseWeight.length < 1) {
-        //     // do nothing
-        //   } else {
-        //     const weight = dayWiseWeight.map(obj => parseInt(obj.calories));
-        //     const currentWeight =
-        //       getUserDataDetails?.weight -
-        //       (weight.reduce((acc, res) => acc + res, 0) * 0.3) / 500;
-        //     arrayForData.push(currentWeight);
-        //   }
-        // }
-        // setArray(arrayForData);
-      }
-    } catch (error) {
-      console.log('Calories Api Error', error);
-    }
-  };
   useEffect(() => {
     WeeklyData(1);
     WeeklyData(2);
   }, []);
- 
+
   useEffect(() => {
     const Calories1 = getCustttomeTimeCal.map(value => value.totalCalories);
     const Calories2 = Calories1?.reduce((acc, ind) => acc + ind, 0);
@@ -141,31 +125,72 @@ const NewProgressScreen = ({navigation}) => {
         }
       });
     } else if (Platform.OS == 'android') {
-      setCalories(
-        parseInt(getHealthData[1] ? getHealthData[1]?.Calories : 0) +
-          parseInt(Calories2),
-      );
-      // console.log('android======>');
+      if (getStepCounterOnoff) {
+        const getDailyData = async () => {
+          try {
+            const dailySteps = await GoogleFit.getDailySteps();
+            const totalSteps = dailySteps.reduce(
+              (total, acc) => (total + acc.steps[0] ? acc.steps[0].value : 0),
+              0,
+            );
+            setCalories(
+              parseInt(totalSteps ? ((totalSteps / 20) * 1).toFixed(0) : 0) +
+                parseInt(Calories2),
+            );
+          } catch (error) {
+            console.error('Error fetching total steps', error);
+          }
+        };
+        getDailyData();
+      } else {
+        setCalories(parseInt(Calories2));
+      }
     }
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      if (data1) {
+        if (getPurchaseHistory.length > 0) {
+          if (
+            getPurchaseHistory[0]?.plan_end_date >=
+            moment().format('YYYY-MM-DD')
+          ) {
+            dispatch(setFitmeAdsCount(0));
+          } else {
+            if (getFitmeAdsCount < 5) {
+              dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+            } else {
+              MyInterstitialAd(resetFitmeCount).load();
+            }
+          }
+        } else {
+          if (getFitmeAdsCount < 5) {
+            dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+          } else {
+            MyInterstitialAd(resetFitmeCount).load();
+          }
+        }
+      }
+    }, [data1]),
+  );
+  const resetFitmeCount = () => {
+    dispatch(setFitmeAdsCount(0));
+  };
   const handleGraph1 = data => {
-    console.log('data', data);
     if (data == 1) {
       WeeklyData(1);
     } else if (data == 2) {
       MonthlyData(1);
     } else {
-      console.log('No matching');
     }
   };
   const handleGraph2 = data => {
-    console.log('data', data);
     if (data == 1) {
       WeeklyData(2);
     } else if (data == 2) {
       MonthlyData(2);
     } else {
-      console.log('No matching');
     }
   };
   const MonthlyData = async Key => {
@@ -208,11 +233,9 @@ const NewProgressScreen = ({navigation}) => {
         }
         setArray(arrayForData);
       } else if (res && Key == 2) {
-        // console.log('ressss=====',res.data)
         for (i = 0; i < getHomeGraphData?.weekly_data?.length; i++) {
           let Total_Duration = getHomeGraphData?.weekly_data[i]?.total_duration;
           arrayForData1.push(parseInt(Total_Duration));
-          // console.log('weeklyData',arrayForData1)
         }
         setArray1(arrayForData1);
       }
@@ -358,7 +381,7 @@ const NewProgressScreen = ({navigation}) => {
     day: item.day,
     value: array1[index] ? array1[index] : null,
   }));
-  // console.log('array=====>', array1);
+
   const Emojis = [
     {
       id: 1,
@@ -474,7 +497,7 @@ const NewProgressScreen = ({navigation}) => {
       const BMI =
         (selected == '' ? getUserDataDetails?.weight : selected) /
         (getUserDataDetails?.height * 0.3048) ** 2;
-      // console.log('BMI>>>>>>>', BMI.toFixed(2));
+
       setBmi(BMI.toFixed(2));
       setModalVisible(false);
     };
@@ -578,7 +601,7 @@ const NewProgressScreen = ({navigation}) => {
       </Modal>
     );
   };
-  // console.log('.........>>>>>', getUserDataDetails);
+
   const theme = useMemo(() => {
     return {
       backgroundColor: AppColor.WHITE,
@@ -616,11 +639,23 @@ const NewProgressScreen = ({navigation}) => {
       </View>
     );
   };
+
+  const openMailApp = () => {
+    Linking.openURL(
+      'mailto:thefitnessandworkout@gmail.com?subject=Feedback&body=Hello%20there!',
+    );
+  };
   return (
     <SafeAreaView style={styles.Container}>
       <ScrollView showsHorizontalScrollIndicator={false}>
         <View style={styles.box1}>
-          <TouchableOpacity style={styles.Feedback_B} activeOpacity={0.5}>
+          <TouchableOpacity
+            style={styles.Feedback_B}
+            activeOpacity={0.5}
+            onPress={() => {
+              analytics().logEvent('CV_FITME_CLICKED_ON_FEEDBACK');
+              openMailApp();
+            }}>
             <Image
               source={localImage.Feedback}
               style={{width: 15, height: 15}}
@@ -655,10 +690,15 @@ const NewProgressScreen = ({navigation}) => {
           {Object.keys(getUserDataDetails).length > 0 && (
             <>
               {isLoading && (
-                <ActivityIndicator
+                // <ActivityIndicator
+                //   style={styles.loader}
+                //   size="large"
+                //   color="#0000ff"
+                // />
+                <ShimmerPlaceholder
                   style={styles.loader}
-                  size="large"
-                  color="#0000ff"
+                  ref={avatarRef}
+                  autoRun
                 />
               )}
               <Image
@@ -672,7 +712,7 @@ const NewProgressScreen = ({navigation}) => {
                 resizeMode="cover"
               />
             </>
-          ) }
+          )}
         </View>
         <Text
           style={{
@@ -733,9 +773,9 @@ const NewProgressScreen = ({navigation}) => {
               bezier
               segments={4}
               renderDotContent={renderCustomPoint}
-              onDataPointClick={data =>
-                console.log('PointData=====>', data.value)
-              }
+              // onDataPointClick={data =>
+              //   console.log('PointData=====>', data.value)
+              // }
               withShadow={false}
               yAxisInterval={10}
               fromZero={true}
@@ -1096,6 +1136,7 @@ const styles = StyleSheet.create({
   },
   placeholderStyle: {
     fontSize: 16,
+    color: AppColor.BLACK,
   },
   selectedTextStyle: {
     fontSize: 16,
@@ -1130,7 +1171,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
     backgroundColor: AppColor.GRAY,
-   // top: DeviceHeigth * 0.02,
+    // top: DeviceHeigth * 0.02,
     height: 150,
     width: 150,
     borderRadius: 150 / 2,

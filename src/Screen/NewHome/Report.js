@@ -25,7 +25,7 @@ const Report = ({navigation}) => {
   const [visible, setVisible] = useState(false);
 
 
- console.log("sounds===>",getSoundOffOn)
+
   const [isAlarmEnabled, setAlarmIsEnabled] = useState(false);
 
   const toggleSwitch3 = () => {
@@ -53,7 +53,7 @@ const Report = ({navigation}) => {
     <View style={styles.container}>
       <NewHeader header={'Settings'} SearchButton={false} backButton={true} />
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      {/* <View style={styles.listItem2}>
+      <View style={styles.listItem2}>
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('Subscription');
@@ -73,7 +73,7 @@ const Report = ({navigation}) => {
           />
         </TouchableOpacity>
    
-      </View> */}
+      </View>
       <Text
         style={[styles.textStyle, {marginHorizontal: 15, marginVertical: 20}]}>
         Timer Setting

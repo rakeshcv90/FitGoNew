@@ -31,7 +31,10 @@ const intialState = {
   getHomeGraphData: [],
   getProfile_imgData: [],
   getCustttomeTimeCal: [],
-  getStepCounterOnoff:0
+  getStepCounterOnoff: false,
+  getSubscriptionModal: false,
+  getFitmeAdsCount: 0,
+  getFitmeMealAdsCount: 0,
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -149,11 +152,26 @@ const ThemeReducer = (state = intialState, action) => {
         ...state,
         getProfile_imgData: action.payload,
       };
-      case types.IS_STEP_COUNTER_ON:
-        return{
-          ...state,
-          getStepCounterOnoff:action.payload
-        }
+    case types.IS_STEP_COUNTER_ON:
+      return {
+        ...state,
+        getStepCounterOnoff: action.payload,
+      };
+    case types.SUBSCRIPTION_MODAL:
+      return {
+        ...state,
+        getSubscriptionModal: action.payload,
+      };
+    case types.FITME_ADD_COUNT:
+      return {
+        ...state,
+        getFitmeAdsCount: action.payload,
+      };
+    case types.FITME_ADD_COUNT_MEALS:
+      return {
+        ...state,
+        getFitmeMealAdsCount: action.payload,
+      };
     default:
       return state;
   }

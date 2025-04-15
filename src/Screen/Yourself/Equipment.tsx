@@ -20,7 +20,7 @@ import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useFocusEffect} from '@react-navigation/native';
-
+import analytics from '@react-native-firebase/analytics';
 const Equipment = ({route, navigation}: any) => {
   const [backbuttonVisiblity, setbackbuttonVisibility] = useState(true);
   const {nextScreen} = route.params;
@@ -28,7 +28,6 @@ const Equipment = ({route, navigation}: any) => {
   const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
     (state: any) => state,
   );
-
   const dispatch = useDispatch();
   const [selected, setSelected] = useState('');
   const [screen, setScreen] = useState(nextScreen);
@@ -132,10 +131,9 @@ const Equipment = ({route, navigation}: any) => {
       equipment:
         gender == 'Without\nEquipment' ? 'Without Equipment' : 'With Equipment',
     };
-    {
-      console.log('Equipment  Screen Data', currentData);
-    }
+   
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
+    analytics().logEvent(`CV_FITME_EQUIPMENT_${gender?.replace('\n','_')}`)
     setTimeout(() => {
       navigation.navigate('FocusArea', {nextScreen: screen + 1});
     }, 2000);

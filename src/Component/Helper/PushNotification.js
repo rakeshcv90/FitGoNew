@@ -1,20 +1,27 @@
 import messaging from '@react-native-firebase/messaging';
 import notifee, {
   AndroidImportance,
+  AndroidStyle,
   AndroidVisibility,
+  EventType,
+  RepeatFrequency,
+  TriggerType,
 } from '@notifee/react-native';
 import {request, PERMISSIONS} from 'react-native-permissions';
 import {Alert, Platform, AppState, PermissionsAndroid} from 'react-native';
-import { setFcmToken } from '../ThemeRedux/Actions';
-export const requestPermissionforNotification = async (dispatch) => {
+import {setFcmToken} from '../ThemeRedux/Actions';
+export const requestPermissionforNotification = async dispatch => {
   if (Platform.OS == 'android') {
-    PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-    );
+    if (Platform.Version >= 31) {
+      PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+      );
+    }
+
     await messaging().registerDeviceForRemoteMessages();
     token = await messaging().getToken();
-    dispatch(setFcmToken(token))
-
+    console.log('Android token is', token);
+    dispatch(setFcmToken(token));
   } else {
     const authStatus = await messaging().requestPermission();
     const enabled =
@@ -24,59 +31,47 @@ export const requestPermissionforNotification = async (dispatch) => {
     if (enabled) {
       token = await messaging().getToken();
       console.log('Ios token is', token);
-      dispatch(setFcmToken(token))
-    
+      dispatch(setFcmToken(token));
     }
   }
 };
 
-export const RemoteMessage = () => {
-  try {
-    messaging().onMessage(async remoteMessage => {
-      DisplayNotification(remoteMessage);
-    });
-  } catch (error) {
-    console.log('onm', error);
-  }
-  messaging().setBackgroundMessageHandler(async remoteMessage => {
-    DisplayNotification(remoteMessage);
-  
-  });
-  notifee.setNotificationCategories([
-    {
-      id: 'Alarm',
-      actions: [
-        {
-          id: 'Plus_Five',
-          title: 'Add +5',
-        },
-        {
-          id: 'Stop',
-          title: 'Stop',
-          destructive: true,
-        },
-      ],
-    },
-  ]);
 
-  messaging().getInitialNotification(async remoteMessage => {
-    DisplayNotification(remoteMessage);
-   
-  });
+const removeHtmlTags = str => {
+  if (!str || typeof str !== 'string') return '';
+  return str.replace(/<[^>]+>/g, '');
 };
-const DisplayNotification = async Notification => {
- 
+
+// Cleaned title without HTML tags
+export const DisplayNotification = async Notification => {
+
+  const cleanedTitle = removeHtmlTags(Notification?.data?.message);
   try {
     await notifee.displayNotification({
-      title: Notification.notification.title,
-      body: Notification.notification.body,
+      title: Notification?.data?.title || Notification.notification.title,
+      body: cleanedTitle || Notification.notification.body,
+      // id:Notification.data?.notification_id,
       android: {
-        channelId: 'default',
-        importance: AndroidImportance.HIGH,
-        visibility: AndroidVisibility.PUBLIC,
+        channelId: 'Fitme',
+        largeIcon: 'ic_launcher',
+        style: {
+          type: AndroidStyle.BIGPICTURE,
+          picture: Notification?.data?.image,
+        },
       },
       ios: {
         categoryId: 'default',
+        foregroundPresentationOptions: {
+          badge: true,
+          sound: true,
+          banner: true,
+          list: true,
+        },
+        attachments: [
+          {
+            url: Notification.data.image,
+          },
+        ],
       },
     });
   } catch (error) {

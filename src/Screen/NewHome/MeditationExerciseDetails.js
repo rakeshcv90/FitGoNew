@@ -26,18 +26,16 @@ import TrackPlayer, {
 import SeekBar from '../../Component/SeekBar';
 
 const MeditationExerciseDetails = ({navigation, route}) => {
- console.log("HHHHHH$$$$$4",route.params.item.exercise_mindset_audio)
   const playbackState = usePlaybackState();
 
   const {position, buffered, duration} = useProgress();
   const songs = [
-
     {
       title: 'song 1',
       artist: 'XYZ',
       artwork: localImage.Play3,
       //   url: require('../../Icon/Images/NewImage/track1.mp3'),
-      url:route.params.item.exercise_mindset_audio,
+      url: route.params.item.exercise_mindset_audio,
     },
   ];
   useEffect(() => {
@@ -61,16 +59,14 @@ const MeditationExerciseDetails = ({navigation, route}) => {
     }
   };
   const togglePlayback = async playbackState => {
-   
     if (
       playbackState.state === State.Paused ||
       playbackState.state === State.Ready
     ) {
       await TrackPlayer.play();
-      console.log('sdfdscxcefw', playbackState, State.Ready);
+
     } else {
       await TrackPlayer.pause();
-      
     }
   };
   const handleSlidingComplete = async value => {
@@ -80,6 +76,7 @@ const MeditationExerciseDetails = ({navigation, route}) => {
   const handleValueChange = value => {};
   return (
     <View style={styles.container}>
+
       <LinearGradient
         start={{x: 0, y: 1}}
         end={{x: 1, y: 0}}
@@ -91,10 +88,12 @@ const MeditationExerciseDetails = ({navigation, route}) => {
             marginVertical:
               Platform.OS == 'android'
                 ? DeviceHeigth * 0.05
-                : DeviceHeigth * 0.06,
+                : DeviceHeigth > 667
+                ? DeviceHeigth * 0.06
+                : DeviceHeigth * 0.035,
           }}
           onPress={() => {
-            TrackPlayer.reset()
+            TrackPlayer.reset();
             navigation.goBack();
           }}>
           <Icons
@@ -117,20 +116,20 @@ const MeditationExerciseDetails = ({navigation, route}) => {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          {playbackState.state=='playing'&& (
-              <AnimatedLottieView
-                source={require('../../Icon/Images/NewImage/MusicAnimation.json')}
-                speed={2}
-                autoPlay
-                loop
-                style={{
-                  width: 300,
-                  height: 300,
-                  position: 'absolute',
-                  top: -DeviceHeigth * 0.09,
-                }}
-              />
-            )}
+          {playbackState.state == 'playing' && (
+            <AnimatedLottieView
+              source={require('../../Icon/Images/NewImage/MusicAnimation.json')}
+              speed={2}
+              autoPlay
+              loop
+              style={{
+                width: 300,
+                height: 300,
+                position: 'absolute',
+                top: -DeviceHeigth * 0.09,
+              }}
+            />
+          )}
 
           <Image
             style={{

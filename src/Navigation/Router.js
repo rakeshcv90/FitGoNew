@@ -1,7 +1,6 @@
 import {View, Text} from 'react-native';
 import React from 'react';
 import SplaceScreen from '../Screen/SplaceScreen';
-import ForgetPassword from '../Screen/ForgetPassword';
 import TermaAndCondition from '../Screen/TermaAndCondition';
 import Yourself from '../Screen/Yourself/index';
 import Scale from '../Screen/Yourself/Scale';
@@ -11,8 +10,6 @@ import Focus from '../Screen/Yourself/Focus';
 import Level from '../Screen/Yourself/Level';
 import Height from '../Screen/Yourself/Height';
 import Weight from '../Screen/Yourself/Weight';                
-
-
 import IntroductionScreen1 from '../Screen/Introduction/IntroductionScreen1';
 import IntroductionScreen2 from '../Screen/Introduction/IntroductionScreen2';
 import IntroductionScreen3 from '../Screen/Introduction/IntroductionScreen3';
@@ -33,7 +30,7 @@ import Age from '../Screen/Yourself/Age';
 import Goal from '../Screen/Yourself/Goal';
 import LoadData from '../Screen/Yourself/LoadData';
 import PredictionScreen from '../Screen/MeditationScreens/PredictionScreen';
-import {CardStyleInterpolators, createStackNavigator} from '@react-navigation/stack';
+// import {CardStyleInterpolators, createStackNavigator} from '@react-navigation/stack';
 
 import AlcohalConsent from '../Screen/MeditationScreens/AlcohalConsent';
 import Profile from '../Screen/NewHome/Profile';
@@ -57,19 +54,22 @@ import Subscription from '../Screen/Subscription/Subscription';
 import Report from '../Screen/NewHome/Report';
 import NewProgressScreen from '../Screen/NewHome/NewProgressScreen';
 import NewMonthlyAchievement from '../Screen/NewHome/NewMonthlyAchievement';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-const Stack = createStackNavigator();
+
+const Stack = createNativeStackNavigator();
 
 const screenOptions = {
   headerShown: false,
-  gestureDirection: 'horizontal',
-  gesturesEnabled: true,
-  cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+  // gestureDirection: 'horizontal',
+  // gesturesEnabled: true,
+  // cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
 
 };
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
+         {/* <Stack.Screen name="Subscription" component={Subscription} /> */}
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
       <Stack.Screen
         name="IntroductionScreen1"
@@ -88,12 +88,9 @@ export const LoginStack = () => {
       <Stack.Screen name="Injury" component={Injury} />
       <Stack.Screen name="FocusArea" component={FocusArea} />
       <Stack.Screen name="WorkoutArea" component={WorkoutArea} />
-      <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />
-
       <Stack.Screen name="Edit_Profile" component={NewEditProfile} />
       <Stack.Screen name="NewPersonalDetails" component={NewPersonalDetails} />
-
       <Stack.Screen name="Scale" component={Scale} />
       <Stack.Screen name="Gender" component={Gender} />
       <Stack.Screen name="Equipment" component={Equipment} />

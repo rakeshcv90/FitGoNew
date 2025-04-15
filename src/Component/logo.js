@@ -38,7 +38,7 @@ export const Logo = () => {
         setEmail(apiResponse.data[0].email);
         setName(apiResponse.data[0].name)
       } else {
-        console.log('No Data found');
+       
       }
     } catch (error) {
       console.log('apiResponseError', error);
