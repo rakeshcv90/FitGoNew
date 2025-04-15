@@ -14,7 +14,6 @@ const intialState = {
   getHealthData: [],
   currentWorkoutData: [],
   allWorkoutData: [],
-  getUserDataDetails: [],
   mindsetConsent: false,
   showLogout: 0,
   mealData: [],
@@ -26,12 +25,31 @@ const intialState = {
   getStoreData: [],
   getPurchaseHistory: [],
   getScreenAwake: false,
-  getSoundOffOn: false,
-  getBmi: '',
+  getSoundOffOn: true,
+  getBmi: {},
   getHomeGraphData: [],
   getProfile_imgData: [],
   getCustttomeTimeCal: [],
-  getStepCounterOnoff:0
+  getStepCounterOnoff: false,
+  getSubscriptionModal: false,
+  getFitmeAdsCount: 0,
+  getFitmeMealAdsCount: 0,
+  getStoreVideoLoc: {},
+  isAlarmEnabled: false,
+  getAllExercise: [],
+  getExperience: false,
+  getChallengesData: [],
+  getWeeklyPlansData: {},
+  currentSelectedDay: 0,
+  getProgressBarCounter: 6,
+  getTempLogin: false,
+  getUperBodyFilOption: [],
+  getLowerBodyFilOpt: [],
+  getCoreFiltOpt: [],
+  getUprBodyCount: 0,
+  getLowerBodyCount: 0,
+  getCoreCount: 0,
+  getExerciseCount: {},
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -68,8 +86,8 @@ const ThemeReducer = (state = intialState, action) => {
       return {...state, currentWorkoutData: action.payload};
     case types.ALL_WORKOUTS_DATA:
       return {...state, allWorkoutData: action.payload};
-    case types.User_Profile_Data:
-      return {...state, getUserDataDetails: action.payload};
+    // case types.User_Profile_Data:
+    //   return {...state, getUserDataDetails: action.payload};
     case types.ALL_MEAL_DATA:
       return {...state, mealData: action.payload};
     case types.LogOut:
@@ -149,11 +167,112 @@ const ThemeReducer = (state = intialState, action) => {
         ...state,
         getProfile_imgData: action.payload,
       };
-      case types.IS_STEP_COUNTER_ON:
-        return{
-          ...state,
-          getStepCounterOnoff:action.payload
-        }
+    case types.IS_STEP_COUNTER_ON:
+      return {
+        ...state,
+        getStepCounterOnoff: action.payload,
+      };
+    case types.SUBSCRIPTION_MODAL:
+      return {
+        ...state,
+        getSubscriptionModal: action.payload,
+      };
+    case types.FITME_ADD_COUNT:
+      return {
+        ...state,
+        getFitmeAdsCount: action.payload,
+      };
+    case types.FITME_ADD_COUNT_MEALS:
+      return {
+        ...state,
+        getFitmeMealAdsCount: action.payload,
+      };
+    case types.STORE_VIDEO_LOC:
+      return {
+        ...state,
+        getStoreVideoLoc: action.payload,
+      };
+    case types.ALARM_ENABLED:
+      return {
+        ...state,
+        isAlarmEnabled: action.payload,
+      };
+
+    case types.WEEKLY_PLANS_DATA:
+      return {
+        ...state,
+        getWeeklyPlansData: action.payload,
+      };
+    case types.CHALLENGES_DATA:
+      return {
+        ...state,
+        getChallengesData: action.payload,
+      };
+
+    case types.ALARM_ENABLED:
+      return {
+        ...state,
+        isAlarmEnabled: action.payload,
+      };
+    case types.ALL_EXERCISE:
+      return {
+        ...state,
+        getAllExercise: action.payload,
+      };
+    case types.CURRENT_SELECTED_DAY:
+      return {
+        ...state,
+        currentSelectedDay: action.payload,
+      };
+    case types.IS_EXPERIENCED:
+      return {
+        ...state,
+        getExperience: action.payload,
+      };
+    case types.PROGRESS_BAR_COUNTER:
+      return {
+        ...state,
+        getProgressBarCounter: action.payload,
+      };
+    case types.BMI:
+      return {...state, getBmi: action.payload};
+    case types.TEMP_LOGIN:
+      return {
+        ...state,
+        getTempLogin: action.payload,
+      };
+    case types.UPRBDYFILTEROPT:
+      return {
+        ...state,
+        getUperBodyFilOption: action.payload,
+      };
+    case types.LWRBDYFILTEROPT:
+      return {
+        ...state,
+        getLowerBodyFilOpt: action.payload,
+      };
+    case types.COREFILTOPRION:
+      return {
+        ...state,
+        getCoreFiltOpt: action.payload,
+      };
+    case types.UPRBODYCOUNT:
+      return {
+        ...state,
+        getUprBodyCount: action.payload,
+      };
+    case types.LWERBODYCOUNT:
+      return {
+        ...state,
+        getLowerBodyCount: action.payload,
+      };
+    case types.CORECOUNT:
+      return {
+        ...state,
+        getCoreCount: action.payload,
+      };
+    case types.EXERCISECOUNT:
+      return {...state, getExerciseCount: action.payload};
     default:
       return state;
   }

@@ -13,7 +13,7 @@ import React, {useEffect, useState} from 'react';
 import Button from '../Component/Button';
 import InputText from '../Component/InputText';
 import {StyleSheet} from 'react-native';
-import {AppColor} from '../Component/Color';
+import {AppColor, Fonts} from '../Component/Color';
 import {
   DeviceHeigth,
   DeviceWidth,
@@ -39,6 +39,7 @@ import {
   setPurchaseHistory,
   setUserId,
   setUserProfileData,
+  setVideoLocation,
 } from '../Component/ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
@@ -49,8 +50,16 @@ import {TextInput} from 'react-native-paper';
 import {navigationRef} from '../../App';
 import VersionNumber from 'react-native-version-number';
 import {Platform} from 'react-native';
-import { RemoteMessage, requestPermissionforNotification } from '../Component/Helper/PushNotification';
-import { Alert } from 'react-native';
+import {BlurView} from '@react-native-community/blur';
+import {
+  RemoteMessage,
+  requestPermissionforNotification,
+} from '../Component/Helper/PushNotification';
+import analytics from '@react-native-firebase/analytics';
+import {Alert} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNFetchBlob from 'rn-fetch-blob';
+import AppUpdateComponent from '../Component/AppUpdateComponent';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
@@ -69,10 +78,11 @@ const Login = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [IsVerifyVisible, setVerifyVisible] = useState(false);
   const [appVersion, setAppVersion] = useState(0);
-  const {getFcmToken} = useSelector(state => state);
+  const [cancelLogin, setCancelLogin] = useState(false);
+  const getFcmToken = useSelector(state => state.getFcmToken);
   useEffect(() => {
     requestPermissionforNotification(dispatch);
-    RemoteMessage();
+    // RemoteMessage();
   }, []);
   useEffect(() => {
     GoogleSignin.configure({
@@ -84,6 +94,7 @@ const Login = ({navigation}) => {
     setAppVersion(VersionNumber.appVersion);
   });
   const GoogleSignup = async () => {
+    analytics().logEvent('CV_FITME_GOOGLE_LOGIN');
     try {
       await GoogleSignin.hasPlayServices();
       await GoogleSignin.hasPlayServices();
@@ -91,7 +102,7 @@ const Login = ({navigation}) => {
       socialLogiIn(user, idToken);
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        alert('Cancel');
+        setCancelLogin(true);
       } else if (error.code === statusCodes.IN_PROGRESS) {
         alert('Signin in progress');
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
@@ -117,9 +128,9 @@ const Login = ({navigation}) => {
           socialtype: 'google',
           version: appVersion,
           devicetoken: getFcmToken,
+          platform: Platform.OS,
         },
       });
-
       if (data.data.profile_status == 1) {
         showMessage({
           message: data.data.msg,
@@ -133,16 +144,17 @@ const Login = ({navigation}) => {
         getProfileData(data.data.id, data.data.profile_status);
         getCustomWorkout(data.data.id);
         Meal_List(data.data.login_token);
-        //PurchaseDetails(data.data.id, data.data.login_token);
+        PurchaseDetails(data.data.id, data.data.login_token);
         await GoogleSignin.signOut();
       } else if (
         data.data.msg ==
         'User does not exist with provided Google social credentials'
       ) {
         showMessage({
-          message: data.data.msg,
+          message:
+            'This email id is not registered. Sign Up to continue',
           type: 'danger',
-          animationDuration: 5000,
+          animationDuration: 1000,
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
@@ -182,10 +194,11 @@ const Login = ({navigation}) => {
     }
   };
   const FacebookLogin = () => {
+    analytics().logEvent('CV_FITME_FACEBOOK_LOGIN');
     LoginManager.logInWithPermissions(['public_profile', 'email']).then(
       function (result) {
         if (result.isCancelled) {
-          alert('Login Cancelled ');
+          setCancelLogin(true);
         } else {
           const currentProfile = Profile.getCurrentProfile().then(function (
             currentProfile,
@@ -218,6 +231,7 @@ const Login = ({navigation}) => {
           socialtype: 'facebook',
           version: appVersion,
           devicetoken: getFcmToken,
+          platform: Platform.OS,
         },
       });
       if (data.data.profile_status == 1) {
@@ -233,13 +247,13 @@ const Login = ({navigation}) => {
         getProfileData(data.data.id, data.data.profile_status);
         getCustomWorkout(data.data.id);
         Meal_List(data.data.login_token);
-        //PurchaseDetails(data.data.id, data.data.login_token);
+        PurchaseDetails(data.data.id, data.data.login_token);
       } else if (
         data.data.msg ==
         'User does not exist with provided Facebook social credentials'
       ) {
         showMessage({
-          message: data.data.msg,
+          message: 'You are not registered,You need to Signup first',
           type: 'danger',
           animationDuration: 500,
           floating: true,
@@ -270,6 +284,7 @@ const Login = ({navigation}) => {
     }
   };
   const onApplePress = async () => {
+    analytics().logEvent('CV_FITME_APPLE_LOGIN');
     await appleAuth
       .performRequest({
         requestedOperation: appleAuth.Operation.LOGIN,
@@ -301,6 +316,7 @@ const Login = ({navigation}) => {
           socialtype: 'Apple',
           version: VersionNumber.appVersion,
           devicetoken: getFcmToken,
+          platform: Platform.OS,
         },
       });
 
@@ -318,7 +334,7 @@ const Login = ({navigation}) => {
         getProfileData(data.data.id, data.data.profile_status);
         getCustomWorkout(data.data.id);
         Meal_List(data.data.login_token);
-        //PurchaseDetails(data.data.id, data.data.login_token);
+        PurchaseDetails(data.data.id, data.data.login_token);
       } else if (
         data.data?.msg ==
         'User does not exist with provided Apple social credentials'
@@ -331,13 +347,14 @@ const Login = ({navigation}) => {
         data.data?.msg == 'Please update the app to the latest version.'
       ) {
         setForLoading(false);
-        showMessage({
-          message: data.data.msg,
-          type: 'danger',
-          animationDuration: 500,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
+
+        // showMessage({
+        //   message: data.data.msg,
+        //   type: 'danger',
+        //   animationDuration: 500,
+        //   floating: true,
+        //   icon: {icon: 'auto', position: 'left'},
+        // });
       } else {
         setForLoading(false);
 
@@ -350,12 +367,14 @@ const Login = ({navigation}) => {
     }
   };
   const loginFunction = async () => {
+    analytics().logEvent('CV_FITME_LOGIN');
+
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (email == null) {
       showMessage({
-        message: 'Please Enter Email id',
+        message: 'Please enter your email id',
         floating: true,
-        duration: 500,
+        duration: 1000,
         type: 'danger',
         icon: {icon: 'auto', position: 'left'},
       });
@@ -388,6 +407,7 @@ const Login = ({navigation}) => {
             password: password,
             version: appVersion,
             devicetoken: getFcmToken,
+            platform: Platform.OS,
           },
         });
 
@@ -407,7 +427,7 @@ const Login = ({navigation}) => {
           getProfileData(data.data.id, data.data.profile_status);
           getCustomWorkout(data.data.id);
           Meal_List(data.data.login_token);
-          //PurchaseDetails(data.data.id, data.data.login_token);
+          PurchaseDetails(data.data.id, data.data.login_token);
         } else if (
           data.data.msg == 'Login successful' &&
           data.data.profile_status == 0
@@ -418,7 +438,7 @@ const Login = ({navigation}) => {
           getProfileData(data.data.id, data.data.profile_status);
           Meal_List(data.data.login_token);
           dispatch(setCustomWorkoutData([]));
-          //PurchaseDetails(data.data.id, data.data.login_token);
+          PurchaseDetails(data.data.id, data.data.login_token);
         } else if (
           data?.data?.msg == 'Please update the app to the latest version.'
         ) {
@@ -467,11 +487,13 @@ const Login = ({navigation}) => {
       if (data?.data?.profile) {
         setForLoading(false);
         dispatch(setUserProfileData(data.data.profile));
+        await AsyncStorage.setItem('userID', `${user_id}`);
         // status == 1
         //   ? navigation.navigate('BottomTab')
         //   : navigationRef.navigate('Yourself');
-        if (status == 1) navigation.navigate('BottomTab');
-        else {
+        if (status == 1) {
+          navigation.replace('BottomTab');
+        } else {
           showMessage({
             message: 'Please complete your Profile Details',
             type: 'success',
@@ -497,7 +519,7 @@ const Login = ({navigation}) => {
         // status == 1
         //   ? navigation.navigate('BottomTab')
         //   : navigationRef.navigate('Yourself');
-        if (status == 1) navigation.navigate('BottomTab');
+        if (status == 1) navigation.replace('BottomTab');
         else {
           showMessage({
             message: 'Please complete your Profile Details',
@@ -511,17 +533,17 @@ const Login = ({navigation}) => {
       }
     } catch (error) {
       console.log('User Profile Error', error);
-      if (status == 1) navigation.navigate('BottomTab');
-        else {
-          showMessage({
-            message: 'Please complete your Profile Details',
-            type: 'success',
-            animationDuration: 500,
-            floating: true,
-            icon: {icon: 'auto', position: 'left'},
-          });
-          navigationRef.navigate('Yourself');
-        }
+      if (status == 1) navigation.replace('BottomTab');
+      else {
+        showMessage({
+          message: 'Please complete your Profile Details',
+          type: 'success',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+        navigationRef.navigate('Yourself');
+      }
       // status == 1
       //   ? navigation.navigate('BottomTab')
       //   : navigationRef.navigate('Yourself');
@@ -604,30 +626,13 @@ const Login = ({navigation}) => {
 
   const getCustomWorkout = async user_id => {
     try {
-      const data = await axios(NewAppapi.Custom_WORKOUT_DATA, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          id: user_id,
-          version: appVersion,
-        },
-      });
+      const data = await axios.get(
+        `${NewAppapi.GET_USER_CUSTOM_WORKOUT}?user_id=${user_id}`,
+      );
 
-      if (data.data.workout) {
+      if (data?.data?.msg != 'data not found.') {
         setForLoading(false);
-        dispatch(setCustomWorkoutData(data?.data));
-      } else if (
-        data?.data?.msg == 'Please update the app to the latest version.'
-      ) {
-        showMessage({
-          message: data.data.msg,
-          type: 'danger',
-          animationDuration: 500,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
+        dispatch(setCustomWorkoutData(data?.data?.data));
       } else {
         setForLoading(false);
         dispatch(setCustomWorkoutData([]));
@@ -658,6 +663,7 @@ const Login = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (data.data.diets.length > 0) {
+        data.data?.diets?.map((item, index) => downloadVideos(item, index));
         dispatch(Setmealdata(data.data.diets));
       } else {
         dispatch(Setmealdata([]));
@@ -673,29 +679,64 @@ const Login = ({navigation}) => {
     }
   };
 
-  // const PurchaseDetails = async (id, login_token) => {
-  //   try {
-  //     const res = await axios(`${NewAppapi.TransctionsDetails}`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //       data: {
-  //         id: id,
-  //         token: login_token,
-  //       },
-  //     });
+  const sanitizeFileName = fileName => {
+    fileName = fileName.replace(/\s+/g, '_');
+    return fileName;
+  };
+  let StoringData = {};
+  const downloadVideos = async (data, index) => {
+    const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(
+      data?.diet_title,
+    )}.jpg`;
+    try {
+      const videoExists = await RNFetchBlob.fs.exists(filePath);
+      if (videoExists) {
+        StoringData[data?.diet_title] = filePath;
+      } else {
+        await RNFetchBlob.config({
+          fileCache: true,
+          path: filePath,
+          appendExt: '.jpg',
+        })
+          .fetch('GET', data?.diet_image, {
+            'Content-Type': 'application/jpg',
+          })
+          .then(res => {
+            StoringData[data?.diet_title] = res.path();
+            console.log('Image downloaded successfully!', index, res.path());
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    } catch (error) {
+      console.log('ERRRR', error);
+    }
+    dispatch(setVideoLocation(StoringData));
+  };
+  const PurchaseDetails = async (id, login_token) => {
+    try {
+      const res = await axios(`${NewAppapi.TransctionsDetails}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          id: id,
+          token: login_token,
+        },
+      });
 
-  //     if (res.data.data.length > 0) {
-  //       dispatch(setPurchaseHistory(res.data.data));
-  //     } else {
-  //       dispatch(setPurchaseHistory([]));
-  //     }
-  //   } catch (error) {
-  //     dispatch(setPurchaseHistory([]));
-  //     console.log('Purchase List Error', error);
-  //   }
-  // };
+      if (res.data.data.length > 0) {
+        dispatch(setPurchaseHistory(res.data.data));
+      } else {
+        dispatch(setPurchaseHistory([]));
+      }
+    } catch (error) {
+      dispatch(setPurchaseHistory([]));
+      console.log('Purchase List Error', error);
+    }
+  };
   const ModalView = () => {
     const [forLoading, setForLoading] = useState(false);
     const handleForgotPassword = async value => {
@@ -821,7 +862,7 @@ const Login = ({navigation}) => {
                       fontFamily: 'Poppins',
                       marginTop: 10,
                     }}>
-                    Please enter your email below to receive
+                    Please enter your registered email below to receive
                   </Text>
                   <Text
                     style={{
@@ -831,9 +872,9 @@ const Login = ({navigation}) => {
                       textAlign: 'center',
                       fontFamily: 'Poppins',
                       marginBottom: 15,
-                      marginTop: 10,
+                      marginTop: 5,
                     }}>
-                    your password reset code
+                    the link to reset your password.
                   </Text>
 
                   <Formik
@@ -892,6 +933,124 @@ const Login = ({navigation}) => {
           </View>
         </Modal>
       </View>
+    );
+  };
+  const LoginCancelModal = () => {
+    return (
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={cancelLogin}
+        onRequestClose={() => {
+          setCancelLogin(!cancelLogin);
+        }}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: '#202020',
+            justifyContent: 'center',
+            alignItems: 'center',
+            opacity: 0.9,
+          }}>
+          <View
+            style={{
+              width: DeviceWidth * 0.8,
+              height: DeviceHeigth * 0.3,
+              backgroundColor: 'white',
+              borderRadius: 8,
+              padding: 20,
+              alignItems: 'center',
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 4,
+              elevation: 5,
+            }}>
+            <Image source={localImage.Alert} style={{width: 70, height: 70}} />
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: '600',
+                color: AppColor.LITELTEXTCOLOR,
+                marginTop: 10,
+                fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                lineHeight: 26,
+              }}>
+              Alert
+            </Text>
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: '600',
+                color: AppColor.HEADERTEXTCOLOR,
+                marginVertical: 7,
+                textAlign: 'center',
+                lineHeight: 24,
+                fontFamily: Fonts.MONTSERRAT_MEDIUM,
+              }}>
+              Are you sure you want to go back without completing Login?
+            </Text>
+
+            <TouchableOpacity
+            style={{
+              backgroundColor: AppColor.NEW_DARK_RED,
+              width: '50%',
+              paddingVertical: 10,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 5,
+              marginTop: 10
+            }}
+              onPress={() => {
+                setCancelLogin(false);
+              }}>
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontWeight: '500',
+                  color: AppColor.WHITE,
+                  fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                  lineHeight: 20
+                }}>
+                OK
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      // <View
+      //   style={{
+      //     flex: 1,
+      //     justifyContent: 'center',
+      //     alignItems: 'center',
+      //     marginTop: 22,
+      //     backfaceVisibility: 'red',
+      //   }}>
+
+      //   <Modal
+      //      animationType="fade"
+      //   transparent={true}
+      //     visible={cancelLogin}
+      //     onRequestClose={() => {
+      //       setCancelLogin(!cancelLogin);
+      //     }}>
+
+      //     <View
+      //       style={{
+      //         flex: 1,
+      //         justifyContent: 'center',
+      //         alignItems: 'center',
+
+      //         backfaceVisibility: 'red',
+      //       }}>
+
+      //
+      //     </View>
+      //   </Modal>
+      // </View>
     );
   };
   return (
@@ -988,6 +1147,7 @@ const Login = ({navigation}) => {
             style={styles.forgotView}>
             <Text style={styles.forgotText}>Forgot Password?</Text>
           </TouchableOpacity>
+
           <View style={{marginTop: DeviceHeigth * 0.2}}>
             <Button buttonText={'Login'} onPresh={loginFunction} />
           </View>
@@ -1015,6 +1175,8 @@ const Login = ({navigation}) => {
         </View>
       </ScrollView>
       <CompleateProfileModal />
+      <LoginCancelModal />
+      {/* `<AppUpdateComponent visible={true}/>` */}
       <ModalView />
     </SafeAreaView>
   );

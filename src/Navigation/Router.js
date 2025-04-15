@@ -1,7 +1,5 @@
-import {View, Text} from 'react-native';
 import React from 'react';
 import SplaceScreen from '../Screen/SplaceScreen';
-import ForgetPassword from '../Screen/ForgetPassword';
 import TermaAndCondition from '../Screen/TermaAndCondition';
 import Yourself from '../Screen/Yourself/index';
 import Scale from '../Screen/Yourself/Scale';
@@ -10,32 +8,21 @@ import Equipment from '../Screen/Yourself/Equipment';
 import Focus from '../Screen/Yourself/Focus';
 import Level from '../Screen/Yourself/Level';
 import Height from '../Screen/Yourself/Height';
-import Weight from '../Screen/Yourself/Weight';                
-
-
+import Weight from '../Screen/Yourself/Weight';
 import IntroductionScreen1 from '../Screen/Introduction/IntroductionScreen1';
 import IntroductionScreen2 from '../Screen/Introduction/IntroductionScreen2';
 import IntroductionScreen3 from '../Screen/Introduction/IntroductionScreen3';
-import MeditationConsent from '../Screen/MeditationScreens/MeditationConsent';
-import MeditationRoutine from '../Screen/MeditationScreens/MeditationRoutine';
 import LogSignUp from '../Screen/LogSignUp';
 import NewEditProfile from '../Component/NewEditProfile';
 import NewPersonalDetails from '../Screen/NewPersonalDetails';
 
-import SleepDuration from '../Screen/MeditationScreens/SleepDuration';
-import MentalState from '../Screen/MeditationScreens/MentalState';
-import Alcohalinfo from '../Screen/MeditationScreens/Alcohalinfo';
 import FocusArea from '../Screen/FocusArea';
 import Injury from '../Screen/Yourself/Injury';
-import Preview from '../Screen/Yourself/Preview';
+
 import WorkoutArea from '../Screen/Yourself/WorkoutArea';
 import Age from '../Screen/Yourself/Age';
 import Goal from '../Screen/Yourself/Goal';
 import LoadData from '../Screen/Yourself/LoadData';
-import PredictionScreen from '../Screen/MeditationScreens/PredictionScreen';
-import {CardStyleInterpolators, createStackNavigator} from '@react-navigation/stack';
-
-import AlcohalConsent from '../Screen/MeditationScreens/AlcohalConsent';
 import Profile from '../Screen/NewHome/Profile';
 import BottomTab from './BottomTab';
 import WorkoutDescription from '../Screen/NewWorkouts/WorkoutsDescription';
@@ -53,24 +40,50 @@ import MeditationExerciseDetails from '../Screen/NewHome/MeditationExerciseDetai
 import AITrainer from '../Screen/NewHome/AITrainer';
 import AIMessageHistory from '../Screen/NewHome/AIMessageHistory';
 import Subscription from '../Screen/Subscription/Subscription';
-
 import Report from '../Screen/NewHome/Report';
 import NewProgressScreen from '../Screen/NewHome/NewProgressScreen';
 import NewMonthlyAchievement from '../Screen/NewHome/NewMonthlyAchievement';
+// import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {createStackNavigator} from '@react-navigation/stack';
+import Store from '../Screen/NewHome/Store';
+import FocuseWorkoutList from '../Screen/FocusArea/FocuseWorkoutList';
+import CustomWorkout from '../Screen/CustomWorkout/CustomWorkout';
+import CustomWorkoutDetails from '../Screen/CustomWorkout/CustomWorkoutDetails';
+import CreateWorkout from '../Screen/CustomWorkout/CreateWorkout';
+import EditCustomWorkout from '../Screen/CustomWorkout/EditCustomWorkout';
+
+import Experience from '../Screen/Experience';
+import AskToCreateWorkout from '../Screen/AskToCreateWorkout';
+import WorkoutDayData from '../Screen/FocusArea/WorkoutDayData';
+
+import WorkoutDetail from '../Screen/CustomWorkout/WorkoutDetail';
+import PredictionScreen from '../Screen/Yourself/PredictionScreen';
+import GymListing from '../Screen/GymListing/GymListing';
+import Trainer from '../Screen/NewHome/Trainer';
+import HomeNew from '../Screen/NewHome/HomeNew';
+import LetsStart from '../Screen/LetsStart';
+import NewFocusWorkouts from '../Screen/FocusArea/NewFocusWorkouts';
+
+import WorkoutCategories from '../Screen/NewWorkouts/WorkoutCategories';
+import Name from '../Screen/Yourself/Name';
 
 const Stack = createStackNavigator();
 
 const screenOptions = {
   headerShown: false,
-  gestureDirection: 'horizontal',
-  gesturesEnabled: true,
-  cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+  animationEnabled: true,
 
+  gestureEnabled: false,
+  // gestureDirection: 'horizontal',
+  // gesturesEnabled: true,
+  // cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
 };
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
+    
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
+      
       <Stack.Screen
         name="IntroductionScreen1"
         component={IntroductionScreen1}
@@ -85,15 +98,15 @@ export const LoginStack = () => {
       />
       <Stack.Screen name="LogSignUp" component={LogSignUp} />
       <Stack.Screen name="Yourself" component={Yourself} />
+      <Stack.Screen name="Name" component={Name}/>
       <Stack.Screen name="Injury" component={Injury} />
+      <Stack.Screen name="Experience" component={Experience} />
+      <Stack.Screen name="AskToCreateWorkout" component={AskToCreateWorkout} />
       <Stack.Screen name="FocusArea" component={FocusArea} />
       <Stack.Screen name="WorkoutArea" component={WorkoutArea} />
-      <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />
-
       <Stack.Screen name="Edit_Profile" component={NewEditProfile} />
       <Stack.Screen name="NewPersonalDetails" component={NewPersonalDetails} />
-
       <Stack.Screen name="Scale" component={Scale} />
       <Stack.Screen name="Gender" component={Gender} />
       <Stack.Screen name="Equipment" component={Equipment} />
@@ -103,15 +116,8 @@ export const LoginStack = () => {
       <Stack.Screen name="Weight" component={Weight} />
       <Stack.Screen name="Age" component={Age} />
       <Stack.Screen name="PredictionScreen" component={PredictionScreen} />
-      <Stack.Screen name="MeditationConsent" component={MeditationConsent} />
-      <Stack.Screen name="MeditationRoutine" component={MeditationRoutine} />
-      <Stack.Screen name="SleepDuration" component={SleepDuration} />
-      <Stack.Screen name="MentalState" component={MentalState} />
-      <Stack.Screen name="Alcohalinfo" component={Alcohalinfo} />
       <Stack.Screen name="LoadData" component={LoadData} />
-      <Stack.Screen name="Preview" component={Preview} />
       <Stack.Screen name="Goal" component={Goal} />
-      <Stack.Screen name="AlcoholConsent" component={AlcohalConsent} />
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="NewEditProfile" component={NewEditProfile} />
       <Stack.Screen name="WorkoutsDescription" component={WorkoutDescription} />
@@ -124,17 +130,37 @@ export const LoginStack = () => {
       <Stack.Screen name="Meals" component={Meals} />
       <Stack.Screen name="MealDetails" component={MealDetails} />
       <Stack.Screen name="ProductsList" component={ProductsList} />
+      <Stack.Screen name="Store" component={Store} />
       <Stack.Screen name="MeditationDetails" component={MeditationDetails} />
       <Stack.Screen
         name="MeditationExerciseDetails"
         component={MeditationExerciseDetails}
       />
-        <Stack.Screen name="Report" component={Report}/>
+      <Stack.Screen name="Report" component={Report} />
       <Stack.Screen name="BottomTab" component={BottomTab} />
       <Stack.Screen name="AITrainer" component={AITrainer} />
       <Stack.Screen name="AIMessageHistory" component={AIMessageHistory} />
       <Stack.Screen name="Subscription" component={Subscription} />
-      <Stack.Screen name="NewProgressScreen" component={NewMonthlyAchievement}/>
+      <Stack.Screen
+        name="NewMonthlyAchievement"
+        component={NewMonthlyAchievement}
+      />
+      <Stack.Screen name="FocuseWorkoutList" component={FocuseWorkoutList} />
+      <Stack.Screen name="CustomWorkout" component={CustomWorkout} />
+      <Stack.Screen
+        name="CustomWorkoutDetails"
+        component={CustomWorkoutDetails}
+      />
+      <Stack.Screen name="CreateWorkout" component={CreateWorkout} />
+      <Stack.Screen name="EditCustomWorkout" component={EditCustomWorkout} />
+      <Stack.Screen name="WorkoutDayData" component={WorkoutDayData} />
+      <Stack.Screen name="WorkoutDetail" component={WorkoutDetail} />
+      <Stack.Screen name="GymListing" component={GymListing} />
+      <Stack.Screen name="Trainer" component={Trainer} />
+      <Stack.Screen name="Home" component={HomeNew} />
+      <Stack.Screen name="LetsStart" component={LetsStart} />
+      <Stack.Screen name="NewFocusWorkouts" component={NewFocusWorkouts} />
+      <Stack.Screen name="WorkoutCategories" component={WorkoutCategories} />
     </Stack.Navigator>
   );
 };

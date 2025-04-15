@@ -17,11 +17,11 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import {setLaterButtonData} from '../Component/ThemeRedux/Actions';
 import Bulb from './Yourself/Bulb';
-
 const FocusArea = ({route, navigation}) => {
   const dispatch = useDispatch();
   const {nextScreen} = route.params;
-  const {getLaterButtonData} = useSelector(state => state);
+  // const {getLaterButtonData} = useSelector(state => state);
+  const getLaterButtonData = useSelector(state => state.getLaterButtonData);
   const [screen, setScreen] = useState(nextScreen);
   const [selectedItems, setSelectedItems] = useState([]);
 
@@ -35,38 +35,20 @@ const FocusArea = ({route, navigation}) => {
    dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
    navigation.navigate('WorkoutArea', {nextScreen: screen + 1});
     {
-      console.log('Focuse Area Screen Data', [
-        ...getLaterButtonData,
-        currentData,
-      ]);
+  
     }
   };
 
   return (
     <View style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      <View
-        style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          //position: 'absolute',
-          marginTop:
-             DeviceHeigth * 0.07,
-        }}>
+     
         <ProgressBar screen={screen} />
-      </View>
-      <View
-        style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginTop:-
-          DeviceHeigth * 0.03,
-        }}>
+     
+      {/* <View style={{marginTop:- DeviceHeigth * 0.05,alignSelf:'center'}}> */}
+      <View style={{marginTop:Platform.OS=='ios'?- DeviceHeigth * 0.05:- DeviceHeigth * 0.02,alignSelf:'center'}}>
         <Bulb
           screen={'Select your Focus area'}
-          header={
-            'Knowing your age can help us for you based on different metabolic rates.'
-          }
         />
       </View>
       <View>

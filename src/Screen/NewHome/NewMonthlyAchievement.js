@@ -11,86 +11,34 @@ import {
 } from 'react-native';
 import React, {useMemo, useState, useEffect} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
-import {AppColor} from '../../Component/Color';
+import {AppColor, Fonts} from '../../Component/Color';
 import {localImage} from '../../Component/Image';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {Calendar} from 'react-native-calendars';
-import AppleHealthKit from 'react-native-health';
 import moment from 'moment';
 import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
 import AnimatedLottieView from 'lottie-react-native';
-import Calories from '../../Component/Calories';
-import ActivityLoader from '../../Component/ActivityLoader';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import {showMessage} from 'react-native-flash-message';
+import Loader from '../../Component/Loader';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
+import {
+  BmiMeter,
+  BMImodal,
+  CaloriesActionReport,
+} from '../../Component/BmiComponent';
 const NewMonthlyAchievement = () => {
   const [getDate, setDate] = useState(moment().format('YYYY-MM-DD'));
-  const [selected, setSelected] = useState(false);
-  const [steps, setSteps] = useState(0);
-  const [Distance, setDistance] = useState(0);
-  const [calories, setCalories] = useState(0);
-  const {getUserDataDetails, getCustttomeTimeCal, getHealthData} = useSelector(
-    state => state,
-  );
+  const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
+  const getBmi = useSelector(state => state.getBmi);
   const [ApiData, setApiData] = useState([]);
-  const [WorkoutCount, setWorkoutCount] = useState(0);
   const [WokoutCalories, setWorkoutCalories] = useState(0);
-  const [WokroutTime_m, setWorkoutTime_m] = useState(0);
-  const [WokroutTime_s, setWorkoutTime_s] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [calories1, setCalories1] = useState(0);
-  const [Wtime, setWtime] = useState(0);
-
+  const [modalVisible, setModalVisible] = useState(false);
+  const dispatch = useDispatch();
   useEffect(() => {
-    // console.log("heloo===>",getCustttomeTimeCal[0])
-    const Calories1 = getCustttomeTimeCal.map(value => value.totalCalories);
-    const Calories2 = Calories1?.reduce((acc, ind) => acc + ind, 0);
-    const time1 = getCustttomeTimeCal?.map(value =>
-      parseInt(value.totalRestTime),
-    );
-    const Time2 = time1?.reduce((acc, ind) => Math.ceil((acc + ind) / 60), 0);
-    setWtime(Time2);
-    // console.log('>>>>>>',Time2)
-    if (Platform.OS == 'ios') {
-      let options = {
-        date: new Date().toISOString(), // optional; default now
-        includeManuallyAdded: true, // optional: default true
-      };
-      AppleHealthKit.getStepCount(options, (callbackError, results) => {
-        if (callbackError) {
-          console.error('Error while getting the data:', callbackError);
-          // Handle the error as needed
-        } else {
-          // console.log('iOS ', results);
-          setCalories1(
-            parseInt(((results?.value / 20) * 1).toFixed(0)) +
-              parseInt(Calories2),
-          );
-        }
-      });
-    } else if (Platform.OS == 'android') {
-      console.log('android======>', getHealthData);
-      // setCalories( getHealthData[1]?getHealthData[1].Calories:0)
-      setCalories1(
-        Calories2 + parseInt(getHealthData[1] ? getHealthData[1].Calories : 0),
-      );
-    }
-  }, []);
-  const theme = useMemo(() => {
-    return {
-      calendarBackground: AppColor.BACKGROUNG,
-      selectedDayBackgroundColor: AppColor.RED,
-      selectedDayTextColor: AppColor.WHITE,
-      todayTextColor: AppColor.BLACK,
-      arrowColor: AppColor.RED,
-      monthTextColor: AppColor.RED,
-      indicatorColor: AppColor.RED,
-      textMonthFontSize: 17,
-      textDayFontFamily: 'Poppins-SemiBold',
-      textMonthFontFamily: 'Poppins-SemiBold',
-      dayTextColor: AppColor.BLACK,
-    };
+    DateWiseData(moment.utc().format('YYYY-MM-DD')); // to get the datewise data
   }, []);
   const DateWiseData = async Date1 => {
     const payload = new FormData();
@@ -112,55 +60,25 @@ const NewMonthlyAchievement = () => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-     
-      }
-     else if (res) {
+        setIsLoaded(true);
+      } else if (res) {
+        setIsLoaded(true);
         setApiData(res.data.data);
-        const Calories = res.data.data.map(value =>
-          parseInt(value.exercise_calories),
+        const Calories = res?.data?.data?.map(value =>
+          parseInt(value?.exercise_calories),
         );
-        //  cont Time=res.data.data.map((value)=>parseInt(value.))
         setWorkoutCalories(Calories?.reduce((acc, num) => acc + num, 0)); // adding steps calories here
         setIsLoaded(true);
-       
+
         if (Platform.OS == 'android') {
-          setSteps(res?.data?.steps[0]?.steps ? res?.data?.steps[0]?.steps : 0);
-          setCalories(
-            res?.data?.steps[0]?.calories ? res?.data?.steps[0]?.calories : 0,
-          );
-          setDistance(
-            res?.data?.steps[0]?.distance ? res?.data?.steps[0]?.distance : 0,
-          );
+          // nothing to show for now
         }
-      } else {
-        isLoaded(true);
       }
     } catch (error) {
       console.log('DatwWiseDataError', error);
       setIsLoaded(true);
     }
   };
-  const HandleStepsAndCalories = Date1 => {
-    if (Platform.OS == 'ios') {
-      let options = {
-        date: new Date(Date1).toISOString(), // optional; default now
-        includeManuallyAdded: true, // optional: default true
-      };
-      AppleHealthKit.getStepCount(options, (callbackError, results) => {
-        if (callbackError) {
-          console.error('Error while getting the data:', callbackError);
-          // Handle the error as needed
-        } else {
-    
-          setSteps(results?.value);
-          setDistance(((results?.value / 20) * 0.01).toFixed(2));
-          setCalories(((results?.value / 20) * 1).toFixed(0));
-        }
-      });
-    } else if (Platform.OS == 'android') {
-    }
-  };
-
   const EmptyComponent = () => {
     return (
       <View
@@ -184,98 +102,109 @@ const NewMonthlyAchievement = () => {
       </View>
     );
   };
-  const DailyData = [
-    {
-      id: 1,
-      img: (
-        <Image
-          source={localImage.Step1}
-          style={{height: 25, width: 25}}
-          resizeMode="contain"
-        />
-      ),
-      txt: `${parseInt(calories) + WokoutCalories} Kcal`,
-    },
-    {
-      id: 2,
-      img: (
-        <Image
-          source={localImage.Step2}
-          style={{height: 25, width: 25}}
-          resizeMode="contain"
-        />
-      ),
-      txt: `${Distance} Km`,
-    },
-    {
-      id: 3,
-      img: (
-        <Image
-          source={localImage.Step3}
-          style={{height: 25, width: 25}}
-          resizeMode="contain"
-          tintColor={AppColor.RED}
-        />
-      ),
-      txt: steps,
-    },
-  ];
-  const Card_Data = [
-    {
-      id: 1,
-      img: localImage.Fire1,
-      txt1: calories1,
-      txt2: 'KCal',
-    },
-    {
-      id: 2,
-      img: localImage.Clock_p,
-      txt1: Wtime,
-      txt2: 'Min',
-    },
-    {
-      id: 3,
-      img: localImage.Biceps_p,
-      txt1: getCustttomeTimeCal[0]
-        ? getCustttomeTimeCal[0]?.exerciseCount
-        : '0',
-      txt2: 'Actions',
-    },
+  const theme = useMemo(() => {
+    return {
+      calendarBackground: AppColor.WHITE,
+      selectedDayBackgroundColor: AppColor.RED,
+      selectedDayTextColor: AppColor.WHITE,
+      todayTextColor: AppColor.BLACK,
+      arrowColor: AppColor.RED,
+      monthTextColor: AppColor.RED,
+      indicatorColor: AppColor.RED,
+      textMonthFontSize: 17,
+      textDayFontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+      textMonthFontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+      dayTextColor: AppColor.BLACK,
+    };
+  }, []);
+  const CalroiesActionArr = [
+    {id: 1, img: localImage.Fire1, txt: 'Total Kcal', value: WokoutCalories},
+    {id: 1, img: localImage.Action, txt: 'Action', value: ApiData?.length},
   ];
   return (
     <SafeAreaView style={styles.Container}>
-      <NewHeader header={'Monthly Achievement'} backButton={true} />
+      <NewHeader header={'Report'} />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View
-          style={{
-            width: DeviceWidth * 0.9,
-            alignSelf: 'center',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          {Card_Data.map((value, index) => (
-            <View key={index} style={styles.cards}>
-              <Image
-                source={value.img}
-                style={{width: 50, height: 50, alignSelf: 'center'}}
-                resizeMode="contain"
-              />
-              <Text style={[styles.txts, {color: AppColor.RED}]}>
-                {value?.txt1}
+        {getBmi?.Bmi ? (
+          <View>
+            <View style={styles.View4}>
+              <Text
+                style={[
+                  styles.txt1,
+                  {fontFamily: Fonts.MONTSERRAT_BOLD, fontSize: 19},
+                ]}>
+                BMI
               </Text>
-              <Text style={styles.txts}>{value.txt2}</Text>
+              <TouchableOpacity onPress={() => setModalVisible(true)}>
+                <Text
+                  style={[styles.txt1, {fontSize: 19, color: AppColor.RED}]}>
+                  Edit
+                </Text>
+              </TouchableOpacity>
             </View>
-          ))}
-        </View>
-
-        <View style={styles.card}>
+            <View
+              style={[
+                styles.card,
+                {
+                  justifyContent: 'center',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                },
+              ]}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  paddingHorizontal: 10,
+                  alignItems: 'center',
+                }}>
+                <Text style={styles.txt4}>Weight: {getBmi?.userWeight}</Text>
+                <View
+                  style={{
+                    height: 20,
+                    width: 0,
+                    borderWidth: 0.3,
+                    borderColor: AppColor.Gray5,
+                    marginHorizontal: 10,
+                  }}
+                />
+                <Text style={styles.txt4}>Height: {getBmi?.userHeight}</Text>
+              </View>
+              <View style={{marginTop: 20}}>
+                <BmiMeter getBmi={getBmi?.Bmi} />
+              </View>
+            </View>
+          </View>
+        ) : (
+          <View style={styles.card}>
+            <Text
+              style={{
+                fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                color: AppColor.BLACK,
+                fontSize: 16,
+              }}>
+              BMI (kg/m²)
+            </Text>
+            <Text
+              style={{
+                color: AppColor.RED,
+                fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                fontSize: 17,
+              }}
+              onPress={() => {
+                setModalVisible(true);
+              }}>
+              Check
+            </Text>
+          </View>
+        )}
+        <View style={[styles.card, {flexDirection: 'column'}]}>
           <Calendar
             onDayPress={day => {
-              console.log(day);
+              AnalyticsConsole(`${day.dateString.replaceAll('-', '_')}`);
               setDate(day.dateString);
-              setSelected(true);
-              HandleStepsAndCalories(day.dateString);
               DateWiseData(day.dateString);
+              setIsLoaded(false);
             }}
             allowSelectionOutOfRange={false}
             markingType="period"
@@ -294,123 +223,94 @@ const NewMonthlyAchievement = () => {
               styles.calender,
               {
                 width: DeviceWidth * 0.85,
-                backgroundColor: AppColor.BACKGROUNG,
+                backgroundColor: AppColor.WHITE,
               },
             ]}
             theme={theme}
           />
-        </View>
-        <View
-          style={{
-            marginVertical: 20,
-            width: DeviceWidth * 0.9,
-            alignSelf: 'center',
-          }}>
-          <Text
+          <View
             style={{
-              color: AppColor.BoldText,
-              fontFamily: 'Poppins-SemiBold',
-              fontSize: 24,
-            }}>
-            {moment(getDate).format('MMM DD, YYYY')}
-          </Text>
-        </View>
-        <View
-          style={{
-            marginBottom: 20,
-            width: DeviceWidth * 0.9,
-            alignSelf: 'center',
-          }}>
-          {ApiData.length == 0 ? null : (
-            <Text
-              style={{
-                color: AppColor.BoldText,
-                fontFamily: 'Poppins-SemiBold',
-                fontSize: 14,
-              }}>
-              {`${ApiData?.length} Workouts`}
-            </Text>
-          )}
-        </View>
-
-        {ApiData.length == 0 ? (
-          <EmptyComponent />
-        ) : (
-          <View style={[styles.card, {flexDirection: 'column'}]}>
-            {isLoaded ? null : <ActivityLoader />}
-            <FlatList
-              data={ApiData}
-              horizontal
-              renderItem={(value, index) => {
-                return (
-                  <View>
-                    <View
-                      style={{
-                        width: 90,
-                        height: 80,
-                        marginHorizontal: 10,
-                        borderRadius: 20,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        backgroundColor: AppColor.GRAY,
-                      }}>
-                      <Image
-                        source={{uri: value.item.exercise_image_link}}
-                        style={{
-                          height: 70,
-                          width: 70,
-                        }}
-                        resizeMode="contain"
-                      />
-                    </View>
-                    <Text
-                      style={{
-                        textAlign: 'center',
-                        marginVertical: 10,
-                        width: 90,
-                        fontFamily: 'Poppins-SemiBold',
-                        color: AppColor.BoldText,
-                        fontSize: 12,
-                        marginLeft: 4,
-                      }}>
-                      {value.item.exercise_title}
-                    </Text>
-                  </View>
-                );
-              }}
-            />
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginVertical: 10,
-              }}>
-              {DailyData.map((value, index) => (
-                <View
-                  key={index}
-                  style={{
-                    marginHorizontal: 10,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                  {value.img}
-                  <Text
-                    style={{
-                      textAlign: 'center',
-                      color: AppColor.BoldText,
-                      fontSize: 14,
-                      fontWeight: '600',
-                      marginLeft: 8,
-                    }}>
-                    {value.txt}
-                  </Text>
+              borderWidth: 0.4,
+              height: 0,
+              marginTop: 15,
+              borderColor: AppColor.GRAY2,
+              marginHorizontal: -20,
+            }}
+          />
+          <View style={{marginVertical: 20, marginHorizontal: -20}}>
+            {ApiData.length == 0 ? (
+              isLoaded ? (
+                <EmptyComponent />
+              ) : (
+                <Loader />
+              )
+            ) : isLoaded ? (
+              <>
+                <FlatList
+                  data={ApiData}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  renderItem={(value, index) => {
+                    return (
+                      <View>
+                        <View
+                          style={{
+                            // width: 90,
+                            borderColor: AppColor.GRAY1,
+                            borderRadius: 6,
+                            marginHorizontal: 10,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: AppColor.WHITE,
+                            borderWidth: 1,
+                          }}>
+                          <Image
+                            source={{uri: value.item.exercise_image_link}}
+                            style={{
+                              height: 70,
+                              width: 70,
+                            }}
+                            resizeMode="contain"
+                          />
+                          <Text
+                            style={{
+                              textAlign: 'center',
+                              width: 90,
+                              fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                              color: AppColor.BoldText,
+                              fontSize: 12,
+                              backgroundColor: AppColor.LIGHTGREY2,
+                              padding: 10,
+                              borderBottomRightRadius: 6,
+                              borderBottomLeftRadius: 6,
+                            }}>
+                            {value.item.exercise_title}
+                          </Text>
+                        </View>
+                      </View>
+                    );
+                  }}
+                  initialNumToRender={10}
+                  maxToRenderPerBatch={10}
+                  updateCellsBatchingPeriod={100}
+                  removeClippedSubviews={true}
+                  keyExtractor={(item, index) => index.toString()}
+                />
+                <View style={{marginTop: 20, marginHorizontal: 10}}>
+                  <CaloriesActionReport arr={CalroiesActionArr} />
                 </View>
-              ))}
-            </View>
+              </>
+            ) : (
+              <Loader />
+            )}
           </View>
-        )}
+        </View>
       </ScrollView>
+      <BMImodal
+        setModalVisible={setModalVisible}
+        modalVisible={modalVisible}
+        dispatch={dispatch}
+      />
     </SafeAreaView>
   );
 };
@@ -422,8 +322,9 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 20,
-    backgroundColor: AppColor.BACKGROUNG,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: AppColor.WHITE,
     width: DeviceWidth * 0.95,
     borderRadius: 20,
     marginVertical: 10,
@@ -443,7 +344,6 @@ const styles = StyleSheet.create({
   cards: {
     backgroundColor: AppColor.BACKGROUNG,
     width: (DeviceWidth * 0.9) / 3.2,
-    marginRight: 5,
     marginBottom: 20,
     ...Platform.select({
       ios: {
@@ -459,12 +359,45 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
   },
+  View2: {},
+  View4: {
+    width: DeviceWidth * 0.9,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  View5: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  // text styles
+  txt1: {
+    fontSize: 18,
+    color: AppColor.BLACK,
+    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+  },
+  txt2: {
+    color: AppColor.BLACK,
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    fontSize: 18,
+    marginVertical: 15,
+  },
+  txt3: {
+    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+    fontSize: 17,
+  },
   txts: {
     color: AppColor.BLACK,
     textAlign: 'center',
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Montserrat-Regular',
     fontSize: 16,
     marginTop: 10,
   },
+  txt4: {
+    color: AppColor.BLACK,
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    fontSize: 17,
+  },
+  // Button styles
 });
 export default NewMonthlyAchievement;

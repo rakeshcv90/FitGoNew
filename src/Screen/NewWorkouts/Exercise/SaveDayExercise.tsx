@@ -1,22 +1,164 @@
 import {Image, Platform, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {AppColor} from '../../../Component/Color';
+import {AppColor, Fonts} from '../../../Component/Color';
 import {localImage} from '../../../Component/Image';
 import GradientText from '../../../Component/GradientText';
-import {DeviceHeigth, DeviceWidth} from '../../../Component/Config';
+import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../../Component/Config';
 import GradientButton from '../../../Component/GradientButton';
+import analytics from '@react-native-firebase/analytics';
+import {ReviewApp} from '../../../Component/ReviewApp';
+import axios from 'axios';
+import {setChallengesData} from '../../../Component/ThemeRedux/Actions';
+import {useDispatch, useSelector} from 'react-redux';
+import VersionNumber, {appVersion} from 'react-native-version-number';
+import moment from 'moment';
+import {BannerAdd} from '../../../Component/BannerAdd';
+import {bannerAdId} from '../../../Component/AdsId';
+import {AnalyticsConsole} from '../../../Component/AnalyticsConsole';
 
+const WeekArray = Array(7)
+  .fill(0)
+  .map(
+    (item, index) =>
+      (item = moment()
+        .add(index, 'days')
+        .subtract(moment().isoWeekday() - 1, 'days')
+        .format('dddd')),
+  );
 const SaveDayExercise = ({navigation, route}: any) => {
-  const {data, day} = route?.params;
+  const {data, day, allExercise, type, challenge} = route?.params;
+  const getAllExercise = useSelector((state: any) => state.getAllExercise);
   let fire, clock, action;
-  for (const d in data?.days) {
-    if (d.split('day_')[1] == day) {
-      action = data?.days[d]?.exercises.length;
-      fire = data?.days[d]?.total_calories;
-      clock = data?.days[d]?.total_rest;
+  const [workoutName, setWorkooutName] = useState('');
+  const dispatch = useDispatch();
+  const getUserDataDetails = useSelector(
+    (state: any) => state.getUserDataDetails,
+  );
+  const getPurchaseHistory = useSelector(
+    (state: any) => state.getPurchaseHistory,
+  );
+console.log('Data---->',data,type)
+  const getWeeklyAPI = async () => {
+    try {
+      const res = await axios({
+        url:
+          NewAppapi.GET_PLANS_EXERCISE +
+          '?version=' +
+          VersionNumber.appVersion +
+          '&day=' +
+          WeekArray[day] +
+          '&user_id=' +
+          getUserDataDetails.id,
+      });
+      if (res.data?.msg != 'User not exist.') {
+        setWorkooutName(res.data?.title);
+      } else {
+        setWorkooutName('');
+      }
+    } catch (error) {
+      setWorkooutName('');
     }
+  };
+  if (type == 'day') {
+    for (const d in data?.days) {
+      if (d.split('day_')[1] == day) {
+        action = data?.days[d]?.exercises.length;
+        fire = data?.days[d]?.total_calories;
+        clock = data?.days[d]?.total_rest;
+      }
+    }
+  } else {
+    allExercise?.map((item: any) => {
+      action = allExercise?.length;
+      fire = item?.exercise_calories;
+      clock = item?.exercise_rest?.split(' ')[0];
+    });
+    if (type == 'weekly') getWeeklyAPI();
   }
+
+  const TESTAPI = async () => {
+    try {
+      const data = await axios(`${NewAppapi.total_Calories}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          user_id: 111,
+        },
+      });
+      if (data.data) {
+        console.log('TEST API DATA', data.data);
+      }
+    } catch (error) {
+      console.log('UCustomeCorkout details', error);
+    }
+  };
+
+  const ChallengesDataAPI = async () => {
+    try {
+      const res = await axios({
+        url:
+          NewAppapi.GET_CHALLENGES_DATA +
+          '?version=' +
+          VersionNumber.appVersion +
+          '&user_id=' +
+          getUserDataDetails?.id,
+      });
+      if (res.data?.msg != 'version  is required') {
+        dispatch(setChallengesData(res.data));
+      } else {
+        dispatch(setChallengesData([]));
+      }
+      navigation.navigate('WorkoutDays', {data, challenge});
+    } catch (error) {
+      console.error(error, 'ChallengesDataAPI ERRR');
+      navigation.navigate('WorkoutDays', {data, challenge});
+    }
+  };
+
+  let categoryExercise: Array<any> = [];
+
+  const onPresh = () => {
+    AnalyticsConsole(`SBA_Exer_Com`);
+    if (type == 'focus') {
+      categoryExercise = getAllExercise?.filter((item: any) =>
+        data.category.split('/').includes(item?.exercise_bodypart),
+      );
+    }
+    type == 'custom'
+      ? navigation.navigate('CustomWorkoutDetails', {item: data})
+      : challenge
+      ? ChallengesDataAPI()
+      : type == 'focus'
+      ? navigation.navigate('WorkoutCategories', {
+          categoryExercise,
+          CategoryDetails: data,
+        })
+      : type=='bodypart'?navigation.navigate('NewFocusWorkouts',{
+        focusExercises:allExercise,
+        focusedPart:data?.title,
+        searchCriteria:data?.searchCriteria,
+        searchCriteriaRedux:data?.searchCriteriaRedux,
+        CategoryDetails:data
+
+      }):navigation.navigate('MyPlans') //add here 
+  };
+  const bannerAdsDisplay = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return null;
+      } else {
+        return <BannerAdd bannerAdId={bannerAdId} />;
+      }
+    } else {
+      return <BannerAdd bannerAdId={bannerAdId} />;
+    }
+  };
+
   return (
     <SafeAreaView
       style={{
@@ -27,14 +169,26 @@ const SaveDayExercise = ({navigation, route}: any) => {
       }}>
       <Image
         source={localImage.Congrats}
-        style={{flex: 0.6, marginTop: DeviceHeigth * 0.1}}
+        style={{flex: 0.6, marginTop: DeviceHeigth * 0.02}}
         resizeMode="contain"
       />
-      <GradientText
-        text="Congratulations!"
-        fontSize={32}
-        width={DeviceWidth * 0.7}
-      />
+      <View
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          alignSelf: 'center',
+        }}>
+        <Text
+          style={{
+            color: AppColor.RED1,
+            fontSize: 28,
+            lineHeight: 40,
+            fontWeight: '600',
+            fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+          }}>
+          Congratulations!
+        </Text>
+      </View>
       <Text
         style={{
           fontSize: 16,
@@ -45,14 +199,20 @@ const SaveDayExercise = ({navigation, route}: any) => {
           width: DeviceWidth * 0.9,
           textAlign: 'center',
         }}>
-        You completed your {data?.workout_title} Exercise
+        You completed your{' '}
+        {type != 'weekly'
+          ? data?.workout_title == undefined
+            ? data?.title
+            : data?.workout_title + ' Exercise'
+          : workoutName + ' Exercises'}
       </Text>
+
       <View
         style={{
           marginHorizontal: 10,
           flexDirection: 'row',
           alignItems: 'center',
-          marginVertical: DeviceHeigth * 0.1,
+          marginVertical: DeviceHeigth * 0.02,
         }}>
         <View style={styles.container}>
           <Image
@@ -60,7 +220,16 @@ const SaveDayExercise = ({navigation, route}: any) => {
             style={{flex: 1}}
             resizeMode="contain"
           />
-          <GradientText text={fire} width={50} fontSize={28} x={'5'} />
+          <Text
+            style={{
+              fontSize: 16,
+              fontFamily: 'Poppins',
+              lineHeight: 30,
+              color: AppColor.RED1,
+              fontWeight: '500',
+            }}>
+            {fire}
+          </Text>
           <Text
             style={{
               fontSize: 16,
@@ -78,7 +247,16 @@ const SaveDayExercise = ({navigation, route}: any) => {
             style={{flex: 1}}
             resizeMode="contain"
           />
-          <GradientText text={clock} width={50} fontSize={28} x={'5'} />
+          <Text
+            style={{
+              fontSize: 16,
+              fontFamily: 'Poppins',
+              lineHeight: 30,
+              color: AppColor.RED1,
+              fontWeight: '500',
+            }}>
+            {clock}
+          </Text>
           <Text
             style={{
               fontSize: 16,
@@ -87,7 +265,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
               color: '#505050',
               fontWeight: '500',
             }}>
-            sec
+            Sec
           </Text>
         </View>
         <View style={styles.container}>
@@ -96,7 +274,16 @@ const SaveDayExercise = ({navigation, route}: any) => {
             style={{flex: 1}}
             resizeMode="contain"
           />
-          <GradientText text={action} width={30} fontSize={28} x={'5'} />
+          <Text
+            style={{
+              fontSize: 16,
+              fontFamily: 'Poppins',
+              lineHeight: 30,
+              color: AppColor.RED1,
+              fontWeight: '500',
+            }}>
+            {action}
+          </Text>
           <Text
             style={{
               fontSize: 16,
@@ -109,14 +296,24 @@ const SaveDayExercise = ({navigation, route}: any) => {
           </Text>
         </View>
       </View>
-      <GradientButton
-        onPress={() => navigation.navigate('DayRewards',{data, day})}
-        text="Save and Continue"
-        bR={10}
-        h={70}
-        flex={0.2}
-        alignSelf
-      />
+      <View
+        style={{marginBottom: DeviceHeigth * 0.002, top: DeviceHeigth * 0.1}}>
+        <GradientButton
+          onPress={() => {
+            // analytics().logEvent(`CV_FITME_COMPLETED_DAY_${day}_EXERCISES`);
+            ReviewApp(onPresh);
+            // TESTAPI()
+          }}
+          text="Save and Continue"
+          bR={10}
+          h={70}
+          flex={0.2}
+          alignSelf
+        />
+      </View>
+      <View style={{position: 'absolute', bottom: 0}}>
+        {bannerAdsDisplay()}
+      </View>
     </SafeAreaView>
   );
 };

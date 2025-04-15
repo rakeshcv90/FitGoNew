@@ -23,7 +23,7 @@ import Svg, {
   Text as SvgText,
 } from 'react-native-svg';
 import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
-
+import analytics from '@react-native-firebase/analytics';
 const GradientText = ({item}: any) => {
   const gradientColors = ['#D5191A', '#941000'];
 
@@ -52,8 +52,11 @@ const Level = ({route, navigation}: any) => {
   const {nextScreen, gender} = route.params;
   const translateLevel = useRef(new Animated.Value(0)).current;
 
-  const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
-    (state: any) => state,
+  const completeProfileData = useSelector(
+    (state: any) => state.completeProfileData,
+  );
+  const getLaterButtonData = useSelector(
+    (state: any) => state.getLaterButtonData,
   );
   const dispatch = useDispatch();
   const [selected, setSelected] = useState(-1);
@@ -72,6 +75,7 @@ const Level = ({route, navigation}: any) => {
       level: selected,
     };
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
+    analytics().logEvent(`CV_FITME_FITNESS_LEVEL_${selected}`)
     navigation.navigate('Injury', {nextScreen: screen + 1});
   };
   return (
@@ -110,9 +114,10 @@ const Level = ({route, navigation}: any) => {
           }}>
           <FlatList
             ref={flatListRef}
-            keyExtractor={index => index.toString()}
+            keyExtractor={(item, index) => index.toString()}
             data={completeProfileData?.level}
             horizontal
+               
             scrollEnabled={false}
             showsHorizontalScrollIndicator={false}
             renderItem={({item, index}: any) => {
@@ -136,6 +141,10 @@ const Level = ({route, navigation}: any) => {
                 );
               }
             }}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            updateCellsBatchingPeriod={100}
+            removeClippedSubviews={true}
           />
         </View>
         <View style={{height: DeviceHeigth * 0.1}}>

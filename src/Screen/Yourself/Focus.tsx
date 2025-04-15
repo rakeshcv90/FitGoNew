@@ -23,7 +23,7 @@ const Focus = ({data, selectedImage, setSelectedImage, data2}: any) => {
       <FlatList
         data={data2}
         numColumns={2}
-        // horizontal
+        keyExtractor={(item, index) => index.toString()}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           width: DeviceWidth * 0.8,
@@ -89,6 +89,10 @@ const Focus = ({data, selectedImage, setSelectedImage, data2}: any) => {
             </TouchableOpacity>
           );
         }}
+        initialNumToRender={10}
+        maxToRenderPerBatch={10}
+        updateCellsBatchingPeriod={100}
+        removeClippedSubviews={true}
       />
     </View>
   );

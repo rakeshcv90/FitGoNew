@@ -1,30 +1,35 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
-import {AppColor} from '../../Component/Color';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {AppColor, Fonts} from '../../Component/Color';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
-
-const ProgressBar = ({screen, Type}: any) => {
-
+import {useDispatch, useSelector} from 'react-redux';
+const ProgressBar = ({screen}: any) => {
+  const getProgressBarCounter = useSelector(
+    state => state.getProgressBarCounter,
+  );
   return (
     <SafeAreaView
       style={{
-        alignSelf: 'flex-start',
+        alignSelf: 'center',
         alignItems: 'center',
         width: DeviceWidth * 0.9,
-        marginBottom: DeviceHeigth * 0.05,
-        marginTop: Type ? DeviceHeigth * 0.02 : -DeviceHeigth*0.06,
+        marginBottom: DeviceHeigth * 0.07,
+        marginTop: DeviceHeigth * 0.02,
       }}>
-      <View style={{flexDirection: 'row-reverse', alignSelf: 'flex-end'}}>
+      <View style={{alignSelf: 'flex-end'}}>
         <Text
           style={{
             color: '#83898C',
-            fontFamily: 'Poppins',
-            fontWeight: '400',
+            fontFamily: Fonts.MONTSERRAT_MEDIUM,
           }}>
-          <Text style={{color: AppColor.RED}}>{`Step  ${screen} `}</Text>
-          {Type ? 'of 6' : 'of 11'}
+          <Text
+            style={{
+              color: AppColor.RED,
+              fontFamily: Fonts.MONTSERRAT_MEDIUM,
+            }}>{`Step  ${screen} `}</Text>
+          {`of ${getProgressBarCounter}`}
         </Text>
       </View>
       <View
@@ -33,20 +38,23 @@ const ProgressBar = ({screen, Type}: any) => {
           backgroundColor: '#E2E6F9',
           height: 5,
           borderRadius: 5,
-          marginLeft: 40,
           marginTop: 5,
         }}>
         <LinearGradient
-        colors={[AppColor.RED1,AppColor.RED]}
-        start={{x: 0, y: 1}}
-        end={{x: 1, y: 0}}
+          colors={[AppColor.RED1, AppColor.RED]}
+          start={{x: 0, y: 1}}
+          end={{x: 1, y: 0}}
           style={{
             width:
               screen == 0
-                ? Type
-                  ? '16.2%'
-                  : '11%'
-                : `${Type ? 17 * screen : 9 * screen}%`,
+                ? '16.2%'
+                : `${
+                    getProgressBarCounter == 6
+                      ? 16.7 * screen
+                      : getProgressBarCounter == 7
+                      ? 14.25 * screen
+                      : 12.5 * screen
+                  }%`,
             height: 5,
             borderRadius: 5,
           }}

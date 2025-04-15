@@ -33,6 +33,7 @@ import {
   Setmealdata,
   setCurrentWorkoutData,
   setCustomWorkoutData,
+  setTempLogin,
   setUserProfileData,
 } from '../../Component/ThemeRedux/Actions';
 import {showMessage} from 'react-native-flash-message';
@@ -40,7 +41,8 @@ import {showMessage} from 'react-native-flash-message';
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 const LoadData = ({navigation}) => {
-  const {getFcmToken} = useSelector(state => state);
+  const getFcmToken = useSelector(state => state.getFcmToken);
+  const getTempLogin=useSelector(state=>state.getTempLogin)
   const [loadData, setLoadData] = useState(0);
   const buttonName = [
     {
@@ -129,30 +131,14 @@ const LoadData = ({navigation}) => {
       payload.append('id', getUserID != 0 ? getUserID : null);
       payload.append('gender', mergedObject?.gender);
       payload.append('goal', mergedObject?.goal);
-      payload.append('age', mergedObject?.age);
-      payload.append('fitnesslevel', mergedObject?.level); // static values change  it accordingly
-      payload.append('focusarea', mergedObject?.focuseArea?.join(','));
       payload.append('weight', mergedObject?.currentWeight);
+      payload.append('age', mergedObject?.age);
       payload.append('targetweight', mergedObject?.targetWeight);
-      payload.append('height', mergedObject?.height);
-      payload.append(
-        'injury',
-        mergedObject?.injury != null ? mergedObject?.injury?.join(',') : null,
-      );
+      payload.append('experience', mergedObject?.experience);
+      payload.append('workout_plans', mergedObject?.workout_plans);
       payload.append('equipment', mergedObject?.equipment);
-      payload.append('workoutarea', mergedObject?.workoutArea?.join(','));
       payload.append('version', VersionNumber.appVersion);
-      if (mindsetConsent == true) {
-        payload.append('workoutroutine', mindSetData[0].routine);
-        payload.append('sleepduration', mindSetData[1].SleepDuration);
-        payload.append('mindstate', mindSetData[2].mState);
-        payload.append('alcoholconstent', mindSetData[3].Alcohol_Consent);
-
-        if (mindSetData[4]) {
-          payload.append('alcoholquantity', mindSetData[4].Alcohol_Qauntity);
-        }
-      }
-
+      if(getTempLogin){payload.append('name',mergedObject?.name)}
       const data = await axios(`${NewAppapi.Post_COMPLETE_PROFILE}`, {
         method: 'POST',
         headers: {
@@ -174,6 +160,7 @@ const LoadData = ({navigation}) => {
         getUserID != 0
           ? getCustomWorkout(getUserID)
           : customFreeWorkoutDataApi(deviceID);
+          dispatch(setTempLogin(false))
       }
     } catch (error) {
       console.log('Whole Data Error', error);
@@ -192,7 +179,6 @@ const LoadData = ({navigation}) => {
           version: VersionNumber.appVersion,
         },
       });
-  
 
       if (data.data.workout) {
         dispatch(setCustomWorkoutData(data?.data));
@@ -242,7 +228,9 @@ const LoadData = ({navigation}) => {
         setActiveNext(true);
         dispatch(setCustomWorkoutData(res.data));
         // currentWorkoutDataApi(res.data?.workout[0]);
-      } else if (res?.data?.msg=='Please update the app to the latest version.') {
+      } else if (
+        res?.data?.msg == 'Please update the app to the latest version.'
+      ) {
         showMessage({
           message: res?.data?.msg,
           floating: true,
@@ -262,55 +250,6 @@ const LoadData = ({navigation}) => {
       setLoadData(100);
     }
   };
-
-  // const currentWorkoutDataApi = async workout => {
-  //   const mergedObject = Object.assign({}, ...getLaterButtonData);
-  //   try {
-  //     const payload = new FormData();
-  //     payload.append('workoutid', workout?.workout_id);
-  //     payload.append('workoutgender', workout?.workout_gender);
-  //     payload.append('workoutgoal', workout?.workout_goal);
-  //     payload.append('workoutlevel', workout?.workout_level);
-  //     payload.append('workoutarea', workout?.workout_area);
-  //     payload.append('workoutinjury', workout?.workout_injury);
-  //     payload.append('workoutage', mergedObject?.age); //User Age here
-  //     payload.append('workoutequipment', workout?.workout_equipment);
-  //     const res = await axios({
-  //       url: NewAppapi.Free_Excercise_Data,
-
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //       data: payload,
-  //     });
-  //     if (res.data) {
-
-  //       dispatch(setCurrentWorkoutData(res.data));
-  //       setLoadData(100);
-  //     } else dispatch(setCurrentWorkoutData([]));
-
-  //     setLoadData(100);
-  //     setTimeout(() => {
-  //       setActiveNext(true);
-  //       // showMessage({
-  //       //   message: 'Your Custom Workout has beeen created Successfully!!',
-  //       //   type: 'success',
-  //       //   animationDuration: 500,
-  //       //   // statusBarHeight: StatusBar_Bar_Height+,
-  //       //   floating: true,
-  //       //   icon: {icon: 'auto', position: 'left'},
-  //       // });
-  //     }, 2000);
-  //   } catch (error) {
-  //     console.error(error, 'customWorkoutDataApiError');
-  //     dispatch(setCurrentWorkoutData([]));
-  //     setTimeout(() => {
-  //       setActiveNext(true);
-  //     }, 2000);
-  //   }
-  // };
-
   const Meal_List = async () => {
     try {
       const data = await axios(`${NewAppapi.Meal_Categorie}`, {
@@ -322,13 +261,6 @@ const LoadData = ({navigation}) => {
           version: VersionNumber.appVersion,
         },
       });
-
-      // if (data.data.diets.length > 0) {
-      //   dispatch(Setmealdata(data.data.diets));
-      // } else {
-      //   dispatch(Setmealdata([]));
-      // }
-
       if (data?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: data?.data?.msg,
@@ -359,7 +291,7 @@ const LoadData = ({navigation}) => {
           version: VersionNumber.appVersion,
         },
       });
-
+      console.log('Load Data Proile ', data?.data?.profile);
       if (data?.data?.profile) {
         dispatch(setUserProfileData(data.data.profile));
       } else if (
@@ -430,8 +362,8 @@ const LoadData = ({navigation}) => {
       </View>
       {/* <Text style={styles.text}>49%</Text> */}
       <Text style={styles.text1}>Creating your personalized plan...</Text>
-      <Text style={styles.text2}>10,00,000+</Text>
-      <Text style={styles.text2}>Training Plan</Text>
+      <Text style={styles.text2}>10K+</Text>
+      <Text style={styles.text2}>Active Users</Text>
       <Text
         style={[
           styles.text2,
@@ -442,7 +374,9 @@ const LoadData = ({navigation}) => {
             fontWeight: '600',
           },
         ]}>
-        Have Completed
+
+         have achieved their fitness goals
+
       </Text>
       <View
         style={{
@@ -453,6 +387,7 @@ const LoadData = ({navigation}) => {
         <AnimatedFlatList
           data={buttonName}
           showsHorizontalScrollIndicator={false}
+          keyExtractor={(item, index) => index.toString()}
           renderItem={({item, index}) => {
             const translateX = translationX.interpolate({
               inputRange: [0, 1],
@@ -472,6 +407,10 @@ const LoadData = ({navigation}) => {
               </Animated.View>
             );
           }}
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          updateCellsBatchingPeriod={100}
+          removeClippedSubviews={true}
           keyExtractor={(item, index) => index.toString()}
           horizontal
         />
@@ -487,6 +426,10 @@ const LoadData = ({navigation}) => {
           renderItem={renderItem1}
           keyExtractor={(item, index) => index.toString()}
           horizontal
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          updateCellsBatchingPeriod={100}
+          removeClippedSubviews={true}
         />
       </View>
 
@@ -496,7 +439,7 @@ const LoadData = ({navigation}) => {
         {activeNext && (
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('BottomTab');
+              navigation.replace('BottomTab');
             }}>
             <LinearGradient
               start={{x: 0, y: 1}}

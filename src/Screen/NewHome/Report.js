@@ -25,7 +25,7 @@ const Report = ({navigation}) => {
   const [visible, setVisible] = useState(false);
 
 
- console.log("sounds===>",getSoundOffOn)
+
   const [isAlarmEnabled, setAlarmIsEnabled] = useState(false);
 
   const toggleSwitch3 = () => {
@@ -53,7 +53,7 @@ const Report = ({navigation}) => {
     <View style={styles.container}>
       <NewHeader header={'Settings'} SearchButton={false} backButton={true} />
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      {/* <View style={styles.listItem2}>
+      <View style={styles.listItem2}>
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('Subscription');
@@ -73,9 +73,9 @@ const Report = ({navigation}) => {
           />
         </TouchableOpacity>
    
-      </View> */}
+      </View>
       <Text
-        style={[styles.textStyle, {marginHorizontal: 15, marginVertical: 20}]}>
+        style={[styles.textStyle, {marginHorizontal: 15, marginVertical: 20,fontWeight:'700'}]}>
         Timer Setting
       </Text>
       <View style={styles.listItem2}>
@@ -131,8 +131,8 @@ const Report = ({navigation}) => {
         <View
           style={{
             width: '100%',
-            height: 0.5,
-            backgroundColor: '#ABABAB',
+            height: 0.2,
+            backgroundColor:AppColor.BLACK,
             marginVertical: 10,
           }}></View>
         <View
@@ -190,7 +190,7 @@ const Report = ({navigation}) => {
           style={{
             width: '100%',
             height: 0.5,
-            backgroundColor: '#ABABAB',
+            backgroundColor:AppColor.BLACK,
             marginVertical: 10,
           }}></View>
         <View
@@ -261,7 +261,7 @@ var styles = StyleSheet.create({
     fontWeight: '500',
     fontSize: 15,
     lineHeight: 18,
-    color: AppColor.LITELTEXTCOLOR,
+    color: AppColor.BLACK,
   },
 });
 export default Report;

@@ -7,13 +7,13 @@ import {
   Platform,
   ScrollView,
   StatusBar,
-  SafeAreaView,
   Alert,
   ActivityIndicator,
   Modal,
   Linking,
+  PermissionsAndroid,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {localImage} from '../../Component/Image';
 import {
   DeviceHeigth,
@@ -21,54 +21,75 @@ import {
   NewApi,
   NewAppapi,
 } from '../../Component/Config';
-import {AppColor} from '../../Component/Color';
+import {AppColor, Fonts} from '../../Component/Color';
 import LinearGradient from 'react-native-linear-gradient';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import {Switch} from 'react-native-switch';
 import {useDispatch, useSelector} from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {
+  setIsAlarmEnabled,
   setLogout,
   setSoundOnOff,
   setUserProfileData,
 } from '../../Component/ThemeRedux/Actions';
-import {CommonActions} from '@react-navigation/native';
+
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {request, PERMISSIONS, openSettings} from 'react-native-permissions';
 import VersionNumber from 'react-native-version-number';
 import {showMessage} from 'react-native-flash-message';
-import {updatePhoto} from '../../Component/ThemeRedux/Actions';
 import {LogOut} from '../../Component/LogOut';
-import {setProfileImg_Data} from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
-
-import {stack} from 'd3';
-import {ColorShader} from '@shopify/react-native-skia';
-import {navigationRef} from '../../../App';
 import {BlurView} from '@react-native-community/blur';
 import Reminder from '../../Component/Reminder';
 import ActivityLoader from '../../Component/ActivityLoader';
+
+import analytics from '@react-native-firebase/analytics';
+
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import notifee from '@notifee/react-native';
+import moment from 'moment';
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
+
 const Profile = () => {
-  const {getUserDataDetails, ProfilePhoto, getSoundOffOn, allWorkoutData} =
+  const {getUserDataDetails, isAlarmEnabled, getSoundOffOn, allWorkoutData} =
     useSelector(state => state);
   const dispatch = useDispatch();
   const [UpdateScreenVisibility, setUpadteScreenVisibilty] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [notificationTimer, setNotificationTimer] = useState('');
   const [PhotoUploaded, setPhotoUploaded] = useState(true);
   const navigation = useNavigation();
   const [isEnabled, setIsEnabled] = useState(false);
-  const [isAlarmEnabled, setAlarmIsEnabled] = useState(false);
   const [visible, setVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const avatarRef = React.createRef();
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
+  useEffect(() => {
+    notifee.getTriggerNotifications().then(res => {
+      if (res.length > 0) {
+        setNotificationTimer(res[0].trigger.timestamp);
+        dispatch(setIsAlarmEnabled(true));
+      } else {
+        setNotificationTimer('');
+        dispatch(setIsAlarmEnabled(false));
+      }
+    });
+  }, []);
+
   const toggleSwitch3 = () => {
-    !isAlarmEnabled && setVisible(true);
-    setAlarmIsEnabled(previousState => !previousState);
+    if (isAlarmEnabled) {
+      dispatch(setIsAlarmEnabled(false));
+      setNotificationTimer('');
+    } else {
+      setVisible(true);
+    }
+  };
+  const setAlarmIsEnabled = data => {
+    dispatch(setIsAlarmEnabled(data));
   };
   const [modalVisible, setModalVisible] = useState(false);
   const DeleteAccount = () => {
@@ -82,7 +103,6 @@ const Profile = () => {
           method: 'get',
         });
         if (res.data) {
-          // console.log("Delete Account",res.data)
           setForLoading(false);
           setModalVisible(false);
           showMessage({
@@ -205,39 +225,39 @@ const Profile = () => {
       ),
       text1: 'Personal Details',
     },
+    {
+      id: 2,
+      icon1: (
+        <Image
+          source={require('../../Icon/Images/NewImage/subscription.png')}
+          style={[styles.IconView, {height: 23, width: 23}]}
+          resizeMode="contain"
+        />
+      ),
+      text1: 'Subscription',
+    },
     // {
-    //   id: 2,
+    //   id: 3,
     //   icon1: (
     //     <Image
-    //       source={localImage.Documents}
-    //       style={[styles.IconView, {height: 23, width: 23}]}
+    //       source={localImage.Heart}
+    //       style={[styles.IconView, {height: 17, width: 21}]}
     //       resizeMode="contain"
     //     />
     //   ),
-    //   text1: 'My plans',
+    //   text1: 'My Favorites',
     // },
-    {
-      id: 3,
-      icon1: (
-        <Image
-          source={localImage.Heart}
-          style={[styles.IconView, {height: 17, width: 21}]}
-          resizeMode="contain"
-        />
-      ),
-      text1: 'My Favorites',
-    },
-    {
-      id: 4,
-      icon1: (
-        <Image
-          source={localImage.Backupimg}
-          style={[styles.IconView, {height: 18, width: 22}]}
-          resizeMode="contain"
-        />
-      ),
-      text1: 'Backup',
-    },
+    // {
+    //   id: 4,
+    //   icon1: (
+    //     <Image
+    //       source={localImage.Backupimg}
+    //       style={[styles.IconView, {height: 18, width: 22}]}
+    //       resizeMode="contain"
+    //     />
+    //   ),
+    //   text1: 'Backup',
+    // },
     {
       id: 5,
       icon1: (
@@ -247,7 +267,7 @@ const Profile = () => {
           resizeMode="contain"
         />
       ),
-      text1: 'Workout Reminder',
+      text1: 'Reminder',
     },
     {
       id: 6,
@@ -284,6 +304,17 @@ const Profile = () => {
       text1: 'Privacy Policy',
     },
     {
+      id: 10,
+      icon1: (
+        <Image
+          source={localImage.Policy}
+          style={[styles.IconView, {height: 22, width: 22}]}
+          resizeMode="contain"
+        />
+      ),
+      text1: 'Terms Condition',
+    },
+    {
       id: 9,
       icon1: (
         <Image
@@ -306,8 +337,8 @@ const Profile = () => {
       text1: 'Delete Account',
     },
   ];
-  const FirstView = Profile_Data.slice(0, 6);
-  const SecondView = Profile_Data.slice(6);
+  const FirstView = Profile_Data.slice(0, 4);
+  const SecondView = Profile_Data.slice(4);
 
   const UpdateProfileModal = () => {
     const [modalImageUploaded, setModalImageUploaded] = useState(false);
@@ -348,7 +379,6 @@ const Profile = () => {
       }
     };
     const UploadImage = async selectedImage => {
-      // console.log("upload img")
       try {
         let payload = new FormData();
         payload.append('token', getUserDataDetails?.login_token);
@@ -359,7 +389,7 @@ const Profile = () => {
           type: selectedImage?.type,
           uri: selectedImage?.uri,
         });
-        // console.log('payload=====>',payload)
+
         const ProfileData = await axios({
           url: NewAppapi.Upload_Profile_picture,
           method: 'POST',
@@ -368,9 +398,16 @@ const Profile = () => {
           },
           data: payload,
         });
-        // console.log(ProfileData.data[0]);
+
         if (ProfileData.data) {
-          console.log('APi Profile Data===>', ProfileData.data);
+          showMessage({
+            message: ProfileData?.data[0]?.msg,
+            type: 'success',
+            animationDuration: 500,
+
+            floating: true,
+            icon: {icon: 'auto', position: 'left'},
+          });
           getProfileData(getUserDataDetails?.id);
           setImguploaded(true);
           if (IsimgUploaded == true) {
@@ -378,7 +415,6 @@ const Profile = () => {
             setPhotoUploaded(false);
           }
         }
-        // console.log('ProfileData', ProfileData.data);
       } catch (error) {
         setImguploaded(true);
         if (IsimgUploaded == true) {
@@ -390,12 +426,14 @@ const Profile = () => {
     };
     const askPermissionForCamera = async permission => {
       const result = await request(permission);
-      //  console.log("camera result",result)
+
       if (result == 'granted') {
         try {
           const resultCamera = await launchCamera({
             mediaType: 'photo',
-            quality: 0.5,
+            quality: 1,
+            maxWidth: 500,
+            maxHeight: 400,
           });
           setUserAvatar(resultCamera.assets[0]);
           if (resultCamera) {
@@ -426,14 +464,15 @@ const Profile = () => {
       }
     };
     const askPermissionForLibrary = async permission => {
-      //Library permission
       const resultLib = await request(permission);
-      // console.log("result",resultLib)
+
       if (resultLib == 'granted') {
         try {
           const resultLibrary = await launchImageLibrary({
             mediaType: 'photo',
             quality: 0.5,
+            maxWidth: 300,
+            maxHeight: 200,
           });
           setUserAvatar(resultLibrary.assets[0]);
 
@@ -460,9 +499,8 @@ const Profile = () => {
           {cancelable: false},
         );
       } else {
-        console.log('error occured');
+        console.log('Galaey error occured');
       }
-      // });
     };
     return (
       <View
@@ -563,7 +601,10 @@ const Profile = () => {
                       askPermissionForLibrary(PERMISSIONS.IOS.PHOTO_LIBRARY);
                     } else {
                       askPermissionForLibrary(
-                        PERMISSIONS.ANDROID.READ_MEDIA_IMAGES,
+                        Platform.Version >= 33
+                          ? PERMISSIONS.ANDROID.READ_MEDIA_IMAGES
+                          : PermissionsAndroid.PERMISSIONS
+                              .READ_EXTERNAL_STORAGE,
                       );
                     }
                   }}>
@@ -587,7 +628,6 @@ const Profile = () => {
                       onPress={() => {
                         setImguploaded(false);
                         UploadImage(userAvatar);
-                        console.log(userAvatar);
                       }}>
                       <Text style={[styles.cameraText]}>Upload Image</Text>
                     </TouchableOpacity>
@@ -632,128 +672,144 @@ const Profile = () => {
           start={{x: 0, y: 1}}
           end={{x: 1, y: 0}}
           colors={['#D5191A', '#941000']}
-          style={{height: DeviceHeigth * 0.4, width: DeviceWidth}}>
+          style={{height: DeviceHeigth * 0.3, width: DeviceWidth}}>
           <View
             style={{
               justifyContent: 'space-between',
               flexDirection: 'row',
+              top: Platform.OS == 'ios' ? 20 : 0,
               margin: 15,
-              marginVertical: Platform.OS == 'ios' ? DeviceHeigth * 0.05 :  DeviceHeigth * 0.02,
-              alignItems: 'center',
+              // borderWidth: 1,
+
+              marginVertical:
+                Platform.OS == 'ios'
+                  ? DeviceHeigth * 0.04
+                  : DeviceHeigth * 0.02,
+              alignItems: 'flex-start',
             }}>
             <TouchableOpacity
               onPress={() => {
                 navigation.goBack();
-              }}
-              style={{
-                width: DeviceWidth * 0.23,
               }}>
-              <Icons name="chevron-left" size={30} color={AppColor.WHITE} />
+              <View
+                style={{
+                  width: 78,
+                }}>
+                <Icons name="chevron-left" size={30} color={AppColor.WHITE} />
+              </View>
             </TouchableOpacity>
-            <Text
-              style={{
-                fontFamily: 'Poppins-SemiBold',
-                fontSize: 20,
-                color: AppColor.WHITE,
-              }}>
-              {'Profile'}
-            </Text>
+
             <View
               style={{
-                justifyContent: 'center',
                 alignItems: 'center',
+                justifyContent: 'center',
+                alignSelf: 'center',
               }}>
-              <TouchableOpacity
-                onPress={() => {
-                  LogOut(dispatch);
-                  // navigation.navigate('SplaceScreen');
-                }}
-                activeOpacity={0.5}
+              <Text
                 style={{
-                  width: DeviceWidth * 0.2,
-                  borderWidth: 1,
-                  borderRadius: 20,
-                  borderColor: AppColor.WHITE,
-                  justifyContent: 'center',
+                  fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                  fontSize: 20,
+                  color: AppColor.WHITE,
+                }}>
+                {'Profile'}
+              </Text>
+              <View
+                style={[styles.profileView, {marginTop: DeviceHeigth * 0.035}]}>
+                {isLoading && (
+                  <ShimmerPlaceholder
+                    style={styles.loader}
+                    ref={avatarRef}
+                    autoRun
+                  />
+                )}
+                <Image
+                  source={
+                    getUserDataDetails.image_path == null
+                      ? localImage.avt
+                      : {uri: getUserDataDetails.image_path}
+                  }
+                  onLoad={() => setIsLoading(false)}
+                  style={styles.img}
+                  resizeMode="cover"></Image>
+                <TouchableOpacity
+                  style={styles.ButtonPen}
+                  activeOpacity={0.6}
+                  onPress={() => {
+                    setUpadteScreenVisibilty(true);
+                    analytics().logEvent('CV_FITME_CLICKED_ON_EDIT_PROFILE');
+                  }}>
+                  <Image
+                    source={localImage.Pen}
+                    style={styles.pen}
+                    resizeMode="cover"
+                    tintColor={AppColor.WHITE}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View
+                style={{
+                  marginTop: DeviceHeigth * 0.01,
                   alignItems: 'center',
                 }}>
                 <Text
                   style={{
-                    fontFamily: 'Poppins-Medium',
-                    fontSize: 12,
+                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                     color: AppColor.WHITE,
-                    paddingVertical: 1.3,
+                    fontSize: 20,
                   }}>
-                  {'Sign out'}
+                  {getUserDataDetails?.name == null
+                    ? 'Guest'
+                    : getUserDataDetails?.name}
                 </Text>
-              </TouchableOpacity>
+                <Text
+                  style={{
+                    fontFamily: 'Poppins-Medium',
+                    color: AppColor.WHITE,
+                    fontSize: 12,
+                  }}>
+                  {getUserDataDetails?.email == null
+                    ? 'guest.gmail.com'
+                    : getUserDataDetails?.email}
+                </Text>
+              </View>
             </View>
-          </View>
-          <View
-            style={[
-              styles.profileView,
-              {marginTop: Platform.OS == 'ios' ? -DeviceHeigth * 0.035 : 0},
-            ]}>
-            {isLoading && (
-              <ActivityIndicator
-                style={styles.loader}
-                size="large"
-                color="#0000ff"
-              />
-            )}
-            <Image
-              source={
-                getUserDataDetails.image_path == null
-                  ? localImage.avt
-                  : {uri: getUserDataDetails.image_path}
-              }
-              onLoad={() => setIsLoading(false)}
-              style={styles.img}
-              resizeMode="cover"></Image>
+
             <TouchableOpacity
-              style={styles.ButtonPen}
-              activeOpacity={0.6}
-              onPress={() => setUpadteScreenVisibilty(true)}>
-              <Image
-                source={localImage.Pen}
-                style={styles.pen}
-                resizeMode="cover"
-                tintColor={AppColor.WHITE}
-              />
+              onPress={() => {
+                analytics().logEvent('CV_FITME_SIGNED_OUT');
+                LogOut(dispatch);
+                // navigation.navigate('SplaceScreen');
+              }}
+              activeOpacity={0.5}
+              style={{
+                // width: DeviceWidth * 0.2,
+                width: 78,
+
+                borderWidth: 1,
+                borderRadius: 20,
+                borderColor: AppColor.WHITE,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{
+                  fontFamily: 'Poppins-Medium',
+                  fontSize: 12,
+                  color: AppColor.WHITE,
+                  paddingVertical: 1.3,
+                }}>
+                {'Sign out'}
+              </Text>
             </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              marginTop: DeviceHeigth * 0.04,
-              alignItems: 'center',
-            }}>
-            <Text
-              style={{
-                fontFamily: 'Poppins-SemiBold',
-                color: AppColor.WHITE,
-                fontSize: 20,
-                paddingLeft: 15,
-              }}>
-              {getUserDataDetails.name}
-            </Text>
-            <Text
-              style={{
-                fontFamily: 'Poppins-Medium',
-                color: AppColor.WHITE,
-                fontSize: 12,
-                paddingLeft: 15,
-              }}>
-              {getUserDataDetails.email}
-            </Text>
           </View>
         </LinearGradient>
       </View>
     );
   };
-  const profileViewHeight = DeviceHeigth * 0.4;
+  const profileViewHeight = DeviceHeigth * 0.2;
   const openMailApp = () => {
     Linking.openURL(
-      'mailto:thefitnessandworkout@gmail.com?subject=Feedback&body=Hello%20there!',
+      'mailto:aessikarwar03@gmail.com?subject=Feedback&body=Hello%20there!',
     );
   };
   return (
@@ -761,156 +817,176 @@ const Profile = () => {
       <StatusBar barStyle={'light-content'} backgroundColor={'#000'} />
 
       <ProfileView />
-      <View
-        style={[
-          styles.UserDetailsView,
-          {
-            top: -profileViewHeight * 0.07,
-          },
-        ]}>
-        {FirstView.map((value, index) => (
-          <TouchableOpacity
-            disabled={
-              value.id == 4 || value.id == 5 || value.id == 6 ? true : false
-            }
-            key={index}
-            style={styles.SingleButton}
-            navigation
-            onPress={() => {
-              console.log('JHDHD', value.text1);
-              if (value.text1 == 'Personal Details') {
-                navigation.navigate('NewPersonalDetails');
-              } else if (value.text1 == 'Contact Us') {
-                openMailApp();
-              } else if (value.text1 == 'My Favorites') {
-                navigation?.navigate('AllWorkouts', {
-                  data: allWorkoutData,
-                  type: '',
-                  fav: true,
-                });
-              } else {
-                showMessage({
-                  message: 'Work In Progress',
-                  type: 'info',
-                  animationDuration: 500,
-
-                  floating: true,
-                  icon: {icon: 'auto', position: 'left'},
-                });
-              }
-            }}>
-            {value.icon1}
-            <View style={styles.View1}>
-              <Text style={styles.nameText}>{value.text1}</Text>
-              {value.id == 4 ? (
-                <Switch
-                  value={isEnabled}
-                  onValueChange={() => toggleSwitch()}
-                  disabled={false}
-                  circleSize={19}
-                  barHeight={21}
-                  circleBorderWidth={0.1}
-                  renderActiveText={false}
-                  renderInActiveText={false}
-                  switchLeftPx={2}
-                  switchRightPx={2}
-                  switchWidthMultiplier={2.2}
-                  switchBorderRadius={30}
-                  backgroundActive={'#FFE3E3'}
-                  backgroundInactive={AppColor.GRAY2}
-                  circleActiveColor={AppColor.RED}
-                  circleInActiveColor={AppColor.WHITE}
-                  changeValueImmediately={true}
-                  outerCircleStyle={{color: AppColor.RED}}
-                />
-              ) : value.id == 6 ? (
-                <View>
-                  <Switch
-                    value={getSoundOffOn}
-                    onValueChange={text => {
-                      if (text == true) {
-                        showMessage({
-                          message: 'Sound Is Unmute',
-                          type: 'success',
-                          animationDuration: 500,
-                          floating: true,
-                          icon: {icon: 'auto', position: 'left'},
-                        });
-                      } else {
-                        showMessage({
-                          message: 'Sound Is Mute',
-                          animationDuration: 500,
-                          type: 'danger',
-                          floating: true,
-                          icon: {icon: 'auto', position: 'left'},
-                        });
-                      }
-
-                      dispatch(setSoundOnOff(text));
-                    }}
-                    disabled={false}
-                    circleSize={19}
-                    barHeight={21}
-                    circleBorderWidth={0.1}
-                    renderActiveText={false}
-                    renderInActiveText={false}
-                    switchLeftPx={2}
-                    switchRightPx={2}
-                    switchWidthMultiplier={2.2}
-                    switchBorderRadius={30}
-                    backgroundActive={'#FFE3E3'}
-                    backgroundInactive={AppColor.GRAY2}
-                    circleActiveColor={AppColor.RED}
-                    circleInActiveColor={AppColor.WHITE}
-                    changeValueImmediately={true}
-                    outerCircleStyle={{color: AppColor.RED}}
-                  />
-                </View>
-              ) : value.id == 5 ? (
-                <View>
-                  <Switch
-                    onValueChange={toggleSwitch3}
-                    value={isAlarmEnabled}
-                    disabled={false}
-                    circleSize={19}
-                    barHeight={21}
-                    circleBorderWidth={0.1}
-                    renderActiveText={false}
-                    renderInActiveText={false}
-                    switchLeftPx={2}
-                    switchRightPx={2}
-                    switchWidthMultiplier={2.2}
-                    switchBorderRadius={30}
-                    backgroundActive={'#FFE3E3'}
-                    backgroundInactive={AppColor.GRAY2}
-                    circleActiveColor={AppColor.RED}
-                    circleInActiveColor={AppColor.WHITE}
-                    changeValueImmediately={true}
-                    outerCircleStyle={{color: AppColor.RED}}
-                  />
-                </View>
-              ) : (
-                <Icons
-                  name="chevron-right"
-                  size={22}
-                  color={AppColor.DARKGRAY}
-                />
-              )}
-            </View>
-          </TouchableOpacity>
-        ))}
-      </View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={[styles.UserDetailsView, {marginBottom: 10}]}>
+        <View style={[styles.UserDetailsView]}>
+          {FirstView.map((value, index) => (
+            <TouchableOpacity
+              disabled={
+                value.id == 4 || value.id == 5 || value.id == 6 ? true : false
+              }
+              key={index}
+              style={styles.SingleButton}
+              navigation
+              onPress={() => {
+                analytics().logEvent(
+                  `CV_FITME_CLICKED_ON_${value?.text1?.replace(' ', '_')}`,
+                );
+
+                if (
+                  value.text1 == 'Personal Details' &&
+                  getUserDataDetails.email != null
+                ) {
+                  navigation.navigate('NewPersonalDetails');
+                } else if (value.text1 == 'Subscription') {
+                  navigation.navigate('Subscription');
+                } else if (value.text1 == 'Privacy Policy') {
+                  navigation.navigate('TermaAndCondition', {
+                    title: 'Privacy & Policy',
+                  });
+                } else {
+                  showMessage({
+                    message: 'Please Signup First',
+                    type: 'info',
+                    animationDuration: 500,
+
+                    floating: true,
+                    icon: {icon: 'auto', position: 'left'},
+                  });
+                }
+              }}>
+              {value.icon1}
+              <View style={styles.View1}>
+                <Text style={styles.nameText}>
+                  {value.text1}
+                  {value.id == 5 && notificationTimer != '' && (
+                    <Text
+                      style={{color: AppColor.RED}}
+                      onPress={() => setVisible(true)}>
+                      {' '}
+                      {moment(notificationTimer).format('LT')}
+                    </Text>
+                  )}
+                </Text>
+                {value.id == 4 ? (
+                  <Switch
+                    value={isEnabled}
+                    onValueChange={() => toggleSwitch()}
+                    disabled={false}
+                    circleSize={19}
+                    barHeight={21}
+                    circleBorderWidth={0.1}
+                    renderActiveText={false}
+                    renderInActiveText={false}
+                    switchLeftPx={2}
+                    switchRightPx={2}
+                    switchWidthMultiplier={2.2}
+                    switchBorderRadius={30}
+                    backgroundActive={'#FFE3E3'}
+                    backgroundInactive={AppColor.GRAY2}
+                    circleActiveColor={AppColor.RED}
+                    circleInActiveColor={AppColor.WHITE}
+                    changeValueImmediately={true}
+                    outerCircleStyle={{color: AppColor.RED}}
+                  />
+                ) : value.id == 6 ? (
+                  <View>
+                    <Switch
+                      value={getSoundOffOn}
+                      onValueChange={text => {
+                        if (text == true) {
+                          showMessage({
+                            message: 'Sound Is Unmute',
+                            type: 'success',
+                            animationDuration: 500,
+                            floating: true,
+                            icon: {icon: 'auto', position: 'left'},
+                          });
+                        } else {
+                          showMessage({
+                            message: 'Sound Is Mute',
+                            animationDuration: 500,
+                            type: 'danger',
+                            floating: true,
+                            icon: {icon: 'auto', position: 'left'},
+                          });
+                        }
+
+                        dispatch(setSoundOnOff(text));
+                      }}
+                      disabled={false}
+                      circleSize={19}
+                      barHeight={21}
+                      circleBorderWidth={0.1}
+                      renderActiveText={false}
+                      renderInActiveText={false}
+                      switchLeftPx={2}
+                      switchRightPx={2}
+                      switchWidthMultiplier={2.2}
+                      switchBorderRadius={30}
+                      backgroundActive={'#FFE3E3'}
+                      backgroundInactive={AppColor.GRAY2}
+                      circleActiveColor={AppColor.RED}
+                      circleInActiveColor={AppColor.WHITE}
+                      changeValueImmediately={true}
+                      outerCircleStyle={{color: AppColor.RED}}
+                    />
+                  </View>
+                ) : value.id == 5 ? (
+                  <View>
+                    <Switch
+                      onValueChange={toggleSwitch3}
+                      value={isAlarmEnabled}
+                      disabled={false}
+                      circleSize={19}
+                      barHeight={21}
+                      circleBorderWidth={0.1}
+                      renderActiveText={false}
+                      renderInActiveText={false}
+                      switchLeftPx={2}
+                      switchRightPx={2}
+                      switchWidthMultiplier={2.2}
+                      switchBorderRadius={30}
+                      backgroundActive={'#FFE3E3'}
+                      backgroundInactive={AppColor.GRAY2}
+                      circleActiveColor={AppColor.RED}
+                      circleInActiveColor={AppColor.WHITE}
+                      changeValueImmediately={true}
+                      outerCircleStyle={{color: AppColor.RED}}
+                    />
+                  </View>
+                ) : (
+                  <Icons
+                    name="chevron-right"
+                    size={22}
+                    color={AppColor.DARKGRAY}
+                  />
+                )}
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <View
+          style={[styles.UserDetailsView, {marginBottom: DeviceHeigth * 0.05}]}>
           {SecondView.map((value, index) => (
             <TouchableOpacity
               key={index}
               style={[styles.SingleButton, {}]}
               navigation
               onPress={() => {
+                analytics().logEvent(
+                  `CV_FITME_CLICKED_ON_${value?.text1?.replace(' ', '_')}`,
+                );
                 // navigation.navigate('Personal Details');
-                if (value.text1 == 'Privacy Policy') {
-                  navigation.navigate('TermaAndCondition');
+                if (value.text1 == 'Contact Us') {
+                  openMailApp();
+                } else if (value.text1 == 'Privacy Policy') {
+                  navigation.navigate('TermaAndCondition', {
+                    title: 'Privacy & Policy',
+                  });
+                } else if (value.text1 == 'Terms Condition') {
+                  navigation.navigate('TermaAndCondition', {
+                    title: 'Terms & Condition',
+                  });
                 } else if (value.text1 == 'Rate Us') {
                   if (Platform.OS == 'ios') {
                     Linking.openURL(
@@ -933,12 +1009,13 @@ const Profile = () => {
           ))}
         </View>
         {modalVisible ? <DeleteAccount /> : null}
-        <Reminder
-          visible={visible}
-          setVisible={setVisible}
-          setAlarmIsEnabled={setAlarmIsEnabled}
-        />
       </ScrollView>
+      <Reminder
+        visible={visible}
+        setVisible={setVisible}
+        setAlarmIsEnabled={setAlarmIsEnabled}
+        setNotificationTimer={setNotificationTimer}
+      />
       {UpdateScreenVisibility ? <UpdateProfileModal /> : null}
     </View>
   );
@@ -987,18 +1064,18 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   NameText: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
     color: AppColor.INPUTTEXTCOLOR,
     fontWeight: '500',
     fontSize: 14,
     lineHeight: 21,
   },
   nameText: {
-    fontFamily: 'Poppins-Regular',
-    fontSize: 12,
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 13,
     lineHeight: 18,
     fontWeight: '400',
-    color: AppColor.ProfileTextColor,
+    color: AppColor.BLACK,
   },
   IconView: {
     // width: 22,
@@ -1008,7 +1085,7 @@ const styles = StyleSheet.create({
     backgroundColor: AppColor.WHITE,
     borderRadius: 12,
     marginHorizontal: DeviceWidth * 0.04,
-    marginBottom: -DeviceHeigth * 0.01,
+    marginTop: DeviceHeigth * 0.025,
     paddingVertical: DeviceHeigth * 0.02,
     shadowColor: 'rgba(0, 0, 0, 1)',
     ...Platform.select({
@@ -1043,25 +1120,28 @@ const styles = StyleSheet.create({
   profileView: {
     height: 100,
     width: 100,
-    borderRadius: 160 / 2,
-    alignSelf: 'center',
+
+    borderRadius: 120 / 2,
+    // alignSelf: 'center',
   },
   img: {
-    height: 120,
-    width: 120,
-    borderRadius: 160 / 2,
+    height: 100,
+    width: 100,
+    borderRadius: 100 / 2,
+    borderWidth: 1,
+    alignSelf: 'center',
   },
   pen: {
-    width: 35,
-    height: 35,
+    width: 25,
+    height: 25,
   },
   ButtonPen: {
-    width: 35,
-    height: 35,
-    borderRadius: 35 / 2,
+    width: 25,
+    height: 25,
+    borderRadius: 25 / 2,
     position: 'absolute',
-    bottom: -22,
-    right: -8,
+    bottom: -2,
+    right: -1,
     backgroundColor: AppColor.RED,
   },
   modalContainer: {
@@ -1165,10 +1245,9 @@ const styles = StyleSheet.create({
   loader: {
     position: 'absolute',
     justifyContent: 'center',
-    backgroundColor: AppColor.GRAY,
-    height: 120,
-    width: 120,
-    borderRadius: 160 / 2,
+    height: 100,
+    width: 100,
+    borderRadius: 100 / 2,
   },
 });
 

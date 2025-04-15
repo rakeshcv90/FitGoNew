@@ -21,17 +21,18 @@ import LinearGradient from 'react-native-linear-gradient';
 import {showMessage} from 'react-native-flash-message';
 import {useDispatch, useSelector} from 'react-redux';
 import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
-
+import analytics from '@react-native-firebase/analytics';
 const Injury = ({route, navigation}) => {
   const dispatch = useDispatch();
   const {nextScreen} = route.params;
-  const {getLaterButtonData, completeProfileData, getUserID} = useSelector(
-    state => state,
-  );
+  const getLaterButtonData = useSelector(state => state.getLaterButtonData);
+
+  const completeProfileData = useSelector(state => state.completeProfileData);
+  const getUserID = useSelector(state => state.getUserID);
   const [selectedItems, setSelectedItems] = useState([]);
   const [imageView, setImageVIew] = useState([]);
   const [screen, setScreen] = useState(nextScreen);
-
+console.log(nextScreen)
   useEffect(() => {
     setScreen(nextScreen);
   }, []);
@@ -39,31 +40,28 @@ const Injury = ({route, navigation}) => {
     const currentData = {
       injury: imageView,
     };
-    {
-      console.log('Injury Screen Data', [...getLaterButtonData, currentData]);
-    }
+
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
-    navigation.navigate('Height', {nextScreen: screen + 1});
+    analytics().logEvent(`CV_FITME_INJURY_${imageView}`);
+    navigation.navigate('Weight', {nextScreen: screen + 1});
   };
-
-
   const [bodyPart, setBordyPart] = useState(
-    completeProfileData?.injury.filter(
-      part => part.injury_title !== 'Back' && part.injury_title !== 'Knee',
+    completeProfileData?.injury?.filter(
+      part => part?.injury_title !== 'Back' && part?.injury_title !== 'Knee',
     ),
   );
 
   const [bodyPart2, setBordyPart2] = useState(
-    completeProfileData?.injury.filter(
+    completeProfileData?.injury?.filter(
       part =>
-        part.injury_title !== 'Shoulder' &&
-        part.injury_title !== 'Ankle' &&
-        part.injury_title !== 'Shoulders' &&
-        part.injury_title !== 'Elbow',
+        part?.injury_title !== 'Shoulder' &&
+        part?.injury_title !== 'Ankle' &&
+        part?.injury_title !== 'Shoulders' &&
+        part?.injury_title !== 'Elbow',
     ),
   );
   const translateXValues = useRef(
-    bodyPart.map(() => new Animated.Value(-DeviceWidth)),
+    bodyPart?.map(() => new Animated.Value(-DeviceWidth)),
   ).current;
   useEffect(() => {
     startAnimation();
@@ -105,7 +103,7 @@ const Injury = ({route, navigation}) => {
     const newSelectedItems = [...selectedItems];
     const newImageVIew = [...imageView];
     if (index === -1) {
-      if (imageView.length <1) {
+      if (imageView.length < 1) {
         newSelectedItems.push(itemId);
         newImageVIew.push(item);
       } else {
@@ -134,27 +132,20 @@ const Injury = ({route, navigation}) => {
     <View style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
 
-      <View
-        style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          //position: 'absolute',
-          // marginTop:
-          //   Platform.OS == 'ios' ? DeviceHeigth * 0.05 : DeviceHeigth * 0.06,
-        }}>
-        <ProgressBar screen={screen} />
-      </View>
+  
+        <ProgressBar screen={screen} Type/>
+  
       <View
         style={{
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <Bulb
+       <View style={{marginTop:Platform.OS=='ios'?- DeviceHeigth * 0.06:- DeviceHeigth * 0.03}}>
+         <Bulb
           screen={'Do you have Injury in any body part?'}
-          header={
-            'We will filter unsuitable workouts for you, Also you can select 1 or 2 Injuries only'
-          }
         />
+      </View>
+       
       </View>
       <View style={{flexDirection: 'row', height: DeviceHeigth * 0.6}}>
         <View
@@ -175,7 +166,6 @@ const Injury = ({route, navigation}) => {
               scrollEnabled={false}
               extraData={({item, index}) => index.toString()}
               renderItem={({item, index}) => {
-             
                 const isSelected = selectedItems.includes(item.injury_id);
                 return (
                   <View
@@ -225,6 +215,10 @@ const Injury = ({route, navigation}) => {
                   </View>
                 );
               }}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={100}
+              removeClippedSubviews={true}
             />
           </View>
         </View>
@@ -238,19 +232,19 @@ const Injury = ({route, navigation}) => {
               top:
                 DeviceHeigth <= '667'
                   ? DeviceHeigth * 0.02
-                  : DeviceHeigth * 0.00,
+                  : DeviceHeigth * 0.0,
               left:
-                getLaterButtonData[0].gender == 'M'
+                getLaterButtonData[0]?.gender == 'M'
                   ? -DeviceWidth * 0.2
                   : -DeviceWidth * 0.15,
             }}>
             <Image
-              source={{uri: getLaterButtonData[0].image}}
+              source={{uri: getLaterButtonData[0]?.image}}
               style={[
                 styles.Image,
                 {
                   width:
-                    getLaterButtonData[0].gender == 'M'
+                    getLaterButtonData[0]?.gender == 'M'
                       ? DeviceWidth * 0.6
                       : DeviceWidth * 0.5,
                   height: DeviceHeigth * 0.6,
@@ -271,7 +265,7 @@ const Injury = ({route, navigation}) => {
               top: DeviceHeigth * 0.1,
               height: DeviceHeigth * 0.7,
               left:
-                getLaterButtonData[0].gender == 'F'
+                getLaterButtonData[0]?.gender == 'F'
                   ? -DeviceWidth * 0.25
                   : DeviceHeigth <= '667'
                   ? -DeviceWidth * 0.25
@@ -289,7 +283,7 @@ const Injury = ({route, navigation}) => {
                     style={{
                       justifyContent: 'center',
                       alignItems: 'center',
-                      marginVertical: -DeviceHeigth * 0.00,
+                      marginVertical: -DeviceHeigth * 0.0,
                     }}>
                     <Animated.View
                       style={[
@@ -332,6 +326,10 @@ const Injury = ({route, navigation}) => {
                   </View>
                 );
               }}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={100}
+              removeClippedSubviews={true}
             />
           </View>
         </View>
@@ -375,9 +373,9 @@ const Injury = ({route, navigation}) => {
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
-    justifyContent: 'center',
+    // justifyContent: 'center',
     //alignItems: 'center',
-    width: DeviceWidth,
+
     backgroundColor: AppColor.WHITE,
   },
 

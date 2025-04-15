@@ -41,7 +41,7 @@ for (let i = 4; i <= 13; i++) {
   }
 }
 const height = [
-  ...Array(halfItemCount + 6).fill(''), // Empty items for the top half
+  // ...Array(halfItemCount -3).fill(''), // Empty items for the top half
   ...myArray,
   ...Array(halfItemCount + 4).fill(''), // Empty items for the bottom half
 ];
@@ -56,8 +56,8 @@ const positions = height.map(
 const Height = ({route, navigation}: any) => {
   const {nextScreen} = route.params;
 
-  const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
-    (state: any) => state,
+  const getLaterButtonData = useSelector(
+    (state: any) => state.getLaterButtonData,
   );
   const dispatch = useDispatch();
   const [selected, setSelected] = useState('');
@@ -85,9 +85,7 @@ const Height = ({route, navigation}: any) => {
       };
       dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
       navigation.navigate('Weight', {nextScreen: screen + 1});
-      {
-        console.log('Hight Screen Data', [...getLaterButtonData, currentData]);
-      }
+     
     } else
       showMessage({
         message: `Height should be less than ${currentActiveIndex}cm`,
@@ -141,7 +139,7 @@ const Height = ({route, navigation}: any) => {
           activeIndex={currentActiveIndex}
           data={height}
           posData={positions}
-          activeItem={0}
+          activeItem={100}
         />
         <View
           style={{
@@ -150,8 +148,8 @@ const Height = ({route, navigation}: any) => {
             alignSelf: 'center',
           }}>
           {toggle == 'ft' &&
-          parseInt(height[currentActiveIndex]) < 9 &&
-          parseInt(height[currentActiveIndex]) >= 4 ? (
+          parseInt(height[currentActiveIndex]) < 11 &&
+          parseInt(height[currentActiveIndex]) >= 3 ? (
             <Text
               style={{
                 color: AppColor.RED,
@@ -254,8 +252,8 @@ const Height = ({route, navigation}: any) => {
           <Icons name="chevron-left" size={25} color={'#000'} />
         </TouchableOpacity>
         {toggle == 'ft' &&
-        parseInt(height[currentActiveIndex]) < 9 &&
-        parseInt(height[currentActiveIndex]) >= 4 ? (
+        parseInt(height[currentActiveIndex]) < 11 &&
+        parseInt(height[currentActiveIndex]) >= 3 ? (
           <TouchableOpacity onPress={toNextScreen}>
             <LinearGradient
               start={{x: 0, y: 1}}

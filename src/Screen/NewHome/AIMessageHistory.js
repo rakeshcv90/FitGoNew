@@ -16,7 +16,9 @@ const AIMessageHistory = () => {
   const flatListRef = useRef(null);
   return (
     <View style={styles.container}>
+   
       <NewHeader header={'AI Message History'} backButton={true} />
+    
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <ScrollView
         style={{flexGrow: 1}}
@@ -287,6 +289,10 @@ const AIMessageHistory = () => {
               </>
             );
           }}
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          updateCellsBatchingPeriod={100}
+          removeClippedSubviews={true}
         />
       </ScrollView>
     </View>

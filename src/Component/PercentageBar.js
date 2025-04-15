@@ -11,7 +11,6 @@ const PercentageBar = ({
   backgroundColor,
   completedColor,
 }) => {
-  const [getPercentage, setPercentage] = useState(percentage);
   const [getheight, setHeight] = useState(height);
   const [getBackgroundColor, setBackgroundColor] = useState(backgroundColor);
   const [getCompletedColor, setCompletedColor] = useState(completedColor);
@@ -20,29 +19,19 @@ const PercentageBar = ({
       <View style={{justifyContent: 'center'}}>
         <View
           style={{
-            width: '100%',
+            width: DeviceHeigth >= 1024 ? '95%' : '90%',
             height: getheight,
             marginVertical: 10,
             borderRadius: 50,
-            borderColor: getBackgroundColor,
-            borderWidth: 1,
+
+            backgroundColor: '#E7E7E7B2',
           }}
         />
-        {/* <View
-          style={{
-            width: getPercentage ? getPercentage : 0,
-            height: getheight,
-            marginVertical: 10,
-            borderRadius: 50,
-            backgroundColor:{['rgba(255, 95, 109, 1)', 'rgba(255, 195, 113, 1)']},
-            position: 'absolute',
-            bottom:20
-          }}
-        /> */}
+
         <LinearGradient
-          colors={['rgba(255, 95, 109, 1)', 'rgba(255, 195, 113, 1)']}
+          colors={['#D01818', '#941000']}
           style={{
-            width: getPercentage ? getPercentage : 0,
+            width: percentage > 10 ? `${percentage}%` : '10%',
             height: getheight,
             marginVertical: 10,
             borderRadius: 50,
@@ -51,16 +40,20 @@ const PercentageBar = ({
           }}></LinearGradient>
         <View
           style={{
-            width: getPercentage ? getPercentage : 0,
+            width: percentage > 10 ? `${percentage}%` : '10%',
             height: getheight,
-            bottom: 10,
-            top:
-              Platform.OS == 'ios'
-                ? -DeviceHeigth * 0.032
-                : -DeviceHeigth * 0.035,
+            // position: 'absolute',
+            bottom: 30,
+
+            // top:
+            //   Platform.OS == 'ios'
+            //     ? DeviceHeigth >= 1024
+            //       ? -DeviceHeigth * 0.03
+            //       : -DeviceHeigth * 0.033
+            //     : -DeviceHeigth * 0.037,
           }}>
-          <Text style={{textAlign: 'right', color: 'white'}}>
-            {getPercentage}
+          <Text style={{textAlign: 'center', color: 'white'}}>
+            {`${percentage}%`}
           </Text>
         </View>
       </View>
