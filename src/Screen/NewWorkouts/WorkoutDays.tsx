@@ -23,11 +23,11 @@ import axios from 'axios';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import ActivityLoader from '../../Component/ActivityLoader';
 import analytics from '@react-native-firebase/analytics';
-import {
-  BannerAdd,
-  MyInterstitialAd,
-  MyRewardedAd,
-} from '../../Component/BannerAdd';
+// import {
+//   BannerAdd,
+//   MyInterstitialAd,
+//   MyRewardedAd,
+// } from '../../Component/BannerAdd';
 import {
   setFitmeMealAdsCount,
   setSubscriptiomModal,
@@ -37,7 +37,7 @@ import AnimatedLottieView from 'lottie-react-native';
 import RNFetchBlob from 'rn-fetch-blob';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import {bannerAdId} from '../../Component/AdsId';
-import NativeAddTest from '../../Component/NativeAd';
+// import NativeAddTest from '../../Component/NativeAd';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 import NewHeader from '../../Component/Headers/NewHeader';
@@ -64,7 +64,7 @@ const WorkoutDays = ({navigation, route}: any) => {
     (state: any) => state.getFitmeMealAdsCount,
   );
 
-  const {showInterstitialAd} = MyInterstitialAd();
+  // const {showInterstitialAd} = MyInterstitialAd();
 
   let isFocuse = useIsFocused();
   const dispatch = useDispatch();
@@ -417,7 +417,7 @@ const WorkoutDays = ({navigation, route}: any) => {
               ]}
               activeOpacity={0.5}
               onPress={() => {
-                MyRewardedAd(setreward).load();
+                // MyRewardedAd(setreward).load();
                 dispatch(setSubscriptiomModal(false));
               }}>
               <LinearGradient
@@ -473,7 +473,7 @@ const WorkoutDays = ({navigation, route}: any) => {
             analytics().logEvent(`CV_FITME_CLICKED_ON_DAY_${index}_EXERCISES`);
             let checkAdsShow = AddCountFunction();
             if (checkAdsShow == true) {
-              showInterstitialAd();
+              // showInterstitialAd();
               index - 1 == 0
                 ? navigation.navigate('OneDay', {
                     data: data,
@@ -722,7 +722,7 @@ const WorkoutDays = ({navigation, route}: any) => {
           alignSelf: 'center',
           alignItems: 'center',
         }}>
-        <NativeAddTest type="image" media={false} />
+        {/* <NativeAddTest type="image" media={false} /> */}
       </View>
     );
   };

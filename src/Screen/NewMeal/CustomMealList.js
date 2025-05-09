@@ -16,8 +16,8 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FitText from '../../Component/Utilities/FitText';
 import {Image} from 'react-native';
 import {localImage} from '../../Component/Image';
-import {BannerAdd} from '../../Component/BannerAdd';
-import {bannerAdId} from '../../Component/AdsId';
+// import {BannerAdd} from '../../Component/BannerAdd';
+// import {bannerAdId} from '../../Component/AdsId';
 import {showMessage} from 'react-native-flash-message';
 
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
@@ -583,7 +583,7 @@ const CustomMealList = ({navigation, route}) => {
             backgroundColor: 'transparent',
             justifyContent: 'flex-end',
           }}>
-          <BannerAdd bannerAdId={bannerAdId} />
+          {/* <BannerAdd bannerAdId={bannerAdId} /> */}
         </View>
         <BottomSheet1 ref={refStandard}>
           <BottomSheet />

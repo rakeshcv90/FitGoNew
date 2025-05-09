@@ -35,7 +35,7 @@ import {useIsFocused} from '@react-navigation/native';
 import AnimatedLottieView from 'lottie-react-native';
 
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
-import {MyInterstitialAd} from '../../Component/BannerAdd';
+// import {MyInterstitialAd} from '../../Component/BannerAdd';
 import moment from 'moment';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import FocusArea from '../FocusArea';
@@ -62,7 +62,7 @@ const Workouts = ({navigation}: any) => {
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
   );
-  const {showInterstitialAd} = MyInterstitialAd();
+  // const {showInterstitialAd} = MyInterstitialAd();
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
@@ -329,7 +329,7 @@ const Workouts = ({navigation}: any) => {
     AnalyticsConsole(`${mydata?.title?.split(' ')[0]}_W_CATE`);
     let checkAdsShow = AddCountFunction();
     if (checkAdsShow == true) {
-      showInterstitialAd();
+      // showInterstitialAd();
       navigation.navigate('WorkoutCategories', {
         categoryExercise: bodyexercise,
         CategoryDetails: mydata,
@@ -350,7 +350,7 @@ const Workouts = ({navigation}: any) => {
             AnalyticsConsole(`D_Wrk_DAYS_FR_Wrk`);
             let checkAdsShow = AddCountFunction();
             if (checkAdsShow == true) {
-              showInterstitialAd();
+              // showInterstitialAd();
               navigation.navigate('WorkoutDays', {
                 data: item,
                 challenge: true,
@@ -518,7 +518,7 @@ const Workouts = ({navigation}: any) => {
         }),
       );
       if (checkAdsShow == true) {
-        showInterstitialAd();
+        // showInterstitialAd();
 
         navigation.navigate('NewFocusWorkouts', {
           focusExercises: exercises,
@@ -563,7 +563,7 @@ const Workouts = ({navigation}: any) => {
         }),
       );
       if (checkAdsShow == true) {
-        showInterstitialAd();
+        // showInterstitialAd();
         navigation.navigate('NewFocusWorkouts', {
           focusExercises: exercises,
           focusedPart: data?.title,
@@ -601,7 +601,7 @@ const Workouts = ({navigation}: any) => {
         }),
       );
       if (checkAdsShow == true) {
-        showInterstitialAd();
+        // showInterstitialAd();
         navigation.navigate('NewFocusWorkouts', {
           focusExercises: exercises,
           focusedPart: data?.title,
@@ -623,7 +623,7 @@ const Workouts = ({navigation}: any) => {
         item?.exercise_title?.toLowerCase()?.includes('stretch'),
       );
       if (checkAdsShow == true) {
-        showInterstitialAd();
+        // showInterstitialAd();
         navigation.navigate('NewFocusWorkouts', {
           focusExercises: stretchEx,
           focusedPart: data?.title,
@@ -839,7 +839,7 @@ const Workouts = ({navigation}: any) => {
                             AnalyticsConsole(`CustomWrk_FR_WRK`);
                             let checkAdsShow = AddCountFunction();
                             if (checkAdsShow == true) {
-                              showInterstitialAd();
+                              // showInterstitialAd();
                               navigation.navigate('CustomWorkout', {
                                 routeName: 'Beginner',
                               });

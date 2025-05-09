@@ -15,7 +15,7 @@ import {AppColor, Fonts, PLATFORM_IOS} from '../Color';
 import {AnalyticsConsole} from '../AnalyticsConsole';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {AddCountFunction} from '../Utilities/AddCountFunction';
-import {MyInterstitialAd} from '../BannerAdd';
+// import {MyInterstitialAd} from '../BannerAdd';
 import AnimatedLottieView from 'lottie-react-native';
 import analytics from '@react-native-firebase/analytics';
 import {
@@ -67,7 +67,7 @@ const data = [
 ];
 
 const UserEspecially = () => {
-  const {showInterstitialAd} = MyInterstitialAd();
+  // const {showInterstitialAd} = MyInterstitialAd();
   const navigation = useNavigation();
   const [locationP, setLocationP] = useState(false);
   const [breatheData, setBreatheData] = useState({
@@ -91,7 +91,7 @@ const UserEspecially = () => {
 
       let checkAdsShow = AddCountFunction();
       if (checkAdsShow == true) {
-        showInterstitialAd();
+        // showInterstitialAd();
         navigation.navigate('CustomWorkout');
       } else {
         navigation.navigate('CustomWorkout');
@@ -102,7 +102,7 @@ const UserEspecially = () => {
       AnalyticsConsole(`MEALS_BUTTON`);
       let checkAdsShow = AddCountFunction();
       if (checkAdsShow == true) {
-        showInterstitialAd();
+        // showInterstitialAd();
         navigation.navigate('DietPlatTabBar');
       } else {
         navigation.navigate('DietPlatTabBar');
@@ -111,7 +111,7 @@ const UserEspecially = () => {
       let checkAdsShow = AddCountFunction();
 
       if (checkAdsShow == true) {
-        showInterstitialAd();
+        // showInterstitialAd();
         navigation.navigate('Store');
       } else {
         navigation.navigate('Store');
@@ -187,7 +187,7 @@ const UserEspecially = () => {
     } else {
       let checkAdsShow = AddCountFunction();
       if (checkAdsShow == true) {
-        showInterstitialAd();
+        // showInterstitialAd();
         getCurrentLocation();
         // navigation.navigate('GymListing');
       } else {

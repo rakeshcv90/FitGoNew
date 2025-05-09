@@ -5,14 +5,14 @@ import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import FitText from '../../Component/Utilities/FitText';
 import {TouchableOpacity} from 'react-native';
 import {localImage} from '../../Component/Image';
-import {BannerAdd, MyInterstitialAd} from '../../Component/BannerAdd';
+// import {BannerAdd, MyInterstitialAd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 import {useSelector} from 'react-redux';
 
 const NewMealList = ({navigation, route}) => {
-  const {showInterstitialAd} = MyInterstitialAd();
+  // const {showInterstitialAd} = MyInterstitialAd();
   const getDietFilterData = useSelector(state => state?.getDietFilterData);
   const mealData = useSelector(state => state.mealData);
   const [filterMealList, setFilterMealList] = useState(route?.params?.data)
@@ -20,7 +20,7 @@ const NewMealList = ({navigation, route}) => {
     let checkAdsShow = AddCountFunction();
 
     if (checkAdsShow == true) {
-      showInterstitialAd();
+      // showInterstitialAd();
       navigation.navigate('MealDetails', {item: item});
     } else {
       navigation.navigate('MealDetails', {item: item});
@@ -319,7 +319,7 @@ const NewMealList = ({navigation, route}) => {
           backgroundColor: 'transparent',
           justifyContent: 'flex-end',
         }}>
-        <BannerAdd bannerAdId={bannerAdId} />
+        {/* <BannerAdd bannerAdId={bannerAdId} /> */}
       </View>
     </View>
   );

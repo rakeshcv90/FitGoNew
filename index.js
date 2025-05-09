@@ -350,4 +350,8 @@ const AppRedux = () => {
 
 // AdManager.subscribe('imageAd', 'onAdPreloadClicked', () => {});
 
+try {
 AppRegistry.registerComponent(appName, () => AppRedux);
+} catch (error) {
+  console.error('App registration failed:', e);
+}

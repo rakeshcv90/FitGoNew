@@ -17,35 +17,36 @@ import {useSelector} from 'react-redux';
 import {API_CALLS} from '../../API/API_CALLS';
 import {StatusBar} from 'react-native';
 import {hasFreeEvent} from '../Event/EnteringEventFunction';
-import useRewardedAd from '../../Utils/Ads/useRewardedAd';
+// import useRewardedAd from '../../Utils/Ads/useRewardedAd';
 import {navigate} from '../../Component/Utilities/NavigationUtil';
 import PredefinedStyles from '../../Component/Utilities/PredefineStyles';
 import {Ad} from '../../Icon/Ad';
 
-const AdEventPopup = () => {
-  const [modalVisible, setModalVisible] = useState(false);
+const AdEventPopup = ({modalVisible,onClose}) => {
+  console.log('Modal visible');
+  // const [modalVisible, setModalVisible] = useState(false);
   const [loader, setLoader] = useState(false);
 
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
-  const getPurchaseHistory = useSelector(
-    (state: any) => state.getPurchaseHistory,
-  );
+  // const getPurchaseHistory = useSelector(
+  //   (state: any) => state.getPurchaseHistory,
+  // );
 
-  const {isAdReady, showAd} = useRewardedAd();
+  // const {isAdReady, showAd} = useRewardedAd();
 
-  useEffect(() => {
-    console.log('Has free event:', hasFreeEvent(getPurchaseHistory));
-    if (getPurchaseHistory && hasFreeEvent(getPurchaseHistory)) {
-      setTimeout(() => {
-        setModalVisible(true);
-      }, 3000);
-    }
-  }, [getPurchaseHistory]);
+  // useEffect(() => {
+  //   console.log('Has free event:', hasFreeEvent(getPurchaseHistory));
+  //   if (getPurchaseHistory && hasFreeEvent(getPurchaseHistory)) {
+  //     setTimeout(() => {
+  //       setModalVisible(true);
+  //     }, 3000);
+  //   }
+  // }, [getPurchaseHistory]);
 
   const adSubscriptionAPI = () => {
-    showAd(() => {
+    // showAd(() => {
       setLoader(true);
       API_CALLS.createSubscriptionPlan({
         user_id: getUserDataDetails.id,
@@ -56,17 +57,19 @@ const AdEventPopup = () => {
         plan_value: 0,
       }).finally(() => {
         setLoader(false);
-        setModalVisible(false);
+        onClose()
       });
-    });
+    // });
   };
 
   return (
+    <View style={styles.container}>
+
     <Modal
       visible={modalVisible}
       animationType="slide"
       transparent={true}
-      onRequestClose={() => setModalVisible(false)}>
+      onRequestClose={() => onClose()}>
       <StatusBar backgroundColor={AppColor.WHITE} barStyle={'dark-content'} />
       <View
         style={{
@@ -95,7 +98,7 @@ const AdEventPopup = () => {
               name="close"
               size={25}
               type="MaterialCommunityIcons"
-              onPress={() => setModalVisible(false)}
+              onPress={onClose}
               containerStyle={{
                 position: 'absolute',
                 top: 10,
@@ -147,14 +150,15 @@ const AdEventPopup = () => {
             textColor={AppColor.WHITE}
             titleText="WATCH ADS "
             loaderColor={AppColor.RED}
-            loader={loader || !isAdReady}
+            loader={loader || false}
             style={{marginBottom: 20, flexDirection: 'row-reverse'}}
             IconLComp={<Ad />}
-            hasIcon={isAdReady}
+            hasIcon={false}
           />
         </View>
       </View>
     </Modal>
+    </View>
   );
 };
 

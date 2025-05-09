@@ -53,16 +53,14 @@ import {showMessage} from 'react-native-flash-message';
 import {requestPermissionforNotification} from '../Component/Helper/PushNotification';
 
 import moment from 'moment';
-import {
-  InterstitialAd,
-  AdEventType,
-  TestIds,
-} from 'react-native-google-mobile-ads';
+// import {
+//   InterstitialAd,
+//   AdEventType,
+//   TestIds,
+// } from 'react-native-google-mobile-ads';
 import {
   ADS_IDs,
   ADS_IOS,
-  interstitialAdId,
-  interstitialAdIdTest,
 } from '../Component/AdsId';
 import {LogOut} from '../Component/LogOut';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -72,7 +70,7 @@ import codePush from 'react-native-code-push';
 import {CommonActions} from '@react-navigation/native';
 import {PLATFORM_IOS} from '../Component/Color';
 import {RequestAPI} from '../Component/Utilities/RequestAPI';
-import {MyInterstitialAd, OpenAppAds} from '../Component/BannerAdd';
+// import {MyInterstitialAd, OpenAppAds} from '../Component/BannerAdd';
 import {
   permissionMethods,
   trueCondition,
@@ -103,7 +101,7 @@ const SplaceScreen = ({navigation, route}) => {
   const [loaded, setLoaded] = useState(false);
   const getOfferAgreement = useSelector(state => state.getOfferAgreement);
   const getDeviceID = useSelector(state => state?.getDeviceID);
-  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
+  // const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const {initOpenApp, showOpenAppAd} = OpenAppAds();
   const circleRef = useSharedValue(1);
   const logoRef = useSharedValue(0);
@@ -117,7 +115,7 @@ const SplaceScreen = ({navigation, route}) => {
       if (getUserDataDetails && getUserDataDetails.social_id != null) {
         if (ADS_IOS.includes(getUserDataDetails.social_id)) {
           callAds(true);
-        } else {
+        } else { 
           callAds(false);
         }
       } else {
@@ -141,10 +139,11 @@ const SplaceScreen = ({navigation, route}) => {
   }, []);
   // function to call ads
   const callAds = condition => {
-    initInterstitial(condition);
-    initOpenApp(condition).then(() => {
-      showOpenAppAd().then(afterAdFunction).catch(afterAdFunction);
-    });
+    // initInterstitial(condition);
+    // initOpenApp(condition).then(() => {
+    //   showOpenAppAd().then(afterAdFunction).catch(afterAdFunction);
+    // });
+    afterAdFunction
   };
 
   const afterAdFunction = () => {

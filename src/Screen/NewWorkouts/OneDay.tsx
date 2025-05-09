@@ -50,7 +50,7 @@ import {
   LinearGradient as SvgGrad,
 } from 'react-native-svg';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {MyRewardedAd} from '../../Component/BannerAdd';
+// import {MyRewardedAd} from '../../Component/BannerAdd';
 import RNFetchBlob from 'rn-fetch-blob';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -648,7 +648,7 @@ const OneDay = ({navigation, route}: any) => {
               ]}
               activeOpacity={0.5}
               onPress={() => {
-                MyRewardedAd(setreward).load();
+                // MyRewardedAd(setreward).load();
                 dispatch(setSubscriptiomModal(false));
               }}>
               <LinearGradient

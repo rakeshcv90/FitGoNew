@@ -52,7 +52,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import {showMessage} from 'react-native-flash-message';
 import {useFocusEffect} from '@react-navigation/native';
 import AnimatedLottieView from 'lottie-react-native';
-import {MyInterstitialAd} from '../../Component/BannerAdd';
+// import {MyInterstitialAd} from '../../Component/BannerAdd';
 import analytics from '@react-native-firebase/analytics';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
 import {WeekTabWithEvents, WeekTabWithoutEvent} from './Tabs';
@@ -126,7 +126,7 @@ const MyPlans = ({navigation}: any) => {
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
   );
-  const {showInterstitialAd} = MyInterstitialAd();
+  // const {showInterstitialAd} = MyInterstitialAd();
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
@@ -427,7 +427,7 @@ const MyPlans = ({navigation}: any) => {
 
         AnalyticsConsole(`SE_ON_${getPurchaseHistory?.currentDay}`);
         if (checkAdsShow == true) {
-          showInterstitialAd();
+          // showInterstitialAd();
           analytics().logEvent(
             `CV_FITME_CLICKED_ON_${WeekArray[selectedDay]}_PLAN`,
           );

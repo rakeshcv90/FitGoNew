@@ -15,8 +15,9 @@ import {API_CALLS} from '../API/API_CALLS';
 import {navigate} from '../Component/Utilities/NavigationUtil';
 import {showMessage} from 'react-native-flash-message';
 import {Modal} from 'react-native-paper';
-import {BannerAdd} from '../Component/BannerAdd';
-import {bannerAdIdTest} from '../Component/AdsId';
+import VersionNumber, {appVersion} from 'react-native-version-number';
+// import {BannerAdd} from '../Component/BannerAdd';
+// import {bannerAdIdTest} from '../Component/AdsId';
 
 const validationSchema = Yup.object().shape({
   // name: Yup.string().required('Full Name is required'),
@@ -44,28 +45,34 @@ const NewLogin = () => {
     insertedEmail: '',
     name: '',
   });
-
+  console.log(VersionNumber, 'postLogin Testing');
   const handleFormSubmit = (values: Values, action?: FormikHelpers<Values>) => {
+    
     setVisible(false);
-    API_CALLS.postLogin(values.name, values.email).then((res: any) => {
+    API_CALLS.postLogin(values?.name, values?.email).then((res: any) => {
       console.log(res, 'LOGIN');
       // {"allcompleted": false, "message": "user not exist", "status": true,"term": false}
       // allcompleted => Everything Right
       // status => Issue in API or Version incorrect
       // term => Offer not acceepted
+
+
+    
       if (res?.status && !res?.email) {
         API_CALLS.getAllWorkouts(res?.user_id)
         API_CALLS.getUserDataDetails(res?.user_id).then((data: any) => {
+        
           if (data) {
             API_CALLS.getSubscriptionDetails(res?.user_id).then(() => {
-              if (res?.allcompleted) {
-                navigate('BottomTab');
-              } else if (res?.status && !res?.term) {
+              console.log(!res?.term, 'LOGINwwwww');
+              // if (!res?.allcompleted) {
+              //   navigate('BottomTab');
+              // } else if (res?.status && !res?.term) {
                 navigate('Yourself');
-              } else if (!res?.term) {
-                navigate('OfferTerms');
-              }
-              action?.resetForm();
+              // } else if (!res?.term) {
+              //   navigate('OfferTerms');
+              // }
+              // action?.resetForm();
             });
           }
         });
@@ -131,7 +138,7 @@ const NewLogin = () => {
             ]}>
             <FitButton
               onPress={() =>
-                handleFormSubmit({name: allData.name, email: allData.email})
+              handleFormSubmit({name: allData.name, email: allData.email})
               }
               w={'half'}
               titleText="Continue"
@@ -223,8 +230,8 @@ const NewLogin = () => {
                   textColor={AppColor.WHITE}
                   w={'contain'}
                   mV={20}
-                />
-                <BannerAdd bannerAdId={bannerAdIdTest} />
+                /> 
+                {/* <BannerAdd bannerAdId={bannerAdIdTest} /> */}
               </View>
             </>
           )}

@@ -19,8 +19,8 @@ import {useSelector} from 'react-redux';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import HTMLRender from 'react-native-render-html';
-import {BannerAdd} from '../../Component/BannerAdd';
-import {bannerAdId} from '../../Component/AdsId';
+// import {BannerAdd} from '../../Component/BannerAdd';
+// import {bannerAdId} from '../../Component/AdsId';
 import moment from 'moment';
 import { ArrowLeft } from '../../Component/Utilities/Arrows/Arrow';
 import { ReviewApp } from '../../Component/ReviewApp';
@@ -374,7 +374,7 @@ const temp = () => {}
       </View>
       {/* {bannerAdsDisplay()} */}
           <View style={{marginBottom: DeviceHeigth <= 846 ? -1 : -10}}>
-            <BannerAdd bannerAdId={bannerAdId} />
+            {/* <BannerAdd bannerAdId={bannerAdId} /> */}
           </View>
     </>
   );

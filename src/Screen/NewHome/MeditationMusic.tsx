@@ -12,7 +12,7 @@ import {DeviceHeigth} from '../../Component/Config';
 import FitIcon from '../../Component/Utilities/FitIcon';
 import useMusicPlayer from '../NewWorkouts/Exercise/ExerciseUtilities/useMusicPlayer';
 import {navigationRef} from '../../../App';
-import { OpenAppAds } from '../../Component/BannerAdd';
+// import { OpenAppAds } from '../../Component/BannerAdd';
 
 type MindsetData = {
   exercise_mindset_area: string;
@@ -62,7 +62,7 @@ const MeditationMusic = ({
     restStart: false,
   });
 
-  const {openAdClosed} = OpenAppAds();
+  // const {openAdClosed} = OpenAppAds();
 
   useEffect(() => {
     const subscribe = AppState.addEventListener(
@@ -71,8 +71,8 @@ const MeditationMusic = ({
         if (state.match(/background|inactive/)) {
           setPause(false);
         } else if (state.match(/active/)) {
-          const isClosed = await openAdClosed();
-          isClosed && setPause(true);
+          // const isClosed = await openAdClosed();
+          // isClosed && setPause(true);
         }
       },
     );

@@ -30,8 +30,8 @@ import {showMessage} from 'react-native-flash-message';
 import {useIsFocused} from '@react-navigation/native';
 import RNFetchBlob from 'rn-fetch-blob';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
-import {BannerAdd} from '../../Component/BannerAdd';
-import {bannerAdId} from '../../Component/AdsId';
+// import {BannerAdd} from '../../Component/BannerAdd';
+// import {bannerAdId} from '../../Component/AdsId';
 import GradientButton from '../../Component/GradientButton';
 import moment from 'moment';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
@@ -631,7 +631,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
           )}
         </View>
         {/* {bannerAdsDisplay()} */}
-        <BannerAdd bannerAdId={bannerAdId} />
+        {/* <BannerAdd bannerAdId={bannerAdId} /> */}
       </Wrapper>
       <Modal
         animationType="slide"

@@ -28,7 +28,7 @@ import {
   setSoundOnOff,
 } from '../../Component/ThemeRedux/Actions';
 import {Alert} from 'react-native';
-import {BannerAdd, MyRewardedAd} from '../../Component/BannerAdd';
+// import {BannerAdd, MyRewardedAd} from '../../Component/BannerAdd';
 import moment from 'moment';
 import Tts from 'react-native-tts';
 import {useIsFocused} from '@react-navigation/native';
@@ -38,7 +38,7 @@ import {ArrowLeft} from '../../Component/Utilities/Arrows/Arrow';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import { ReviewApp } from '../../Component/ReviewApp';
-import useRewardedAd from '../../Utils/Ads/useRewardedAd';
+// import useRewardedAd from '../../Utils/Ads/useRewardedAd';
 // const apiKey = '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';
 // const apiKey = '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';
 const systemMessage = {
@@ -49,7 +49,7 @@ const systemMessage = {
 const AITrainer = ({navigation}) => {
   const dispatch = useDispatch();
   // const {rewardAdsLoad, showRewardAds} = MyRewardedAd();
-  const {isAdReady, showAd} = useRewardedAd();
+  // const {isAdReady, showAd} = useRewardedAd();
   const isFocused = useIsFocused();
   const [ttsSound, setTtsSound] = useState(
     `Hello! I am your personal fitness instructor. I am here to assist you in your fitness journey.
@@ -130,7 +130,7 @@ const AITrainer = ({navigation}) => {
               text: 'Yes',
               onPress: async () => {
                 dispatch(setRewardedCount(0));
-                await showAd();
+                // await showAd();
               },
             },
           ],
@@ -522,7 +522,7 @@ console.log("AFTER GPT",response.data.result)
             </TouchableOpacity>
           </View>
           {/* {bannerAdsDisplay()} */}
-          <BannerAdd bannerAdId={bannerAdId} />
+          {/* <BannerAdd bannerAdId={bannerAdId} /> */}
         </KeyboardAvoidingView>
       </Wrapper>
     </View>

@@ -15,8 +15,8 @@ import FitIcon from '../../Component/Utilities/FitIcon';
 import PredefinedStyles from '../../Component/Utilities/PredefineStyles';
 import MealList from './MealList';
 import CreateMealList from '../NewMeal/CreateMealList';
-import { BannerAdd } from '../../Component/BannerAdd';
-import { bannerAdId } from '../../Component/AdsId';
+// import { BannerAdd } from '../../Component/BannerAdd';
+// import { bannerAdId } from '../../Component/AdsId';
 
 const eatTime = ['Breakfast', 'Lunch', 'Dinner', 'Your meal'];
 
@@ -304,7 +304,7 @@ const NewDiet = () => {
       ) : (
         <MealList data={mealData[eatTime[selectedItem]?.toLowerCase()]} />
       )}
-      <BannerAdd bannerAdId={bannerAdId} />
+      {/* <BannerAdd bannerAdId={bannerAdId} /> */}
       <BottomSheet1 ref={refStandard}>
         <BottomSheetContent />
       </BottomSheet1>

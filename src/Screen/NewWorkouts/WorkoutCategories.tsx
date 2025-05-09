@@ -46,9 +46,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import moment from 'moment';
-import {BannerAdd} from '../../Component/BannerAdd';
-import {bannerAdId} from '../../Component/AdsId';
-import NativeAddTest from '../../Component/NativeAd';
+// import {BannerAdd} from '../../Component/BannerAdd';
+// import {bannerAdId} from '../../Component/AdsId';
+// import NativeAddTest from '../../Component/NativeAd';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import GradientButton from '../../Component/GradientButton';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -284,7 +284,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
             alignSelf: 'center',
             alignItems: 'center',
           }}>
-          <NativeAddTest type="image" media={false} />
+          {/* <NativeAddTest type="image" media={false} /> */}
         </View>
       );
     } else {
@@ -294,7 +294,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
             alignSelf: 'center',
             alignItems: 'center',
           }}>
-          <NativeAddTest type="image" media={false} />
+          {/* <NativeAddTest type="image" media={false} /> */}
         </View>
       );
     }
@@ -478,7 +478,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
                   alignSelf: 'center',
                   alignItems: 'center',
                 }}>
-                <NativeAddTest type="image" media={false} />
+                {/* <NativeAddTest type="image" media={false} /> */}
               </View>
             )}
           </>

@@ -53,8 +53,6 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
-	<!-- <key>CodePushDeploymentKey</key>
-	<string>m5Lx0xad7uqrqZ05foy7cf8JyFXDjS7pfUcyv</string>  APPCENTER key -->
 	<key>CodePushDeploymentKey</key>
 	<string>8muak9HnrJvDxnc83si3IgcS6FZkNJuEEt0c-g</string>
 	<key>CodePushServerURL</key>
@@ -65,6 +63,8 @@
 	<string>4f99beb018894652232218e499038690</string>
 	<key>FacebookDisplayName</key>
 	<string>FItMe</string>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-7924921064490662~1619210523</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>

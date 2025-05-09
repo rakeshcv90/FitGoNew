@@ -13,7 +13,7 @@ import analytics from '@react-native-firebase/analytics';
 import {AddCountFunction} from '../Utilities/AddCountFunction';
 import {useSelector} from 'react-redux';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
-import {MyInterstitialAd} from '../BannerAdd';
+// import {MyInterstitialAd} from '../BannerAdd';
 import {showMessage} from 'react-native-flash-message';
 import AnimatedLottieView from 'lottie-react-native';
 import {AnalyticsConsole} from '../AnalyticsConsole';
@@ -21,13 +21,13 @@ import {localImage} from '../Image';
 const FocuseMind = () => {
   const allWorkoutData = useSelector(state => state.allWorkoutData);
   const navigation = useNavigation();
-  const {showInterstitialAd} = MyInterstitialAd();
+  // const {showInterstitialAd} = MyInterstitialAd();
   const viewMorePress = () => {
     analytics().logEvent('CV_FITME_CLICKED_ON_MEDITATION');
     let checkAdsShow = AddCountFunction();
     if (allWorkoutData?.mindset_workout_data?.length > 0) {
       if (checkAdsShow == true) {
-        showInterstitialAd();
+        // showInterstitialAd();
         navigation.navigate('MeditationDetails', {
           item: allWorkoutData?.mindset_workout_data[0],
         });
@@ -54,7 +54,7 @@ const FocuseMind = () => {
         AnalyticsConsole(`MediDetails`);
         let checkAdsShow = AddCountFunction();
         if (checkAdsShow == true) {
-          showInterstitialAd();
+          // showInterstitialAd();
           navigation.navigate('MeditationDetails', {item: title});
         } else {
           navigation.navigate('MeditationDetails', {item: title});

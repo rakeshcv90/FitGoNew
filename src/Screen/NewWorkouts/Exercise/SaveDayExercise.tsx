@@ -17,8 +17,8 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import moment from 'moment';
-import {BannerAdd} from '../../../Component/BannerAdd';
-import {bannerAdId} from '../../../Component/AdsId';
+// import {BannerAdd} from '../../../Component/BannerAdd';
+// import {bannerAdId} from '../../../Component/AdsId';
 import {AnalyticsConsole} from '../../../Component/AnalyticsConsole';
 import ActivityLoader from '../../../Component/ActivityLoader';
 import RatingModal from '../../../Component/RatingModal';
@@ -351,7 +351,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
       </View>
       <View style={{position: 'absolute', bottom: 0}}>
         {/* {bannerAdsDisplay()} */}
-        <BannerAdd bannerAdId={bannerAdId} />
+        {/* <BannerAdd bannerAdId={bannerAdId} /> */}
       </View>
       {/* <RatingModal /> */}
     </SafeAreaView>

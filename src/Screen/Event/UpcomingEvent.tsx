@@ -56,6 +56,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
   );
+  console.log('getPurchaseHistoryssssss', getPurchaseHistory);
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );

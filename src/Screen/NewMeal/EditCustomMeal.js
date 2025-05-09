@@ -23,8 +23,8 @@ import {
   setUserProfileData,
 } from '../../Component/ThemeRedux/Actions';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
-import {BannerAdd} from '../../Component/BannerAdd';
-import {bannerAdId} from '../../Component/AdsId';
+// import {BannerAdd} from '../../Component/BannerAdd';
+// import {bannerAdId} from '../../Component/AdsId';
 import FitText from '../../Component/Utilities/FitText';
 import {localImage} from '../../Component/Image'
 import VersionNumber from 'react-native-version-number';
@@ -355,7 +355,7 @@ const EditCustomMeal = ({navigation, route}) => {
           backgroundColor: 'transparent',
           justifyContent: 'flex-end',
         }}>
-        <BannerAdd bannerAdId={bannerAdId} />
+        {/* <BannerAdd bannerAdId={bannerAdId} /> */}
       </View>
     </View>
   );

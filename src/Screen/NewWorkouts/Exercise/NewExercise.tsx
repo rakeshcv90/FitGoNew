@@ -15,10 +15,10 @@ import {ShadowStyle} from '../../../Component/Utilities/ShadowStyle';
 import {StatusBar} from 'react-native';
 import {ArrowLeft} from '../../../Component/Utilities/Arrows/Arrow';
 import ExerciseControls from './ExerciseUtilities/ExerciseControls';
-import {BannerAdd} from '../../../Component/BannerAdd';
-import {bannerAdId} from '../../../Component/AdsId';
+// import {BannerAdd} from '../../../Component/BannerAdd';
+// import {bannerAdId} from '../../../Component/AdsId';
 import Wrapper from '../../WorkoutCompleteScreen/Wrapper';
-import NativeAddTest from '../../../Component/NativeAd';
+// import NativeAddTest from '../../../Component/NativeAd';
 import ActivityLoader from '../../../Component/ActivityLoader';
 import PredefinedStyles from '../../../Component/Utilities/PredefineStyles';
 
@@ -138,9 +138,7 @@ const NewExercise = ({navigation, route}: any) => {
                 },
                 ShadowStyle,
               ]}>
-              {isRest ? (
-                <NativeAddTest media={false} type="image" />
-              ) : pause ? (
+              
                 <Video
                   source={{
                     uri: getStoreVideoLoc[allExercise[number]?.exercise_title],
@@ -161,11 +159,6 @@ const NewExercise = ({navigation, route}: any) => {
                     top: 30,
                   }}
                 />
-              ) : (
-                <View style={PredefinedStyles.NormalCenter}>
-                  <ActivityLoader visible={!pause} />
-                </View>
-              )}
             </View>
           </View>
           <ExerciseControls
@@ -190,7 +183,7 @@ const NewExercise = ({navigation, route}: any) => {
           />
         </ScrollView>
       </Wrapper>
-      <BannerAdd bannerAdId={bannerAdId} />
+      {/* <BannerAdd bannerAdId={bannerAdId} /> */}
     </View>
   );
 };

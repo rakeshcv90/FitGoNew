@@ -15,9 +15,9 @@ import React, {useEffect, useRef, useState} from 'react';
 import {AppColor, Fonts} from '../../Component/Color';
 import {useSelector, useDispatch} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
-import {BannerAdd} from '../../Component/BannerAdd';
-import {bannerAdId} from '../../Component/AdsId';
-import NativeAddTest from '../../Component/NativeAd';
+// import {BannerAdd} from '../../Component/BannerAdd';
+// import {bannerAdId} from '../../Component/AdsId';
+// import NativeAddTest from '../../Component/NativeAd';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -296,7 +296,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
             alignSelf: 'center',
             alignItems: 'center',
           }}>
-          <NativeAddTest type="image" media={false} />
+          {/* <NativeAddTest type="image" media={false} /> */}
         </View>
       );
     } else {
@@ -306,7 +306,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
             alignSelf: 'center',
             alignItems: 'center',
           }}>
-          <NativeAddTest type="image" media={false} />
+          {/* <NativeAddTest type="image" media={false} /> */}
         </View>
       );
     }
@@ -1076,7 +1076,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
         </Wrapper>
       </View>
       <View style={styles.footer}>
-        <BannerAdd bannerAdId={bannerAdId} />
+        {/* <BannerAdd bannerAdId={bannerAdId} /> */}
       </View>
       <OverExerciseModal
         setOverExerciseVisible={setOverExerciseVisible}

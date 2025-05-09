@@ -14,8 +14,8 @@ import Workouts from '../Screen/NewHome/Workouts';
 
 import Trainer from '../Screen/NewHome/Trainer';
 import {View, Text} from 'react-native';
-import {BannerAdd, MyInterstitialAd} from '../Component/BannerAdd';
-import {bannerAdId} from '../Component/AdsId';
+// import {BannerAdd, MyInterstitialAd} from '../Component/BannerAdd';
+// import {bannerAdId} from '../Component/AdsId';
 import {DeviceHeigth, DeviceWidth} from '../Component/Config';
 import {useDispatch, useSelector} from 'react-redux';
 import moment from 'moment';
@@ -44,7 +44,7 @@ const Tabs = createBottomTabNavigator();
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
 
 const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
-  const { showInterstitialAd} = MyInterstitialAd();
+  // const { showInterstitialAd} = MyInterstitialAd();
   const Dispatch = useDispatch();
   const getFitmeAdsCount = useSelector(state => state.getFitmeAdsCount);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
@@ -128,27 +128,27 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                 //   Dispatch(setFitmeAdsCount(0));
                 //   Dispatch(setOpenAdsCount(0));
                 // } else {
-                if (getFitmeAdsCount < count) {
+                {/* if (getFitmeAdsCount < count) {
                   Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
                   Dispatch(setOpenAdsCount(getOpenAdsCount + 1));
                   navigation.navigate(route.name);
-                } else {
-                  showInterstitialAd();
-                  Dispatch(setFitmeAdsCount(0));
-                  Dispatch(setOpenAdsCount(0));
+                } else { */}
+                  {/* showInterstitialAd(); */}
+                  {/* Dispatch(setFitmeAdsCount(0));
+                  Dispatch(setOpenAdsCount(0)); */}
                   navigation.navigate(route.name);
-                }
+                {/* } */}
               } else {
-                if (getFitmeAdsCount < 2) {
+                {/* if (getFitmeAdsCount < 2) {
                   Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
                   Dispatch(setOpenAdsCount(getOpenAdsCount + 1));
                   navigation.navigate(route.name);
-                } else {
-                  showInterstitialAd();
-                  Dispatch(setFitmeAdsCount(0));
-                  Dispatch(setOpenAdsCount(0));
+                } else { */}
+                  {/* showInterstitialAd(); */}
+                  {/* Dispatch(setFitmeAdsCount(0));
+                  Dispatch(setOpenAdsCount(0)); */}
                   navigation.navigate(route.name);
-                }
+                {/* } */}
               }
             }
           }
@@ -307,7 +307,7 @@ const BottomTab = () => {
                 : DeviceHeigth * 0.0
               : 0,
         }}>
-        <BannerAdd bannerAdId={bannerAdId} />
+        {/* <BannerAdd bannerAdId={bannerAdId} /> */}
       </View>
       {/* <BackHandlerModal /> */}
     </>

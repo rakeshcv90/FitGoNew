@@ -10,9 +10,9 @@ import {
   setFitmeAdsCount,
   setPopUpSeen,
 } from '../../Component/ThemeRedux/Actions';
-import {MyInterstitialAd} from '../../Component/BannerAdd';
+// import {MyInterstitialAd} from '../../Component/BannerAdd';
 import {requestPermissionforNotification} from '../../Component/Helper/PushNotification';
-import useOpenAd from '../../Utils/Ads/useOpenAd';
+// import useOpenAd from '../../Utils/Ads/useOpenAd';
 
 type Props = {
   afterAdFunction: () => void;
@@ -24,11 +24,11 @@ const useSetupAds = ({afterAdFunction}: Props) => {
     (state: any) => state.getUserDataDetails,
   );
 
-  const {initInterstitial} = MyInterstitialAd();
-  const {isAdReady, loadAd, showAd} = useOpenAd();
+  // const {initInterstitial} = MyInterstitialAd();
+  // const {isAdReady, loadAd, showAd} = useOpenAd();
 
   useEffect(() => {
-    loadAd();
+    // loadAd();
     if (PLATFORM_IOS) {
       if (getUserDataDetails && getUserDataDetails.social_id != null) {
         if (ADS_IOS.includes(getUserDataDetails.social_id)) {
@@ -60,8 +60,8 @@ const useSetupAds = ({afterAdFunction}: Props) => {
   }, []);
   // function to call ads
   const callAds = async () => {
-    await showAd(afterAdFunction);
-    // afterAdFunction()
+    // await showAd(afterAdFunction);
+    afterAdFunction()
   };
   
   return {};

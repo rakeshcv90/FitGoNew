@@ -19,7 +19,7 @@ import {localImage} from '../../Component/Image';
 import {useDispatch, useSelector} from 'react-redux';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
-import {BannerAdd, MyInterstitialAd} from '../../Component/BannerAdd';
+// import {BannerAdd, MyInterstitialAd} from '../../Component/BannerAdd';
 import {
   setFitmeMealAdsCount,
   setVideoLocation,
@@ -42,7 +42,7 @@ const Meals = ({navigation}) => {
   const getFitmeMealAdsCount = useSelector(state => state.getFitmeMealAdsCount);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const getStoreVideoLoc = useSelector(state => state.getStoreVideoLoc);
-  const {showInterstitialAd} = MyInterstitialAd();
+  // const {showInterstitialAd} = MyInterstitialAd();
   const dispatch = useDispatch();
   const carouselRef = useRef(null);
 
@@ -61,7 +61,7 @@ const Meals = ({navigation}) => {
           dispatch(setFitmeMealAdsCount(getFitmeMealAdsCount + 1));
           navigation.navigate('MealDetails', {item: item});
         } else {
-          showInterstitialAd();
+          // showInterstitialAd();
           navigation.navigate('MealDetails', {item: item});
           dispatch(setFitmeMealAdsCount(0));
         }
@@ -71,7 +71,7 @@ const Meals = ({navigation}) => {
         dispatch(setFitmeMealAdsCount(getFitmeMealAdsCount + 1));
         navigation.navigate('MealDetails', {item: item});
       } else {
-        showInterstitialAd();
+        // showInterstitialAd();
         navigation.navigate('MealDetails', {item: item});
         dispatch(setFitmeMealAdsCount(0));
       }
@@ -390,7 +390,7 @@ const Meals = ({navigation}) => {
       </View>
       {/* {bannerAdsDisplay()} */}
           <View style={{marginBottom: DeviceHeigth <= 808 ? -1 : -10}}>
-            <BannerAdd bannerAdId={bannerAdId} />
+            {/* <BannerAdd bannerAdId={bannerAdId} /> */}
           </View>
     </>
   );

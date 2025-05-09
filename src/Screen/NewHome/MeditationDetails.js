@@ -28,8 +28,8 @@ import moment from 'moment';
 import NativeAddTest from '../../Component/NativeAd';
 import {setVideoLocation} from '../../Component/ThemeRedux/Actions';
 import RNFetchBlob from 'rn-fetch-blob';
-import {BannerAdd} from '../../Component/BannerAdd';
-import {bannerAdId} from '../../Component/AdsId';
+// import {BannerAdd} from '../../Component/BannerAdd';
+// import {bannerAdId} from '../../Component/AdsId';
 import RewardModal from '../../Component/Utilities/RewardModal';
 import UpcomingEventModal from '../../Component/Utilities/UpcomingEventModal';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
@@ -101,7 +101,7 @@ const MeditationDetails = ({navigation, route}) => {
         setForLoading(false);
       } else if (data?.data?.status == 'data found') {
         setForLoading(false);
-        setmindsetExercise(data.data.data);
+        setmindsetExercise(data.data);
         // Promise.all(
         //   data.data.data.map((item, index) =>
         //     downloadVideos(item, index, data.data.data.length),
@@ -567,7 +567,7 @@ const MeditationDetails = ({navigation, route}) => {
         </View>
       </Wrapper>
       {/* {bannerAdsDisplay()} */}
-      <BannerAdd bannerAdId={bannerAdId} />
+      {/* <BannerAdd bannerAdId={bannerAdId} /> */}
     </View>
   );
 };

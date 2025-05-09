@@ -17,7 +17,7 @@ import HomeHeader from './HomeHeader';
 import UserEspecially from '../../Component/NewHomeUtilities/UserEspecially';
 import {AppColor, Fonts, PLATFORM_IOS} from '../../Component/Color';
 import FocuseMind from '../../Component/NewHomeUtilities/FocuseMind';
-import NativeAdBanner from './NativeAdBanner';
+// import NativeAdBanner from './NativeAdBanner';
 import PastWinnersComponent from '../Leaderboard/PastWinnersComponent';
 import {navigate} from '../../Component/Utilities/NavigationUtil';
 import FitText from '../../Component/Utilities/FitText';
@@ -30,10 +30,15 @@ import FitButton from '../../Component/Utilities/FitButton';
 import AdEventPopup from './AdEventPopup';
 import OfferAnimation from './OfferAnimation';
 import {AppleHealthKitData} from '../../Component/TransferStepCounterData';
+import {hasFreeEvent} from '../Event/EnteringEventFunction';
 
 const Home = () => {
+  const [modalVisible, setModalVisible] = useState(false);
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
+  );
+  const getPurchaseHistory = useSelector(
+    (state: any) => state.getPurchaseHistory,
   );
   const getPastWinners = useSelector((state: any) => state?.getPastWinners);
   const enteredCurrentEvent = useSelector(
@@ -49,7 +54,15 @@ const Home = () => {
     API_CALLS.getSubscriptionDetails(getUserDataDetails?.id);
     AppleHealthKitData();
   }, [loader]);
-
+  useEffect(() => {
+    console.log('Has free event:', hasFreeEvent(getPurchaseHistory));
+    if (getPurchaseHistory && hasFreeEvent(getPurchaseHistory)) {
+      setTimeout(() => {
+        console.log('Modal visible');
+        setModalVisible(true);
+      }, 3000);
+    }
+  }, [getPurchaseHistory]);
   setDefaultAlarm();
   return (
     <Wrapper styles={{backgroundColor: '#f7f7f7'}}>
@@ -69,7 +82,7 @@ const Home = () => {
           />
         }>
         {enteredCurrentEvent && <OfferAnimation />}
-        <NativeAdBanner loader={loader} />
+        {/* <NativeAdBanner loader={loader} /> */}
         <View style={styles.whiteBox}>
           <Progress myPlans={false} />
         </View>
@@ -133,7 +146,10 @@ const Home = () => {
           color={AppColor.RED}
         />
       </TouchableOpacity>
-      <AdEventPopup />
+      <AdEventPopup
+        modalVisible={modalVisible}
+        onClose={() => setModalVisible(false)}
+      />
     </Wrapper>
   );
 };

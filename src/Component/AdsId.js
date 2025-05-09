@@ -1,5 +1,5 @@
 import {Platform} from 'react-native';
-import {TestIds} from 'react-native-google-mobile-ads';
+// import {TestIds} from 'react-native-google-mobile-ads';
 
 export const ADS_IDs = [
   // Device_IDs
@@ -98,5 +98,5 @@ export const adUnitIDsTest = {
 };
 export const OPENAPP_IDTest =
   Platform.OS == 'ios'
-    ? TestIds.APP_OPEN
+    ? 'ca-app-pub-3940256099942544/9257395921'
     : 'ca-app-pub-3940256099942544/9257395921';

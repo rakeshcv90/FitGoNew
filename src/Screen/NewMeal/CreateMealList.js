@@ -6,8 +6,8 @@ import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import FitText from '../../Component/Utilities/FitText';
 import {Image} from 'react-native';
 import {localImage} from '../../Component/Image';
-import {BannerAdd} from '../../Component/BannerAdd';
-import {bannerAdId} from '../../Component/AdsId';
+// import {BannerAdd} from '../../Component/BannerAdd';
+// import {bannerAdId} from '../../Component/AdsId';
 import Icons from 'react-native-vector-icons/FontAwesome5';
 const CreateMealList = () => {
   const getCustomDietData = useSelector(state => state.getCustomDietData);
@@ -205,7 +205,7 @@ const CreateMealList = () => {
           backgroundColor: 'transparent',
           justifyContent: 'flex-end',
         }}>
-        <BannerAdd bannerAdId={bannerAdId} />
+        {/* <BannerAdd bannerAdId={bannerAdId} /> */}
       </View>
     </View>
   );

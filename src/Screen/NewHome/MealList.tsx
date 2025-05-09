@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {MyInterstitialAd} from '../../Component/BannerAdd';
+// import {MyInterstitialAd} from '../../Component/BannerAdd';
 import {useSelector} from 'react-redux';
 import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 import {navigate} from '../../Component/Utilities/NavigationUtil';
@@ -40,7 +40,7 @@ type Item = {
 };
 
 const MealList = ({data}: any) => {
-  const {showInterstitialAd} = MyInterstitialAd();
+  // const {showInterstitialAd} = MyInterstitialAd();
   const getDietFilterData = useSelector(
     (state: any) => state?.getDietFilterData,
   );
@@ -50,7 +50,7 @@ const MealList = ({data}: any) => {
     let checkAdsShow = AddCountFunction();
 
     if (checkAdsShow == true) {
-      showInterstitialAd();
+      // showInterstitialAd();
       navigate('MealDetails', {item: item});
     } else {
       navigate('MealDetails', {item: item});

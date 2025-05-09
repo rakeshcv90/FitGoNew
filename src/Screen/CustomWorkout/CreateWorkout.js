@@ -28,9 +28,9 @@ import ActivityLoader from '../../Component/ActivityLoader';
 import AnimatedLottieView from 'lottie-react-native';
 import {setCustomWorkoutData} from '../../Component/ThemeRedux/Actions';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
-import {BannerAdd} from '../../Component/BannerAdd';
-import {bannerAdId} from '../../Component/AdsId';
-import NativeAddTest from '../../Component/NativeAd';
+// import {BannerAdd} from '../../Component/BannerAdd';
+// import {bannerAdId} from '../../Component/AdsId';
+// import NativeAddTest from '../../Component/NativeAd';
 import moment from 'moment';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
@@ -219,7 +219,7 @@ const CreateWorkout = ({navigation, route}) => {
 
               //  top: DeviceHeigth * 0.1,
             }}>
-            <NativeAddTest type="image" media={false} />
+            {/* <NativeAddTest type="image" media={false} /> */}
           </View>
         );
       }
@@ -232,7 +232,7 @@ const CreateWorkout = ({navigation, route}) => {
 
             //top: DeviceHeigth * 0.1,
           }}>
-          <NativeAddTest type="image" media={false} />
+          {/* <NativeAddTest type="image" media={false} /> */}
         </View>
       );
     }
@@ -527,7 +527,7 @@ const CreateWorkout = ({navigation, route}) => {
         </View>
       </View>
       {/* {bannerAdsDisplay()} */}
-      <BannerAdd bannerAdId={bannerAdId} />
+      {/* <BannerAdd bannerAdId={bannerAdId} /> */}
     </>
   );
 };

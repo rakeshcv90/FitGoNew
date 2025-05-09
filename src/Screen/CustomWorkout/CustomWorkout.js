@@ -30,9 +30,9 @@ import {
 } from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
-import {BannerAdd} from '../../Component/BannerAdd';
-import {bannerAdId} from '../../Component/AdsId';
-import NativeAddTest from '../../Component/NativeAd';
+// import {BannerAdd} from '../../Component/BannerAdd';
+// import {bannerAdId} from '../../Component/AdsId';
+// import NativeAddTest from '../../Component/NativeAd';
 import moment from 'moment';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import RewardModal from '../../Component/Utilities/RewardModal';
@@ -214,7 +214,7 @@ const CustomWorkout = ({navigation}) => {
             alignSelf: 'center',
             alignItems: 'center',
           }}>
-          <NativeAddTest type="image" media={false} />
+          {/* <NativeAddTest type="image" media={false} /> */}
         </View>
       );
     } else {
@@ -224,7 +224,7 @@ const CustomWorkout = ({navigation}) => {
             alignSelf: 'center',
             alignItems: 'center',
           }}>
-          <NativeAddTest type="image" media={false} />
+          {/* <NativeAddTest type="image" media={false} /> */}
         </View>
       );
     }
@@ -562,7 +562,7 @@ const CustomWorkout = ({navigation}) => {
           </View>
         </TouchableOpacity>
       </Modal>
-      <BannerAdd bannerAdId={bannerAdId} />
+      {/* <BannerAdd bannerAdId={bannerAdId} /> */}
     </>
   );
 };

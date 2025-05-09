@@ -27,7 +27,7 @@ import ExerciseTimer from './ExerciseTimer';
 import BottomControls from './BottomControls';
 import useExerciseHook, {ExerciseData} from './useExerciseHook';
 import {RequestAPI} from '../../../../Component/Utilities/RequestAPI';
-import {OpenAppAds} from '../../../../Component/BannerAdd';
+// import {OpenAppAds} from '../../../../Component/BannerAdd';
 import RestButtons from './RestButtons';
 import FitText from '../../../../Component/Utilities/FitText';
 
@@ -160,7 +160,7 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
     musicLink,
   });
 
-  const {openAdClosed} = OpenAppAds();
+  // const {openAdClosed} = OpenAppAds();
 
   useEffect(() => {
     setIsRest(restSet)
@@ -178,8 +178,8 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
           if (state.match(/background|inactive/)) {
             setPause(false);
           } else if (state.match(/active/)) {
-            const isClosed = await openAdClosed();
-            isClosed && setPause(true);
+            // // const isClosed = await openAdClosed();
+            // isClosed && setPause(true);
           }
         }
       },
