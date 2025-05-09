@@ -250,8 +250,8 @@ const BottomTab = () => {
         initialRouteName={'Home'}
         tabBar={props => <CustomTab {...props} />}
         screenOptions={{
-          activeTintColor: '#D01818',
-          inactiveTintColor: '#3D3D3D',
+          // activeTintColor: '#D01818',
+          // inactiveTintColor: '#3D3D3D',
           headerShown: false,
           // activeBackgroundColor: '#EED9D6',
 
