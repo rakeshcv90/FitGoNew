@@ -11,7 +11,10 @@ import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.react.soloader.OpenSourceMergedSoMapping
 import com.facebook.soloader.SoLoader
-import com.microsoft.codepush.react.CodePush
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.initialization.InitializationStatus
+import warfarefitness.com.BuildConfig
+
 
 class MainApplication : Application(), ReactApplication {
 
@@ -22,6 +25,8 @@ class MainApplication : Application(), ReactApplication {
               // Packages that cannot be autolinked yet can be added manually here, for example:
               // add(MyReactNativePackage())
                add(MusicPlayerPackage())
+               add(AdEnginePackage())
+               add(AdmobInterstitialPackage())
             }
 
         override fun getJSMainModuleName(): String = "index"
@@ -38,7 +43,10 @@ class MainApplication : Application(), ReactApplication {
   override fun onCreate() {
     super.onCreate()
     SoLoader.init(this, OpenSourceMergedSoMapping)
-    if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
+      MobileAds.initialize(
+          this
+      ) { initializationStatus: InitializationStatus? -> }
+      if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
       // If you opted-in for the New Architecture, we load the native entry point for this app.
       load()
     }

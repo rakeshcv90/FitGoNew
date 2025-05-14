@@ -2,7 +2,7 @@ apply plugin: "com.android.application"
 apply plugin: "com.facebook.react"
 apply plugin: "org.jetbrains.kotlin.android"
 apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
-//apply from: file("../../node_modules/react-native-code-push/android/codepush.gradle")
+
 
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
@@ -86,13 +86,13 @@ android {
     
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "fitme.health.fitness.homeworkouts.equipment"
+    namespace "warfarefitness.com"
     defaultConfig {
-        applicationId "fitme.health.fitness.homeworkouts.equipment"
+        applicationId "warfarefitness.com"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 30
-        versionName "1.30"
+        versionCode 31
+        versionName "1.31"
         multiDexEnabled true
         missingDimensionStrategy "store", "play"
         def date = new Date();
@@ -101,10 +101,10 @@ android {
     }
      signingConfigs {
          release {
-             storeFile file('Apple-Pie.jks')
-             storePassword 'singh007'
+             storeFile file('Cristian.jks')
+             storePassword '123456'
              keyAlias 'key0'
-             keyPassword 'singh007'
+             keyPassword '123456'
          }
      }
     buildTypes {
@@ -130,16 +130,19 @@ dependencies {
     implementation("com.google.firebase:firebase-crashlytics-ndk")
     // implementation("com.google.firebase:firebase-analytics")
     // implementation project(':react-native-google-fit')
+//    implementation 'com.google.android.gms:play-services-ads:22.6.0'
+
     implementation("com.google.android.gms:play-services-fitness:21.1.0")
     implementation("com.google.android.gms:play-services-auth:21.1.1")
     implementation("com.facebook.react:react-android")
     implementation("androidx.multidex:multidex:2.0.1")
     implementation project(':react-native-iap')
     implementation project(':react-native-keep-awake')
-    implementation project(':react-native-code-push')
+    // implementation project(':react-native-code-push')
     implementation project(':react-native-in-app-review')
 //    implementation ("androidx.appcompat:appcompat:1.7.0-beta01")
     implementation 'com.facebook.android:facebook-android-sdk:latest.release'
+    implementation 'com.google.android.gms:play-services-ads-api:24.2.0'
     // debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
     // debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
     //     exclude group:'com.squareup.okhttp3', module:'okhttp'
@@ -154,4 +157,4 @@ dependencies {
 }
 
 // apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
-apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"
+

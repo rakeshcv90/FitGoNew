@@ -5,10 +5,10 @@ import PredefinedStyles from '../../Component/Utilities/PredefineStyles';
 import FitText from '../../Component/Utilities/FitText';
 import {ScrollView} from 'react-native';
 import {DeviceWidth} from '../../Component/Config';
-import NativeAddTest from '../../Component/NativeAd';
+// import NativeAddTest from '../../Component/NativeAd';
 import {API_CALLS} from '../../API/API_CALLS';
 import {useSelector} from 'react-redux';
-import NativeAdsView from '../../Component/NativeAd';
+// import NativeAdsView from '../../Component/NativeAd';
 import {useIsFocused} from '@react-navigation/native';
 import NewBanner from '../../Component/NewHomeUtilities/NewBanner';
 
@@ -66,11 +66,11 @@ const NativeAdBanner = ({loader}: Props) => {
             enteredCurrentEvent={enteredCurrentEvent}
             enteredUpcomingEvent={enteredUpcomingEvent}
           />
-          <NativeAdsView
+          {/* <NativeAdsView
             width={DeviceWidth * 0.95}
             media={false}
             type="image"
-          />
+          /> */}
         </ScrollView>
       </View>
       <View style={[PredefinedStyles.rowCenter, {marginTop: 15}]}>

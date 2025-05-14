@@ -73,14 +73,7 @@ export const API_CALLS = {
             device_id: deviceID,
           },
           ({data, errors, status, message}) => {
-            console.log(
-              name,
-              email,
-              Platform.OS,
-              VersionNumber.appVersion,
-              deviceID,
-              data,
-            );
+          
             console.log(deviceID, 'Token Data');
             if (data && status == 200) {
               noMessage &&
@@ -119,14 +112,10 @@ export const API_CALLS = {
             device_id: deviceID,
           },
           ({data, errors, status, message}) => {
-            // console.log(
-            //   name,
-            //   email,
-            //   Platform.OS,
-            //   VersionNumber.appVersion,
-            //   deviceID,
-            //   data,
-            // );
+            console.log("eeeeeeeeeeeee",
+         
+              data,
+            );
             if (data && status == 200) {
               noMessage &&
                 showMessage({
@@ -502,7 +491,9 @@ export const API_CALLS = {
           user_id,
           version: VersionNumber.appVersion,
         },
+      
         ({data, errors, status, message}) => {
+       
           if (
             data?.msg == 'user id is required' ||
             data?.msg == 'version is required'
@@ -529,6 +520,7 @@ export const API_CALLS = {
           version: VersionNumber.appVersion,
         },
         ({data, errors, status, message}) => {
+         
           if (
             data?.msg == 'user id is required' ||
             data?.msg == 'Please update the app to the latest version.'

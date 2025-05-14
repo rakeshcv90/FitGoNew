@@ -22,7 +22,7 @@ import FitToggle from '../../../../Component/Utilities/FitToggle';
 import BottomSheet from 'react-native-easy-bottomsheet';
 import BottomSheetContent from './BottomSheetContent';
 import FitIcon from '../../../../Component/Utilities/FitIcon';
-import NativeAddTest from '../../../../Component/NativeAd';
+// import NativeAddTest from '../../../../Component/NativeAd';
 import {BlurView} from '@react-native-community/blur';
 import {ShadowStyle} from '../../../../Component/Utilities/ShadowStyle';
 
@@ -138,7 +138,7 @@ const MusicPopup = ({
               </View>
             </View>
           ))}
-          <NativeAddTest media={true} type="video" />
+          {/* <NativeAddTest media={true} type="video" /> */}
         </View>
       </View>
     </Modal>

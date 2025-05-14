@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import Tts from 'react-native-tts';
 import {AppColor} from '../../../../Component/Color';
-import NativeAddTest from '../../../../Component/NativeAd';
+// import NativeAddTest from '../../../../Component/NativeAd';
 import {DeviceWidth} from '../../../../Component/Config';
 import ProgreesButton from '../../../../Component/ProgressButton';
 import {ActivityIndicator} from 'react-native';
@@ -85,7 +85,7 @@ const PauseModal = ({
           alignItems: 'center',
           // marginTop: DeviceHeigth * 0.05
         }}>
-        <NativeAddTest media={true} type="video" />
+        {/* <NativeAddTest media={true} type="video" /> */}
         <View
           style={{
             justifyContent: 'center',

@@ -13,7 +13,7 @@ import {
 import FitText from '../Component/Utilities/FitText';
 import {navigationRef} from '../../App';
 import {DeviceWidth} from '../Component/Config';
-import NativeAddTest from '../Component/NativeAd';
+// import NativeAddTest from '../Component/NativeAd';
 import {AppColor, Fonts} from '../Component/Color';
 
 const BackHandlerModal = () => {
@@ -66,7 +66,7 @@ const BackHandlerModal = () => {
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
           }}>
-          <NativeAddTest media={true} type="video" />
+          {/* <NativeAddTest media={true} type="video" /> */}
           <FitText
             type="SubHeading"
             value="Want to exit from the app?"

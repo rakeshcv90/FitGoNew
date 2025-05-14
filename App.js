@@ -30,6 +30,7 @@ LogBox.ignoreLogs([
 const App = () => {
   useEffect(() => {
     requestPermissionforNotification(dispatch);
+    
     // RemoteMessage();
   }, []);
 

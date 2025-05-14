@@ -39,11 +39,18 @@ import AnimatedLottieView from 'lottie-react-native';
 import NewHome from '../Screen/NewHome/NewHome';
 import BackHandlerModal from './BackHandlerModal';
 import Home from '../Screen/NewHome/Home';
+
+import BannerAds from '../Component/NativeCodeAds/BannerAdView';
+import AdmobInterstitial from '../Component/NativeCodeAds/AdmobInterstitial';
+import { DeviceEventEmitter } from 'react-native';
+
+
 const Tabs = createBottomTabNavigator();
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
 
 const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
+
   // const { showInterstitialAd} = MyInterstitialAd();
   const Dispatch = useDispatch();
   const getFitmeAdsCount = useSelector(state => state.getFitmeAdsCount);
@@ -128,27 +135,60 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                 //   Dispatch(setFitmeAdsCount(0));
                 //   Dispatch(setOpenAdsCount(0));
                 // } else {
-                {/* if (getFitmeAdsCount < count) {
+                {
+                  /* if (getFitmeAdsCount < count) {
                   Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
                   Dispatch(setOpenAdsCount(getOpenAdsCount + 1));
                   navigation.navigate(route.name);
-                } else { */}
-                  {/* showInterstitialAd(); */}
-                  {/* Dispatch(setFitmeAdsCount(0));
-                  Dispatch(setOpenAdsCount(0)); */}
+                } else { */
+                }
+                {
+                  /* showInterstitialAd(); */
+                }
+                {
+                  /* Dispatch(setFitmeAdsCount(0));
+                  Dispatch(setOpenAdsCount(0)); */
+                }
+                {/* AdmobInterstitial.showAd().then(() => {
                   navigation.navigate(route.name);
-                {/* } */}
+                }) */}
+
+                AdmobInterstitial.showAd()
+                 .then(() => {console.log('Ad showns and completed')
+                  navigation.navigate(route.name);
+                 })
+                  .catch((err) => console.error('Ad show failed', err));
+
+                {
+                  /* } */
+                }
               } else {
-                {/* if (getFitmeAdsCount < 2) {
+                {
+                  /* if (getFitmeAdsCount < 2) {
                   Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
                   Dispatch(setOpenAdsCount(getOpenAdsCount + 1));
                   navigation.navigate(route.name);
-                } else { */}
-                  {/* showInterstitialAd(); */}
-                  {/* Dispatch(setFitmeAdsCount(0));
-                  Dispatch(setOpenAdsCount(0)); */}
+                } else { */
+                }
+                {
+                  /* showInterstitialAd(); */
+                }
+                {
+                  /* Dispatch(setFitmeAdsCount(0));
+                  Dispatch(setOpenAdsCount(0)); */
+                }
+                {/* AdmobInterstitial.showAd().then(() => {
+                navigation.navigate(route.name);
+                }) */}
+
+                AdmobInterstitial.showAd()
+                 .then(() => {console.log('Ad shown and completed')
                   navigation.navigate(route.name);
-                {/* } */}
+                 })
+                  .catch((err) => console.error('Ad shows failed', err));
+                {
+                  /* } */
+                }
               }
             }
           }
@@ -176,7 +216,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                   }>
                   <Image
                     source={localImage[route.name + 'Red']}
-                    // tintColor={'#f0013b'}
+                    tintColor={'#1671A8'}
                     resizeMode="contain"
                     style={{
                       width: 30,
@@ -187,7 +227,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
 
                 <Text
                   style={{
-                    color: AppColor.RED,
+                    color: '#1671A8',
                     fontFamily: Fonts.HELVETICA_BOLD,
                     fontSize: 12,
                     lineHeight: 14.63,
@@ -244,6 +284,29 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
 
 const BottomTab = () => {
   const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
+  const [adHeight, setAdHeight] = useState(70);
+  const [adKey, setAdKey] = useState(0);
+
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('BannerAdEvent', event => {
+      if (event.type === 'banner' && event.event === 'refreshed') {
+        console.log('Ad auto-refreshed - adjusting height');
+        setAdHeight(prev => (prev === 70 ? 71 : 70)); // Toggle to force re-render
+      }
+    });
+
+    return () => subscription.remove();
+  }, []);
+
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setAdKey(prev => prev + 1); // Force re-render
+  //   }, 60000);
+  
+  //   return () => clearInterval(interval);
+  // }, []);
+
   return (
     <>
       <Tabs.Navigator
@@ -307,7 +370,7 @@ const BottomTab = () => {
                 : DeviceHeigth * 0.0
               : 0,
         }}>
-        {/* <BannerAdd bannerAdId={bannerAdId} /> */}
+        <BannerAds style={{width: '100%', height: adHeight}} />
       </View>
       {/* <BackHandlerModal /> */}
     </>

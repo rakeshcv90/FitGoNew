@@ -172,4 +172,6 @@ export const localImage = {
   health_permission:require('../Icon/Images/NewImage/health_permission.png'),
   breathHome:require('../Icon/Images/NewHome/breathHome.png'),
   AdPopupIMG:require('../Icon/Images/AdPopupIMG.png'),
+  Splashlogo:require('../Icon/Images/NewHome/splash_logo.png'),
+  Splashlottie:require('../Icon/Images/Leading.json'),
 };

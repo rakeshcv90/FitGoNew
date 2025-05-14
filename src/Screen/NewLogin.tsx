@@ -57,25 +57,29 @@ const NewLogin = () => {
       // term => Offer not acceepted
 
 
-    
       if (res?.status && !res?.email) {
         API_CALLS.getAllWorkouts(res?.user_id)
         API_CALLS.getUserDataDetails(res?.user_id).then((data: any) => {
         
           if (data) {
             API_CALLS.getSubscriptionDetails(res?.user_id).then(() => {
-              console.log(!res?.term, 'LOGINwwwww');
-              // if (!res?.allcompleted) {
-              //   navigate('BottomTab');
-              // } else if (res?.status && !res?.term) {
+              console.log(res?.status && !res?.term, 'LOGINwwwww');
+              if (res?.allcompleted) {
+                navigate('BottomTab');
+              } else if (res?.status) {
                 navigate('Yourself');
-              // } else if (!res?.term) {
-              //   navigate('OfferTerms');
+              } else if (!res?.term) {
+                navigate('OfferTerms');
+              }
+              // else{
+              //   navigate('Yourself');
+              //   console.log(data,":DSFGdsgfdgdfgdfg33333")
               // }
               // action?.resetForm();
             });
           }
         });
+    
       } else {
         showMessage({
           message: `Multiple User with same userID ${res?.email}`,
@@ -127,7 +131,7 @@ const NewLogin = () => {
               allData.email +
               '. But you have used ' +
               allData.insertedEmail +
-              '. Do you want to use your new Email as default email'
+              '. Do you want to use your new Email or continue with default email?'
             }
             marginVertical={10}
           />
@@ -152,7 +156,8 @@ const NewLogin = () => {
                   allData.email,
                   allData.insertedEmail,
                 ).finally(() =>
-                  handleFormSubmit({name: allData.name, email: allData.email}),
+           
+                  handleFormSubmit({name: allData.name, email: allData.insertedEmail}),
                 )
               }
               w={'half'}

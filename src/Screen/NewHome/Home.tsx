@@ -21,6 +21,7 @@ import FocuseMind from '../../Component/NewHomeUtilities/FocuseMind';
 import PastWinnersComponent from '../Leaderboard/PastWinnersComponent';
 import {navigate} from '../../Component/Utilities/NavigationUtil';
 import FitText from '../../Component/Utilities/FitText';
+import BannerAd from '../../Component/NativeCodeAds/BannerAdView';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import {API_CALLS} from '../../API/API_CALLS';
 import Progress from './Progress';
@@ -31,7 +32,6 @@ import AdEventPopup from './AdEventPopup';
 import OfferAnimation from './OfferAnimation';
 import {AppleHealthKitData} from '../../Component/TransferStepCounterData';
 import {hasFreeEvent} from '../Event/EnteringEventFunction';
-
 const Home = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const getUserDataDetails = useSelector(
@@ -83,6 +83,9 @@ const Home = () => {
         }>
         {enteredCurrentEvent && <OfferAnimation />}
         {/* <NativeAdBanner loader={loader} /> */}
+        {/* <BannerAd
+          style={{width: '100%', height: 50}} // Ensure height and width are specified
+        /> */}
         <View style={styles.whiteBox}>
           <Progress myPlans={false} />
         </View>

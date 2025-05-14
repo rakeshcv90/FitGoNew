@@ -9,7 +9,7 @@ import {
 import React, {useCallback, useState} from 'react';
 import {ExerciseData} from '../NewWorkouts/Exercise/ExerciseUtilities/useExerciseHook';
 import FitText from '../../Component/Utilities/FitText';
-import NativeAddTest from '../../Component/NativeAd';
+// import NativeAddTest from '../../Component/NativeAd';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {AppColor, Fonts} from '../../Component/Color';
 import {localImage} from '../../Component/Image';
@@ -181,13 +181,13 @@ const RenderItem = ({
           />
         )}
       </TouchableOpacity>
-      <View
+      {/* <View
         style={{
           alignSelf: 'center',
           alignItems: 'center',
         }}>
         {showAds && <NativeAddTest type="image" media={false} />}
-      </View>
+      </View> */}
       <WorkoutsDescription data={item} open={visible} setOpen={setVisible} />
     </>
   );

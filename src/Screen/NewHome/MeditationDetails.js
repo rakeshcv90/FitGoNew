@@ -25,7 +25,7 @@ import AnimatedLottieView from 'lottie-react-native';
 import axios from 'axios';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import moment from 'moment';
-import NativeAddTest from '../../Component/NativeAd';
+// import NativeAddTest from '../../Component/NativeAd';
 import {setVideoLocation} from '../../Component/ThemeRedux/Actions';
 import RNFetchBlob from 'rn-fetch-blob';
 // import {BannerAdd} from '../../Component/BannerAdd';
@@ -224,51 +224,51 @@ const MeditationDetails = ({navigation, route}) => {
     );
   };
 
-  const getNativeAdsDisplay = () => {
-    if (getPurchaseHistory?.plan != null) {
-      if (
-        getPurchaseHistory?.plan == 'premium' &&
-        getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
-      ) {
-        return null;
-      } else {
-        return (
-          <View
-            style={{
-              alignSelf: 'center',
-              alignItems: 'center',
-              marginVertical: 10,
+  // const getNativeAdsDisplay = () => {
+  //   if (getPurchaseHistory?.plan != null) {
+  //     if (
+  //       getPurchaseHistory?.plan == 'premium' &&
+  //       getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
+  //     ) {
+  //       return null;
+  //     } else {
+  //       return (
+  //         <View
+  //           style={{
+  //             alignSelf: 'center',
+  //             alignItems: 'center',
+  //             marginVertical: 10,
 
-              //  top: DeviceHeigth * 0.1,
-            }}>
-            <NativeAddTest type="image" media={false} />
-          </View>
-        );
-      }
-    } else {
-      return (
-        <View
-          style={{
-            alignSelf: 'center',
-            alignItems: 'center',
-            marginVertical: 10,
+  //             //  top: DeviceHeigth * 0.1,
+  //           }}>
+  //           <NativeAddTest type="image" media={false} />
+  //         </View>
+  //       );
+  //     }
+  //   } else {
+  //     return (
+  //       <View
+  //         style={{
+  //           alignSelf: 'center',
+  //           alignItems: 'center',
+  //           marginVertical: 10,
 
-            //top: DeviceHeigth * 0.1,
-          }}>
-          <NativeAddTest type="image" media={false} />
-        </View>
-      );
-    }
-  };
-  const getAdsDisplay = (index, item) => {
-    if (mindsetExercise.length > 1) {
-      if (index == 0) {
-        return getNativeAdsDisplay();
-      } else if ((index + 1) % 6 == 0) {
-        return getNativeAdsDisplay();
-      }
-    }
-  };
+  //           //top: DeviceHeigth * 0.1,
+  //         }}>
+  //         <NativeAddTest type="image" media={false} />
+  //       </View>
+  //     );
+  //   }
+  // };
+  // const getAdsDisplay = (index, item) => {
+  //   if (mindsetExercise.length > 1) {
+  //     if (index == 0) {
+  //       return getNativeAdsDisplay();
+  //     } else if ((index + 1) % 6 == 0) {
+  //       return getNativeAdsDisplay();
+  //     }
+  //   }
+  // };
   // const bannerAdsDisplay = () => {
   //   if (getPurchaseHistory.length > 0) {
   //     if (
@@ -552,7 +552,7 @@ const MeditationDetails = ({navigation, route}) => {
                         </LinearGradient>
                       </ImageBackground>
                     </TouchableOpacity>
-                    {getAdsDisplay(index, item)}
+                    {/* {getAdsDisplay(index, item)} */}
                   </>
                 );
               }}

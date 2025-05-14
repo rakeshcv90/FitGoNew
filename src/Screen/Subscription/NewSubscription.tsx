@@ -966,6 +966,7 @@ const NewSubscription = ({navigation, route}: any) => {
       Platform.OS == 'ios'
         ? []
         : item?.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList;
+        console.log("price check workiong on ... ", item?.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList)
     const price: string =
       currentSelected == 2 && Platform.OS == 'android'
         ? temp?.length == 1

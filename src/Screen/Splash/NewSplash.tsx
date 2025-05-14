@@ -1,4 +1,4 @@
-import {ImageBackground, StatusBar, StyleSheet, View} from 'react-native';
+import {ImageBackground, StatusBar, StyleSheet, View, Image, Text} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {localImage} from '../../Component/Image';
 import SplashAnimation from './SplashAnimation';
@@ -10,8 +10,11 @@ import {API_CALLS} from '../../API/API_CALLS';
 import useSetupAds from './useSetupAds';
 import {useSelector} from 'react-redux';
 import checkAllPermissions from './checkAllPermissions';
+import LottieView from 'lottie-react-native';
+import AdmobInterstitial from '../../Component/NativeCodeAds/AdmobInterstitial';
 
 const NewSplash = ({navigation}: any) => {
+
   const [loader, setLoader] = useState(true);
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
@@ -26,6 +29,12 @@ const NewSplash = ({navigation}: any) => {
   );
 
   useEffect(() => {
+    AdmobInterstitial.loadAd()
+      .then(() => console.log('Ad Loaded'))
+      .catch((err) => console.error('Ad Load Failed 123 .....', err));
+  }, []);
+
+  useEffect(() => {
     const time = setTimeout(() => {
       setLoader(false);
     }, 10000);
@@ -38,6 +47,7 @@ const NewSplash = ({navigation}: any) => {
   }, [loader]);
 
   const afterAdFunction = () => {
+    console.log("SDfdsfdsfdsf")
     setupSubscription();
     API_CALLS.getMajorData();
     API_CALLS.postLogin(getUserDataDetails?.name, getUserDataDetails?.email);
@@ -72,26 +82,76 @@ const NewSplash = ({navigation}: any) => {
   useSetupAds({afterAdFunction, setLoader});
 
   return (
-    <ImageBackground
-      source={localImage.BGSplash}
-      style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
-      imageStyle={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
-      <StatusBar backgroundColor="white" barStyle={'light-content'} />
-      <SplashAnimation />
-      <View style={{position: 'absolute', bottom: 10}}>
-        <ActivityIndicator
-          animating={loader}
-          size={'large'}
-          color={AppColor.RED}
+    // <ImageBackground
+    //   source={localImage.BGSplash}
+    //   style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
+    //   imageStyle={{
+    //     flex: 1,
+    //     justifyContent: 'center',
+    //     alignItems: 'center',
+    //   }}>
+    //   <StatusBar backgroundColor="white" barStyle={'light-content'} />
+    //   <SplashAnimation />
+    //   <View style={{position: 'absolute', bottom: 10}}>
+    //     <ActivityIndicator
+    //       animating={loader}
+    //       size={'large'}
+    //       color={AppColor.RED}
+    //     />
+    //     <FitText type="SubHeading" value="Please wait..." />
+    //   </View>
+    // </ImageBackground>
+
+    <View style={styles.container}>
+      <StatusBar backgroundColor="#0D1117" barStyle="light-content" />
+
+      <Image
+        source={localImage.Splashlogo} // Replace with your actual logo
+        style={styles.logo}
+        resizeMode="contain"
+      />
+
+      <Text style={styles.title}>WARFAREFITNESS</Text>
+
+      <View style={styles.loaderContainer}>
+        <LottieView
+          source={localImage.Splashlottie} // Replace with your Lottie file
+          autoPlay
+          loop
+          style={styles.lottie}
+          onAnimationFinish={() => setLoader(false)}
         />
-        <FitText type="SubHeading" value="Please wait..." />
       </View>
-    </ImageBackground>
+    </View>
   );
 };
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#0D1117',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logo: {
+    height: 140,
+    width: 140,
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#ffffff',
+    fontFamily: 'BlackOpsOne-Regular.ttf', // Use your custom font if needed
+    marginBottom: 20,
+  },
+  loaderContainer: {
+    width: '60%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  lottie: {
+    width: '100%',
+    height: 40,
+  },
+});
 export default NewSplash;

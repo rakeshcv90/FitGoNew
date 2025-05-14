@@ -18,7 +18,7 @@ const useMusicPlayer = ({song, restStart, pause, getSoundOffOn}: Props) => {
     if (getSoundOffOn) {
       if (initialized)
         restStart ? stopMusicandReset() : pause ? playMusic() : pauseMusic();
-      else if (song.length != 0) setupMusic();
+      else if (song?.length != 0) setupMusic();
     } else {
       releaseMusic();
     }

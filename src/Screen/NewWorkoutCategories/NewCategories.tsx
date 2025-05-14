@@ -200,7 +200,6 @@ const NewCategories = ({navigation, route}: any) => {
   );
 };
 
-export default NewCategories;
 
 const styles = StyleSheet.create({
   container: {
@@ -266,3 +265,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
 });
+
+
+export default NewCategories;

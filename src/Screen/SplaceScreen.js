@@ -66,7 +66,7 @@ import {LogOut} from '../Component/LogOut';
 import RNFetchBlob from 'rn-fetch-blob';
 import {EnteringEventFunction} from './Event/EnteringEventFunction';
 import AnimatedLottieView from 'lottie-react-native';
-import codePush from 'react-native-code-push';
+
 import {CommonActions} from '@react-navigation/native';
 import {PLATFORM_IOS} from '../Component/Color';
 import {RequestAPI} from '../Component/Utilities/RequestAPI';
@@ -124,29 +124,29 @@ const SplaceScreen = ({navigation, route}) => {
       }
     } else {
       // For non-iOS platforms, fetch the unique ID
+
       DeviceInfo.syncUniqueId().then(uniqueId => {
         dispatch(setDeviceID(uniqueId));
-        if (ADS_IDs.includes(uniqueId) || __DEV__) {
-          callAds(true);
-        } else {
-          // callAds(__DEV__ ? true : false);
-          callAds(false);
-        }
+        callAds();
+        // if (ADS_IDs.includes(uniqueId) || __DEV__) {
+        //   callAds(true);
+        // } else {
+        //   // callAds(__DEV__ ? true : false);
+        //   callAds(false);
+        // }
       });
     }
     dispatch(setExerciseOutTime(''));
     dispatch(setExerciseInTime(''));
   }, []);
   // function to call ads
-  const callAds = condition => {
+  const callAds = () => {
     // initInterstitial(condition);
     // initOpenApp(condition).then(() => {
     //   showOpenAppAd().then(afterAdFunction).catch(afterAdFunction);
     // });
-    afterAdFunction
-  };
-
-  const afterAdFunction = () => {
+    // afterAdFunction()
+    console.log("Tests")
     requestPermissionforNotification(dispatch);
     getUserAllInData();
     getPlanData();
@@ -154,6 +154,10 @@ const SplaceScreen = ({navigation, route}) => {
     getPastWinner();
     dispatch(setPopUpSeen(false));
     dispatch(setFitmeAdsCount(0));
+  };
+
+  const afterAdFunction = () => {
+   
   };
   const isObject = result => {
     return !!(typeof result === 'object' && result != null);
@@ -202,7 +206,7 @@ const SplaceScreen = ({navigation, route}) => {
       getUserDataDetails?.length > 0 ||
       Object.keys(getUserDataDetails)?.length > 0
     ) {
-      API_CALLS.postLogin(getUserDataDetails?.name,getUserDataDetails?.email, false)
+      // API_CALLS.postLogin(getUserDataDetails?.name,getUserDataDetails?.email, false)
       getUserDetailData(getUserDataDetails?.id);
     }
   }, []);
@@ -356,7 +360,7 @@ const SplaceScreen = ({navigation, route}) => {
       const responseData = await axios.get(
         `${NewAppapi.GET_ALL_IN_ONE}?version=${VersionNumber.appVersion}`,
       );
-
+console.log("SDFsdfdsfsdfdsfsfdsfds",responseData?.data)
       if (
         responseData?.data?.msg ==
         'Please update the app to the latest version.'

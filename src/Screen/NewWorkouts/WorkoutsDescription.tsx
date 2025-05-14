@@ -174,8 +174,8 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
             alignSelf: 'center',
 
             marginTop: 10,
-            top: -DeviceHeigth * 0.07,
-            zIndex: -1,
+            // top: -DeviceHeigth * 0.07,
+            // zIndex: -1,
           }}
           onReadyForDisplay={() => {
             setIsLoading(false);

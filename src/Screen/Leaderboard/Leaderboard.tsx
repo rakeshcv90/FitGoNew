@@ -34,7 +34,7 @@ import NewHeader1 from '../../Component/Headers/NewHeader1';
 import LeaderBoardTopComponent from './LeaderBoardTopComponent';
 import PastWinnersComponent from './PastWinnersComponent';
 import LeaderBoardProgressComopnent from './LeaderBoardProgressComopnent';
-import NativeAddTest from '../../Component/NativeAd';
+// import NativeAddTest from '../../Component/NativeAd';
 import FitText from '../../Component/Utilities/FitText';
 
 type TypeData = {
@@ -638,12 +638,12 @@ const Leaderboard = () => {
                   />
                 ) : (
                   <View style={{marginTop: 10}}>
-                    <NativeAddTest media={true} type="image" />
+                    {/* <NativeAddTest media={true} type="image" /> */}
                   </View>
                 )
               ) : enteredUpcomingEvent ? (
                 <View style={{marginTop: 10}}>
-                  <NativeAddTest media={true} type="image" />
+                  {/* <NativeAddTest media={true} type="image" /> */}
                 </View>
               ) : (
                 <View

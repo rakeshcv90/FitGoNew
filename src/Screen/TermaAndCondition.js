@@ -52,8 +52,8 @@ const TermaAndCondition = ({route}) => {
           source={{
             uri:
               route.params.title === 'Privacy Policy'
-                ? 'https://thefitnessandworkout.com/privacy-policy/'
-                : 'https://thefitnessandworkout.com/terms-condition/',
+                ? 'https://warfarefitness.com/privacy-policy/'
+                : 'https://warfarefitness.com/terms-conditions/',
           }}
           style={{flex: 1}}
           onLoad={() => setIsLoaded(false)} // Set loading to false when content is loaded

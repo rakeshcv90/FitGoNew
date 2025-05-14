@@ -87,6 +87,7 @@ export const ExerciseComponetWithoutEvents = ({
                     <TouchableOpacity
                       style={[styles.button, {justifyContent: 'flex-start'}]}
                       onPress={() => {
+                        console.log("fffffff",item)
                         setData(item);
                         setOpen(true);
                       }}>

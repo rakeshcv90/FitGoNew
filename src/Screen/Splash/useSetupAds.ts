@@ -19,11 +19,12 @@ type Props = {
   setLoader: Dispatch<SetStateAction<boolean>>;
 };
 const useSetupAds = ({afterAdFunction}: Props) => {
+
   const dispatch = useDispatch();
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
-
+  console.log("DSfvdsfsdfs",getUserDataDetails)
   // const {initInterstitial} = MyInterstitialAd();
   // const {isAdReady, loadAd, showAd} = useOpenAd();
 
@@ -44,12 +45,15 @@ const useSetupAds = ({afterAdFunction}: Props) => {
       // For non-iOS platforms, fetch the unique ID
       DeviceInfo.syncUniqueId().then(uniqueId => {
         dispatch(setDeviceID(uniqueId));
-        if (ADS_IDs.includes(uniqueId) || __DEV__) {
-          callAds();
-        } else {
-          // callAds(__DEV__ ? true : false);
-          callAds();
-        }
+        // if (ADS_IDs.includes(uniqueId) || __DEV__) {
+        //   callAds();
+
+        // } else {
+        //   // callAds(__DEV__ ? true : false);
+          
+        // }
+        // callAds();
+        afterAdFunction()
       });
     }
     dispatch(setExerciseOutTime(''));
@@ -59,10 +63,10 @@ const useSetupAds = ({afterAdFunction}: Props) => {
     dispatch(setFitmeAdsCount(0));
   }, []);
   // function to call ads
-  const callAds = async () => {
-    // await showAd(afterAdFunction);
-    afterAdFunction()
-  };
+  // const callAds = async () => {
+  //   // await showAd(afterAdFunction);
+  //   afterAdFunction()
+  // };
   
   return {};
 };

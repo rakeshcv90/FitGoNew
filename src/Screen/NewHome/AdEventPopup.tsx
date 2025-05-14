@@ -130,11 +130,11 @@ const AdEventPopup = ({modalVisible,onClose}) => {
             />
           </View>
           <FitButton
-            onPress={() => navigate('NewSubscription')}
+            onPress={() => navigate('NewSubscription', {upgrade: true})}
             w={'90%'}
             textColor={AppColor.WHITE}
             titleText="PURCHASE PLAN "
-            style={{marginTop: 20, flexDirection: 'row-reverse'}}
+            style={{marginTop: 20, marginBottom: 20, flexDirection: 'row-reverse'}}
             IconLeft={{
               name: 'tag',
               size: 15,
@@ -143,7 +143,7 @@ const AdEventPopup = ({modalVisible,onClose}) => {
             }}
             hasIcon
           />
-          <FitButton
+          {/* <FitButton
             onPress={adSubscriptionAPI}
             w={'half'}
             bgColor="#28A745"
@@ -154,7 +154,7 @@ const AdEventPopup = ({modalVisible,onClose}) => {
             style={{marginBottom: 20, flexDirection: 'row-reverse'}}
             IconLComp={<Ad />}
             hasIcon={false}
-          />
+          /> */}
         </View>
       </View>
     </Modal>

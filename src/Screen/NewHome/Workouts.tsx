@@ -232,6 +232,7 @@ const Workouts = ({navigation}: any) => {
           }}>
           <TouchableOpacity
             onPress={() => {
+              console.log("SSSSSSS",item)
               handleNavigation(item);
             }}
             style={{
@@ -328,6 +329,7 @@ const Workouts = ({navigation}: any) => {
 
     AnalyticsConsole(`${mydata?.title?.split(' ')[0]}_W_CATE`);
     let checkAdsShow = AddCountFunction();
+  
     if (checkAdsShow == true) {
       // showInterstitialAd();
       navigation.navigate('WorkoutCategories', {
@@ -335,6 +337,7 @@ const Workouts = ({navigation}: any) => {
         CategoryDetails: mydata,
       });
     } else {
+      console.log("eeeeeee",checkAdsShow)
       navigation.navigate('WorkoutCategories', {
         categoryExercise: bodyexercise,
         CategoryDetails: mydata,
@@ -477,6 +480,7 @@ const Workouts = ({navigation}: any) => {
       </View>
     );
   };
+  
   const getbodyPartWorkout = (data: any) => {
     let checkAdsShow = AddCountFunction();
     AnalyticsConsole(`${data?.bodypart_title}_FR_Wrk`);
