@@ -49,6 +49,7 @@ const PermissionScreen = () => {
       : permissionState.location &&
         permissionState.notification 
     if (readyToNavigate) {
+      console.log("check navigation is working")
       navigation.navigate('BottomTab', {screen: 'Home'});
     }
   }, [permissionState]);
@@ -105,6 +106,7 @@ const PermissionScreen = () => {
             permissionMethods[item.askPermission] ==
               permissionMethods['initHealthKit']
           ) {
+            console.log("requesting for permission  ")
             setPermissionState(prev => ({...prev, healthkit: true}));
           }
           if (alertCondition(result)) {

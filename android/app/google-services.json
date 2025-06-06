@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "1070738084763",
-    "project_id": "warfarefitness-1fd2b",
-    "storage_bucket": "warfarefitness-1fd2b.firebasestorage.app"
+    "project_number": "108107871858",
+    "project_id": "hq72-2fd03",
+    "storage_bucket": "hq72-2fd03.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1070738084763:android:33cfe4f73df23a8723073e",
+        "mobilesdk_app_id": "1:108107871858:android:6346e64db6a926125e74eb",
         "android_client_info": {
-          "package_name": "warfarefitness.com"
+          "package_name": "com.metodo.hq72"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDDIhybf0AbFBjz7PQbVwWd8Yl9khSFIdI"
+          "current_key": "AIzaSyBAa8hC85N8XIbFuX7VmKEiiznZyFCFgSc"
         }
       ],
       "services": {

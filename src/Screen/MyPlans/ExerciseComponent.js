@@ -64,7 +64,7 @@ export const ExerciseComponetWithoutEvents = ({
               ]}>
               {dayObject?.exercises?.length
                 ? dayObject?.exercises?.length + ' Exercises'
-                : '10 Exercises'}
+                : '0 Exercises'}
             </Text>
             <FlatList
               data={dayObject?.exercises}

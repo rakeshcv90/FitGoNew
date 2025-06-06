@@ -633,7 +633,7 @@ const Breathe = ({navigation, route}) => {
                 "You've completed your breathing exercise.\nKeep up the great work and stay healthy with us!"
               }
             </Text>
-            <Text
+            {/* <Text
               style={{
                 color: AppColor.WHITE,
                 // textAlign: 'center',
@@ -667,7 +667,7 @@ const Breathe = ({navigation, route}) => {
                 }}>
                 {`+${slotCoins ?? 1}`}
               </Text>
-            </View>
+            </View> */}
           </Animated.View>
           <Animated.View
             style={[
@@ -680,7 +680,7 @@ const Breathe = ({navigation, route}) => {
             ]}>
             <NewButton
               buttonColor={AppColor.BREATHE_CIRCLE_COLOR}
-              title={'Collect'}
+              title={'Done'}
               fontFamily={'Helvetica-Bold'}
               pV={12}
               onPress={() => {

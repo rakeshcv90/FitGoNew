@@ -5,15 +5,9 @@ PODS:
   - AppAuth/Core (1.7.6)
   - AppAuth/ExternalUserAgent (1.7.6):
     - AppAuth/Core
-  - Base64 (1.1.2)
   - boost (1.84.0)
   - BVLinearGradient (2.8.3):
     - React-Core
-  - CodePush (8.3.1):
-    - Base64 (~> 1.1)
-    - JWT (~> 3.0.0-beta.12)
-    - React-Core
-    - SSZipArchive (~> 2.2.2)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.76.6)
   - Firebase (11.12.0):
@@ -80,7 +74,7 @@ PODS:
     - GoogleUtilities/Reachability (~> 8.0)
     - GoogleUtilities/UserDefaults (~> 8.0)
     - nanopb (~> 3.30910.0)
-  - FirebaseRemoteConfigInterop (11.12.0)
+  - FirebaseRemoteConfigInterop (11.13.0)
   - FirebaseSessions (11.12.0):
     - FirebaseCore (~> 11.12.0)
     - FirebaseCoreExtension (~> 11.12.0)
@@ -92,8 +86,6 @@ PODS:
     - PromisesSwift (~> 2.1)
   - fmt (9.1.0)
   - glog (0.3.5)
-  - Google-Mobile-Ads-SDK (12.4.0):
-    - GoogleUserMessagingPlatform (>= 1.1)
   - GoogleAppMeasurement (11.12.0):
     - GoogleAppMeasurement/AdIdSupport (= 11.12.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 8.0)
@@ -121,7 +113,6 @@ PODS:
     - AppAuth (< 2.0, >= 1.7.3)
     - GTMAppAuth (< 5.0, >= 4.1.1)
     - GTMSessionFetcher/Core (~> 3.3)
-  - GoogleUserMessagingPlatform (3.0.0)
   - GoogleUtilities (8.1.0):
     - GoogleUtilities/AppDelegateSwizzler (= 8.1.0)
     - GoogleUtilities/Environment (= 8.1.0)
@@ -169,8 +160,6 @@ PODS:
   - hermes-engine (0.76.6):
     - hermes-engine/Pre-built (= 0.76.6)
   - hermes-engine/Pre-built (0.76.6)
-  - JWT (3.0.0-beta.14):
-    - Base64 (~> 1.1.2)
   - lottie-ios (4.4.1)
   - lottie-react-native (6.7.2):
     - DoubleConversion
@@ -1531,7 +1520,7 @@ PODS:
     - React-Core
   - react-native-version-number (0.3.6):
     - React
-  - react-native-video (6.10.2):
+  - react-native-video (6.13.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1544,7 +1533,7 @@ PODS:
     - React-featureflags
     - React-graphics
     - React-ImageManager
-    - react-native-video/Video (= 6.10.2)
+    - react-native-video/Video (= 6.13.0)
     - React-NativeModulesApple
     - React-RCTFabric
     - React-rendererdebug
@@ -1553,7 +1542,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-video/Video (6.10.2):
+  - react-native-video/Video (6.13.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2093,7 +2082,6 @@ PODS:
     - ReactCommon/turbomodule/core
     - Yoga
   - SocketRocket (0.7.1)
-  - SSZipArchive (2.2.3)
   - TextToSpeech (4.1.1):
     - React-Core
   - Yoga (0.0.0)
@@ -2101,14 +2089,12 @@ PODS:
 DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
-  - CodePush (from `../node_modules/react-native-code-push`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - Firebase
   - FirebaseCoreInternal
   - fmt (from `../node_modules/react-native/third-party-podspecs/fmt.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
-  - Google-Mobile-Ads-SDK
   - GoogleUtilities
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - lottie-react-native (from `../node_modules/lottie-react-native`)
@@ -2208,7 +2194,6 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - AppAuth
-    - Base64
     - Firebase
     - FirebaseAnalytics
     - FirebaseCore
@@ -2219,29 +2204,23 @@ SPEC REPOS:
     - FirebaseMessaging
     - FirebaseRemoteConfigInterop
     - FirebaseSessions
-    - Google-Mobile-Ads-SDK
     - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleSignIn
-    - GoogleUserMessagingPlatform
     - GoogleUtilities
     - GTMAppAuth
     - GTMSessionFetcher
-    - JWT
     - lottie-ios
     - nanopb
     - PromisesObjC
     - PromisesSwift
     - SocketRocket
-    - SSZipArchive
 
 EXTERNAL SOURCES:
   boost:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
   BVLinearGradient:
     :path: "../node_modules/react-native-linear-gradient"
-  CodePush:
-    :path: "../node_modules/react-native-code-push"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   FBLazyVector:
@@ -2438,10 +2417,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AppAuth: d4f13a8fe0baf391b2108511793e4b479691fb73
-  Base64: cecfb41a004124895a7bcee567a89bae5a89d49b
   boost: 1dca942403ed9342f98334bf4c3621f011aa7946
   BVLinearGradient: cb006ba232a1f3e4f341bb62c42d1098c284da70
-  CodePush: 8ba8ea6dbaf817d5e51dbbbd622e15150ba814dd
   DoubleConversion: f16ae600a246532c4020132d54af21d0ddb2a385
   FBLazyVector: be509404b5de73a64a74284edcaf73a5d1e128b1
   Firebase: 735108d2d0b67827cd929bfe8254983907c4479f
@@ -2452,20 +2429,17 @@ SPEC CHECKSUMS:
   FirebaseCrashlytics: 90ea664e2b9dcf1aa5087ec6f684e9a0035d2378
   FirebaseInstallations: 41189d8b11007152d9e46ec844019f38a0a4282a
   FirebaseMessaging: 3a5de79d8dce82b70815123c05dfb8825111f15d
-  FirebaseRemoteConfigInterop: 82b81fd06ee550cbeff40004e2c106daedf73e38
+  FirebaseRemoteConfigInterop: 7915cec47731a806cda541f90898ad0fab8f9f86
   FirebaseSessions: 2c0ea8956085570415601d64cc7ebe83c8dd5c93
   fmt: 10c6e61f4be25dc963c36bd73fc7b1705fe975be
   glog: 08b301085f15bcbb6ff8632a8ebaf239aae04e6a
-  Google-Mobile-Ads-SDK: db00a3836f288f94e52114f312b56fe066699d82
   GoogleAppMeasurement: 6ee0ee888bb1db802c49049001adb4013d7fe41b
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleSignIn: d4281ab6cf21542b1cfaff85c191f230b399d2db
-  GoogleUserMessagingPlatform: f8d0cdad3ca835406755d0a69aa634f00e76d576
   GoogleUtilities: 00c88b9a86066ef77f0da2fab05f65d7768ed8e1
   GTMAppAuth: f69bd07d68cd3b766125f7e072c45d7340dea0de
   GTMSessionFetcher: 5aea5ba6bd522a239e236100971f10cb71b96ab6
   hermes-engine: 1949ca944b195a8bde7cbf6316b9068e19cf53c6
-  JWT: ef71dfb03e1f842081e64dc42eef0e164f35d251
   lottie-ios: e047b1d2e6239b787cc5e9755b988869cf190494
   lottie-react-native: 73d81964a6f54821f26a3b037a71c6d761b9a828
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
@@ -2509,7 +2483,7 @@ SPEC CHECKSUMS:
   react-native-render-html: 5afc4751f1a98621b3009432ef84c47019dcb2bd
   react-native-safe-area-context: 758e894ca5a9bd1868d2a9cfbca7326a2b6bf9dc
   react-native-version-number: 3d74b5224ca4e1032b1593937d86d3f3c94bf95c
-  react-native-video: adb65ad9f80e33df8d496b410d79c21e151d68ff
+  react-native-video: caeaa5bae4a71f062f057f52e560730d7e01db47
   react-native-webview: f5c35e0d850b42a67ae1e2f97377b3dca224d46a
   React-nativeconfig: 014403841159c621de6d2f888ad829aac530f93e
   React-NativeModulesApple: d92ce55cd2e351c54c08671a5198579920588688
@@ -2553,17 +2527,16 @@ SPEC CHECKSUMS:
   RNGoogleSignin: b8760528f2a7cbe157ecfdcc13bdb7d2745c9389
   RNIap: f94647b3a3dbd5fa08ad7ed847eb588aa5fe95fe
   RNNotifee: 271cfeb505183d2cd1b858c14c3968b6ca30a642
-  RNPermissions: 30df8673d224c8acce552b1cece80335ac7ea55a
+  RNPermissions: 93c083df624e95417684d8ab1002e96535bb9861
   RNReanimated: c70f7880e6e657a27791cd0d25d4c754f14ccba0
   RNScreens: 560df4e0088c2f103cc645626a797a2738ce0856
   RNShare: 694e19d7f74ac4c04de3a8af0649e9ccc03bd8b1
   RNSVG: a07e14363aa208062c6483bad24a438d5986d490
   RNVectorIcons: 55221459225ae0fe7a5ab6b029378c79f1a82d8f
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
-  SSZipArchive: 62d4947b08730e4cda640473b0066d209ff033c9
   TextToSpeech: 89b239221ec378d213af422d14789a729705360b
-  Yoga: fd4ca32b81c4069b4175ad9460b042e17db94b66
+  Yoga: c597d2c0803c51f27569fb69f05eeb76646c0074
 
-PODFILE CHECKSUM: afe188177dd077de5288d06b573aae8372c987d8
+PODFILE CHECKSUM: 5e3e003a06e838a48521f21421ceb4c50a162d28
 
-COCOAPODS: 1.16.2
+COCOAPODS: 1.16.1

@@ -6,35 +6,35 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Workouts from '../Screen/NewHome/Workouts';
 
 import Trainer from '../Screen/NewHome/Trainer';
-import {View, Text} from 'react-native';
+import { View, Text } from 'react-native';
 // import {BannerAdd, MyInterstitialAd} from '../Component/BannerAdd';
 // import {bannerAdId} from '../Component/AdsId';
-import {DeviceHeigth, DeviceWidth} from '../Component/Config';
-import {useDispatch, useSelector} from 'react-redux';
+import { DeviceHeigth, DeviceWidth } from '../Component/Config';
+import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
-import {AppColor, Fonts} from '../Component/Color';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import { AppColor, Fonts } from '../Component/Color';
 import {
   setFitmeAdsCount,
   setOpenAdsCount,
 } from '../Component/ThemeRedux/Actions';
-import MyPlans, {handleStart} from '../Screen/MyPlans/MyPlans';
+import MyPlans, { handleStart } from '../Screen/MyPlans/MyPlans';
 import GradientButton from '../Component/GradientButton';
 
-import {localImage} from '../Component/Image';
+import { localImage } from '../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
-import {ClipPath, Defs, Path, Polygon, Rect, Svg} from 'react-native-svg';
+import { ClipPath, Defs, Path, Polygon, Rect, Svg } from 'react-native-svg';
 import NewProfile from '../Screen/NewProfile';
-import {AnalyticsConsole} from '../Component/AnalyticsConsole';
+import { AnalyticsConsole } from '../Component/AnalyticsConsole';
 import NewMonthlyAchievement from '../Screen/NewHome/NewMonthlyAchievement';
-import {showMessage} from 'react-native-flash-message';
+import { showMessage } from 'react-native-flash-message';
 import AnimatedLottieView from 'lottie-react-native';
 import NewHome from '../Screen/NewHome/NewHome';
 import BackHandlerModal from './BackHandlerModal';
@@ -49,7 +49,7 @@ const Tabs = createBottomTabNavigator();
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
 
-const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
+const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
 
   // const { showInterstitialAd} = MyInterstitialAd();
   const Dispatch = useDispatch();
@@ -79,13 +79,13 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
   return (
     <View style={styles.tabContainer}>
       {state.routes.map((route, index) => {
-        const {options} = descriptors[route.key];
+        const { options } = descriptors[route.key];
         const label =
           options.tabBarLabel !== undefined
             ? options.tabBarLabel
             : options.title !== undefined
-            ? options.title
-            : route.name;
+              ? options.title
+              : route.name;
 
         const isFocused = state.index === index;
 
@@ -95,8 +95,8 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
           getPurchaseHistory?.plan == 'noob'
             ? 3
             : getPurchaseHistory?.plan == 'pro'
-            ? 6
-            : 8;
+              ? 6
+              : 8;
         const Sat = getPurchaseHistory?.currentDay == 6;
         const Sun = getPurchaseHistory?.currentDay == 0;
         const onPress = () => {
@@ -153,11 +153,19 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                   navigation.navigate(route.name);
                 }) */}
 
-                AdmobInterstitial.showAd()
-                 .then(() => {console.log('Ad showns and completed')
-                  navigation.navigate(route.name);
-                 })
-                  .catch((err) => console.error('Ad show failed', err));
+                if (Platform.OS === 'android') {
+                  AdmobInterstitial.showAd()
+                    .then(() => {
+                      console.log('Ad shown and completed');
+                      navigation.navigate(route.name);
+                    })
+                    .catch((err) => {
+                      console.error('Ad show failed', err);
+                      navigation.navigate(route.name); // fallback if ad fails
+                    });
+                } else {
+                  navigation.navigate(route.name); // direct navigation for iOS
+                }
 
                 {
                   /* } */
@@ -181,11 +189,19 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                 navigation.navigate(route.name);
                 }) */}
 
-                AdmobInterstitial.showAd()
-                 .then(() => {console.log('Ad shown and completed')
-                  navigation.navigate(route.name);
-                 })
-                  .catch((err) => console.error('Ad shows failed', err));
+                if (Platform.OS === 'android') {
+                  AdmobInterstitial.showAd()
+                    .then(() => {
+                      console.log('Ad shown and completed');
+                      navigation.navigate(route.name);
+                    })
+                    .catch((err) => {
+                      console.error('Ad show failed', err);
+                      navigation.navigate(route.name); // fallback if ad fails
+                    });
+                } else {
+                  navigation.navigate(route.name); // direct navigation for iOS
+                }
                 {
                   /* } */
                 }
@@ -303,7 +319,7 @@ const BottomTab = () => {
   //   const interval = setInterval(() => {
   //     setAdKey(prev => prev + 1); // Force re-render
   //   }, 60000);
-  
+
   //   return () => clearInterval(interval);
   // }, []);
 
@@ -336,7 +352,7 @@ const BottomTab = () => {
         <Tabs.Screen
           name="Home"
           component={Home}
-          options={{tabBarShowLabel: false}}
+          options={{ tabBarShowLabel: false }}
         />
         <Tabs.Screen
           name="MyPlans"
@@ -344,18 +360,18 @@ const BottomTab = () => {
           // options={{
           //   tabBarIcon: () => <NotificationBadge />,
           // }}
-          options={{tabBarShowLabel: false}}
+          options={{ tabBarShowLabel: false }}
         />
         <Tabs.Screen
           name="Workout"
           component={Workouts}
-          options={{tabBarShowLabel: true}}
+          options={{ tabBarShowLabel: true }}
         />
 
         <Tabs.Screen
           name="Profile"
           component={NewProfile}
-          options={{tabBarShowLabel: false}}
+          options={{ tabBarShowLabel: false }}
         />
       </Tabs.Navigator>
       {/* {getPurchaseStatusData()} */}
@@ -366,11 +382,13 @@ const BottomTab = () => {
               ? DeviceHeigth == 667
                 ? -DeviceHeigth * 0.01
                 : DeviceHeigth >= 1024
-                ? 0
-                : DeviceHeigth * 0.0
+                  ? 0
+                  : DeviceHeigth * 0.0
               : 0,
         }}>
-        <BannerAds style={{width: '100%', height: adHeight}} />
+        {Platform.OS === 'android' && (
+          <BannerAds style={{ width: '100%', height: adHeight }} />
+        )}
       </View>
       {/* <BackHandlerModal /> */}
     </>
@@ -384,8 +402,8 @@ const styles = StyleSheet.create({
       DeviceHeigth >= 640
         ? DeviceHeigth * 0.09
         : DeviceHeigth >= 1024
-        ? DeviceHeigth * 0.06
-        : DeviceHeigth * 0.09,
+          ? DeviceHeigth * 0.06
+          : DeviceHeigth * 0.09,
     backgroundColor: 'white',
 
     borderTopWidth: 0.5,
@@ -413,7 +431,7 @@ const styles = StyleSheet.create({
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
     borderBottomColor: 'red', // Change this to the desired color of the triangle
-    transform: [{rotate: '90deg'}],
+    transform: [{ rotate: '90deg' }],
   },
   triangle: {
     width: 0,
@@ -434,16 +452,16 @@ const styles = StyleSheet.create({
       DeviceHeigth <= 667
         ? -12
         : DeviceHeigth <= 844
-        ? -11
-        : DeviceHeigth >= 1024
-        ? -13
-        : -10,
+          ? -11
+          : DeviceHeigth >= 1024
+            ? -13
+            : -10,
     right:
       DeviceHeigth <= 844
         ? 20
         : DeviceHeigth >= 1024
-        ? DeviceHeigth * 0.054
-        : 20,
+          ? DeviceHeigth * 0.054
+          : 20,
     width: 25,
     height: 25,
   },

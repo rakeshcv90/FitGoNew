@@ -83,6 +83,7 @@ const FitButton = ({
           borderRadius: bR,
           borderColor: bColor,
           borderWidth: bW,
+          padding:padH,
           backgroundColor: bgColor ?? AppColor.RED,
           justifyContent: justifyContent ?? 'center',
           paddingVertical: padV,

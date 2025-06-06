@@ -31,16 +31,17 @@ const useSetupAds = ({afterAdFunction}: Props) => {
   useEffect(() => {
     // loadAd();
     if (PLATFORM_IOS) {
-      if (getUserDataDetails && getUserDataDetails.social_id != null) {
-        if (ADS_IOS.includes(getUserDataDetails.social_id)) {
-          callAds();
-        } else {
-          callAds();
-        }
-      } else {
-        // callAds(__DEV__ ? true : false); // load live ad if null
-        callAds(); // load live ad if null
-      }
+      // if (getUserDataDetails && getUserDataDetails.social_id != null) {
+      //   if (ADS_IOS.includes(getUserDataDetails.social_id)) {
+      //     callAds();
+      //   } else {
+      //     callAds();
+      //   }
+      // } else {
+      //   // callAds(__DEV__ ? true : false); // load live ad if null
+      //   callAds(); // load live ad if null
+      // }
+        afterAdFunction()
     } else {
       // For non-iOS platforms, fetch the unique ID
       DeviceInfo.syncUniqueId().then(uniqueId => {

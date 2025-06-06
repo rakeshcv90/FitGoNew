@@ -1,4 +1,4 @@
-import {ImageBackground, StatusBar, StyleSheet, View, Image, Text} from 'react-native';
+import {ImageBackground, StatusBar, StyleSheet, View, Image, Text, Platform} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {localImage} from '../../Component/Image';
 import SplashAnimation from './SplashAnimation';
@@ -29,9 +29,11 @@ const NewSplash = ({navigation}: any) => {
   );
 
   useEffect(() => {
+if (Platform.OS === 'android') {
     AdmobInterstitial.loadAd()
       .then(() => console.log('Ad Loaded'))
       .catch((err) => console.error('Ad Load Failed 123 .....', err));
+  }
   }, []);
 
   useEffect(() => {
@@ -72,6 +74,7 @@ const NewSplash = ({navigation}: any) => {
           navigation.navigate('Yourself');
         }
       } else {
+        console.log("login call from splash")
         navigation.replace('LogSignUp');
       }
     } else {
@@ -111,7 +114,7 @@ const NewSplash = ({navigation}: any) => {
         resizeMode="contain"
       />
 
-      <Text style={styles.title}>WARFAREFITNESS</Text>
+      <Text style={styles.title}>Método HQ72</Text>
 
       <View style={styles.loaderContainer}>
         <LottieView

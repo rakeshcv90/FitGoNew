@@ -76,6 +76,16 @@ target 'FitGo' do
      :mac_catalyst_enabled => false,
      # :ccache_enabled => true
    )
+  patch_targets = ['React-jsinspector', 'ReactCommon', 'React-Core', 'React-jsi', 'React-perflogger', 'React-cxxreact', 'React-jsiexecutor', 'React-rendererdebug', 'React-hermes', 'React-performancetimeline','React-graphics','React-RuntimeCore','React-Fabric','React-NativeModulesApple','React-RuntimeHermes','React-FabricImage','React-CoreModules','React-FabricComponents','React-RCTFabric','React-microtasksnativemodule','React-featureflagsnativemodule','React-idlecallbacksnativemodule','React-RuntimeApple','React-domnativemodule','React-defaultsnativemodule','React-RCTAppDelegate','RCT-Folly','ReactCodegen']
+
+   installer.pods_project.targets.each do |target|
+        if patch_targets.include?(target.name)
+      target.build_configurations.each do |config|
+        config.build_settings['OTHER_CPLUSPLUSFLAGS'] ||= ''
+        config.build_settings['OTHER_CPLUSPLUSFLAGS'] << ' -include "/Users/yogeshrana/AndroidStudioProjects/FirstReactNative/FitGoNew/ios/FollyCharTraitsPatch.h"'
+      end
+    end
+  end
  end
 end
 
