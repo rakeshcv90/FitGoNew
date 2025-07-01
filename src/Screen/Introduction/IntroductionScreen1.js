@@ -6,7 +6,7 @@ import {
   StatusBar,
   Image,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {DeviceWidth, DeviceHeigth} from '../../Component/Config';
 import {AppColor, Fonts} from '../../Component/Color';
 
@@ -20,9 +20,22 @@ import {useDispatch, useSelector} from 'react-redux';
 import AnimatedLottieView from 'lottie-react-native';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import CircleProgress from '../../Component/Utilities/ProgressCircle';
+import { translate } from '../Translation/TranslationService';
+
 const IntroductionScreen1 = ({navigation}) => {
   const dispatch = useDispatch();
   const hindiLanguage = useSelector(state => state.hindiLanguage);
+
+  useEffect(() => {
+    const translatedTitle = translate('title');
+    const desc = translate('description');
+console.log('converterd text ',translatedTitle, desc);
+    // setTitle(translatedTitle);
+  }, []);
+
+// const [titleText, setTitleText] = useState('Get Fit, Your Way!');
+const [descText, setDescText] = useState('Design your perfect workout routine! Choose from various exercises, customize your plan based on your goals, and enjoy workouts that fit your lifestyle. Achieve your fitness goals on your terms!');
+
   return (
     <View style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={AppColor.WHITE} />
@@ -40,13 +53,13 @@ const IntroductionScreen1 = ({navigation}) => {
             height: 30,
             width: '95%',
             flexDirection: 'row',
-            justifyContent: 'space-between',
+            justifyContent: 'flex-end',
             alignItems: 'center',
 
             zIndex: 1,
             top: Platform.OS == 'ios' && DeviceHeigth <= 1024 ? 15 : -5,
           }}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={{
               justifyContent: 'center',
               alignItems: 'center',
@@ -59,14 +72,25 @@ const IntroductionScreen1 = ({navigation}) => {
             onPress={() => {
               AnalyticsConsole(`LAN_C_TO_${hindiLanguage ? 'H' : 'E'}`);
               dispatch(setHindiLanuage(!hindiLanguage));
+              // console.log("handle press");
+              // handleTranslate()
             }}>
             <Image
               source={localImage.TranslateIntro}
               resizeMode="contain"
               style={{height: 30, width: 30}}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
+          // style={{
+          //     justifyContent: 'right',
+          //     alignItems: 'right',
+          //     textAlign:'right',
+          //     zIndex: 1,
+          //     overflow: 'hidden',
+          //     width: DeviceWidth * 0.08,
+          //     height: DeviceHeigth * 0.05,
+          //   }}
             onPress={() => {
               AnalyticsConsole('SKIP_IS');
               dispatch(setShowIntro(true));
@@ -81,7 +105,7 @@ const IntroductionScreen1 = ({navigation}) => {
                 lineHeight: 20,
                 fontSize: 14,
               }}>
-              Skip
+              {translate('skip')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -111,7 +135,9 @@ const IntroductionScreen1 = ({navigation}) => {
             fontWeight: '700',
             color: AppColor.RED,
           }}>
-          {hindiLanguage ? 'अपना फिटनेस का सफर खुद तय करें!' : 'Get Fit, Your Way!'}
+          {/* {hindiLanguage ? 'अपना फिटनेस का सफर खुद तय करें!' : 'Get Fit, Your Way!'} */}
+          {translate('intro1title')}
+          {console.log('jasdkjskdjkjs',translate('titleText'))}
         </Text>
 
         <Text
@@ -124,9 +150,10 @@ const IntroductionScreen1 = ({navigation}) => {
             opacity: 0.8,
             marginTop: 16,
           }}>
-          {hindiLanguage
+          {/* {hindiLanguage
             ? `अपनी परफेक्ट वर्कआउट रूटीन डिजाइन करें! विभिन्न एक्सरसाइज में से चुनें, अपने लक्ष्य के अनुसार प्लान कस्टमाइज़ करें, और अपनी लाइफस्टाइल के अनुसार वर्कआउट का आनंद लें। अपने फिटनेस गोल्स को अपने तरीके से हासिल करें!`
-            : `Design your perfect workout routine! Choose from various exercises, customize your plan based on your goals, and enjoy workouts that fit your lifestyle. Achieve your fitness goals on your terms!`}
+            : `Design your perfect workout routine! Choose from various exercises, customize your plan based on your goals, and enjoy workouts that fit your lifestyle. Achieve your fitness goals on your terms!`} */}
+            {translate('intro1description')}
         </Text>
       </View>
       <View

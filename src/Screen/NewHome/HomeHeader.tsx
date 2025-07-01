@@ -11,6 +11,7 @@ import FitIcon, {FitIconTypes} from '../../Component/Utilities/FitIcon';
 import FitText from '../../Component/Utilities/FitText';
 import moment from 'moment';
 import {DeviceWidth} from '../../Component/Config';
+import {translate} from '../Translation/TranslationService';
 
 type Props = {
   leaderboardData: Array<{
@@ -55,10 +56,10 @@ const HomeHeader = ({leaderboardData}: Props) => {
   const currentTime = parseInt(moment().format('HH'));
   const greeting =
     currentTime < 12
-      ? 'Good Morning'
+      ? translate('goodmorning')
       : currentTime > 12 && currentTime < 17
-      ? 'Good Afternoon'
-      : 'Good Evening';
+      ? translate('goodafternoon')
+      : translate('goodevening');
 
   const historyIcon: FitIconTypes = {
     name: 'history',

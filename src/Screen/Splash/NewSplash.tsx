@@ -1,19 +1,20 @@
-import {ImageBackground, StatusBar, StyleSheet, View, Image, Text, Platform} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {localImage} from '../../Component/Image';
+import { ImageBackground, StatusBar, StyleSheet, View, Image, Text, Platform } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { localImage } from '../../Component/Image';
 import SplashAnimation from './SplashAnimation';
-import {ActivityIndicator} from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import FitText from '../../Component/Utilities/FitText';
-import {AppColor} from '../../Component/Color';
-import {setupSubscription} from './setupSubscription';
-import {API_CALLS} from '../../API/API_CALLS';
+import { AppColor } from '../../Component/Color';
+import { setupSubscription } from './setupSubscription';
+import { API_CALLS } from '../../API/API_CALLS';
 import useSetupAds from './useSetupAds';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import checkAllPermissions from './checkAllPermissions';
 import LottieView from 'lottie-react-native';
 import AdmobInterstitial from '../../Component/NativeCodeAds/AdmobInterstitial';
+import { setLanguage } from '../Translation/TranslationService';
 
-const NewSplash = ({navigation}: any) => {
+const NewSplash = ({ navigation }: any) => {
 
   const [loader, setLoader] = useState(true);
   const getUserDataDetails = useSelector(
@@ -28,19 +29,31 @@ const NewSplash = ({navigation}: any) => {
     (state: any) => state.getChallengesData,
   );
 
+  const handleLangChange = async (langCode: string) => {
+    await setLanguage(langCode);
+    console.log('Language changed to:', langCode);
+  };
+
   useEffect(() => {
-if (Platform.OS === 'android') {
-    AdmobInterstitial.loadAd()
-      .then(() => console.log('Ad Loaded'))
-      .catch((err) => console.error('Ad Load Failed 123 .....', err));
-  }
+    const applyLanguage = async () => {
+      await handleLangChange('pt'); // or 'hi', 'en', etc.
+    };
+
+    applyLanguage();
+  }, []);
+
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      AdmobInterstitial.loadAd()
+        .then(() => console.log('Ad Loaded'))
+        .catch((err) => console.error('Ad Load Failed 123 .....', err));
+    }
   }, []);
 
   useEffect(() => {
     const time = setTimeout(() => {
       setLoader(false);
     }, 10000);
-
     return () => clearTimeout(time);
   }, []);
 
@@ -49,17 +62,22 @@ if (Platform.OS === 'android') {
   }, [loader]);
 
   const afterAdFunction = () => {
-    console.log("SDfdsfdsfdsf")
+    console.log("SDfdsfdsfdsf .... ", getUserDataDetails?.name, getUserDataDetails?.email, getUserDataDetails)
     setupSubscription();
     API_CALLS.getMajorData();
-    API_CALLS.postLogin(getUserDataDetails?.name, getUserDataDetails?.email);
-    API_CALLS.getUserDataDetails(getUserDataDetails?.id);
-    API_CALLS.getAllWorkouts(getUserDataDetails?.id)
-    API_CALLS.pastWinners()
-    getAllExercise &&
-      getChallengesData &&
-      API_CALLS.getAllExercisesData(getUserDataDetails?.id);
-      loadScreen()
+    if (getUserDataDetails.id != null) {
+      API_CALLS.postLogin(getUserDataDetails?.name, getUserDataDetails?.email);
+      API_CALLS.getUserDataDetails(getUserDataDetails?.id);
+      if(getUserDataDetails.gender != null){
+      API_CALLS.getAllWorkouts(getUserDataDetails?.id)
+      }
+      API_CALLS.pastWinners()
+      getAllExercise &&
+        getChallengesData &&
+        API_CALLS.getAllExercisesData(getUserDataDetails?.id);
+    }
+
+    loadScreen()
   };
   const loadScreen = () => {
     if (showIntro) {
@@ -81,8 +99,8 @@ if (Platform.OS === 'android') {
       navigation.replace('IntroductionScreen1');
     }
   };
-  
-  useSetupAds({afterAdFunction, setLoader});
+
+  useSetupAds({ afterAdFunction, setLoader });
 
   return (
     // <ImageBackground

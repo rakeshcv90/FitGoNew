@@ -123,6 +123,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
+        lang:'en',
       });
 
       if (res?.data?.msg == 'Please update the app to the latest version.') {
@@ -170,6 +171,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
           url: NewAppapi.CURRENT_DAY_EXERCISE,
           method: 'Post',
           data: {user_details: datas,type: 'custom'},
+          lang:'en'
         });
 
         if (res.data) {

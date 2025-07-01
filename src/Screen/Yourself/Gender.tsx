@@ -16,6 +16,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import analytics from '@react-native-firebase/analytics';
 import {localImage} from '../../Component/Image';
+import { translate } from '../Translation/TranslationService';
 const Gender = ({route, navigation}) => {
   const {data, nextScreen, name} = route?.params;
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
@@ -60,7 +61,7 @@ const Gender = ({route, navigation}) => {
                 : DeviceHeigth * 0.08
               : DeviceHeigth * 0.05,
         }}>
-        <Bulb screen={'Select your gender'} />
+        <Bulb screen={translate('genderheading')} />
       </View>
       <View
         style={{

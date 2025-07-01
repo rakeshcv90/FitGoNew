@@ -38,6 +38,7 @@ import {
 import {showMessage} from 'react-native-flash-message';
 import FitText from '../../Component/Utilities/FitText';
 import CircleProgress from '../../Component/Utilities/ProgressCircle';
+import { translate } from '../Translation/TranslationService'
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
@@ -345,9 +346,9 @@ const LoadData = ({navigation}) => {
         </CircleProgress>
       </View>
       {/* <Text style={styles.text}>49%</Text> */}
-      <Text style={styles.text1}>Creating your personalized plan...</Text>
+      <Text style={styles.text1}>{translate('loadheading')}</Text>
       <Text style={styles.text2}>50K+</Text>
-      <Text style={styles.text2}>Active Users</Text>
+      <Text style={styles.text2}>{translate('activeusers')}</Text>
       <Text
         style={[
           styles.text2,
@@ -359,7 +360,7 @@ const LoadData = ({navigation}) => {
             fontFamily: Fonts.MONTSERRAT_MEDIUM,
           },
         ]}>
-        have achieved their fitness goals
+        {translate('loaddesc')}
       </Text>
       <View
         style={{

@@ -49,6 +49,8 @@ import {
 import {RESULTS} from 'react-native-permissions';
 import {AuthorizationStatus} from '@notifee/react-native';
 import {LogOut} from '../../Component/LogOut';
+import {translate} from '../Translation/TranslationService';
+
 const OfferTerms = ({navigation, route}: any) => {
   const dispatch = useDispatch();
   const [language, setLanguage] = useState('English');
@@ -120,7 +122,7 @@ const OfferTerms = ({navigation, route}: any) => {
         </TouchableOpacity>
         <View>
           <Text style={styles.policyText}>
-            By continuing you accept our terms and conditions
+            {translate('acceptterm')}
           </Text>
         </View>
       </View>
@@ -242,14 +244,14 @@ const OfferTerms = ({navigation, route}: any) => {
           }}>
           <View>
             <FitText
-              value="Terms of Use for"
+              value={translate('termsuse')}
               type="SubHeading"
               textTransform="uppercase"
               fontWeight="500"
               letterSpacing={0.2}
               fontSize={14}
             />
-            <FitText value="In-App Rewards" type="Heading" fontSize={22} />
+            <FitText value={translate('appreward')} type="Heading" fontSize={18} />
           </View>
           <TouchableOpacity
             onPress={() => setOpened(!opened)}
@@ -338,12 +340,12 @@ const OfferTerms = ({navigation, route}: any) => {
                         <View
                           style={{flexDirection: 'row', alignItems: 'center'}}>
                           <RadioButton
-                            value="Hindi"
+                            value="Portuguese"
                             status={
-                              language === 'Hindi' ? 'checked' : 'unchecked'
+                              language === 'Portuguese' ? 'checked' : 'unchecked'
                             }
                             onPress={() => {
-                              setLanguage('Hindi');
+                              setLanguage('Portuguese');
                               handleRadioButton('term_condition_hindi');
                               setTimeout(() => {
                                 setOpened(!opened);
@@ -355,13 +357,13 @@ const OfferTerms = ({navigation, route}: any) => {
                           <Text
                             style={{color: AppColor.BLACK}}
                             onPress={() => {
-                              setLanguage('Hindi');
+                              setLanguage('Portuguese');
                               handleRadioButton('term_condition_hindi');
                               setTimeout(() => {
                                 setOpened(!opened);
                               }, 250);
                             }}>
-                            Hindi
+                            Portuguese
                           </Text>
                         </View>
                       </View>
@@ -395,7 +397,7 @@ const OfferTerms = ({navigation, route}: any) => {
               <View style={{marginBottom: 15}}>
                 <NewButton
                   pV={14}
-                  title={'I Agree'}
+                  title={translate('iagree')}
                   disabled={!checked}
                   opacity={checked ? 1 : 0.7}
                   onPress={() => handleAgreement()}

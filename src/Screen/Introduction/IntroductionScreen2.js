@@ -21,6 +21,8 @@ import {
 import AnimatedLottieView from 'lottie-react-native';
 import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
 import CircleProgress from '../../Component/Utilities/ProgressCircle';
+import { translate } from '../Translation/TranslationService';
+
 const IntroductionScreen2 = ({navigation, route}) => {
   const hindiLanguage = useSelector(state => state.hindiLanguage);
   const dispatch = useDispatch();
@@ -40,13 +42,13 @@ const IntroductionScreen2 = ({navigation, route}) => {
             height: 30,
             width: '95%',
             flexDirection: 'row',
-            justifyContent: 'space-between',
+            justifyContent: 'flex-end',
             alignItems: 'center',
 
             zIndex: 1,
             top: Platform.OS == 'ios' && DeviceHeigth <= 1024 ? 15 : -5,
           }}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={{
               justifyContent: 'center',
               alignItems: 'center',
@@ -65,7 +67,7 @@ const IntroductionScreen2 = ({navigation, route}) => {
               resizeMode="contain"
               style={{height: 30, width: 30}}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
             onPress={() => {
               AnalyticsConsole('SKIP_IS');
@@ -81,7 +83,7 @@ const IntroductionScreen2 = ({navigation, route}) => {
                 lineHeight: 20,
                 fontSize: 14,
               }}>
-              Skip
+              {translate('skip')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -110,9 +112,11 @@ const IntroductionScreen2 = ({navigation, route}) => {
             fontWeight: '700',
             color: AppColor.RED,
           }}>
-          {hindiLanguage
+          {/* {hindiLanguage
             ? 'फिट रहें, इनाम पाएं!'
             : 'Earn While You Burn!'}
+             */}
+             {translate('intro2title')}
         </Text>
 
         <Text
@@ -125,9 +129,10 @@ const IntroductionScreen2 = ({navigation, route}) => {
             opacity: 0.8,
             marginTop: 16,
           }}>
-          {hindiLanguage
+          {/* {hindiLanguage
             ? `हमारे रोमांचक फिटनेस चैलेंजेस में हिस्सा लें और अपनी सीमाओं को चुनौती दें! लीडरबोर्ड पर चढ़ें, और अपनी मेहनत को शानदार इनामों में बदलते हुए देखें।`
-            : `Join our thrilling fitness challenges and push your limits! Climb to the top of the leaderboard, and watch as your hard work transforms into exciting rewards.`}
+            : `Join our thrilling fitness challenges and push your limits! Climb to the top of the leaderboard, and watch as your hard work transforms into exciting rewards.`} */}
+            {translate('intro2description')}
         </Text>
       </View>
 

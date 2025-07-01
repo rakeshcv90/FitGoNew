@@ -8,6 +8,7 @@ import {FlatList} from 'react-native';
 import WorkoutsDescription from '../NewWorkouts/WorkoutsDescription';
 import AnimatedLottieView from 'lottie-react-native';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
+import {translate} from '../Translation/TranslationService';
 export const ExerciseComponetWithoutEvents = ({
   dayObject,
   day,
@@ -41,7 +42,7 @@ export const ExerciseComponetWithoutEvents = ({
               </View>
             </View>
             <NewButton
-              title={'Start Workout'}
+              title={translate('startworkout')}
               onPress={onPress}
               withAnimation={overExerciseVisible}
               download={download}
@@ -127,7 +128,7 @@ export const ExerciseComponetWithoutEvents = ({
               }}
             />
           </View>
-          <WorkoutsDescription data={data} open={open} setOpen={setOpen} />
+          <WorkoutsDescription data={data} open={open} setOpen={setOpen} id={data.exercise_id} />
         </>
       ) : (
         <>
@@ -274,7 +275,7 @@ export const ExerciseComponentWithEvent = ({
             </View>
             {day == WeekArray[currentDay] ? (
               <NewButton
-                title={'Start Workout'}
+                title={translate('startworkout')}
                 onPress={onPress}
                 withAnimation={overExerciseVisible}
                 download={download}

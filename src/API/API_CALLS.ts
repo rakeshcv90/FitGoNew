@@ -30,6 +30,7 @@ import {Dispatch, SetStateAction, version} from 'react';
 import {EnteringEventFunction} from '../Screen/Event/EnteringEventFunction';
 import {navigate} from '../Component/Utilities/NavigationUtil';
 import {downloadImages} from '../Screen/Splash/downloadBanner';
+import { translate } from '../Screen/Translation/TranslationService';
 
 let deviceID = '';
 DeviceInfo.syncUniqueId().then(uniqueId => {
@@ -138,7 +139,7 @@ export const API_CALLS = {
     return new Promise((resolve, reject) =>
       RequestAPI.makeRequest(
         'GET',
-        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userID}`,
+        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userID}&lang='pt`,
         {},
         ({data, errors, status, message}) => {
           // console.log(data, 'USER DETAILS');
@@ -384,11 +385,15 @@ export const API_CALLS = {
         {
           user_id,
           version: VersionNumber.appVersion,
+          lang:'en',
         },
         ({data, errors, status, message}) => {
+          console.log('subscription data .... ',data, ' // ',status);
           if (data?.msg == 'Please update the app to the latest version.') {
+            console.log('subscription data upgrade ',data, ' // ',status);
             reject(UpgradeAppResponse());
           } else if (status == 200) {
+            console.log('subscription data working  ',data, ' // ',status);
             dispatch(setCustomWorkoutData(data?.workout_data));
             dispatch(setOfferAgreement(data?.additional_data));
             dispatch(setUserProfileData(data?.profile));
@@ -490,10 +495,11 @@ export const API_CALLS = {
         {
           user_id,
           version: VersionNumber.appVersion,
+          lang:'pt'
         },
       
         ({data, errors, status, message}) => {
-       
+       console.log('all users with condition .... ',data, ' // ',status, '// ',message)
           if (
             data?.msg == 'user id is required' ||
             data?.msg == 'version is required'
@@ -518,9 +524,10 @@ export const API_CALLS = {
         {
           id,
           version: VersionNumber.appVersion,
+          lang:'pt',
         },
         ({data, errors, status, message}) => {
-         
+         console.log('workout data .....', data , ' // ',status, '// ', id);
           if (
             data?.msg == 'user id is required' ||
             data?.msg == 'Please update the app to the latest version.'

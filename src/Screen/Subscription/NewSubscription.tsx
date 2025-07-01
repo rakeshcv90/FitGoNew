@@ -413,6 +413,7 @@ const NewSubscription = ({navigation, route}: any) => {
   // PURCHASE START ANDROID
   const purchaseItemsAndroid = async (sku: RNIap.Sku, offerToken: any) => {
     try {
+      console.log("get plan details ...  ",sku)
       const purchase: any = await RNIap.requestSubscription({
         sku,
         ...(offerToken && {subscriptionOffers: [{sku, offerToken}]}),

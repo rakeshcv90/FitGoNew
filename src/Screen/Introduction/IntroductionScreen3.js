@@ -20,6 +20,7 @@ import {
 import AnimatedLottieView from 'lottie-react-native';
 import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
 import CircleProgress from '../../Component/Utilities/ProgressCircle';
+import { translate } from '../Translation/TranslationService';
 
 const IntroductionScreen3 = ({navigation}) => {
   const dispatch = useDispatch();
@@ -46,7 +47,7 @@ const IntroductionScreen3 = ({navigation}) => {
             zIndex: 1,
             top: Platform.OS == 'ios' && DeviceHeigth <= 1024 ? 15 : -5,
           }}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={{
               justifyContent: 'center',
               alignItems: 'center',
@@ -65,7 +66,7 @@ const IntroductionScreen3 = ({navigation}) => {
               resizeMode="contain"
               style={{height: 30, width: 30}}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
           disabled={true}
             onPress={() => {
@@ -112,7 +113,8 @@ const IntroductionScreen3 = ({navigation}) => {
             fontWeight: '700',
             color: AppColor.RED,
           }}>
-          {hindiLanguage ? 'सुकून की साँस लें!' : 'Breathe In, Stress Out!'}
+          {/* {hindiLanguage ? 'सुकून की साँस लें!' : 'Breathe In, Stress Out!'} */}
+          {translate('intro3title')}
         </Text>
 
         <Text
@@ -125,9 +127,10 @@ const IntroductionScreen3 = ({navigation}) => {
             opacity: 0.8,
             marginTop: 16,
           }}>
-          {hindiLanguage
+          {/* {hindiLanguage
             ? `शांति पाएं इस हलचल भरी दुनिया में हमारी शांतिदायक ब्रीदिंग एक्सरसाइज और माइंडफुल मेडिटेशन सेशन के साथ। तनाव कम करें, मूड बेहतर करें और हमारे गाइडेड सेशन्स के साथ अपनी फोकस क्षमता बढ़ाएं। एक गहरी साँस लें और एक शांत, स्वस्थ जीवन का आनंद उठाएं!`
-            : `Find your peace amidst the chaos with calming breathing exercises and mindful meditation sessions. Reduce stress, boost your mood, and enhance your focus with our guided sessions. Take a deep breath and unlock a calmer, healthier you!`}
+            : `Find your peace amidst the chaos with calming breathing exercises and mindful meditation sessions. Reduce stress, boost your mood, and enhance your focus with our guided sessions. Take a deep breath and unlock a calmer, healthier you!`} */}
+            {translate('intro3description')}
         </Text>
       </View>
 

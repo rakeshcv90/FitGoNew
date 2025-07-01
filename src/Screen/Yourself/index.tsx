@@ -1,9 +1,10 @@
-import {StyleSheet, Text, SafeAreaView} from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {DeviceWidth, NewApi, NewAppapi} from '../../Component/Config';
-import VersionNumber, {appVersion} from 'react-native-version-number';
-import {showMessage} from 'react-native-flash-message';
+import { StyleSheet, Text, SafeAreaView } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { DeviceWidth, NewApi, NewAppapi } from '../../Component/Config';
+import VersionNumber, { appVersion } from 'react-native-version-number';
+import { showMessage } from 'react-native-flash-message';
+import { translate } from '../Translation/TranslationService';
 
 import {
   Setmealdata,
@@ -28,7 +29,7 @@ const height = Array(100)
   .fill(4)
   .map((item: any, index, arr) => arr[index] + index / 10);
 
-const Index = ({navigation, route}: any) => {
+const Index = ({ navigation, route }: any) => {
   const dispatch = useDispatch();
   const [screen, setScreen] = useState(1);
   const [toggleW, setToggleW] = useState('kg');
@@ -46,7 +47,7 @@ const Index = ({navigation, route}: any) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const getTempLogin = useSelector(state => state.getTempLogin);
   const [isRouteDataAvailable, setIsrouteDataAvailable] = useState(false);
- 
+
   useEffect(() => {
     if (route?.params?.id == undefined) {
       setScreen(1);
@@ -91,12 +92,14 @@ const Index = ({navigation, route}: any) => {
 
   const ProfileDataAPI = async () => {
     try {
+      console.log('profile data')
       const res = await axios({
-        url: NewAppapi.Get_COMPLETE_PROFILE,
+        url: NewAppapi.Get_COMPLETE_PROFILE+"?lang=pt",
         method: 'get',
       });
-
+      console.log('profile data ... ', res.data)
       if (res.data) {
+        console.log('profile data ...... ', res.data)
         dispatch(setCompleteProfileData(res.data));
         setTimeout(() => {
           navigation.replace(getTempLogin ? 'Name' : 'Gender', {
@@ -104,7 +107,7 @@ const Index = ({navigation, route}: any) => {
             nextScreen: screen,
           });
         }, 3000);
-    }
+      }
     } catch (error) {
       dispatch(setCompleteProfileData([]));
       setTimeout(() => {
@@ -132,13 +135,13 @@ const Index = ({navigation, route}: any) => {
           type: 'danger',
           animationDuration: 500,
           floating: true,
-          icon: {icon: 'auto', position: 'left'},
+          icon: { icon: 'auto', position: 'left' },
         });
       } else if (responseData?.data?.msg == 'version is required') {
-   
+
       } else {
         const objects = {};
-        responseData.data.data.forEach((item:any) => {
+        responseData.data.data.forEach((item: any) => {
           objects[item?.type] = item?.image;
         });
 
@@ -180,7 +183,7 @@ const Index = ({navigation, route}: any) => {
         // speed={5}
         autoPlay
         loop
-        style={{width: 350, height: 250}}
+        style={{ width: 350, height: 250 }}
       />
       <Text
         style={{
@@ -191,7 +194,7 @@ const Index = ({navigation, route}: any) => {
           lineHeight: 30,
           //marginTop: -50,
         }}>
-        Tell us about yourself!
+        {translate('welcomemsg')}
       </Text>
       <Text
         style={{
@@ -205,7 +208,7 @@ const Index = ({navigation, route}: any) => {
           textAlign: 'center',
           marginTop: 5,
         }}>
-        Start your journey to a healthier, happier you with us today!
+        {translate('subwelcome')}
       </Text>
     </SafeAreaView>
   );

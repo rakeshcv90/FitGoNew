@@ -138,4 +138,5 @@ export const NewAppapi = {
   CARDIO_STATUS_WITHOUT_EVENT:NewApi+'withoutevent_cardio_status',
   GET_ALL_HISTORY:NewApi+'get_exercise_history',
   GET_BOTH_HISTORY:NewApi+'get_eventwithoutenvent_history',
+  GET_SINGLE_EXERCISE:NewApi+'get_single_exercise',
 };

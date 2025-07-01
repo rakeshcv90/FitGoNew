@@ -108,6 +108,7 @@ const WorkoutDays = ({navigation, route}: any) => {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
+        lang:'en',
       });
 
       if (res.data?.msg != 'No data found') {
@@ -801,7 +802,7 @@ const WorkoutDays = ({navigation, route}: any) => {
 
         <View></View>
         {/* {bannerAdsDisplay()} */}
-        <BannerAdd bannerAdId={bannerAdId} />
+        {/* <BannerAdd bannerAdId={bannerAdId} /> */}
         <ActivityLoader visible={refresh} />
         <PaddoMeterPermissionModal />
       </Wrapper>

@@ -17,7 +17,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {AppColor, Fonts} from '../../Component/Color';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
-import moment from 'moment';
+import moment, { lang } from 'moment';
 import VersionNumber from 'react-native-version-number';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
@@ -74,6 +74,7 @@ import Progress from '../NewHome/Progress';
 import FitIcon, {FitIconTypes} from '../../Component/Utilities/FitIcon';
 import {navigate} from '../../Component/Utilities/NavigationUtil';
 import PredefinedStyles from '../../Component/Utilities/PredefineStyles';
+import {translate} from '../Translation/TranslationService';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -261,8 +262,10 @@ const MyPlans = ({navigation}: any) => {
           version: VersionNumber.appVersion,
           user_id: getUserDataDetails?.id,
           equipment: getEquipmentExercise == 1 ? 'no' : 'yes',
+          lang:'pt',
         },
       });
+      console.log('data event ....', res, getUserDataDetails?.id)
 
       if (res.data?.msg == 'User not exist.') {
         showMessage({
@@ -288,9 +291,10 @@ const MyPlans = ({navigation}: any) => {
     setRefresh(true);
     try {
       const res = await axios({
-        url: NewAppapi.WEEKLY_STATUS + '?user_id=' + getUserDataDetails.id,
+        url: NewAppapi.WEEKLY_STATUS + '?user_id=' + getUserDataDetails.id+'&lang=pt',
       });
     
+      console.log(' data weekly   ',res.data);
       if (res?.data?.message != 'data not found') {
         const days = new Set(); // Use a Set to store unique days
         res?.data?.forEach((item: any) => {
@@ -415,6 +419,7 @@ const MyPlans = ({navigation}: any) => {
         url: NewAppapi.CURRENT_DAY_EXERCISE,
         method: 'Post',
         data: {user_details: datas, type: 'weekly'},
+        lang:'en'
       });
       if (
         res.data?.msg == 'Exercise Status for All Users Inserted Successfully'
@@ -622,6 +627,7 @@ const MyPlans = ({navigation}: any) => {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
+        lang:'en',
       });
       setDownloadedVideoSent(false);
       if (res?.data?.msg == 'Please update the app to the latest version.') {
@@ -1174,7 +1180,7 @@ const MyPlans = ({navigation}: any) => {
                   ]}>
                   <FitText
                     type="SubHeading"
-                    value="Weekly Challenge"
+                    value={translate('weeklychallenge')}
                     fontWeight="700"
                   />
                   <View style={[PredefinedStyles.rowBetween]}>

@@ -393,6 +393,7 @@ const NewHome = ({navigation}) => {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
+        lang:'en',
       });
 
       if (res.data?.msg != 'No data found') {

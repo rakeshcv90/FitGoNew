@@ -21,6 +21,7 @@ import {hasFreeEvent} from '../Event/EnteringEventFunction';
 import {navigate} from '../../Component/Utilities/NavigationUtil';
 import PredefinedStyles from '../../Component/Utilities/PredefineStyles';
 import {Ad} from '../../Icon/Ad';
+import {translate} from '../Translation/TranslationService';
 
 const AdEventPopup = ({modalVisible,onClose}) => {
   console.log('Modal visible');
@@ -108,14 +109,14 @@ const AdEventPopup = ({modalVisible,onClose}) => {
             />
             <FitText
               type="Heading"
-              value="Want to Join the Event?"
+              value={translate('eventdialogheading')}
               marginHorizontal={20}
               w={(DeviceWidth * 2) / 3}
               color={'#34258D'}
             />
             <FitText
               type="SubHeading"
-              value="When you start the event, you can earn amazing rewards."
+              value={translate('eventdialogsub')}
               marginHorizontal={20}
               // fontSize={20}
               // lineHeight={25}
@@ -133,7 +134,7 @@ const AdEventPopup = ({modalVisible,onClose}) => {
             onPress={() => navigate('NewSubscription', {upgrade: true})}
             w={'90%'}
             textColor={AppColor.WHITE}
-            titleText="PURCHASE PLAN "
+            titleText={translate('purchaseplan')}
             style={{marginTop: 20, marginBottom: 20, flexDirection: 'row-reverse'}}
             IconLeft={{
               name: 'tag',

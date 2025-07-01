@@ -7,21 +7,24 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {AppColor, Fonts, PLATFORM_IOS} from '../../Component/Color';
-import {Image} from 'react-native';
-import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
+import React, { useEffect, useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { AppColor, Fonts, PLATFORM_IOS } from '../../Component/Color';
+import { Image } from 'react-native';
+import { DeviceHeigth, DeviceWidth, NewAppapi } from '../../Component/Config';
 import RenderHTML from 'react-native-render-html';
 import Tts from 'react-native-tts';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useSelector, useDispatch} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import AnimatedLottieView from 'lottie-react-native';
-import {localImage} from '../../Component/Image';
-import {setSoundOnOff} from '../../Component/ThemeRedux/Actions';
+import { localImage } from '../../Component/Image';
+import { setSoundOnOff } from '../../Component/ThemeRedux/Actions';
 import Video from 'react-native-video';
+import axios from 'axios';
+import { user } from '@elevenlabs/elevenlabs-js/api';
+import VersionNumber from 'react-native-version-number';
 
-const WorkoutsDescription = ({data, open, setOpen}: any) => {
+const WorkoutsDescription = ({ data, open, setOpen, id }: any) => {
   const [ttsInitialized, setTtsInitialized] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const TextSpeech = `${data?.exercise_instructions}`;
@@ -32,6 +35,42 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
   const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
   const cleanText = TextSpeech.replace(/<\/?[^>]+(>|$)/g, '');
   const isIOS18 = PLATFORM_IOS && Platform.Version >= 18
+
+
+  const getUserDataDetails = useSelector(
+    (state: any) => state.getUserDataDetails,
+  );
+
+
+  const getExerciseDescription = async () => {
+    console.log('descrppp ....', id, ' / ', getUserDataDetails?.id, '/', VersionNumber.appVersion);
+
+    if (id !== null && id !== undefined) {
+      console.log('descrp ....', id, ' / ', getUserDataDetails?.id, '/', VersionNumber.appVersion);
+      const res = await axios({
+        url: NewAppapi.GET_SINGLE_EXERCISE,
+        method: 'GET',
+        params: {
+          user_id: getUserDataDetails?.id,
+          version: VersionNumber.appVersion,
+          exercise_id: id,
+          lang: 'pt',
+        },
+      });
+      // SetDescription(res.data[0].exercise_instructions);
+      console.log('desc data ... ', res.data, ' // ', res.data.data[0].exercise_instructions);
+      if (res.data.data?.length > 0) {
+        SetDescription(res.data.data[0].exercise_instructions);
+        console.log('retunr descr ', description);
+      } else {
+        console.warn('No data found in response.');
+      }
+
+    }
+  }
+
+
+
   useEffect(() => {
     const initTts = async () => {
       const ttsStatus = await Tts.getInitStatus();
@@ -52,7 +91,7 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
         }
       }
       // Register tts-progress event listener outside the conditional block
-      Tts.addEventListener('tts-progress', event => {});
+      Tts.addEventListener('tts-progress', event => { });
     };
 
     initTts();
@@ -64,6 +103,12 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
       Tts.stop();
     }
   }, [open, getSoundOffOn]);
+
+  useEffect(() => {
+    if (id !== null && id !== undefined) {
+      getExerciseDescription();
+    }
+  }, [id]);
   const tag = {
     p: {
       color: '#3A4750',
@@ -97,7 +142,7 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
           flex: 1,
           backgroundColor: AppColor.WHITE,
         }}>
-           {isLoading && (
+        {isLoading && (
           <View style={styles.loader}>
             <AnimatedLottieView
               source={require('../../Icon/Images/NewImage2/Adloader.json')}
@@ -180,11 +225,11 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
           onReadyForDisplay={() => {
             setIsLoading(false);
           }}
-          // poster={
-          //   data?.exercise_image?.includes('https')
-          //     ? data?.exercise_image
-          //     : data?.exercise_image_link
-          // }
+        // poster={
+        //   data?.exercise_image?.includes('https')
+        //     ? data?.exercise_image
+        //     : data?.exercise_image_link
+        // }
         />
         <View style={styles.container}>
           <View style={styles.content}>
@@ -200,13 +245,13 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
             <ScrollView showsVerticalScrollIndicator={false}>
               {data?.workout_description ? (
                 <RenderHTML
-                  source={{html: data?.workout_description}}
+                  source={{ html: description }}
                   contentWidth={DeviceWidth}
                   tagsStyles={tag}
                 />
               ) : (
                 <RenderHTML
-                  source={{html: data?.exercise_instructions}}
+                  source={{ html: description }}
                   contentWidth={DeviceWidth}
                   tagsStyles={tag}
                 />

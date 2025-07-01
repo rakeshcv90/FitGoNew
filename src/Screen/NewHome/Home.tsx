@@ -8,30 +8,30 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import setDefaultAlarm from '../../Component/Utilities/setDefaultAlarm';
 import PredefinedStyles from '../../Component/Utilities/PredefineStyles';
 import HomeHeader from './HomeHeader';
 import UserEspecially from '../../Component/NewHomeUtilities/UserEspecially';
-import {AppColor, Fonts, PLATFORM_IOS} from '../../Component/Color';
+import { AppColor, Fonts, PLATFORM_IOS } from '../../Component/Color';
 import FocuseMind from '../../Component/NewHomeUtilities/FocuseMind';
 // import NativeAdBanner from './NativeAdBanner';
 import PastWinnersComponent from '../Leaderboard/PastWinnersComponent';
-import {navigate} from '../../Component/Utilities/NavigationUtil';
+import { navigate } from '../../Component/Utilities/NavigationUtil';
 import FitText from '../../Component/Utilities/FitText';
 import BannerAd from '../../Component/NativeCodeAds/BannerAdView';
-import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
-import {API_CALLS} from '../../API/API_CALLS';
+import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
+import { API_CALLS } from '../../API/API_CALLS';
 import Progress from './Progress';
-import {Trophy} from '../../Icon/Trophy';
+import { Trophy } from '../../Icon/Trophy';
 import FitIcon from '../../Component/Utilities/FitIcon';
 import FitButton from '../../Component/Utilities/FitButton';
 import AdEventPopup from './AdEventPopup';
 import OfferAnimation from './OfferAnimation';
-import {AppleHealthKitData} from '../../Component/TransferStepCounterData';
-import {hasFreeEvent} from '../Event/EnteringEventFunction';
+import { AppleHealthKitData } from '../../Component/TransferStepCounterData';
+import { hasFreeEvent } from '../Event/EnteringEventFunction';
 const Home = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const getUserDataDetails = useSelector(
@@ -65,7 +65,7 @@ const Home = () => {
   }, [getPurchaseHistory]);
   setDefaultAlarm();
   return (
-    <Wrapper styles={{backgroundColor: '#f7f7f7'}}>
+    <Wrapper styles={{ backgroundColor: '#f7f7f7' }}>
       <StatusBar backgroundColor={AppColor.WHITE} barStyle={'dark-content'} />
       <HomeHeader leaderboardData={leaderboardData} />
       <ScrollView
@@ -89,7 +89,10 @@ const Home = () => {
         <View style={styles.whiteBox}>
           <Progress myPlans={false} />
         </View>
-        <PastWinnersComponent pastWinners={getPastWinners} />
+
+        {getPastWinners && getPastWinners.length > 0 && (
+          <PastWinnersComponent pastWinners={getPastWinners} />
+        )}
         <UserEspecially />
         <FocuseMind />
         {enteredCurrentEvent && (
@@ -97,10 +100,10 @@ const Home = () => {
             style={[
               PredefinedStyles.rowBetween,
               styles.whiteBox,
-              {paddingVertical: 0},
+              { paddingVertical: 0 },
             ]}>
             <View
-              style={{width: '50%', alignItems: 'flex-start', paddingLeft: 20}}>
+              style={{ width: '50%', alignItems: 'flex-start', paddingLeft: 20 }}>
               <FitText
                 type="SubHeading"
                 fontWeight="700"
@@ -124,12 +127,12 @@ const Home = () => {
                 textColor={AppColor.WHITE}
                 w={'half'}
                 padV={7}
-                style={{alignSelf: 'flex-start'}}
+                style={{ alignSelf: 'flex-start' }}
               />
             </View>
             <Image
               source={require('./InviteImage.png')}
-              style={{width: '50%', bottom: 0}}
+              style={{ width: '50%', bottom: 0 }}
               resizeMode="contain"
             />
           </View>
@@ -195,7 +198,7 @@ const styles = StyleSheet.create({
     ...Platform.select({
       ios: {
         shadowColor: 'rgba(0, 0, 0, 1)',
-        shadowOffset: {width: 0, height: 2},
+        shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.3,
         shadowRadius: 3,
       },

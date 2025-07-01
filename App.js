@@ -6,6 +6,7 @@ import Router, {LoginStack} from './src/Navigation/Router';
 import FlashMessage from 'react-native-flash-message';
 import {useDispatch} from 'react-redux';
 import {DeviceHeigth, DeviceWidth} from './src/Component/Config';
+import { loadLanguage } from './src/Screen/Translation/TranslationService';
 
 import {
   requestPermissionforNotification,
@@ -42,6 +43,7 @@ const App = () => {
       crashlytics().recordError(error);
     }
     alalyicsData();
+    loadLanguage();
   }, []);
 
   const StatusBar_Bar_Height = Platform.OS === 'ios' ? getStatusBarHeight() : 0;

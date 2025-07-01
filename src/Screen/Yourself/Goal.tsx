@@ -20,6 +20,8 @@ import {
   import {localImage} from '../../Component/Image';
   import LinearGradient from 'react-native-linear-gradient';
   import {Card} from './Card';
+  import { translate } from '../Translation/TranslationService';
+
   const Goal = ({navigation, route}: any) => {
     const {data, nextScreen, gender, experience, workout_plans,name} = route?.params;
     const goalsAnimation = useRef(new Animated.Value(0)).current;
@@ -134,7 +136,7 @@ import {
                   : DeviceHeigth * 0.08
                 : DeviceHeigth * 0.05,
           }}>
-          <Bulb screen={'What is your fitness goal?'} />
+          <Bulb screen={translate('goalheading')} />
         </View>
         <View style={{justifyContent: 'center', marginTop: DeviceHeigth * 0.06}}>
           <Card

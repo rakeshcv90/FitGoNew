@@ -16,20 +16,21 @@ import {navigate} from '../Component/Utilities/NavigationUtil';
 import {showMessage} from 'react-native-flash-message';
 import {Modal} from 'react-native-paper';
 import VersionNumber, {appVersion} from 'react-native-version-number';
+import { translate } from '../Screen/Translation/TranslationService';
 // import {BannerAdd} from '../Component/BannerAdd';
 // import {bannerAdIdTest} from '../Component/AdsId';
 
 const validationSchema = Yup.object().shape({
   // name: Yup.string().required('Full Name is required'),
   name: Yup.string()
-    .required('Full Name must contain at least 3 characters')
-    .matches(/^[A-Za-z].*/, 'Full Name must start with a character')
-    .matches(/^[a-zA-Z0-9 ]*$/, 'Full Name must not contain special characters')
-    .min(3, 'Full Name must contain at least 3 characters'),
+    .required(translate('namevalid'))
+    .matches(/^[A-Za-z].*/, translate('namechar'))
+    .matches(/^[a-zA-Z0-9 ]*$/, translate('namespecial'))
+    .min(3, translate('namevalid')),
 
   email: Yup.string()
-    .matches(/^[\w.\-]+@[\w.\-]+\.\w{2,4}$/, 'Invalid Email Format')
-    .required('Email is Required'),
+    .matches(/^[\w.\-]+@[\w.\-]+\.\w{2,4}$/, translate('emailvalid'))
+    .required(translate('emailreq')),
 });
 
 type Values = {
@@ -58,13 +59,15 @@ const NewLogin = () => {
 
 
       if (res?.status && !res?.email) {
-        API_CALLS.getAllWorkouts(res?.user_id)
+              console.log(res, 'LOGIN....');
+          
         API_CALLS.getUserDataDetails(res?.user_id).then((data: any) => {
-        
+        console.log(data, 'data....');
           if (data) {
-            API_CALLS.getSubscriptionDetails(res?.user_id).then(() => {
-              console.log(res?.status && !res?.term, 'LOGINwwwww');
+            API_CALLS.getSubscriptionDetails(res?.user_id).then((data2:any) => {
+              console.log(data2, 'LOGINwwwww');
               if (res?.allcompleted) {
+        API_CALLS.getAllWorkouts(res?.user_id)
                 navigate('BottomTab');
               } else if (res?.status) {
                 navigate('Yourself');
@@ -175,8 +178,8 @@ const NewLogin = () => {
     <Wrapper styles={{paddingTop: DeviceHeigth * 0.1}}>
       <View
         style={[PredefinedStyles.FlexCenter, {justifyContent: 'flex-start'}]}>
-        <FitText type="Heading" value="Enter your details" />
-        <FitText type="normal" value="Enter your details to continue" />
+        <FitText type="Heading" value={translate('loginheading')} />
+        <FitText type="normal" value={translate('loginsubheading')} />
         {loader && <ActivityLoader />}
         <Formik
           initialValues={{
@@ -197,7 +200,7 @@ const NewLogin = () => {
               <FitInput
                 errors={errors.name}
                 touched={touched.name}
-                placeholder="Enter Name"
+                placeholder={translate('name')}
                 onChangeText={handleChange('name')}
                 IconLComp={
                   <FitIcon
@@ -214,7 +217,7 @@ const NewLogin = () => {
               <FitInput
                 errors={errors.email}
                 touched={touched.email}
-                placeholder="Enter Email"
+                placeholder={translate('email')}
                 onChangeText={handleChange('email')}
                 IconLComp={
                   <FitIcon
@@ -230,10 +233,10 @@ const NewLogin = () => {
               />
               <View style={{position: 'absolute', bottom: 0}}>
                 <FitButton
-                  titleText={`Let's Start`}
+                  titleText={translate('letstart')}
                   onPress={() => handleSubmit()}
                   textColor={AppColor.WHITE}
-                  w={'contain'}
+                  w={'full'}
                   mV={20}
                 /> 
                 {/* <BannerAdd bannerAdId={bannerAdIdTest} /> */}

@@ -193,6 +193,7 @@ const OneDay = ({navigation, route}: any) => {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
+        lang:'en',
       });
 
       if (res?.data?.msg == 'Please update the app to the latest version.') {
@@ -268,6 +269,7 @@ const OneDay = ({navigation, route}: any) => {
             : NewAppapi.CURRENT_DAY_EXERCISE,
           method: 'Post',
           data: {user_details: datas,type: 'day'},
+          lang:'en'
         });
         if (res.data) {
           if (

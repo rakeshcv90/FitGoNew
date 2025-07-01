@@ -38,31 +38,32 @@ import {ExerciseTime} from '../../Icon/ExerciseTime';
 import FitButton from '../Utilities/FitButton';
 import {useSelector} from 'react-redux';
 import {API_CALLS} from '../../API/API_CALLS';
+import {translate} from '../../Screen/Translation/TranslationService'
 
 const data = [
   {
     id: 1,
-    title: 'Custom Made',
+    title: translate('customade'),
     image: require('../../Icon/Images/NewHome/back3.png'),
-    text: 'Create your own workout',
+    text: translate('customtext'),
   },
   {
     id: 2,
-    title: 'Gyms',
+    title: translate('gyms'),
     image: require('../../Icon/Images/NewHome/back1.png'),
-    text: 'Discover fitness centers close to you',
+    text: translate('gymtext'),
   },
   {
     id: 3,
-    title: 'Diet',
+    title: translate('diet'),
     image: require('../../Icon/Images/NewHome/back2.png'),
-    text: 'Reach your goals quickly with a nutritious diet',
+    text: translate('diettext'),
   },
   {
     id: 4,
-    title: 'Store',
+    title: translate('store'),
     image: require('../../Icon/Images/NewHome/back4.png'),
-    text: 'Explore top-tier fitness essentials',
+    text: translate('storetext'),
   },
 ];
 
@@ -344,7 +345,7 @@ const UserEspecially = () => {
             marginBottom: 5,
             marginLeft: 20,
           }}>
-          Especially For You
+          {translate('especially')}
         </Text>
         {openBreathe && (
           <ImageBackground
@@ -366,7 +367,7 @@ const UserEspecially = () => {
               <FitText
                 type="SubHeading"
                 fontWeight="700"
-                value="Breath in and out"
+                value={translate('breathin')}
                 color={AppColor.WHITE}
               />
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -388,7 +389,7 @@ const UserEspecially = () => {
                 <FitText
                   {...{
                     type: 'normal',
-                    value: 'START NOW',
+                    value: translate('startnow'),
                     color: AppColor.WHITE,
 
                     fontSize: 12,

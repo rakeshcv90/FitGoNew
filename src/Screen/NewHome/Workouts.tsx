@@ -43,6 +43,7 @@ import ActivityLoader from '../../Component/ActivityLoader';
 import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
+import {translate} from '../Translation/TranslationService';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Workouts = ({navigation}: any) => {
@@ -707,7 +708,7 @@ const Workouts = ({navigation}: any) => {
                             alignItems: 'center',
                             justifyContent: 'flex-start',
                           }}>
-                          Body Type
+                          {translate('bodytype')}
                         </Text>
                       </View>
                       <View style={[styles.meditionBox]}>
@@ -820,7 +821,7 @@ const Workouts = ({navigation}: any) => {
                             alignItems: 'center',
                             justifyContent: 'flex-start',
                           }}>
-                          Custom Made
+                          {translate('customade')}
                         </Text>
                       </View>
 
@@ -890,7 +891,7 @@ const Workouts = ({navigation}: any) => {
 
                                   fontWeight: '500',
                                   fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                                }}>{`Create your custom plans`}</Text>
+                                }}>{translate('customtext')}</Text>
                             </View>
                             <Image
                               source={localImage.NewWorkout}
@@ -994,7 +995,7 @@ const Workouts = ({navigation}: any) => {
                             alignItems: 'center',
                             justifyContent: 'flex-start',
                           }}>
-                          Workout Challenges
+                          {translate('workoutchallenge')}
                         </Text>
                       </View>
                       {getChallengesData?.length > 0 ? (

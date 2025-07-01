@@ -13,6 +13,8 @@ import {
 } from './PermissionMethods';
 import {useNavigation} from '@react-navigation/native';
 import {navigationRef} from '../../../App';
+// import { translate } from 'react-native-redash';
+import {translate} from '../../Screen/Translation/TranslationService';
 
 const PermissionScreen = () => {
   const [permissionState, setPermissionState] = useState({
@@ -196,10 +198,11 @@ const PermissionScreen = () => {
     <View style={styles.container}>
       <Wrapper styles={{backgroundColor: AppColor.Background_New}}>
         <View style={styles.cView}>
-          <Text style={styles.rTextStyle}>Required Permissions</Text>
+          <Text style={styles.rTextStyle}>
+            {translate('requiredpermission')}
+          </Text>
           <Text style={styles.dTextStyle}>
-            To access certain features of this app, you need to grant
-            permissions. Please check the description of each permission.
+            {translate('permissionsubtext')}
           </Text>
           <View style={styles.pView}>
             {UIArray.map((item, index) => (

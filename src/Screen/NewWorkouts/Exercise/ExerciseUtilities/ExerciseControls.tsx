@@ -284,6 +284,7 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
         headers: {
           'Content-Type': 'multipart/form-data',
         },
+        lang:'en',
       });
       console.log(res.data,payload)
       if (res?.data?.msg == 'Please update the app to the latest version.') {

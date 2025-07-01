@@ -54,6 +54,7 @@ const NewMonthlyAchievement = ({navigation}) => {
         method: 'POST',
         headers: {'Content-Type': 'multipart/form-data'},
         data: payload,
+        lang:'en',
       });
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
