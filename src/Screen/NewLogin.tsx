@@ -58,13 +58,14 @@ const NewLogin = () => {
 
 
       if (res?.status && !res?.email) {
-        API_CALLS.getAllWorkouts(res?.user_id)
+         console.log(res, 'LOGIN....');
         API_CALLS.getUserDataDetails(res?.user_id).then((data: any) => {
         
           if (data) {
             API_CALLS.getSubscriptionDetails(res?.user_id).then(() => {
               console.log(res?.status && !res?.term, 'LOGINwwwww');
               if (res?.allcompleted) {
+              API_CALLS.getAllWorkouts(res?.user_id)
                 navigate('BottomTab');
               } else if (res?.status) {
                 navigate('Yourself');

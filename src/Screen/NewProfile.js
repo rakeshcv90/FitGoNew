@@ -165,7 +165,7 @@ const NewProfile = ({navigation}) => {
   };
   const openMailApp = () => {
     Linking.openURL(
-      'mailto:digimetrixuk@gmail.com?subject=Feedback&body=Hello%20there!',
+      'mailto:support@metabrace.app?subject=Feedback&body=Hello%20there!',
     );
   };
   const HandleButtons = (ids, value) => {

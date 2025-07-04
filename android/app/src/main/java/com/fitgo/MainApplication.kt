@@ -13,7 +13,7 @@ import com.facebook.react.soloader.OpenSourceMergedSoMapping
 import com.facebook.soloader.SoLoader
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.initialization.InitializationStatus
-import warfarefitness.com.BuildConfig
+import com.metabrace.app.BuildConfig
 
 
 class MainApplication : Application(), ReactApplication {

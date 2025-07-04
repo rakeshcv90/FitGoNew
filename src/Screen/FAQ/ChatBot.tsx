@@ -192,7 +192,7 @@ const ChatBot = ({navigation, route}: any) => {
                   fontWeight="600"
                   fontFamily={Fonts.MONTSERRAT_MEDIUM}
                   color="blue"
-                  value="thefitnessandworkout@gmail.com >"
+                  value="support@metabrace.app >"
                   onPress={handleEmail}
                 />
               )}

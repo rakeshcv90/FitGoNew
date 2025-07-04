@@ -2,10 +2,7 @@ import {Dimensions} from 'react-native';
 export const DeviceHeigth = Dimensions.get('screen').height;
 export const DeviceWidth = Dimensions.get('screen').width;
 export const Api = 'https://cvinfotech2@gofit.tentoptoday.com/json/';
-//export const NewApi = 'https://gofit.tentoptoday.com/adserver/public/api/';
-// export const NewApi = 'https://fitme.esapplications.in/adserver/public/api/';
-//export const NewApi = 'https://fitme.cvinfotech.in/adserver/public/api/'; //old Server
-export const NewApi = 'https://twp.warfarefitness.com/adserver/public/api/'; //New  Server
+export const NewApi = 'https://admin.metabrace.app/adserver/public/api/'; //New  Server
 
 
 export const Appapi = {

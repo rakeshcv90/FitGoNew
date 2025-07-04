@@ -50,13 +50,18 @@ const NewSplash = ({navigation}: any) => {
     console.log("SDfdsfdsfdsf")
     setupSubscription();
     API_CALLS.getMajorData();
-    API_CALLS.postLogin(getUserDataDetails?.name, getUserDataDetails?.email);
-    API_CALLS.getUserDataDetails(getUserDataDetails?.id);
-    API_CALLS.getAllWorkouts(getUserDataDetails?.id)
-    API_CALLS.pastWinners()
-    getAllExercise &&
-      getChallengesData &&
-      API_CALLS.getAllExercisesData(getUserDataDetails?.id);
+   
+   if (getUserDataDetails.id != null) {
+      API_CALLS.postLogin(getUserDataDetails?.name, getUserDataDetails?.email);
+      API_CALLS.getUserDataDetails(getUserDataDetails?.id);
+      if(getUserDataDetails.gender != null){
+      API_CALLS.getAllWorkouts(getUserDataDetails?.id)
+      }
+      API_CALLS.pastWinners()
+      getAllExercise &&
+        getChallengesData &&
+        API_CALLS.getAllExercisesData(getUserDataDetails?.id);
+    }
       loadScreen()
   };
   const loadScreen = () => {
@@ -111,7 +116,7 @@ const NewSplash = ({navigation}: any) => {
         resizeMode="contain"
       />
 
-      <Text style={styles.title}>WARFAREFITNESS</Text>
+      <Text style={styles.title}>Metabrace</Text>
 
       <View style={styles.loaderContainer}>
         <LottieView

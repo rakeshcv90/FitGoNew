@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "1070738084763",
-    "project_id": "warfarefitness-1fd2b",
-    "storage_bucket": "warfarefitness-1fd2b.firebasestorage.app"
+    "project_number": "909634077332",
+    "project_id": "metabrace-a947c",
+    "storage_bucket": "metabrace-a947c.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1070738084763:android:33cfe4f73df23a8723073e",
+        "mobilesdk_app_id": "1:909634077332:android:52731e5b5be79c093daa81",
         "android_client_info": {
-          "package_name": "warfarefitness.com"
+          "package_name": "com.metabrace.app"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDDIhybf0AbFBjz7PQbVwWd8Yl9khSFIdI"
+          "current_key": "AIzaSyDe4tsVcZxlnKRCG8xjRLXUwjGF6hunShs"
         }
       ],
       "services": {

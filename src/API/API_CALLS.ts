@@ -53,14 +53,14 @@ export const API_CALLS = {
   postLogin: debounce(
     (name: string, email: string, noMessage?: boolean | true) => {
     
-      // const requestBody = {
-      //   name,
-      //   email,
-      //   platform: Platform.OS,
-      //   version: VersionNumber.appVersion,
-      //   device_id: deviceID,
-      // };
-      // console.log("🚀 Called postLogin with:", { requestBody });
+      const requestBody = {
+        name,
+        email,
+        platform: Platform.OS,
+        version: VersionNumber.appVersion,
+        device_id: deviceID,
+      };
+      console.log("🚀 Called postLogin with:", { requestBody });
       return new Promise((resolve, reject) =>
         RequestAPI.makeRequest(
           'POST',

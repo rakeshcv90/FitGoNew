@@ -90,7 +90,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="https" />
-                <data android:host="warfarefitness.com"/>
+                <data android:host="com.metabrace.app"/>
             </intent-filter>
         </activity>
 
