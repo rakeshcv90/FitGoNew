@@ -17,7 +17,7 @@ import HomeHeader from './HomeHeader';
 import UserEspecially from '../../Component/NewHomeUtilities/UserEspecially';
 import { AppColor, Fonts, PLATFORM_IOS } from '../../Component/Color';
 import FocuseMind from '../../Component/NewHomeUtilities/FocuseMind';
-// import NativeAdBanner from './NativeAdBanner';
+import NativeAdBanner from './NativeAdBanner';
 import PastWinnersComponent from '../Leaderboard/PastWinnersComponent';
 import { navigate } from '../../Component/Utilities/NavigationUtil';
 import FitText from '../../Component/Utilities/FitText';
@@ -82,7 +82,7 @@ const Home = () => {
           />
         }>
         {enteredCurrentEvent && <OfferAnimation />}
-        {/* <NativeAdBanner loader={loader} /> */}
+        <NativeAdBanner loader={loader} />
         {/* <BannerAd
           style={{width: '100%', height: 50}} // Ensure height and width are specified
         /> */}

@@ -1,35 +1,36 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import moment from 'moment';
-import {useSelector} from 'react-redux';
-import {API_CALLS} from '../../API/API_CALLS';
+import { useSelector } from 'react-redux';
+import { API_CALLS } from '../../API/API_CALLS';
 import PredefinedStyles from '../../Component/Utilities/PredefineStyles';
 import FitText from '../../Component/Utilities/FitText';
-import {DeviceWidth} from '../../Component/Config';
-import {AppColor} from '../../Component/Color';
+import { DeviceWidth } from '../../Component/Config';
+import { AppColor } from '../../Component/Color';
 import FitButton from '../../Component/Utilities/FitButton';
-import {navigate} from '../../Component/Utilities/NavigationUtil';
+import { navigate } from '../../Component/Utilities/NavigationUtil';
 import DailyProgress from './DailyProgress';
+import { translate, getCurrentLanguage } from '../Translation/TranslationService';
 
 const WeekArrayWithEvent = Array(5)
   .fill(0)
   .map(
     (item, index) =>
-      (item = moment()
-        .add(index, 'days')
-        .subtract(moment().isoWeekday() - 1, 'days')
-        .format('dddd')),
+    (item = moment()
+      .add(index, 'days')
+      .subtract(moment().isoWeekday() - 1, 'days')
+      .format('dddd')),
   );
 const WeekArrayWithoutEvent = Array(7)
   .fill(0)
   .map(
     (item, index) =>
-      (item = moment()
-        .add(index, 'days')
-        .subtract(moment().isoWeekday() - 1, 'days')
-        .format('dddd')),
+    (item = moment()
+      .add(index, 'days')
+      .subtract(moment().isoWeekday() - 1, 'days')
+      .format('dddd')),
   );
-const Progress = ({myPlans}: {myPlans: boolean}) => {
+const Progress = ({ myPlans }: { myPlans: boolean }) => {
   const getWeeklyPlansData = useSelector(
     (state: any) => state.getWeeklyPlansData,
   );
@@ -82,7 +83,7 @@ const Progress = ({myPlans}: {myPlans: boolean}) => {
         const rightRadius = index == 4 ? 20 : 0;
         const coin = getWeeklyPlansData[item]?.total_coins;
         return (
-          <View style={{alignItems: 'center'}}>
+          <View style={{ alignItems: 'center' }}>
             <View
               style={[
                 styles.design,
@@ -94,10 +95,10 @@ const Progress = ({myPlans}: {myPlans: boolean}) => {
                   backgroundColor: isCurrentDay
                     ? progressColor
                     : isNull
-                    ? incompleteColor
-                    : isMissed
-                    ? missed
-                    : completeColor,
+                      ? incompleteColor
+                      : isMissed
+                        ? missed
+                        : completeColor,
                 },
               ]}>
               <FitText
@@ -112,8 +113,8 @@ const Progress = ({myPlans}: {myPlans: boolean}) => {
                   isCurrentDay
                     ? 'Progress'
                     : isNull
-                    ? coin
-                    : weeklyCoins[item] + ''
+                      ? coin
+                      : weeklyCoins[item] + ''
                 }
               />
             </View>
@@ -122,13 +123,13 @@ const Progress = ({myPlans}: {myPlans: boolean}) => {
                 isCurrentDay
                   ? incompleteImg
                   : isNull
-                  ? futureImg
-                  : isMissed
-                  ? missedImg
-                  : completeImg
+                    ? futureImg
+                    : isMissed
+                      ? missedImg
+                      : completeImg
               }
               resizeMode="contain"
-              style={{width: 25, height: 25}}
+              style={{ width: 25, height: 25 }}
             />
             <FitText
               type="SubHeading"
@@ -166,13 +167,28 @@ const Progress = ({myPlans}: {myPlans: boolean}) => {
       <View
         style={[
           PredefinedStyles.rowCenter,
-          {alignSelf: 'center', marginTop: 20},
+          { alignSelf: 'center', marginTop: 20 },
         ]}>
         {enteredCurrentEvent ? (
           <EventUI />
         ) : (
           <>
             {WeekArrayWithoutEvent.map((item, index) => {
+              if (getCurrentLanguage() === 'pt') {
+                const dayMap = {
+                  Monday: 'Segunda-feira',
+                  Tuesday: 'Terça-feira',
+                  Wednesday: 'Quarta-feira',
+                  Thursday: 'Quinta-feira',
+                  Friday: 'Sexta-feira',
+                  Saturday: 'Sábado',
+                  Sunday: 'Domingo',
+                };
+
+                if (dayMap[item]) {
+                  item = dayMap[item];
+                }
+              }
               const isCurrentDay = index == getPurchaseHistory?.currentDay - 1;
               const prevDays = index < getPurchaseHistory?.currentDay - 1;
               const nextDays = index > getPurchaseHistory?.currentDay - 1;
@@ -181,7 +197,7 @@ const Progress = ({myPlans}: {myPlans: boolean}) => {
                 <View
                   style={[
                     PredefinedStyles.NormalCenter,
-                    {width: DeviceWidth / 7.5, marginBottom: 10},
+                    { width: DeviceWidth / 7.5, marginBottom: 10 },
                   ]}>
                   <FitText
                     type="normal"
@@ -198,8 +214,8 @@ const Progress = ({myPlans}: {myPlans: boolean}) => {
                         backgroundColor: isCurrentDay
                           ? '#E35178'
                           : prevDays
-                          ? '#3333333A'
-                          : AppColor.WHITE,
+                            ? '#3333333A'
+                            : AppColor.WHITE,
                         borderWidth: nextDays ? 1.5 : 0,
                         borderColor: nextDays ? '#3333331A' : 'transparent',
                         marginVertical: 5,

@@ -11,25 +11,26 @@ import {useIsFocused} from '@react-navigation/native';
 import {API_CALLS} from '../../API/API_CALLS';
 import moment from 'moment';
 import {historyData} from '../../API/responseTypes';
+import { translate } from '../Translation/TranslationService';
 
 const arr = [
   {
     id: 1,
-    val: 'Exercises',
+    val: translate('exercises'),
     img: <ExerciseCount size={20} stroke="#007AFF" />,
     color: '#cce4ff',
     bgColor: '#007AFF1F',
   },
   {
     id: 2,
-    val: 'kcal',
+    val: translate('kcal'),
     img: <ExerciseKcal size={20} stroke="#FF9500" />,
     color: '#FFC1071A',
     bgColor: '#FF95001F',
   },
   {
     id: 3,
-    val: 'minutes',
+    val: translate('minutes'),
     img: <ExerciseTime size={20} stroke="#34C759" />,
     color: '#EAF7ED',
     bgColor: '#34C7591F',

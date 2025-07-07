@@ -11,8 +11,8 @@ import useSetupAds from './useSetupAds';
 import { useSelector } from 'react-redux';
 import checkAllPermissions from './checkAllPermissions';
 import LottieView from 'lottie-react-native';
-import AdmobInterstitial from '../../Component/NativeCodeAds/AdmobInterstitial';
-import { setLanguage } from '../Translation/TranslationService';
+// import AdmobInterstitial from '../../Component/NativeCodeAds/AdmobInterstitial';
+import { setLanguage, getCurrentLanguage } from '../Translation/TranslationService';
 
 const NewSplash = ({ navigation }: any) => {
 
@@ -36,19 +36,20 @@ const NewSplash = ({ navigation }: any) => {
 
   useEffect(() => {
     const applyLanguage = async () => {
-      await handleLangChange('pt'); // or 'hi', 'en', etc.
+      console.log('get language', getCurrentLanguage)
+      await handleLangChange(getCurrentLanguage); // or 'hi', 'en', etc.
     };
 
     applyLanguage();
   }, []);
 
-  useEffect(() => {
-    if (Platform.OS === 'android') {
-      AdmobInterstitial.loadAd()
-        .then(() => console.log('Ad Loaded'))
-        .catch((err) => console.error('Ad Load Failed 123 .....', err));
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (Platform.OS === 'android') {
+  //     AdmobInterstitial.loadAd()
+  //       .then(() => console.log('Ad Loaded'))
+  //       .catch((err) => console.error('Ad Load Failed 123 .....', err));
+  //   }
+  // }, []);
 
   useEffect(() => {
     const time = setTimeout(() => {

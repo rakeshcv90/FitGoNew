@@ -21,7 +21,7 @@ import {hasFreeEvent} from '../Event/EnteringEventFunction';
 import {navigate} from '../../Component/Utilities/NavigationUtil';
 import PredefinedStyles from '../../Component/Utilities/PredefineStyles';
 import {Ad} from '../../Icon/Ad';
-import {translate} from '../Translation/TranslationService';
+import { translate } from '../Translation/TranslationService';
 
 const AdEventPopup = ({modalVisible,onClose}) => {
   console.log('Modal visible');

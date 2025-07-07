@@ -41,9 +41,9 @@ import BackHandlerModal from './BackHandlerModal';
 import Home from '../Screen/NewHome/Home';
 
 import BannerAds from '../Component/NativeCodeAds/BannerAdView';
-import AdmobInterstitial from '../Component/NativeCodeAds/AdmobInterstitial';
+// import AdmobInterstitial from '../Component/NativeCodeAds/AdmobInterstitial';
 import { DeviceEventEmitter } from 'react-native';
-
+import { translate } from '../Screen/Translation/TranslationService';
 
 const Tabs = createBottomTabNavigator();
 
@@ -87,6 +87,7 @@ const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
               ? options.title
               : route.name;
 
+              console.log('label .... ',label);
         const isFocused = state.index === index;
 
         const isValid =
@@ -101,7 +102,7 @@ const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
         const Sun = getPurchaseHistory?.currentDay == 0;
         const onPress = () => {
           AnalyticsConsole(`${route.name}_TAB`);
-          if (enteredCurrentEvent && route.key?.includes('MyPlans') && Sat) {
+          if (enteredCurrentEvent && route.key?.includes(translate('myplans')) && Sat) {
             showMessage({
               message:
                 'Your event has ended. You can resume your weekly plan normally from Monday. If you join another fitness challenge, it will start from the upcoming Monday.',
@@ -112,7 +113,7 @@ const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
             });
           } else if (
             enteredCurrentEvent &&
-            route.key?.includes('MyPlans') &&
+            route.key?.includes(translate('myplans')) &&
             Sun
           ) {
             showMessage({
@@ -154,15 +155,16 @@ const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
                 }) */}
 
                 if (Platform.OS === 'android') {
-                  AdmobInterstitial.showAd()
-                    .then(() => {
-                      console.log('Ad shown and completed');
+                  // AdmobInterstitial.showAd()
+                  //   .then(() => {
+                  //     console.log('Ad shown and completed');
+                  //     navigation.navigate(route.name);
+                  //   })
+                  //   .catch((err) => {
+                  //     console.error('Ad show failed', err);
+                  //     navigation.navigate(route.name); // fallback if ad fails
+                  //   });
                       navigation.navigate(route.name);
-                    })
-                    .catch((err) => {
-                      console.error('Ad show failed', err);
-                      navigation.navigate(route.name); // fallback if ad fails
-                    });
                 } else {
                   navigation.navigate(route.name); // direct navigation for iOS
                 }
@@ -190,15 +192,16 @@ const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
                 }) */}
 
                 if (Platform.OS === 'android') {
-                  AdmobInterstitial.showAd()
-                    .then(() => {
-                      console.log('Ad shown and completed');
-                      navigation.navigate(route.name);
-                    })
-                    .catch((err) => {
-                      console.error('Ad show failed', err);
-                      navigation.navigate(route.name); // fallback if ad fails
-                    });
+                  // AdmobInterstitial.showAd()
+                  //   .then(() => {
+                  //     console.log('Ad shown and completed');
+                  //     navigation.navigate(route.name);
+                  //   })
+                  //   .catch((err) => {
+                  //     console.error('Ad show failed', err);
+                  //     navigation.navigate(route.name); // fallback if ad fails
+                  //   });
+                  navigation.navigate(route.name); // fallback if ad fails
                 } else {
                   navigation.navigate(route.name); // direct navigation for iOS
                 }
@@ -251,7 +254,7 @@ const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
                     marginTop: 5,
                     textAlign: 'center',
                   }}>
-                  {label == 'MyPlans' ? 'Plan' : label}
+                  {label == translate('myplans') ? translate('myplans') : label}
                 </Text>
               </TouchableOpacity>
             ) : (
@@ -273,7 +276,7 @@ const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
                     height: 30,
                   }}
                 />
-                {enteredCurrentEvent && label == 'MyPlans' && (
+                {enteredCurrentEvent && label == translate('myplans') && (
                   <NotificationBadge />
                 )}
                 <Text
@@ -287,7 +290,7 @@ const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
                     marginTop: 5,
                     textAlign: 'center',
                   }}>
-                  {label == 'MyPlans' ? 'Plan' : label}
+                  {label == translate('myplans') ? translate('myplans') : label}
                 </Text>
               </TouchableOpacity>
             )}
@@ -326,7 +329,7 @@ const BottomTab = () => {
   return (
     <>
       <Tabs.Navigator
-        initialRouteName={'Home'}
+        initialRouteName={translate('home')}
         tabBar={props => <CustomTab {...props} />}
         screenOptions={{
           // activeTintColor: '#D01818',
@@ -350,12 +353,12 @@ const BottomTab = () => {
           },
         }}>
         <Tabs.Screen
-          name="Home"
+          name={translate('home')}
           component={Home}
           options={{ tabBarShowLabel: false }}
         />
         <Tabs.Screen
-          name="MyPlans"
+          name={translate('myplans')}
           component={MyPlans}
           // options={{
           //   tabBarIcon: () => <NotificationBadge />,
@@ -363,13 +366,13 @@ const BottomTab = () => {
           options={{ tabBarShowLabel: false }}
         />
         <Tabs.Screen
-          name="Workout"
+          name={translate('workout')}
           component={Workouts}
           options={{ tabBarShowLabel: true }}
         />
 
         <Tabs.Screen
-          name="Profile"
+          name={translate('profile')}
           component={NewProfile}
           options={{ tabBarShowLabel: false }}
         />
@@ -386,9 +389,9 @@ const BottomTab = () => {
                   : DeviceHeigth * 0.0
               : 0,
         }}>
-        {Platform.OS === 'android' && (
+        {/* {Platform.OS === 'android' && (
           <BannerAds style={{ width: '100%', height: adHeight }} />
-        )}
+        )} */}
       </View>
       {/* <BackHandlerModal /> */}
     </>

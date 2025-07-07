@@ -49,7 +49,7 @@ import {
 import {RESULTS} from 'react-native-permissions';
 import {AuthorizationStatus} from '@notifee/react-native';
 import {LogOut} from '../../Component/LogOut';
-import {translate} from '../Translation/TranslationService';
+import { translate } from '../Translation/TranslationService';
 
 const OfferTerms = ({navigation, route}: any) => {
   const dispatch = useDispatch();

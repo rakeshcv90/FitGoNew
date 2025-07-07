@@ -43,7 +43,7 @@ import ActivityLoader from '../../Component/ActivityLoader';
 import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
-import {translate} from '../Translation/TranslationService';
+import { translate } from '../Translation/TranslationService';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Workouts = ({navigation}: any) => {
@@ -193,7 +193,7 @@ const Workouts = ({navigation}: any) => {
   const focuseArea = [
     {
       id: 238,
-      title: 'Upper Body',
+      title: translate('upperbody'),
       image: require('../../Icon/Images/NewImage2/uperBody.png'),
 
       searchCriteria: ['Chest', 'Back', 'Shoulders', 'Arms'],
@@ -201,14 +201,14 @@ const Workouts = ({navigation}: any) => {
     },
     {
       id: 239,
-      title: 'Lower Body',
+      title: translate('lowerbody'),
       image: require('../../Icon/Images/NewImage2/lowerBody.png'),
       searchCriteria: ['Legs', 'Quads', 'Calves'],
       searchCriteriaRedux: getLowerBodyFilOpt,
     },
     {
       id: 240,
-      title: 'Stretch',
+      title: translate('stretch'),
       image: require('../../Icon/Images/NewImage2/fullBody.png'),
 
       searchCriteria: [],
@@ -216,7 +216,7 @@ const Workouts = ({navigation}: any) => {
     },
     {
       id: 241,
-      title: 'Core',
+      title: translate('core'),
       image: require('../../Icon/Images/NewImage2/core.png'),
 
       searchCriteria: ['Abs', 'Cardio'],
@@ -486,7 +486,7 @@ const Workouts = ({navigation}: any) => {
     let checkAdsShow = AddCountFunction();
     AnalyticsConsole(`${data?.bodypart_title}_FR_Wrk`);
 
-    if (data?.title == 'Upper Body') {
+    if (data?.title == translate('upperbody')) {
       let Ccount = 0;
       let Bcount = 0;
       let Acount = 0;
@@ -541,7 +541,7 @@ const Workouts = ({navigation}: any) => {
           CategoryDetails: data,
         });
       }
-    } else if (data?.title == 'Lower Body') {
+    } else if (data?.title == translate('lowerbody')) {
       let Lcount = 0;
       let Qcount = 0;
       let Ccount = 0;
@@ -585,7 +585,7 @@ const Workouts = ({navigation}: any) => {
           CategoryDetails: data,
         });
       }
-    } else if (data?.title == 'Core') {
+    } else if (data?.title == translate('core')) {
       let Acount = 0;
       let Ccount = 0;
       let exercises = getAllExercise?.filter((item: any) => {
@@ -882,7 +882,7 @@ const Workouts = ({navigation}: any) => {
                                   fontWeight: '600',
                                   fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                                 }}>
-                                Your workouts
+                                {translate('yourworkout')}
                               </Text>
                               <Text
                                 style={{
@@ -927,7 +927,7 @@ const Workouts = ({navigation}: any) => {
                             alignItems: 'center',
                             justifyContent: 'flex-start',
                           }}>
-                          Workout Categories
+                          {translate('workoutcategories')}
                         </Text>
                       </View>
                       {currentCategories?.length > 0 ? (

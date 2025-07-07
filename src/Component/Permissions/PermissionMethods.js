@@ -10,6 +10,7 @@ import {AuthorizationStatus} from '@notifee/react-native';
 import {Alert} from 'react-native';
 import {PLATFORM_IOS} from '../Color';
 import {showMessage} from 'react-native-flash-message';
+import { translate } from '../../Screen/Translation/TranslationService'
 // item Array
 export const UIArray = [
   // {
@@ -22,25 +23,25 @@ export const UIArray = [
   // },
   {
     img: localImage.notification_permission,
-    text1: 'Notification',
-    text2: 'Allow Fitme to send notifications for daily updates.',
+    text1: translate('notification'),
+    text2: translate('allownotification'),
     key: 'notification',
     checkPermission: 'checkNotificationPermission',
     askPermission: 'askNotificationPermission',
   },
   {
     img: localImage.location_permission,
-    text1: 'Location',
-    text2: 'Allow Fitme to access your location for better services.',
+    text1: translate('location'),
+    text2: translate('allowlocation'),
     key: 'location',
     checkPermission: 'checkLocationPermission',
     askPermission: 'askLocationPermission',
   },
   PLATFORM_IOS && {
     img: localImage.health_permission,
-    text1: 'Health Kit',
+    text1: translate('healthkit'),
     text2:
-      'Allow Fitme to access health kit data to keep tracking your health data.',
+      translate('allowhealthkit'),
     key: 'healthkit',
     checkPermission: 'checkHealthikitPermission', // You can handle HealthKit permission separately
     askPermission: 'initHealthKit',

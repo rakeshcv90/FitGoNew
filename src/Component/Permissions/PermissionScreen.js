@@ -14,7 +14,7 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {navigationRef} from '../../../App';
 // import { translate } from 'react-native-redash';
-import {translate} from '../../Screen/Translation/TranslationService';
+import { translate } from '../../Screen/Translation/TranslationService';
 
 const PermissionScreen = () => {
   const [permissionState, setPermissionState] = useState({

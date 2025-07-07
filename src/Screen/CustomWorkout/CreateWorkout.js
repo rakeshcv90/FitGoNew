@@ -60,6 +60,7 @@ const CreateWorkout = ({navigation, route}) => {
   const [filteredCategories, setFilteredCategories] = useState([]);
 
   useEffect(() => {
+    console.log('bodyparts.. ',bodyPart, getAllExercise)
     const datalist = getAllExercise?.filter(listdata => {
       if (bodyPart == 'Biceps') {
         return listdata.exercise_bodypart == 'Triceps';
@@ -71,6 +72,8 @@ const CreateWorkout = ({navigation, route}) => {
         return listdata.exercise_bodypart == bodyPart;
       }
     });
+
+
 
     setWorkoutList(datalist);
     setFilteredCategories(datalist);
@@ -91,7 +94,6 @@ const CreateWorkout = ({navigation, route}) => {
               style={{
                 width: '90%',
                 borderRadius: 10,
-
                 marginVertical: 8,
                 flexDirection: 'row',
                 alignSelf: 'center',

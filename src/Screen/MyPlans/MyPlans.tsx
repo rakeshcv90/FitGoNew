@@ -74,7 +74,7 @@ import Progress from '../NewHome/Progress';
 import FitIcon, {FitIconTypes} from '../../Component/Utilities/FitIcon';
 import {navigate} from '../../Component/Utilities/NavigationUtil';
 import PredefinedStyles from '../../Component/Utilities/PredefineStyles';
-import {translate} from '../Translation/TranslationService';
+import {getCurrentLanguage, translate} from '../Translation/TranslationService';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -262,7 +262,7 @@ const MyPlans = ({navigation}: any) => {
           version: VersionNumber.appVersion,
           user_id: getUserDataDetails?.id,
           equipment: getEquipmentExercise == 1 ? 'no' : 'yes',
-          lang:'pt',
+          lang:getCurrentLanguage,
         },
       });
       console.log('data event ....', res, getUserDataDetails?.id)
@@ -291,7 +291,7 @@ const MyPlans = ({navigation}: any) => {
     setRefresh(true);
     try {
       const res = await axios({
-        url: NewAppapi.WEEKLY_STATUS + '?user_id=' + getUserDataDetails.id+'&lang=pt',
+        url: NewAppapi.WEEKLY_STATUS + '?user_id=' + getUserDataDetails.id+'&lang='+getCurrentLanguage,
       });
     
       console.log(' data weekly   ',res.data);
@@ -415,12 +415,15 @@ const MyPlans = ({navigation}: any) => {
       });
     }
     try {
+      const lang = getCurrentLanguage();
+            console.log('current day ',datas, ' data ',lang);
+
       const res = await axios({
         url: NewAppapi.CURRENT_DAY_EXERCISE,
         method: 'Post',
-        data: {user_details: datas, type: 'weekly'},
-        lang:'en'
+        data: {user_details: datas, type: 'weekly', lang: getCurrentLanguage},
       });
+      console.log('current day .. ',res);
       if (
         res.data?.msg == 'Exercise Status for All Users Inserted Successfully'
       ) {
@@ -1263,7 +1266,7 @@ const MyPlans = ({navigation}: any) => {
                 }}>
                 <FitText
                   type="SubHeading"
-                  value="Weekly Challenge"
+                  value={translate('weeklychallenge')}
                   fontWeight="700"
                 />
                 <Progress myPlans />

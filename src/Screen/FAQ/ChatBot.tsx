@@ -23,6 +23,7 @@ import AnimatedLottieView from 'lottie-react-native';
 import {DeviceHeigth} from '../../Component/Config';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
+import { translate} from '../Translation/TranslationService';
 
 type TYPE = 'USER' | 'ADMIN';
 
@@ -181,10 +182,10 @@ const ChatBot = ({navigation, route}: any) => {
                 answer
                   ? data.answer
                   : answerTrue && conditionAnswer == 'T'
-                  ? 'Thank you for your feedback!'
+                  ? translate('thankYouFeedback')
                   : answerFalse && conditionAnswer == 'F'
-                  ? 'Contact us at '
-                  : 'Are you satisfied with this response?'
+                  ? translate('contactUsAt')
+                  : translate('areYouSatisfied')
               }>
               {answerFalse && conditionAnswer == 'F' && (
                 <FitText
@@ -192,7 +193,7 @@ const ChatBot = ({navigation, route}: any) => {
                   fontWeight="600"
                   fontFamily={Fonts.MONTSERRAT_MEDIUM}
                   color="blue"
-                  value="thefitnessandworkout@gmail.com >"
+                  value="appmeumelhorcorpo@gmail.com  >"
                   onPress={handleEmail}
                 />
               )}

@@ -2,7 +2,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { translations } from '../Translation/Translations';
 
-let currentLang = 'pt'; // fallback default
+let currentLang = 'en'; // fallback default
 
 export const loadLanguage = async () => {
   const savedLang = await AsyncStorage.getItem('app_language');

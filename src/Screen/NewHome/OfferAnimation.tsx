@@ -12,6 +12,7 @@ import MarqueeText from '../../Component/Utilities/MarqueeText';
 import {navigate} from '../../Component/Utilities/NavigationUtil';
 import {AppColor, Fonts} from '../../Component/Color';
 import FitIcon from '../../Component/Utilities/FitIcon';
+import { translate } from '../Translation/TranslationService';
 
 const OfferAnimation = () => {
   return (
@@ -44,7 +45,7 @@ const OfferAnimation = () => {
         style={{
           width: DeviceHeigth >= 1024 ? '70%' : '60%',
         }}>
-        <MarqueeText text="Explore Special Offers to Win Exciting Prizes! Check Out the Upcoming Challenges!" />
+        <MarqueeText text= {translate('offertext')}/>
       </View>
 
       <TouchableOpacity
@@ -70,7 +71,7 @@ const OfferAnimation = () => {
 
             color: AppColor.RED,
           }}>
-          EXPLORE
+          {translate('explore')}
         </Text>
         <FitIcon
           type="MaterialCommunityIcons"

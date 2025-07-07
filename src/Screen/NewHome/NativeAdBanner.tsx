@@ -73,7 +73,7 @@ const NativeAdBanner = ({loader}: Props) => {
           /> */}
         </ScrollView>
       </View>
-      <View style={[PredefinedStyles.rowCenter, {marginTop: 15}]}>
+      {/* <View style={[PredefinedStyles.rowCenter, {marginTop: 15}]}>
         {[1, 2].map(i => (
           <View
             style={[
@@ -85,7 +85,7 @@ const NativeAdBanner = ({loader}: Props) => {
             ]}
           />
         ))}
-      </View>
+      </View> */}
     </View>
   );
 };

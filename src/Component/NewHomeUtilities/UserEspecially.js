@@ -38,7 +38,7 @@ import {ExerciseTime} from '../../Icon/ExerciseTime';
 import FitButton from '../Utilities/FitButton';
 import {useSelector} from 'react-redux';
 import {API_CALLS} from '../../API/API_CALLS';
-import {translate} from '../../Screen/Translation/TranslationService'
+import { translate } from '../../Screen/Translation/TranslationService'
 
 const data = [
   {

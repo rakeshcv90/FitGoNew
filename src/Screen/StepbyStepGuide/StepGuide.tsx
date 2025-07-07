@@ -9,21 +9,22 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {AppColor, Fonts} from '../../Component/Color';
-import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
-import {localImage} from '../../Component/Image';
+import React, { useEffect, useState } from 'react';
+import { AppColor, Fonts } from '../../Component/Color';
+import { DeviceHeigth, DeviceWidth, NewAppapi } from '../../Component/Config';
+import { localImage } from '../../Component/Image';
 import FitText from '../../Component/Utilities/FitText';
-import {StepsArray, StepsArrayType} from './StepsArray';
+import { StepsArray, StepsArrayType } from './StepsArray';
 import GradientButton from '../../Component/GradientButton';
-import {useSelector} from 'react-redux';
-import {RequestAPI} from '../../Component/Utilities/RequestAPI';
+import { useSelector } from 'react-redux';
+import { RequestAPI } from '../../Component/Utilities/RequestAPI';
 import VersionNumber from 'react-native-version-number';
 import FitIcon from '../../Component/Utilities/FitIcon';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
 import WithoutEvent from '../../Component/NewHomeUtilities/WithoutEvent';
-import {ArrowLeft} from '../../Component/Utilities/Arrows/Arrow';
+import { ArrowLeft } from '../../Component/Utilities/Arrows/Arrow';
+import { translate } from '../Translation/TranslationService';
 type StepItem = {
   item: StepsArrayType;
   index: number;
@@ -31,7 +32,7 @@ type StepItem = {
 const IPAD_HEIGHT = DeviceHeigth >= 1024;
 const SMALL_SCREEN_HEIGHT = DeviceHeigth <= 640;
 const PIXEL_HEIGHT = DeviceHeigth <= 808;
-const StepItems = ({item, index}: StepItem) => {
+const StepItems = ({ item, index }: StepItem) => {
   const odd = (index + 1) % 2;
 
   return (
@@ -103,7 +104,7 @@ const HeartCom = () => (
   />
 );
 
-const StepGuide = ({navigation}: any) => {
+const StepGuide = ({ navigation }: any) => {
   const getPastWinner = useSelector((state: any) => state.getPastWinners);
   const enteredCurrentEvent = useSelector((state: any) => state.enteredCurrentEvent);
 
@@ -112,7 +113,7 @@ const StepGuide = ({navigation}: any) => {
       <StatusBar backgroundColor={AppColor.RED} barStyle={'light-content'} />
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{width: '100%', alignSelf: 'center'}}>
+        contentContainerStyle={{ width: '100%', alignSelf: 'center' }}>
         <TouchableOpacity
           onPress={() => navigation?.goBack()}
           style={{
@@ -138,22 +139,22 @@ const StepGuide = ({navigation}: any) => {
         <View style={styles.mainBox}>
           <FitText
             type="Heading"
-            value="Step-by-Step Guide"
+            value={translate('stepHeading')}
             textAlign="center"
           />
           <HeartCom />
           <FitText
             type="SubHeading"
-            value="Join the challenge & earn your way to"
+            value={translate('stepSub1')}
             textAlign="center"
           />
           <FitText
             type="SubHeading"
-            value="WIN BIG!"
+            value={translate('stepSub2')}
             textAlign="center"
             fontWeight="bold"
           />
-          <View style={{width: '95%', alignSelf: 'center', marginTop: 20}}>
+          <View style={{ width: '95%', alignSelf: 'center', marginTop: 20 }}>
             {StepsArray.map((item: StepsArrayType, index: number) => (
               <StepItems item={item} index={index} />
             ))}
@@ -223,8 +224,13 @@ const StepGuide = ({navigation}: any) => {
                 />
               </View>
             </View> */}
-            <FitText type="Heading" value="Event Winners" />
-            <WithoutEvent pastWinners={getPastWinner} pV={0} noText />
+
+            {getPastWinner?.length > 0 && (
+              <>
+                <FitText type="Heading" value={translate('eventWinners')} />
+                <WithoutEvent pastWinners={getPastWinner} pV={0} noText />
+              </>
+            )}
             {/* <FitText
               type="SubHeading"
               value="Terms & Conditions"
@@ -242,7 +248,7 @@ const StepGuide = ({navigation}: any) => {
       </ScrollView>
       <View style={styles.btmButton}>
         <GradientButton
-          text="Join Challenge"
+          text={translate('joinChallenge')}
           colors={['#F0013B', '#F0013B']}
           bR={10}
           h={50}
@@ -253,7 +259,7 @@ const StepGuide = ({navigation}: any) => {
                 eventType: 'upcoming',
               });
             } else {
-              navigation?.navigate('NewSubscription', {upgrade: true});
+              navigation?.navigate('NewSubscription', { upgrade: true });
             }
           }}
           alignSelf
@@ -281,7 +287,7 @@ const StepGuide = ({navigation}: any) => {
           ...Platform.select({
             ios: {
               shadowColor: 'rgba(0, 0, 0, 1)',
-              shadowOffset: {width: 0, height: 2},
+              shadowOffset: { width: 0, height: 2 },
               shadowOpacity: 0.3,
               shadowRadius: 3,
             },
@@ -292,7 +298,7 @@ const StepGuide = ({navigation}: any) => {
         }}>
         <Image
           source={require('../../Icon/Images/InAppRewards/FAQ.png')}
-          style={{height: 25, width: 25, marginRight: 5}}
+          style={{ height: 25, width: 25, marginRight: 5 }}
           resizeMode="contain"
         />
         <Text
@@ -302,7 +308,7 @@ const StepGuide = ({navigation}: any) => {
             lineHeight: 30,
             color: AppColor.RED,
           }}>
-          FAQs
+          {translate('faqs')}
         </Text>
       </TouchableOpacity>
     </SafeAreaView>

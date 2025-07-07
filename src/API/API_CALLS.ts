@@ -30,7 +30,8 @@ import {Dispatch, SetStateAction, version} from 'react';
 import {EnteringEventFunction} from '../Screen/Event/EnteringEventFunction';
 import {navigate} from '../Component/Utilities/NavigationUtil';
 import {downloadImages} from '../Screen/Splash/downloadBanner';
-import { translate } from '../Screen/Translation/TranslationService';
+import { translate,getCurrentLanguage } from '../Screen/Translation/TranslationService';
+import { lang } from 'moment';
 
 let deviceID = '';
 DeviceInfo.syncUniqueId().then(uniqueId => {
@@ -139,7 +140,7 @@ export const API_CALLS = {
     return new Promise((resolve, reject) =>
       RequestAPI.makeRequest(
         'GET',
-        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userID}&lang='pt`,
+        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userID}&lang=${getCurrentLanguage}`,
         {},
         ({data, errors, status, message}) => {
           // console.log(data, 'USER DETAILS');
@@ -385,7 +386,7 @@ export const API_CALLS = {
         {
           user_id,
           version: VersionNumber.appVersion,
-          lang:'en',
+          lang:getCurrentLanguage,
         },
         ({data, errors, status, message}) => {
           console.log('subscription data .... ',data, ' // ',status);
@@ -459,6 +460,7 @@ export const API_CALLS = {
         NewAppapi.GET_ALL_IN_ONE,
         {
           version: VersionNumber.appVersion,
+          lang:getCurrentLanguage
         },
         ({data, errors, status, message}) => {
           if (
@@ -495,7 +497,7 @@ export const API_CALLS = {
         {
           user_id,
           version: VersionNumber.appVersion,
-          lang:'pt'
+          lang:getCurrentLanguage
         },
       
         ({data, errors, status, message}) => {
@@ -524,7 +526,7 @@ export const API_CALLS = {
         {
           id,
           version: VersionNumber.appVersion,
-          lang:'pt',
+          lang:getCurrentLanguage,
         },
         ({data, errors, status, message}) => {
          console.log('workout data .....', data , ' // ',status, '// ', id);

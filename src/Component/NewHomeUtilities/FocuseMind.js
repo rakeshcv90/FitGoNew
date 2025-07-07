@@ -18,6 +18,7 @@ import {showMessage} from 'react-native-flash-message';
 import AnimatedLottieView from 'lottie-react-native';
 import {AnalyticsConsole} from '../AnalyticsConsole';
 import {localImage} from '../Image';
+import { translate } from '../../Screen/Translation/TranslationService';
 const FocuseMind = () => {
   const allWorkoutData = useSelector(state => state.allWorkoutData);
   const navigation = useNavigation();
@@ -195,7 +196,7 @@ const FocuseMind = () => {
               fontSize: 16,
               marginLeft: 10
             }}>
-            Focus Mind
+            {translate('focusmind')}
           </Text>
           <TouchableOpacity
             onPress={() => {
@@ -212,7 +213,7 @@ const FocuseMind = () => {
                 textDecorationLine:'underline',
                 marginRight: 10
               }}>
-              View More
+              {translate('viewmore')}
             </Text>
           </TouchableOpacity>
         </View>

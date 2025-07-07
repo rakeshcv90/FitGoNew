@@ -8,7 +8,7 @@ import {FlatList} from 'react-native';
 import WorkoutsDescription from '../NewWorkouts/WorkoutsDescription';
 import AnimatedLottieView from 'lottie-react-native';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
-import {translate} from '../Translation/TranslationService';
+import { translate } from '../Translation/TranslationService';
 export const ExerciseComponetWithoutEvents = ({
   dayObject,
   day,

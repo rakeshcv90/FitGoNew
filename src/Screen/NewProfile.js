@@ -12,11 +12,11 @@ import {
   Linking,
   PermissionsAndroid,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import NewHeader from '../Component/Headers/NewHeader';
-import {AppColor, Fonts} from '../Component/Color';
-import {useDispatch, useSelector} from 'react-redux';
-import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import { AppColor, Fonts } from '../Component/Color';
+import { useDispatch, useSelector } from 'react-redux';
+import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import {
   DeviceHeigth,
@@ -24,18 +24,18 @@ import {
   NewApi,
   NewAppapi,
 } from '../Component/Config';
-import {localImage} from '../Component/Image';
+import { localImage } from '../Component/Image';
 import Reminder from '../Component/Reminder';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {showMessage} from 'react-native-flash-message';
-import {request, PERMISSIONS, openSettings} from 'react-native-permissions';
+import { showMessage } from 'react-native-flash-message';
+import { request, PERMISSIONS, openSettings } from 'react-native-permissions';
 import VersionNumber from 'react-native-version-number';
 import ActivityLoader from '../Component/ActivityLoader';
 import analytics from '@react-native-firebase/analytics';
 import notifee from '@notifee/react-native';
 import moment from 'moment';
 import axios from 'axios';
-import {BlurView} from '@react-native-community/blur';
+import { BlurView } from '@react-native-community/blur';
 import KeepAwake from 'react-native-keep-awake';
 
 import {
@@ -46,19 +46,21 @@ import {
   setSoundOnOff,
   setUserProfileData,
 } from '../Component/ThemeRedux/Actions';
-import {LogOut} from '../Component/LogOut';
-import {AnalyticsConsole} from '../Component/AnalyticsConsole';
+import { LogOut } from '../Component/LogOut';
+import { AnalyticsConsole } from '../Component/AnalyticsConsole';
 import RatingModal from '../Component/RatingModal';
 import FitIcon from '../Component/Utilities/FitIcon';
 import Wrapper from './WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../Component/Headers/NewHeader1';
 import NewButton from '../Component/NewButton';
-import {useGalleryPermission} from '../Component/Permissions/PermissionHooks';
+import { useGalleryPermission } from '../Component/Permissions/PermissionHooks';
 import FitToggle from '../Component/Utilities/FitToggle';
 import PersonalDetails from './PersonalDetails';
 import FitSheet from '../Component/Utilities/FitSheet';
+import { translate } from '../Screen/Translation/TranslationService';
+import LanguageSelectorModal from '../Screen/Translation/LanguageSelectorModal'; // adjust path if needed
 
-const NewProfile = ({navigation}) => {
+const NewProfile = ({ navigation }) => {
   useEffect(() => {
     notifee.getTriggerNotifications().then(res => {
       if (res.length > 0) {
@@ -86,10 +88,11 @@ const NewProfile = ({navigation}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const getSoundOffOn = useSelector(state => state.getSoundOffOn);
   const getScreenAwake = useSelector(state => state.getScreenAwake);
+  const [languageModalVisible, setLanguageModalVisible] = useState(false);
   const bottomRef = useRef(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [snapPoints, setSnapPoints] = useState(0.5);
-  const {launchLibrary} = useGalleryPermission();
+  const { launchLibrary } = useGalleryPermission();
   const setAlarmIsEnabled = data => {
     dispatch(setIsAlarmEnabled(data));
   };
@@ -106,7 +109,7 @@ const NewProfile = ({navigation}) => {
   const CardData = [
     {
       id: 1,
-      txt: 'Daily Reminder',
+      txt: translate('dailyreminder'),
       img: localImage.Bell,
       txt1:
         moment(notificationTimer).format('LT') == 'Invalid date'
@@ -115,12 +118,12 @@ const NewProfile = ({navigation}) => {
     },
     {
       id: 2,
-      txt: 'Subscription',
+      txt: translate('subscription'),
       img: localImage.Planning,
     },
     {
       id: 3,
-      txt: 'My Details',
+      txt: translate('mydetails'),
       img: localImage.NewPrfile,
     },
   ];
@@ -146,7 +149,7 @@ const NewProfile = ({navigation}) => {
       setVisible(true);
     } else if (id == 2) {
       AnalyticsConsole(`SUBSCRIPTION_BUTTON`);
-      navigation.navigate('NewSubscription', {upgrade: false});
+      navigation.navigate('NewSubscription', { upgrade: false });
     } else if (id == 3) {
       AnalyticsConsole(`PERSO_DETAILS_BUTTON`);
       // navigation.navigate('NewPersonalDetails');
@@ -165,13 +168,13 @@ const NewProfile = ({navigation}) => {
   };
   const openMailApp = () => {
     Linking.openURL(
-      'mailto:digimetrixuk@gmail.com?subject=Feedback&body=Hello%20there!',
+      'mailto:appmeumelhorcorpo@gmail.com?subject=Feedback&body=Hello%20there!',
     );
   };
   const HandleButtons = (ids, value) => {
     const id = ids;
     if (id == 4) {
-      navigation.navigate('Questions', {screenName: 'Home'});
+      navigation.navigate('Questions', { screenName: 'Home' });
     }
     if (id == 5) {
       navigation.navigate('NewMonthlyAchievement');
@@ -187,9 +190,10 @@ const NewProfile = ({navigation}) => {
       });
     } else if (id == 8) {
       AnalyticsConsole(`T_n_CBUTTON`);
-      navigation.navigate('TermaAndCondition', {
-        title: 'Terms & Conditions',
-      });
+      // navigation.navigate('TermaAndCondition', {
+      //   title: 'Terms & Conditions',
+      // });
+      setLanguageModalVisible(true);
     } else if (id == 9) {
       AnalyticsConsole(`APP_RATING_BUTTON`);
       setRatingVisibilty(true);
@@ -212,52 +216,52 @@ const NewProfile = ({navigation}) => {
   const ListData = [
     {
       id: 1,
-      txt: 'Voice Assistant',
+      txt: translate('voiceassistant'),
       img: localImage.NSounds,
     },
     {
       id: 2,
-      txt: 'Music Sound',
+      txt: translate('musicsound'),
       img: localImage.NMusic,
     },
     {
       id: 3,
-      txt: 'Display Always On',
+      txt: translate('displayon'),
       img: localImage.DisplayOn,
     },
     {
       id: 4,
-      txt: 'FAQs',
+      txt: translate('faqs'),
       img: localImage.FAQ,
     },
     {
       id: 5,
-      txt: 'Report',
+      txt: translate('report'),
       img: localImage.REPORT,
     },
     {
       id: 6,
-      txt: 'Contact Us',
+      txt: translate('contactus'),
       img: localImage.NContact,
     },
     {
       id: 7,
-      txt: 'Privacy Policy',
+      txt: translate('privacypolicy'),
       img: localImage.NPrivacy,
     },
     {
       id: 8,
-      txt: 'Terms & Conditions',
+      txt: translate('language'),
       img: localImage.NPolicy,
     },
     {
       id: 9,
-      txt: 'Rate Us',
+      txt: translate('rate'),
       img: localImage.NRate,
     },
     {
       id: 10,
-      txt: 'Delete Account',
+      txt: translate('deleteaccount'),
       img: localImage.NDelete,
     },
     // {
@@ -285,7 +289,7 @@ const NewProfile = ({navigation}) => {
             type: 'danger',
             animationDuration: 500,
             floating: true,
-            icon: {icon: 'auto', position: 'left'},
+            icon: { icon: 'auto', position: 'left' },
           });
         } else {
           dispatch(setUserProfileData(responseData?.data?.profile));
@@ -322,7 +326,7 @@ const NewProfile = ({navigation}) => {
             animationDuration: 500,
 
             floating: true,
-            icon: {icon: 'auto', position: 'left'},
+            icon: { icon: 'auto', position: 'left' },
           });
 
           setImguploaded(true);
@@ -383,7 +387,7 @@ const NewProfile = ({navigation}) => {
           <View
             style={[
               styles.modalContainer,
-              {backgroundColor: 'transparent', flex: 1},
+              { backgroundColor: 'transparent', flex: 1 },
             ]}>
             <View
               style={{
@@ -399,7 +403,7 @@ const NewProfile = ({navigation}) => {
                 ...Platform.select({
                   ios: {
                     shadowColor: '#000000',
-                    shadowOffset: {width: 0, height: 2},
+                    shadowOffset: { width: 0, height: 2 },
                     shadowOpacity: 0.3,
                     shadowRadius: 4,
                   },
@@ -413,7 +417,7 @@ const NewProfile = ({navigation}) => {
                 name="close"
                 size={25}
                 color={AppColor.BLACK}
-                style={{position: 'absolute', right: 16, top: 16}}
+                style={{ position: 'absolute', right: 16, top: 16 }}
                 onPress={() => {
                   setUpadteScreenVisibilty(false);
                 }}
@@ -422,15 +426,15 @@ const NewProfile = ({navigation}) => {
                 defaultSource={localImage.avt}
                 source={
                   userAvatar != null
-                    ? {uri: userAvatar.uri}
+                    ? { uri: userAvatar.uri }
                     : getUserDataDetails.image_path
-                    ? {uri: getUserDataDetails.image_path}
-                    : localImage.avt
+                      ? { uri: getUserDataDetails.image_path }
+                      : localImage.avt
                 }
                 style={styles.Icon}
               />
             </View>
-            <View style={{position: 'absolute', bottom: 15}}>
+            <View style={{ position: 'absolute', bottom: 15 }}>
               <View style={styles.border} />
               <NewButton
                 ButtonWidth={DeviceWidth * 0.5}
@@ -450,7 +454,7 @@ const NewProfile = ({navigation}) => {
   };
   const DeleteAccount = () => {
     const [forLoading, setForLoading] = useState(false);
-    const {getUserDataDetails} = useSelector(state => state);
+    const { getUserDataDetails } = useSelector(state => state);
     const Delete = async () => {
       setForLoading(true);
       AnalyticsConsole(`DEL_BUTTON_API`);
@@ -468,7 +472,7 @@ const NewProfile = ({navigation}) => {
             floating: true,
             type: 'info',
             animationDuration: 750,
-            icon: {icon: 'none', position: 'left'},
+            icon: { icon: 'none', position: 'left' },
           });
           // AnalyticsConsole(`DEL_BUTTON_API_COMPLETE`);
           LogOut(dispatch);
@@ -483,7 +487,7 @@ const NewProfile = ({navigation}) => {
           floating: true,
           type: 'danger',
           animationDuration: 750,
-          icon: {icon: 'none', position: 'left'},
+          icon: { icon: 'none', position: 'left' },
         });
         setModalVisible(false);
       }
@@ -507,7 +511,7 @@ const NewProfile = ({navigation}) => {
         <View
           style={[
             styles.modalContent1,
-            {backgroundColor: AppColor.BACKGROUNG},
+            { backgroundColor: AppColor.BACKGROUNG },
           ]}>
           <View
             style={{
@@ -618,13 +622,13 @@ const NewProfile = ({navigation}) => {
     name == 'Screen'
       ? dispatch(setScreenAwake(!value))
       : name == 'Sound'
-      ? dispatch(setSoundOnOff(!value))
-      : dispatch(setMusicOnOff(!value));
+        ? dispatch(setSoundOnOff(!value))
+        : dispatch(setMusicOnOff(!value));
   };
   return (
     <>
       <View style={styles.Container}>
-        <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
+        <Wrapper styles={{ backgroundColor: AppColor.WHITE }}>
           <NewHeader1 header={''} />
           <View style={styles.ProfileContainer}>
             <View style={[styles.profileView, {}]}>
@@ -632,7 +636,7 @@ const NewProfile = ({navigation}) => {
                 source={
                   getUserDataDetails.image_path == null
                     ? localImage.avt
-                    : {uri: getUserDataDetails.image_path}
+                    : { uri: getUserDataDetails.image_path }
                 }
                 style={styles.img}
                 onLoad={() => setIsLoading(false)}
@@ -644,12 +648,12 @@ const NewProfile = ({navigation}) => {
                 activeOpacity={0.5}>
                 <Image
                   source={localImage.NewPen}
-                  style={{height: 17, width: 15}}
+                  style={{ height: 17, width: 15 }}
                   resizeMode="contain"
                 />
               </TouchableOpacity>
             </View>
-            <View style={{marginLeft: 15}}>
+            <View style={{ marginLeft: 15 }}>
               <Text
                 style={{
                   fontFamily: Fonts.MONTSERRAT_BOLD,
@@ -677,49 +681,14 @@ const NewProfile = ({navigation}) => {
           <View style={styles.card}>
             {getUserDataDetails.email != null
               ? CardData?.map((v, i) => {
-                  return (
-                    <TouchableOpacity
-                      key={i}
-                      style={{justifyContent: 'center', alignItems: 'center'}}
-                      onPress={() => handleCardDataPress(v.id)}>
-                      <Image
-                        source={v.img}
-                        style={{height: 35, width: 35}}
-                        resizeMode="contain"
-                      />
-                      <Text
-                        style={{
-                          textAlign: 'center',
-                          fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                          fontWeight: '600',
-                          marginTop: 10,
-                          color: AppColor.BLACK,
-                        }}>
-                        {v.txt}
-                      </Text>
-                      {v.txt1 == 'Invalid date' ? null : (
-                        <Text
-                          style={{
-                            textAlign: 'center',
-                            fontFamily: Fonts.MONTSERRAT_REGULAR,
-                            fontWeight: '500',
-                            marginTop: 6,
-                            color: AppColor.RED1,
-                          }}>
-                          {v.txt1}
-                        </Text>
-                      )}
-                    </TouchableOpacity>
-                  );
-                })
-              : CardData1?.map((v, i) => (
+                return (
                   <TouchableOpacity
                     key={i}
-                    style={{justifyContent: 'center', alignItems: 'center'}}
-                    onPress={() => handleCardDataPress1(v.id)}>
+                    style={{ justifyContent: 'center', alignItems: 'center' }}
+                    onPress={() => handleCardDataPress(v.id)}>
                     <Image
                       source={v.img}
-                      style={{height: 35, width: 35}}
+                      style={{ height: 35, width: 35 }}
                       resizeMode="contain"
                     />
                     <Text
@@ -739,18 +708,53 @@ const NewProfile = ({navigation}) => {
                           fontFamily: Fonts.MONTSERRAT_REGULAR,
                           fontWeight: '500',
                           marginTop: 6,
-                          color: '#f0013b',
+                          color: AppColor.RED1,
                         }}>
                         {v.txt1}
                       </Text>
                     )}
                   </TouchableOpacity>
-                ))}
+                );
+              })
+              : CardData1?.map((v, i) => (
+                <TouchableOpacity
+                  key={i}
+                  style={{ justifyContent: 'center', alignItems: 'center' }}
+                  onPress={() => handleCardDataPress1(v.id)}>
+                  <Image
+                    source={v.img}
+                    style={{ height: 35, width: 35 }}
+                    resizeMode="contain"
+                  />
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                      fontWeight: '600',
+                      marginTop: 10,
+                      color: AppColor.BLACK,
+                    }}>
+                    {v.txt}
+                  </Text>
+                  {v.txt1 == 'Invalid date' ? null : (
+                    <Text
+                      style={{
+                        textAlign: 'center',
+                        fontFamily: Fonts.MONTSERRAT_REGULAR,
+                        fontWeight: '500',
+                        marginTop: 6,
+                        color: '#f0013b',
+                      }}>
+                      {v.txt1}
+                    </Text>
+                  )}
+                </TouchableOpacity>
+              ))}
           </View>
           <ScrollView
             showsVerticalScrollIndicator={false}
-            style={{marginBottom: DeviceHeigth * 0.025}}>
-            <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
+            style={{ marginBottom: DeviceHeigth * 0.025 }}>
+            <View style={{ width: DeviceWidth * 0.95, alignSelf: 'center' }}>
               {ListData.slice(0, 3).map((v, i) => (
                 <View
                   key={i}
@@ -759,10 +763,10 @@ const NewProfile = ({navigation}) => {
                     marginVertical: 10,
                     justifyContent: 'space-between',
                   }}>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Image
                       source={v.img}
-                      style={{height: 35, width: 35}}
+                      style={{ height: 35, width: 35 }}
                       resizeMode="contain"
                     />
                     <Text
@@ -775,15 +779,15 @@ const NewProfile = ({navigation}) => {
                       {v.txt}
                     </Text>
                   </View>
-                  <View style={{alignSelf: 'center'}}>
+                  <View style={{ alignSelf: 'center' }}>
                     <FitToggle
                       key={v.id}
                       value={
                         v.id == 1
                           ? getSoundOffOn
                           : v.id == 2
-                          ? getMusicOffOn
-                          : getScreenAwake
+                            ? getMusicOffOn
+                            : getScreenAwake
                       }
                       name={
                         v.id == 1 ? 'Sound' : v.id == 2 ? 'Music' : 'Screen'
@@ -794,7 +798,7 @@ const NewProfile = ({navigation}) => {
                 </View>
               ))}
             </View>
-            <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
+            <View style={{ width: DeviceWidth * 0.95, alignSelf: 'center' }}>
               <Text
                 style={{
                   fontFamily: Fonts.MONTSERRAT_BOLD,
@@ -805,7 +809,7 @@ const NewProfile = ({navigation}) => {
                 Others
               </Text>
             </View>
-            <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
+            <View style={{ width: DeviceWidth * 0.95, alignSelf: 'center' }}>
               {ListData.slice(3).map((v, i) => (
                 <TouchableOpacity
                   key={i}
@@ -817,7 +821,7 @@ const NewProfile = ({navigation}) => {
                   onPress={() => HandleButtons(v.id, v.txt)}>
                   <Image
                     source={v.img}
-                    style={{height: 35, width: 35}}
+                    style={{ height: 35, width: 35 }}
                     resizeMode="contain"
                   />
                   <Text style={styles.ListText}>{v.txt}</Text>
@@ -839,6 +843,11 @@ const NewProfile = ({navigation}) => {
             />
           ) : null}
           <DeleteAccount />
+          <LanguageSelectorModal
+            visible={languageModalVisible}
+            onClose={() => setLanguageModalVisible(false)}
+            dispatch={dispatch}
+          />
         </Wrapper>
       </View>
       <FitSheet
@@ -981,7 +990,7 @@ const styles = StyleSheet.create({
       ios: {
         shadowColor: '#000000',
         shadowOpacity: 0.2,
-        shadowOffset: {height: 5, width: 0},
+        shadowOffset: { height: 5, width: 0 },
       },
       android: {
         elevation: 5,

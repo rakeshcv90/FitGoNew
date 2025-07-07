@@ -11,7 +11,7 @@ import FitIcon, {FitIconTypes} from '../../Component/Utilities/FitIcon';
 import FitText from '../../Component/Utilities/FitText';
 import moment from 'moment';
 import {DeviceWidth} from '../../Component/Config';
-import {translate} from '../Translation/TranslationService';
+import { translate } from '../Translation/TranslationService';
 
 type Props = {
   leaderboardData: Array<{

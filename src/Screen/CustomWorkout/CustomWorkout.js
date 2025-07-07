@@ -40,6 +40,7 @@ import UpcomingEventModal from '../../Component/Utilities/UpcomingEventModal';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
+import { translate} from '../Translation/TranslationService';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -260,7 +261,7 @@ const CustomWorkout = ({navigation}) => {
               lineHeight: 26,
               fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
             }}>
-            No workout created yet!
+            {translate('noworkoutcreated')}
           </Text>
         </View>
         <View
@@ -279,7 +280,7 @@ const CustomWorkout = ({navigation}) => {
               opacity: 0.6,
               fontFamily: Fonts.MONTSERRAT_MEDIUM,
             }}>
-            Create your perfect workout plan based
+            {translate('createworkouttext')}
           </Text>
           <Text
             style={{
@@ -323,7 +324,7 @@ const CustomWorkout = ({navigation}) => {
                 style={{width: 20, height: 20}}
                 tintColor={AppColor.WHITE}
               />
-              <Text style={styles.button}>{'Create Workout'}</Text>
+              <Text style={styles.button}>{translate('createworkout')}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -334,7 +335,7 @@ const CustomWorkout = ({navigation}) => {
   const createWorkout = () => {
     if (text.trim().length <= 0) {
       showMessage({
-        message: 'Please enter your workout name',
+        message: translate('workoutname'),
         type: 'danger',
         animationDuration: 500,
 
@@ -343,7 +344,7 @@ const CustomWorkout = ({navigation}) => {
       });
     } else if (text.trim().length < 3) {
       showMessage({
-        message: 'Please enter proper workout name',
+        message: translate('workoutname'),
         type: 'danger',
         animationDuration: 500,
         floating: true,
@@ -351,7 +352,7 @@ const CustomWorkout = ({navigation}) => {
       });
     } else if (getWorkoutAvt == null) {
       showMessage({
-        message: 'Please select image for workout',
+        message: translate('workoutimage'),
         type: 'danger',
         animationDuration: 500,
         floating: true,
@@ -503,7 +504,7 @@ const CustomWorkout = ({navigation}) => {
                 lineHeight: 24,
                 fontWeight: '700',
               }}>
-              Enter Workout Name
+              {translate('enterworkoutname')}
             </Text>
             <TextInput
               value={text}
@@ -539,7 +540,7 @@ const CustomWorkout = ({navigation}) => {
                     lineHeight: 30,
                     fontWeight: '600',
                   }}>
-                  Cancel
+                  {translate('cancel')}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity

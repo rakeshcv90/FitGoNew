@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { DeviceWidth, NewApi, NewAppapi } from '../../Component/Config';
 import VersionNumber, { appVersion } from 'react-native-version-number';
 import { showMessage } from 'react-native-flash-message';
-import { translate } from '../Translation/TranslationService';
+import { translate,getCurrentLanguage } from '../Translation/TranslationService';
 
 import {
   Setmealdata,
@@ -92,9 +92,9 @@ const Index = ({ navigation, route }: any) => {
 
   const ProfileDataAPI = async () => {
     try {
-      console.log('profile data')
+      console.log('profile data with lang', getCurrentLanguage)
       const res = await axios({
-        url: NewAppapi.Get_COMPLETE_PROFILE+"?lang=pt",
+        url: NewAppapi.Get_COMPLETE_PROFILE+"?lang="+getCurrentLanguage,
         method: 'get',
       });
       console.log('profile data ... ', res.data)

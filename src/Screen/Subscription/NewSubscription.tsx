@@ -46,6 +46,7 @@ import NewHeader1 from '../../Component/Headers/NewHeader1';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import useMusicPlayer from '../NewWorkouts/Exercise/ExerciseUtilities/useMusicPlayer';
 import {resolveImportedAssetOrPath} from '../NewWorkouts/Exercise/ExerciseUtilities/Helpers';
+import { translate } from '../Translation/TranslationService';
 // import {MyRewardedAd} from '../../Component/BannerAdd';
 
 const NewSubscription = ({navigation, route}: any) => {
@@ -737,10 +738,10 @@ const NewSubscription = ({navigation, route}: any) => {
           lineHeight={24}
           value={
             planName.includes('noob')
-              ? 'Basic Plan'
+              ? translate('basicPlan')
               : planName.includes('pro')
-              ? 'Medium Plan'
-              : 'Premium Plan'
+              ? translate('mediumPlan')
+              : translate('premiumPlan')
           }
           marginVertical={5}
         />
@@ -792,7 +793,7 @@ const NewSubscription = ({navigation, route}: any) => {
               <CheckIcon />
               <FitText
                 type="normal"
-                value="3 days free trial"
+                value={translate('freeTrial')}
                 color="#333333E5"
                 fontFamily={Fonts.MONTSERRAT_MEDIUM}
                 marginVertical={3}
@@ -831,10 +832,10 @@ const NewSubscription = ({navigation, route}: any) => {
             type="normal"
             value={
               planName.includes('noob')
-                ? '1 event/month'
+                ? translate('eventsPerMonthBasic')
                 : planName.includes('pro')
-                ? '2 events/month'
-                : '3 events/month'
+                ? translate('eventsPerMonthPro')
+                : translate('eventsPerMonthPremium')
             }
             color="#333333E5"
             fontFamily={Fonts.MONTSERRAT_MEDIUM}
@@ -852,14 +853,14 @@ const NewSubscription = ({navigation, route}: any) => {
           <CheckIcon />
           <FitText
             type="normal"
-            value="Unlock 150+ Exercises"
+            value={translate('unlockExercises')}
             color="#333333E5"
             fontFamily={Fonts.MONTSERRAT_MEDIUM}
             marginVertical={3}
           />
         </View>
         <Line />
-        <View
+        {/* <View
           style={[
             styles.row,
             {
@@ -874,7 +875,7 @@ const NewSubscription = ({navigation, route}: any) => {
             fontFamily={Fonts.MONTSERRAT_MEDIUM}
             marginVertical={3}
           />
-        </View>
+        </View> */}
         {(planName.includes('noob') || planName.includes('pro')) &&
           getPurchaseHistory?.plan_value == null && (
             <View style={{height: 50, width: '100%'}} />
@@ -883,8 +884,8 @@ const NewSubscription = ({navigation, route}: any) => {
         <GradientButton
           text={
             planName.includes(getPurchaseHistory?.plan)
-              ? 'Purchased'
-              : 'Proceed'
+              ? translate('purchased')
+              : translate('proceed')
           }
           h={50}
           colors={[color, color]}
@@ -1132,7 +1133,7 @@ const NewSubscription = ({navigation, route}: any) => {
                         textAlign: 'center',
                         opacity: isSelected ? 1 : 0.7,
                       }}>
-                      {index == 0 ? 'Basic' : index == 1 ? 'Medium' : 'Premium'}
+                      {index == 0 ? translate('basic') : index == 1 ? translate('medium') : translate('premium')}
                     </Text>
                   </TouchableOpacity>
                 );
