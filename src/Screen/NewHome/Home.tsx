@@ -32,6 +32,7 @@ import AdEventPopup from './AdEventPopup';
 import OfferAnimation from './OfferAnimation';
 import { AppleHealthKitData } from '../../Component/TransferStepCounterData';
 import { hasFreeEvent } from '../Event/EnteringEventFunction';
+import { translate,getCurrentLanguage } from '../Translation/TranslationService';
 const Home = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const getUserDataDetails = useSelector(
@@ -47,15 +48,16 @@ const Home = () => {
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [loader, setLoader] = useState(false);
   const [referralCode, setReferralCode] = useState('');
+  const lang = getCurrentLanguage();
 
   useEffect(() => {
     API_CALLS.getLeaderboardData(getUserDataDetails?.id, setLeaderboardData);
     API_CALLS.getReferralCode(getUserDataDetails?.id, setReferralCode);
-    API_CALLS.getSubscriptionDetails(getUserDataDetails?.id);
+    API_CALLS.getSubscriptionDetails(getUserDataDetails?.id, lang);
     AppleHealthKitData();
   }, [loader]);
   useEffect(() => {
-    console.log('Has free event:', hasFreeEvent(getPurchaseHistory));
+    console.log('Has free event:', hasFreeEvent(getPurchaseHistory), getPurchaseHistory);
     if (getPurchaseHistory && hasFreeEvent(getPurchaseHistory)) {
       setTimeout(() => {
         console.log('Modal visible');
@@ -107,12 +109,12 @@ const Home = () => {
               <FitText
                 type="SubHeading"
                 fontWeight="700"
-                value="Invite friend to get amazing voucher"
+                value= {translate('inviteFriendVoucher')}
                 color={AppColor.PrimaryTextColor}
               />
               <FitText
                 type="normal"
-                value="Copy your refer code"
+                value={translate('copyReferralCode')}
                 color={AppColor.SecondaryTextColor}
               />
               <FitText
@@ -123,7 +125,7 @@ const Home = () => {
               />
               <FitButton
                 onPress={() => navigate('Referral')}
-                titleText={'Invite'}
+                titleText={translate('invite')}
                 textColor={AppColor.WHITE}
                 w={'half'}
                 padV={7}

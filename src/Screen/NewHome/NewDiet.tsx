@@ -15,6 +15,7 @@ import FitIcon from '../../Component/Utilities/FitIcon';
 import PredefinedStyles from '../../Component/Utilities/PredefineStyles';
 import MealList from './MealList';
 import CreateMealList from '../NewMeal/CreateMealList';
+import { translate } from '../Translation/TranslationService';
 // import { BannerAdd } from '../../Component/BannerAdd';
 // import { bannerAdId } from '../../Component/AdsId';
 
@@ -35,12 +36,12 @@ const NewDiet = () => {
   const meal_type = [
     {
       id: 1,
-      title: 'Veg',
+      title: translate('veg'),
       ima: require('../../Icon/Images/InAppRewards/Veg.png'),
     },
     {
       id: 2,
-      title: 'Non-Veg',
+      title: translate('nonVeg'),
       ima: require('../../Icon/Images/InAppRewards/Nonveg.png'),
     },
   ];
@@ -72,7 +73,7 @@ const NewDiet = () => {
               color: '#1E1E1E',
               marginLeft: DeviceWidth * 0.06,
             }}>
-            Filter
+            {translate('filter')}
           </Text>
           <TouchableOpacity
             activeOpacity={0.7}
@@ -108,7 +109,7 @@ const NewDiet = () => {
             width: DeviceWidth * 0.9,
             alignSelf: 'center',
           }}>
-          Food Categories
+          {translate('foodCategories')}
         </Text>
         <View
           style={{
@@ -205,7 +206,7 @@ const NewDiet = () => {
           }}>
           <FitText
             type="normal"
-            value="Clear All"
+            value={translate('clearAll')}
             color={AppColor.RED}
             fontSize={15}
             textDecorationLine="underline"
@@ -240,7 +241,7 @@ const NewDiet = () => {
                 textAlign: 'center',
                 fontFamily: Fonts.MONTSERRAT_MEDIUM,
               }}>
-              Show Result
+              {translate('showResult')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -250,7 +251,7 @@ const NewDiet = () => {
   return (
     <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
       <NewHeader1
-        header={'Diet plan'}
+        header={translate('dietPlan')}
         backButton
         icon={showSearchButton ? true : false}
         onBackPress={() => {

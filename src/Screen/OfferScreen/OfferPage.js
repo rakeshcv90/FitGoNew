@@ -24,6 +24,7 @@ import Loader from '../../Component/Loader';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import {setVideoLocation} from '../../Component/ThemeRedux/Actions';
 import {useFocusEffect} from '@react-navigation/native';
+import { translate } from '../Translation/TranslationService';
 const OfferPage = ({navigation, route}) => {
   const WeekArrayWithEvent = Array(5)
     .fill(0)
@@ -250,7 +251,7 @@ const OfferPage = ({navigation, route}) => {
       });
     } else {
       showMessage({
-        message: "Complete today's exercises to unlock the cardio session.",
+        message:translate('completedTodayExerciseFirst'),
         type: 'info',
         animationDuration: 500,
         floating: true,
@@ -264,7 +265,7 @@ const OfferPage = ({navigation, route}) => {
     downloadCounter = 0;
     setWokroutLoaded(false);
     const url =
-      'https://fitme.cvinfotech.in/adserver/public/api/test_user_event__exercise_status';
+      'https://fitme.cvinfotechserver.com/adserver/public/api/test_user_event__exercise_status';
     for (const item of cardioExxercise) {
       datas.push({
         user_id: getUserDataDetails?.id,
@@ -374,46 +375,46 @@ const OfferPage = ({navigation, route}) => {
             'Thursday' && (
             <OfferCards
               imgSource={localImage.cardio_banner}
-              header={'Cardio Point'}
-              text1={'Cardio Point'}
+              header={translate('cardioPoint')}
+              text1={translate('cardioPoint')}
               text1Color={AppColor.WHITE}
-              text2={'Do a few minutes of cardio and earn extra FitCoins.'}
+              text2={translate('cardioDescription')}
               text3={`${cardioExxercise[0]?.fit_coins} coins`}
               coinTextColor={AppColor.YELLOW}
               isactive={!cardioStatus}
               onPress={() => handleStart()}
               withAnimation={!cardioStatus}
               downloaded={downloaded}
-              buttonText={cardioStatus ? `Completed` : 'Start Now'}
+              buttonText={cardioStatus ? translate('completed') : translate('startNow')}
               showRightArrow={!cardioStatus}
             />
           )}
 
           <OfferCards
             imgSource={localImage.reffer_banner}
-            header={'Refer and Earn'}
-            text1={'Refer and Earn'}
+            header={translate('referEarn')}
+            text1={translate('referEarn')}
             text1Color={AppColor.BLACK}
-            text2={'Invite your friends & earn bonus FitCoins.'}
+            text2={translate('referDescription')}
             text3={'5 coins'}
             coinTextColor={AppColor.BLACK}
             onPress={() => navigation.navigate('Referral')}
             isactive={true}
-            buttonText={'Refer Now'}
+            buttonText={translate('referNow')}
           />
           <OfferCards
             imgSource={localImage.breathe_banner}
-            header={'Breathing Session'}
-            text1={'Breathing Session'}
+            header={translate('breathingSession')}
+            text1={translate('breathingSession')}
             text1Color={AppColor.WHITE}
-            text2={'Join the Breathing session & earn bonus FitCoins.'}
+            text2={translate('breathingDescription')}
             text3={`${breatheCoins} coins`}
             coinTextColor={AppColor.WHITE}
             bannerType={'breathe'}
             isactive={breatheStatus && !breatheCompleteStatus}
             buttonText={
               breatheStatus && !breatheCompleteStatus
-                ? 'Start Now'
+                ? translate('startNow')
                 : upComingTime
             }
             onPress={() => {

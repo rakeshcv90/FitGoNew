@@ -666,7 +666,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                             !percent && selectedIndex
                               ? AppColor.BLACK
                               : '#505050',
-                          lineHeight: 20,
+                          lineHeight: 0,
                           marginHorizontal: 10,
                           fontFamily: Fonts.MONTSERRAT_MEDIUM,
                         }}>

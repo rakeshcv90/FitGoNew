@@ -61,6 +61,10 @@ export const hasFreeEvent = (data: Data) => {
       return false;
     }
   } else {
-    return data?.free_status;
+    if (data?.current_day_status == 0 && data?.upcoming_day_status == 0) {
+      return data?.free_status;
+    } else {
+      return false;
+    }
   }
 };

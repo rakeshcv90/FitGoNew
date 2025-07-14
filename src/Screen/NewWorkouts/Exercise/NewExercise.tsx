@@ -144,9 +144,11 @@ const NewExercise = ({navigation, route}: any) => {
                     uri: getStoreVideoLoc[allExercise[number]?.exercise_title],
                   }}
                   onReadyForDisplay={() => {
-                    setPause(true);
+                  console.log('on display working');
+                    // setPause(true);
                   }}
                   onLoad={() => {
+                    console.log('on loade working');
                     setPause(true);
                   }}
                   paused={!pause}

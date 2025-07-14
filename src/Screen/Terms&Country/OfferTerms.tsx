@@ -340,12 +340,12 @@ const OfferTerms = ({navigation, route}: any) => {
                         <View
                           style={{flexDirection: 'row', alignItems: 'center'}}>
                           <RadioButton
-                            value="Portuguese"
+                            value="Hindi"
                             status={
-                              language === 'Portuguese' ? 'checked' : 'unchecked'
+                              language === 'Hindi' ? 'checked' : 'unchecked'
                             }
                             onPress={() => {
-                              setLanguage('Portuguese');
+                              setLanguage('Hindi');
                               handleRadioButton('term_condition_hindi');
                               setTimeout(() => {
                                 setOpened(!opened);
@@ -357,13 +357,13 @@ const OfferTerms = ({navigation, route}: any) => {
                           <Text
                             style={{color: AppColor.BLACK}}
                             onPress={() => {
-                              setLanguage('Portuguese');
+                              setLanguage('Hindi');
                               handleRadioButton('term_condition_hindi');
                               setTimeout(() => {
                                 setOpened(!opened);
                               }, 250);
                             }}>
-                            Portuguese
+                            Hindi
                           </Text>
                         </View>
                       </View>

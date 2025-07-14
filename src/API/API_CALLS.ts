@@ -31,7 +31,6 @@ import {EnteringEventFunction} from '../Screen/Event/EnteringEventFunction';
 import {navigate} from '../Component/Utilities/NavigationUtil';
 import {downloadImages} from '../Screen/Splash/downloadBanner';
 import { translate,getCurrentLanguage } from '../Screen/Translation/TranslationService';
-import { lang } from 'moment';
 
 let deviceID = '';
 DeviceInfo.syncUniqueId().then(uniqueId => {
@@ -40,6 +39,7 @@ DeviceInfo.syncUniqueId().then(uniqueId => {
 });
 
 const dispatch = store.dispatch;
+// const lang = getCurrentLanguage();
 
 const UpgradeAppResponse = () => {
   showMessage({
@@ -136,11 +136,11 @@ export const API_CALLS = {
     },
     300,
   ),
-  getUserDataDetails: debounce((userID: string) => {
+  getUserDataDetails: debounce((userID: string,lang:string) => {
     return new Promise((resolve, reject) =>
       RequestAPI.makeRequest(
         'GET',
-        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userID}&lang=${getCurrentLanguage}`,
+        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userID}&lang=${lang}`,
         {},
         ({data, errors, status, message}) => {
           // console.log(data, 'USER DETAILS');
@@ -378,7 +378,7 @@ export const API_CALLS = {
     },
     500,
   ),
-  getSubscriptionDetails: debounce((user_id: string) => {
+  getSubscriptionDetails: debounce((user_id: string, lang:string) => {
     return new Promise((resolve, reject) =>
       RequestAPI.makeRequest(
         'GET',
@@ -386,7 +386,7 @@ export const API_CALLS = {
         {
           user_id,
           version: VersionNumber.appVersion,
-          lang:getCurrentLanguage,
+          lang:lang,
         },
         ({data, errors, status, message}) => {
           console.log('subscription data .... ',data, ' // ',status);
@@ -453,16 +453,17 @@ export const API_CALLS = {
       ),
     );
   }, 500),
-  getMajorData: debounce(() => {
+  getMajorData: debounce((lang:string) => {
     return new Promise((resolve, reject) =>
       RequestAPI.makeRequest(
         'GET',
         NewAppapi.GET_ALL_IN_ONE,
         {
           version: VersionNumber.appVersion,
-          lang:getCurrentLanguage
+          lang:lang
         },
         ({data, errors, status, message}) => {
+          console.log('all in data... ',data);
           if (
             data?.msg == 'Please update the app to the latest version.' ||
             data?.msg == 'version is required'
@@ -471,8 +472,11 @@ export const API_CALLS = {
           } else if (status == 200) {
             const objects: any = {};
             data?.data?.forEach((item: any) => {
+            console.log('all in data images... ',item);
+
               objects[item?.type] = item?.image;
             });
+              console.log('all in check ... ',data, objects);
             downloadImages(data?.custom_dailog_data[0], dispatch);
             dispatch(setDynamicPopupValues(data?.custom_dailog_data[0]));
 
@@ -489,7 +493,7 @@ export const API_CALLS = {
       ),
     );
   }, 300),
-  getAllExercisesData: debounce((user_id: string) => {
+  getAllExercisesData: debounce((user_id: string,lang:string) => {
     return new Promise((resolve, reject) =>
       RequestAPI.makeRequest(
         'GET',
@@ -497,7 +501,7 @@ export const API_CALLS = {
         {
           user_id,
           version: VersionNumber.appVersion,
-          lang:getCurrentLanguage
+          lang:lang
         },
       
         ({data, errors, status, message}) => {
@@ -518,7 +522,7 @@ export const API_CALLS = {
       ),
     );
   }, 300),
-  getAllWorkouts: debounce((id: string) => {
+  getAllWorkouts: debounce((id: string, lang: string) => {
     return new Promise((resolve, reject) =>
       RequestAPI.makeRequest(
         'POST',
@@ -526,10 +530,10 @@ export const API_CALLS = {
         {
           id,
           version: VersionNumber.appVersion,
-          lang:getCurrentLanguage,
+          lang:lang,
         },
         ({data, errors, status, message}) => {
-         console.log('workout data .....', data , ' // ',status, '// ', id);
+         console.log('workout data .....', data , ' // ',status, '// ', id, ' ///', lang);
           if (
             data?.msg == 'user id is required' ||
             data?.msg == 'Please update the app to the latest version.'

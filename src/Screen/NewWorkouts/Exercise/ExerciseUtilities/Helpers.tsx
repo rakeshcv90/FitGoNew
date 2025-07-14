@@ -14,6 +14,7 @@ import {DeviceWidth} from '../../../../Component/Config';
 import ProgreesButton from '../../../../Component/ProgressButton';
 import {ActivityIndicator} from 'react-native';
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
+import { getCurrentLanguage, translate } from '../../../Translation/TranslationService';
 
 const songs = [
   // require('../../../../Icon/Images/Exercise_Timer.wav'),
@@ -41,11 +42,15 @@ function resolveImportedAssetOrPath(pathOrAsset: any) {
 function resolveImportedAsset(id: number) {
   return id ? resolveAssetSource(id)?.uri ?? undefined : undefined;
 }
-
+  const lang = getCurrentLanguage()
 const initTts = async () => {
   const ttsStatus: any = await Tts.getInitStatus();
   if (!ttsStatus.isInitialized) {
-    await Tts.setDefaultLanguage('en-IN');
+    if (lang == 'en') {
+          await Tts.setDefaultLanguage('en-IN');
+        } else {
+          await Tts.setDefaultLanguage('pt-BR');
+        }
     await Tts.setDucking(true);
     await Tts.setIgnoreSilentSwitch(true);
     await Tts.addEventListener('tts-finish', event => {
@@ -100,7 +105,7 @@ const PauseModal = ({
               fontSize: 32,
               color: '#f0013b',
             }}>
-            Keep Going!
+            {translate('keepGoing')}
           </Text>
           <Text
             style={{
@@ -108,7 +113,7 @@ const PauseModal = ({
               fontSize: 32,
               color: '#f0013b',
             }}>
-            Don't Give Up!
+            {translate('dontGiveUp')}
           </Text>
         </View>
         <Text
@@ -120,20 +125,20 @@ const PauseModal = ({
             marginTop: 5,
             color: AppColor.BLACK,
           }}>
-          {`You have finished `}
+          {translate('youHaveFinished')}
           <Text style={{color: '#f0013b'}}>
             {((number / exerciseLength) * 100).toFixed(0) + '%'}
           </Text>
           {'\n'}
-          {' only '}
+          {translate('only')}
           <Text style={{color: '#f0013b'}}>
-            {exerciseLength - number + ' Exercises'}
+            {exerciseLength - number}
           </Text>
-          {' left '}
+          {translate('exercisesLeft')}
         </Text>
         <View style={{marginTop: 12}}>
           <ProgreesButton
-            text="Resume"
+            text={translate('resume')}
             h={55}
             bR={30}
             flex={-1}
@@ -159,7 +164,7 @@ const PauseModal = ({
                   color: AppColor.BLACK,
                   fontWeight: '700',
                 }}>
-                Quit
+                {translate('quit')}
               </Text>
             )}
           </TouchableOpacity>

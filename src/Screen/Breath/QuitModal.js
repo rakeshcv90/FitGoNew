@@ -7,12 +7,13 @@ import {AppColor} from '../../Component/Color';
 import AnimatedLottieView from 'lottie-react-native';
 import {useNavigation} from '@react-navigation/native';
 import { withSpring } from 'react-native-reanimated';
+import { translate } from '../Translation/TranslationService';
 const QuitModal = ({type,cardAnimation}) => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <View style={styles.contentView}>
-        <Text style={styles.txt1}>Take your time</Text>
+        <Text style={styles.txt1}>{translate('takeYourTime')}</Text>
         <AnimatedLottieView
           source={localImage.cautionLottie}
           style={{
@@ -30,12 +31,12 @@ const QuitModal = ({type,cardAnimation}) => {
             styles.txt1,
             {fontFamily: 'Helvetica', fontSize: 15, lineHeight: 24},
           ]}>
-          {"Your body's main\nsource of energy is oxygen"}
+          {translate('oxygenEnergyNote')}
         </Text>
         <NewButton
           ButtonWidth={DeviceWidth * 0.4}
           pV={12}
-          title={'Continue'}
+          title={translate('continue')}
           fontFamily={'Helvetica-Bold'}
           mV={10}
           buttonColor={AppColor.BREATHE_CIRCLE_COLOR}
@@ -46,13 +47,18 @@ const QuitModal = ({type,cardAnimation}) => {
         <Text
           style={styles.txt1}
           onPress={() => {
+            console.log('type check ',type);
             if (type) {
+              if(type == 'Home'){
+              navigation.goBack();
+              }else{
               navigation.navigate('OfferPage');
+              }
             } else {
               navigation.navigate('WorkoutCompleted', {type: 'complete'});
             }
           }}>
-          Yes, quit
+          {translate('yesQuit')}
         </Text>
       </View>
     </View>

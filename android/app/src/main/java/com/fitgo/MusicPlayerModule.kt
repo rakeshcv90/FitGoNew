@@ -6,7 +6,7 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
-import com.metodo.hq72.BuildConfig
+import fitme.health.fitness.homeworkouts.equipment.BuildConfig
 import java.io.IOException
 
 class MusicPlayerModule(reactContext: ReactApplicationContext) :

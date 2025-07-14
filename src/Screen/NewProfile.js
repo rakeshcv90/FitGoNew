@@ -168,7 +168,7 @@ const NewProfile = ({ navigation }) => {
   };
   const openMailApp = () => {
     Linking.openURL(
-      'mailto:appmeumelhorcorpo@gmail.com?subject=Feedback&body=Hello%20there!',
+      'mailto:thefitnessandworkout@gmail.com?subject=Feedback&body=Hello%20there!',
     );
   };
   const HandleButtons = (ids, value) => {
@@ -249,11 +249,11 @@ const NewProfile = ({ navigation }) => {
       txt: translate('privacypolicy'),
       img: localImage.NPrivacy,
     },
-    {
-      id: 8,
-      txt: translate('language'),
-      img: localImage.NPolicy,
-    },
+    // {
+    //   id: 8,
+    //   txt: translate('language'),
+    //   img: localImage.NPolicy,
+    // },
     {
       id: 9,
       txt: translate('rate'),

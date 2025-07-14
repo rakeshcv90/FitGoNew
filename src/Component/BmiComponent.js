@@ -16,6 +16,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {AnalyticsConsole} from './AnalyticsConsole';
 import {setBmi} from './ThemeRedux/Actions';
 import {showMessage} from 'react-native-flash-message';
+import { translate } from '../Screen/Translation/TranslationService';
 export const BmiMeter = ({getBmi}) => {
   return (
     <>
@@ -42,12 +43,12 @@ export const BmiMeter = ({getBmi}) => {
             }}>
             <Text style={{fontWeight: '500', color: AppColor.WHITE}}>
               {getBmi <= 18
-                ? 'Under Weight'
+                ? translate('underWeight')
                 : getBmi > 18 && getBmi < 25
-                ? 'Normal'
+                ? translate('normal')
                 : isFinite(getBmi)
-                ? 'Over Weight'
-                : 'No Data'}
+                ? translate('overWeight')
+                : translate('noData')}
             </Text>
           </View>
           <View style={styles.arrowheadContainer}>
@@ -139,7 +140,7 @@ const WeightHeight = ({
     <View style={styles.View2}>
       <Text style={styles.txt2}>{heading}</Text>
       <View style={styles.View3}>
-        {heading == 'Height' && selectedItem == 0 ? (
+        {heading == translate('height') && selectedItem == 0 ? (
           <>
             <TextInput
               style={{width: DeviceWidth * 0.24}}
@@ -158,7 +159,7 @@ const WeightHeight = ({
                 if(txt<4 && txt !=''){
                   setValue('');
                   showMessage({
-                    message: "Height can't be less than 4 ft.",
+                    message: translate('heightTooLow'),
                     type: 'info',
                     animationDuration: 500,
                     floating: true,
@@ -186,7 +187,7 @@ const WeightHeight = ({
                 if (txt > 12 ) {
                   setHeightInch('');
                   showMessage({
-                    message: 'Please enter number between 0 and 12',
+                    message: translate('inchLimit'),
                     type: 'info',
                     animationDuration: 500,
                     floating: true,
@@ -205,11 +206,11 @@ const WeightHeight = ({
             mode="outlined"
             keyboardType="decimal-pad"
             placeholder={
-              heading == 'Weight' && selectedItem == 0
-                ? 'kg'
-                : heading == 'Weight' && selectedItem == 1
-                ? 'lbs'
-                : 'cm'
+              heading == translate('weight') && selectedItem == 0
+                ? translate('kg')
+                : heading == translate('weight') && selectedItem == 1
+                ? translate('lbs')
+                : translate('cm')
             }
             placeholderTextColor={AppColor.GRAY2}
             activeUnderlineColor="transparent"
@@ -235,10 +236,10 @@ const WeightHeight = ({
               ]}
               onPress={() => {
                 setSelectedItem(i);
-                if (heading == 'Weight') {
-                  setWeightType(i == 0 ? 'kg' : 'lbs');
+                if (heading == translate('weight')) {
+                  setWeightType(i == 0 ? translate('kg') : translate('lbs'));
                 } else {
-                  setHeightType(i == 0 ? 'ft' : 'cm');
+                  setHeightType(i == 0 ? translate('ft') : translate('cm'));
                 }
               }}>
               <Text
@@ -283,7 +284,7 @@ export const BMImodal = ({setModalVisible, modalVisible, dispatch}) => {
       weight < 10 ||
       weight > 300
     ) {
-      Alert.alert('Please enter valid height and weight', '', [
+      Alert.alert(translate('pleaseEnterValid'), '', [
         {
           text: 'Ok',
           onPress: () => {},
@@ -293,13 +294,13 @@ export const BMImodal = ({setModalVisible, modalVisible, dispatch}) => {
      else {
       AnalyticsConsole(`Submit_BMI_BUTTON`);
       const BMI =
-        (weightType == 'kg' ? weight : weight / 2.2) /
-        (heightType == 'ft' ? newHeight * 0.3048 : height / 100) ** 2;
+        (weightType == translate('kg') ? weight : weight / 2.2) /
+        (heightType == translate('ft') ? newHeight * 0.3048 : height / 100) ** 2;
       dispatch(
         setBmi({
           Bmi: BMI.toFixed(2),
           userHeight:
-            heightType == 'ft' ? newHeight + heightType : height + heightType,
+            heightType == translate('ft') ? newHeight + heightType : height + heightType,
           userWeight: weight + weightType,
         }),
       );
@@ -332,15 +333,15 @@ export const BMImodal = ({setModalVisible, modalVisible, dispatch}) => {
             />
           </View>
           <WeightHeight
-            arr={['kg', 'lbs']}
-            heading={'Weight'}
+            arr={[translate('kg'), translate('lbs')]}
+            heading={translate('weight')}
             value={weight}
             setValue={setWeight}
             setWeightType={setWeightType}
           />
           <WeightHeight
-            arr={['ft', 'cm']}
-            heading={'Height'}
+            arr={[translate('ft'), translate('cm')]}
+            heading={translate('height')}
             value={height}
             setValue={setHeight}
             setHeightInch={setHeightInch}
@@ -373,7 +374,7 @@ export const BMImodal = ({setModalVisible, modalVisible, dispatch}) => {
                     fontFamily: Fonts.MONTSERRAT_MEDIUM,
                   },
                 ]}>
-                Calculate
+                {translate('calculate')}
               </Text>
             </TouchableOpacity>
           </View>

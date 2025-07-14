@@ -16,6 +16,7 @@ import {API_CALLS} from '../../API/API_CALLS';
 import {useSelector} from 'react-redux';
 import {historyData} from '../../API/responseTypes';
 import {ExerciseData} from '../NewWorkouts/Exercise/ExerciseUtilities/useExerciseHook';
+import { translate } from '../Translation/TranslationService';
 
 const staticData: historyData = {
   normal_exercises: {
@@ -59,7 +60,7 @@ const NewHistory = () => {
     console.log(historyData?.normal_exercises)
   return (
     <Wrapper styles={{}}>
-      <NewHeader1 header={'Workout History'} backButton {...defaultVal} />
+      <NewHeader1 header={translate('workoutHistory')}  backButton {...defaultVal} />
       <ScrollView
         contentContainerStyle={{
           flex: 1,
@@ -74,7 +75,7 @@ const NewHistory = () => {
               <FitText
                 type="SubHeading"
                 fontWeight="700"
-                value="Daily Workout Tasks"
+                value={translate('dailyWorkoutTasks')}
                 marginHorizontal={5}
               />
 
@@ -100,8 +101,8 @@ const NewHistory = () => {
                 <FitText
                   type="normal"
                   value={
-                    historyData?.normal_exercises?.summary.total_exercises +
-                    ' exercise'
+                    historyData?.normal_exercises?.summary.total_exercises + ' '+
+                    translate('exerciseSuffix')
                   }
                   marginHorizontal={5}
                   color={AppColor.SecondaryTextColor}
@@ -112,8 +113,8 @@ const NewHistory = () => {
                 <FitText
                   type="normal"
                   value={
-                    historyData?.normal_exercises?.summary.total_calories +
-                    ' kcal'
+                    historyData?.normal_exercises?.summary.total_calories + ' '+
+                    translate('kcal')
                   }
                   marginHorizontal={5}
                   color={AppColor.SecondaryTextColor}

@@ -29,26 +29,27 @@ const LanguageSelectorModal = ({ visible, onClose, dispatch }) => {
     { label: 'Português', code: 'pt' },
   ];
 
-//   const handleChange = async (code) => {
-//     setSelectedLang(code);
-//     await setLanguage(code);
-//     onClose(); // or Alert.alert('Restart required');
-//   };
+  //   const handleChange = async (code) => {
+  //     setSelectedLang(code);
+  //     await setLanguage(code);
+  //     onClose(); // or Alert.alert('Restart required');
+  //   };
 
-const handleChange = async (code) => {
-  try {
-    console.log('set lang code ',code);
-    setSelectedLang(code);            
-    await setLanguage(code);           
-    setTimeout(() => {
+  const handleChange = async (code) => {
+    try {
+      console.log('set lang code ', code);
+      setSelectedLang(code);
+      await setLanguage('');
+      await setLanguage(code);
+      setTimeout(() => {
         resetAndNavigate('SplaceScreen');
 
-    }, 1000);
-    onClose();
-  } catch (error) {
-    console.log('Language change failed:', error);
-  }
-};
+      }, 1000);
+      onClose();
+    } catch (error) {
+      console.log('Language change failed:', error);
+    }
+  };
 
   return (
     <Modal visible={visible} transparent animationType="fade">
@@ -58,7 +59,10 @@ const handleChange = async (code) => {
           {languages.map(({ label, code }) => (
             <TouchableOpacity
               key={code}
-              onPress={() => handleChange(code)}
+              onPress={() => {
+                console.log('language change to: ',code);
+                handleChange(code) 
+                }}
               style={styles.option}
             >
               <Text style={styles.text}>{label}</Text>

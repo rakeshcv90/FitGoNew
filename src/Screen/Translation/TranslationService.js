@@ -13,7 +13,8 @@ export const loadLanguage = async () => {
 export const setLanguage = async (lang) => {
   console.log('langa code ',lang);
   currentLang = lang;
-  await AsyncStorage.setItem('app_language', lang);
+    console.log('set langa code ',currentLang);
+  await AsyncStorage.setItem('app_language', lang,);
 };
 
 export const translate = (key) => {

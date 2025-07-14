@@ -6,10 +6,12 @@ import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import FitText from '../../Component/Utilities/FitText';
 import {Image} from 'react-native';
 import {localImage} from '../../Component/Image';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 // import {BannerAdd} from '../../Component/BannerAdd';
 // import {bannerAdId} from '../../Component/AdsId';
 import Icons from 'react-native-vector-icons/FontAwesome5';
 const CreateMealList = () => {
+  const navigation = useNavigation();
   const getCustomDietData = useSelector(state => state.getCustomDietData);
   const mealData = useSelector(state => state.mealData);
   return (

@@ -8,36 +8,37 @@ import {
   ScrollView,
   BackHandler,
 } from 'react-native';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {StyleSheet} from 'react-native';
-import {AppColor} from '../../Component/Color';
-import {StatusBar} from 'react-native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { StyleSheet } from 'react-native';
+import { AppColor } from '../../Component/Color';
+import { StatusBar } from 'react-native';
 import NewHeader from '../../Component/Headers/NewHeader';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {localImage} from '../../Component/Image';
-import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
-import {TextInput} from 'react-native';
-import {TouchableOpacity} from 'react-native';
-import {showMessage} from 'react-native-flash-message';
+import { localImage } from '../../Component/Image';
+import { DeviceHeigth, DeviceWidth } from '../../Component/Config';
+import { TextInput } from 'react-native';
+import { TouchableOpacity } from 'react-native';
+import { showMessage } from 'react-native-flash-message';
 import AnimatedLottieView from 'lottie-react-native';
 import axios from 'axios';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   SetAIMessageHistory,
   setRewardedCount,
   setSoundOnOff,
 } from '../../Component/ThemeRedux/Actions';
-import {Alert} from 'react-native';
+import { Alert } from 'react-native';
 // import {BannerAdd, MyRewardedAd} from '../../Component/BannerAdd';
 import moment from 'moment';
 import Tts from 'react-native-tts';
-import {useIsFocused} from '@react-navigation/native';
-import {bannerAdId} from '../../Component/AdsId';
+import { useIsFocused } from '@react-navigation/native';
+import { bannerAdId } from '../../Component/AdsId';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {ArrowLeft} from '../../Component/Utilities/Arrows/Arrow';
+import { ArrowLeft } from '../../Component/Utilities/Arrows/Arrow';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import { ReviewApp } from '../../Component/ReviewApp';
+import { translate, getCurrentLanguage } from '../Translation/TranslationService';
 // import useRewardedAd from '../../Utils/Ads/useRewardedAd';
 // const apiKey = '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';
 // const apiKey = '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';
@@ -46,14 +47,13 @@ const systemMessage = {
   content: `You are a Gym Traineer and you give response to us who are  only related Gym Traineer, how to do Workouts,
    what diet have to take`,
 };
-const AITrainer = ({navigation}) => {
+const AITrainer = ({ navigation }) => {
   const dispatch = useDispatch();
   // const {rewardAdsLoad, showRewardAds} = MyRewardedAd();
   // const {isAdReady, showAd} = useRewardedAd();
   const isFocused = useIsFocused();
   const [ttsSound, setTtsSound] = useState(
-    `Hello! I am your personal fitness instructor. I am here to assist you in your fitness journey.
-    `,
+   translate('initialGreeting'),
   );
 
   const [searchText, setSearchText] = useState('');
@@ -65,8 +65,7 @@ const AITrainer = ({navigation}) => {
   const getRerwardCount = useSelector(state => state.getRerwardCount);
   const [senderMessage, setsenderMessage] = useState([
     {
-      message: `Hello! I am your personal fitness instructor. I am here to assist you in your fitness journey.
-      `,
+      message: translate('initialGreeting'),
       sender: 'ChatGpt',
     },
   ]);
@@ -74,6 +73,7 @@ const AITrainer = ({navigation}) => {
   const [speechRate, setSpeechRate] = useState(0.5);
   const [speechPitch, setSpeechPitch] = useState(1);
   const getSoundOffOn = useSelector(state => state.getSoundOffOn);
+  const lang = getCurrentLanguage();
 
   useEffect(() => {
     Tts.addEventListener('tts-start', _event => setTtsStatus('started'));
@@ -84,7 +84,11 @@ const AITrainer = ({navigation}) => {
     Tts.getInitStatus().then(initTts);
   }, [getSoundOffOn]);
   const initTts = async () => {
-    await Tts.setDefaultLanguage('en-IN');
+    if (lang == 'en') {
+      await Tts.setDefaultLanguage('en-IN');
+    } else {
+      await Tts.setDefaultLanguage('pt-BR');
+    }
 
     readText();
     setTtsStatus('initialized');
@@ -98,47 +102,47 @@ const AITrainer = ({navigation}) => {
     }
   };
   useEffect(() => {
-    flatListRef.current.scrollToEnd({animated: true});
+    flatListRef.current.scrollToEnd({ animated: true });
   }, [senderMessage]);
   const sendMessage = async () => {
     if (searchText.trim().length <= 0) {
       showMessage({
-        message: 'Please Enter Message',
+        message: translate('errorEmptyInput'),
         type: 'danger',
         animationDuration: 500,
 
         floating: true,
-        icon: {icon: 'auto', position: 'left'},
+        icon: { icon: 'auto', position: 'left' },
       });
       return false;
     } else {
-      if (getRerwardCount < 5) {
+      // if (getRerwardCount < 5) {
         dispatch(setRewardedCount(getRerwardCount + 1));
         handleSend(searchText);
         setSearchText('');
-      } else {
-        Alert.alert(
-          'Questions Limit Reached!',
-          'Do you want to Continue Asking Questions? Watch Ads',
-          [
-            {
-              text: 'No',
-              onPress: () => console.log('Cancel Pressed'),
-              style: 'Yes',
-            },
-            {
-              text: 'Yes',
-              onPress: async () => {
-                dispatch(setRewardedCount(0));
-                // await showAd();
-              },
-            },
-          ],
-          {
-            cancelable: false,
-          },
-        );
-      }
+      // } else {
+      //   Alert.alert(
+      //     'Questions Limit Reached!',
+      //     'Do you want to Continue Asking Questions? Watch Ads',
+      //     [
+      //       {
+      //         text: 'No',
+      //         onPress: () => console.log('Cancel Pressed'),
+      //         style: 'Yes',
+      //       },
+      //       {
+      //         text: 'Yes',
+      //         onPress: async () => {
+      //           dispatch(setRewardedCount(0));
+      //           // await showAd();
+      //         },
+      //       },
+      //     ],
+      //     {
+      //       cancelable: false,
+      //     },
+      //   );
+      // }
     }
   };
   const temp = () => {
@@ -150,7 +154,7 @@ const AITrainer = ({navigation}) => {
       sender: 'user',
     };
     const newMessages = [...senderMessage, newMessage];
-console.log(newMessages)
+    console.log(newMessages)
     processMessageToChatGPT(newMessages);
   };
   const processMessageToChatGPT = async (chatMessages) => {
@@ -161,7 +165,7 @@ console.log(newMessages)
       } else {
         role = 'user';
       }
-      return {role: role, content: messageObject.message};
+      return { role: role, content: messageObject.message };
     });
 
     const apiRequestBody = {
@@ -181,7 +185,7 @@ console.log(newMessages)
         sender: 'ChatGpt',
       },
     ]);
-console.log("GPT BEFORE",[systemMessage, ...apiMessages])
+    console.log("GPT BEFORE", [systemMessage, ...apiMessages])
     const options = {
       method: 'POST',
       url: 'https://open-ai21.p.rapidapi.com/conversationgpt35',
@@ -190,7 +194,7 @@ console.log("GPT BEFORE",[systemMessage, ...apiMessages])
         // 'X-RapidAPI-Key': '7be654b7aemsh655aa83390ba17bp103b88jsn2fa0e7203912',
         // 'X-RapidAPI-Host': 'open-ai21.p.rapidapi.com',
         'Content-Type': 'application/json',
-        'X-RapidAPI-Key': '9f5e35e1cdmsh0e06fab358b1d30p11fb66jsnb6ce0886d0aa',
+        'X-RapidAPI-Key': 'ca80f283d4mshb1109d8a103cef0p1a05eajsn402ad423ce02',
         'X-RapidAPI-Host': 'open-ai21.p.rapidapi.com',
       },
       data: {
@@ -206,7 +210,7 @@ console.log("GPT BEFORE",[systemMessage, ...apiMessages])
 
     try {
       const response = await axios.request(options);
-console.log("AFTER GPT",response.data.result)
+      console.log("AFTER GPT", response.data.result)
       setsenderMessage([
         ...chatMessages,
         {
@@ -232,7 +236,7 @@ console.log("AFTER GPT",response.data.result)
       console.error(error);
     }
   };
-  console.log('senderMessage====>',senderMessage)
+  console.log('senderMessage====>', senderMessage)
   const handleBackPress = useCallback(() => {
     Tts.stop();
     return false; // Allow default back behavior when switchButton is false
@@ -248,9 +252,9 @@ console.log("AFTER GPT",response.data.result)
   return (
     <View style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
+      <Wrapper styles={{ backgroundColor: AppColor.WHITE }}>
         <NewHeader1
-          header="Fitness Coach"
+          header={translate('aiTrainerTitle')}
           onBackPress={() => {
             Tts.stop();
             navigation.goBack();
@@ -258,11 +262,11 @@ console.log("AFTER GPT",response.data.result)
           backButton
           icon={getAIMessageHistory?.length > 0}
           iconSource={localImage.ChatHistory}
-          onIconPress={()=>navigation.navigate('AIMessageHistory')}
+          onIconPress={() => navigation.navigate('AIMessageHistory')}
         />
         <KeyboardAvoidingView
           behavior={Platform.OS == 'ios' ? 'padding' : undefined}
-          contentContainerStyle={{flexGrow: 1}}
+          contentContainerStyle={{ flexGrow: 1 }}
           style={{
             position: 'absolute',
             bottom: 0,
@@ -273,19 +277,19 @@ console.log("AFTER GPT",response.data.result)
                 : DeviceHeigth * 0.12,
           }}>
           <ScrollView
-            style={{flexGrow: 1, marginVertical: DeviceHeigth * 0.0}}
+            style={{ flexGrow: 1, marginVertical: DeviceHeigth * 0.0 }}
             ref={flatListRef}
             onContentSizeChange={() =>
-              flatListRef.current.scrollToEnd({animated: true})
+              flatListRef.current.scrollToEnd({ animated: true })
             }
-            onLayout={() => flatListRef.current.scrollToEnd({animated: true})}
+            onLayout={() => flatListRef.current.scrollToEnd({ animated: true })}
             keyboardDismissMode="interactive"
             keyboardShouldPersistTaps="always"
             showsVerticalScrollIndicator={false}>
             <FlatList
               data={senderMessage}
               keyExtractor={(item, index) => index.toString()}
-              renderItem={({item, index}) => {
+              renderItem={({ item, index }) => {
                 if (item.sender == 'ChatGpt' && item?.message != 'test') {
                   setTtsSound(item.message);
                 }
@@ -457,7 +461,7 @@ console.log("AFTER GPT",response.data.result)
                               source={
                                 getUserDataDetails?.image_path == null
                                   ? localImage.User
-                                  : {uri: getUserDataDetails?.image_path}
+                                  : { uri: getUserDataDetails?.image_path }
                               }
                               style={{
                                 width: 30,
@@ -497,7 +501,7 @@ console.log("AFTER GPT",response.data.result)
               paddingLeft: 20,
             }}>
             <TextInput
-              placeholder="Type Here...."
+              placeholder={translate('inputPlaceholder')}
               placeholderTextColor={'rgba(80, 80, 80, 0.6)'}
               value={searchText}
               onChangeText={text => {

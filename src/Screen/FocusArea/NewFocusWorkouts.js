@@ -49,6 +49,7 @@ import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import BottomSheet1 from '../../Component/BottomSheet';
 import { CircularProgressBase } from 'react-native-circular-progress-indicator';
+import { translate } from '../Translation/TranslationService';
 
 const format = 'hh:mm:ss';
 
@@ -88,25 +89,25 @@ const NewFocusWorkouts = ({route, navigation}) => {
   const uperBody = [
     {
       id: 1,
-      title: 'Chest',
+      title: translate('chest'),
       ima: require('../../Icon/Images/NewImage2/chest.png'),
       exCount: getExerciseCount?.exCount1 ?? 0,
     },
     {
       id: 2,
-      title: 'Back',
+      title: translate('back'),
       ima: require('../../Icon/Images/NewImage2/back.png'),
       exCount: getExerciseCount?.exCount2 ?? 0,
     },
     {
       id: 3,
-      title: 'Shoulders',
+      title: translate('shoulders'),
       ima: require('../../Icon/Images/NewImage2/shoulder.png'),
       exCount: getExerciseCount?.exCount3 ?? 0,
     },
     {
       id: 4,
-      title: 'Arms',
+      title: translate('arms'),
       ima: require('../../Icon/Images/NewImage2/arms.png'),
       exCount: getExerciseCount?.exCount4 ?? 0,
     },
@@ -115,7 +116,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
   const lowerBody = [
     {
       id: 1,
-      title: 'Legs',
+      title: translate('legs'),
       ima: require('../../Icon/Images/NewImage2/calves.png'),
       exCount: getExerciseCount?.exCount1 ?? 0,
     },
@@ -127,7 +128,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
     // },
     {
       id: 2,
-      title: 'Calves',
+      title: translate('calves'),
       ima: require('../../Icon/Images/NewImage2/calves.png'),
       exCount: getExerciseCount?.exCount3 ?? 0,
     },
@@ -135,13 +136,13 @@ const NewFocusWorkouts = ({route, navigation}) => {
   const core = [
     {
       id: 1,
-      title: 'Abs',
+      title: translate('abs'),
       ima: require('../../Icon/Images/NewImage2/core.png'),
       exCount: getExerciseCount?.exCount1 ?? 0,
     },
     {
       id: 2,
-      title: 'Cardio',
+      title: translate('cardio'),
       ima: require('../../Icon/Images/NewImage2/Cardio.png'),
       exCount: getExerciseCount?.exCount2 ?? 0,
     },
@@ -376,11 +377,11 @@ const NewFocusWorkouts = ({route, navigation}) => {
     const adjustArray = [
       {
         image: localImage.Workout,
-        text: 'With Equipment',
+        text: translate('withEquipment'),
       },
       {
         image: require('../../Icon/Images/NewHome/WithoutEquipment.png'),
-        text: 'Without Equipment',
+        text: translate('withoutEquipment'),
       },
     ];
     const isFullBody = route?.params?.focusedPart == 'Full Body';
@@ -405,7 +406,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
             marginLeft: DeviceWidth * 0.06,
             textAlign: 'center',
           }}>
-          {isFullBody ? 'Adjust' : 'Filter'}
+          {isFullBody ? translate('adjust') : translate('filter')}
         </Text>
         <View
           style={{
@@ -561,7 +562,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                 fontSize: 16,
                 marginBottom: 16,
               }}>
-              Adjust
+              {translate('adjust')}
             </Text>
           )}
           <TouchableOpacity
@@ -650,7 +651,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                 textAlign: 'center',
                 fontFamily: Fonts.MONTSERRAT_MEDIUM,
               }}>
-              Show Result
+              {translate('showResult')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -892,6 +893,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                           handleSelection(item?.exercise_id);
                           return;
                         } else if (!visible) {
+                          console.log('item data ,... ',item);
                           setVisible(true);
                           setitem(item);
                         }
@@ -1072,6 +1074,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
             data={item}
             open={visible}
             setOpen={setVisible}
+            id={item?.exercise_id ?? item?.id}
           />
         </Wrapper>
       </View>

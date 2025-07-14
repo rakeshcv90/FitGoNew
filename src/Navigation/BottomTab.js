@@ -41,7 +41,7 @@ import BackHandlerModal from './BackHandlerModal';
 import Home from '../Screen/NewHome/Home';
 
 import BannerAds from '../Component/NativeCodeAds/BannerAdView';
-// import AdmobInterstitial from '../Component/NativeCodeAds/AdmobInterstitial';
+import AdmobInterstitial from '../Component/NativeCodeAds/AdmobInterstitial';
 import { DeviceEventEmitter } from 'react-native';
 import { translate } from '../Screen/Translation/TranslationService';
 
@@ -60,6 +60,9 @@ const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
   const enteredUpcomingEvent = useSelector(
     state => state?.enteredUpcomingEvent,
   );
+
+
+
   // const getPopUpFreuqency = useSelector(state => state?.getPopUpFreuqency);
   function NotificationBadge() {
     return (
@@ -79,16 +82,50 @@ const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
   return (
     <View style={styles.tabContainer}>
       {state.routes.map((route, index) => {
+        const routeKey = route.name;
         const { options } = descriptors[route.key];
-        const label =
-          options.tabBarLabel !== undefined
-            ? options.tabBarLabel
-            : options.title !== undefined
-              ? options.title
-              : route.name;
 
-              console.log('label .... ',label);
+
+        console.log('label .... ', label, ' // ', route.name);
+
+
+
+        const imageSourceMap = {
+          home: localImage.Home,
+          myplans: localImage.MyPlans,
+          workout: localImage.Workout,
+          profile: localImage.Profile,
+        };
+
+        const focusedImageSourceMap = {
+          home: localImage.HomeRed,
+          myplans: localImage.MyPlansRed,
+          workout: localImage.WorkoutRed,
+          profile: localImage.ProfileRed,
+        };
+
+        const labelMap = {
+          home: translate('home'),
+          myplans: translate('myplans'),
+          workout: translate('workout'),
+          profile: translate('profile'),
+        };
+
+        const imageSource = isFocused
+          ? focusedImageSourceMap[routeKey]
+          : imageSourceMap[routeKey];
+
         const isFocused = state.index === index;
+
+        const label = labelMap[routeKey] || routeKey;
+
+        //  const label =
+        //   options.tabBarLabel !== undefined
+        //     ? options.tabBarLabel
+        //     : options.title !== undefined
+        //       ? options.title
+        //       : route.name;
+
 
         const isValid =
           getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD');
@@ -101,7 +138,9 @@ const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
         const Sat = getPurchaseHistory?.currentDay == 6;
         const Sun = getPurchaseHistory?.currentDay == 0;
         const onPress = () => {
-          AnalyticsConsole(`${route.name}_TAB`);
+          // AnalyticsConsole(`${route.name}_TAB`);
+          console.log('Tab:', route.name, '| Image Key:', Object.keys(imageSourceMap), '| Source:', imageSource);
+
           if (enteredCurrentEvent && route.key?.includes(translate('myplans')) && Sat) {
             showMessage({
               message:
@@ -155,16 +194,33 @@ const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
                 }) */}
 
                 if (Platform.OS === 'android') {
-                  // AdmobInterstitial.showAd()
-                  //   .then(() => {
-                  //     console.log('Ad shown and completed');
-                  //     navigation.navigate(route.name);
-                  //   })
-                  //   .catch((err) => {
-                  //     console.error('Ad show failed', err);
-                  //     navigation.navigate(route.name); // fallback if ad fails
-                  //   });
-                      navigation.navigate(route.name);
+                  const newCount = getFitmeAdsCount + 1;
+
+                    const clickFrequency = getPurchaseHistory?.plan === 'premium' ? 4 : 2;
+
+                  // Update Redux counter
+                  Dispatch(setFitmeAdsCount(newCount));
+                    console.log('click frequency ... ',clickFrequency, newCount);
+
+                  if (newCount % clickFrequency === 0) {
+                    // Show ad on every 2nd click
+                    setFitmeAdsCount(0);
+                    AdmobInterstitial.showAd()
+                      .then(() => {
+                        console.log('Ad shown and completed');
+                        navigation.navigate(route.name);
+                      })
+                      .catch((err) => {
+                        console.error('Ad show failed', err);
+                        navigation.navigate(route.name); // fallback
+                      });
+
+                    // Reset or keep counting
+                    // Dispatch(setFitmeAdsCount(0)); // optional reset
+                  } else {
+                    // Direct navigation without ad
+                    navigation.navigate(route.name);
+                  }
                 } else {
                   navigation.navigate(route.name); // direct navigation for iOS
                 }
@@ -192,16 +248,33 @@ const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
                 }) */}
 
                 if (Platform.OS === 'android') {
-                  // AdmobInterstitial.showAd()
-                  //   .then(() => {
-                  //     console.log('Ad shown and completed');
-                  //     navigation.navigate(route.name);
-                  //   })
-                  //   .catch((err) => {
-                  //     console.error('Ad show failed', err);
-                  //     navigation.navigate(route.name); // fallback if ad fails
-                  //   });
-                  navigation.navigate(route.name); // fallback if ad fails
+                  const newCount = getFitmeAdsCount + 1;
+                    const clickFrequency = getPurchaseHistory?.plan === 'premium' ? 4 : 2;
+
+
+                  // Update Redux counter
+                  Dispatch(setFitmeAdsCount(newCount));
+                  console.log('click frequency',clickFrequency);
+
+                  if (newCount % clickFrequency === 0) {
+                    // Show ad on every 2nd click
+                    setFitmeAdsCount(0);
+                    AdmobInterstitial.showAd()
+                      .then(() => {
+                        console.log('Ad shown and completed');
+                        navigation.navigate(route.name);
+                      })
+                      .catch((err) => {
+                        console.error('Ad show failed', err);
+                        navigation.navigate(route.name); // fallback
+                      });
+
+                    // Reset or keep counting
+                    // Dispatch(setFitmeAdsCount(0)); // optional reset
+                  } else {
+                    // Direct navigation without ad
+                    navigation.navigate(route.name);
+                  }
                 } else {
                   navigation.navigate(route.name); // direct navigation for iOS
                 }
@@ -234,7 +307,7 @@ const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
                     }
                   }>
                   <Image
-                    source={localImage[route.name + 'Red']}
+                    source={imageSource}
                     tintColor={'#1671A8'}
                     resizeMode="contain"
                     style={{
@@ -269,7 +342,7 @@ const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
                   },
                 ]}>
                 <Image
-                  source={localImage[route.name]}
+                  source={imageSource}
                   resizeMode="contain"
                   style={{
                     width: 30,
@@ -329,7 +402,7 @@ const BottomTab = () => {
   return (
     <>
       <Tabs.Navigator
-        initialRouteName={translate('home')}
+        initialRouteName='home'
         tabBar={props => <CustomTab {...props} />}
         screenOptions={{
           // activeTintColor: '#D01818',
@@ -353,12 +426,12 @@ const BottomTab = () => {
           },
         }}>
         <Tabs.Screen
-          name={translate('home')}
+          name='home'
           component={Home}
           options={{ tabBarShowLabel: false }}
         />
         <Tabs.Screen
-          name={translate('myplans')}
+          name='myplans'
           component={MyPlans}
           // options={{
           //   tabBarIcon: () => <NotificationBadge />,
@@ -366,13 +439,13 @@ const BottomTab = () => {
           options={{ tabBarShowLabel: false }}
         />
         <Tabs.Screen
-          name={translate('workout')}
+          name='workout'
           component={Workouts}
           options={{ tabBarShowLabel: true }}
         />
 
         <Tabs.Screen
-          name={translate('profile')}
+          name='profile'
           component={NewProfile}
           options={{ tabBarShowLabel: false }}
         />
@@ -389,9 +462,9 @@ const BottomTab = () => {
                   : DeviceHeigth * 0.0
               : 0,
         }}>
-        {/* {Platform.OS === 'android' && (
+        {Platform.OS === 'android' && (
           <BannerAds style={{ width: '100%', height: adHeight }} />
-        )} */}
+        )}
       </View>
       {/* <BackHandlerModal /> */}
     </>

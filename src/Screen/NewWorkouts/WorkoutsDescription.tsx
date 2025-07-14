@@ -21,20 +21,24 @@ import { localImage } from '../../Component/Image';
 import { setSoundOnOff } from '../../Component/ThemeRedux/Actions';
 import Video from 'react-native-video';
 import axios from 'axios';
-import { user } from '@elevenlabs/elevenlabs-js/api';
 import VersionNumber from 'react-native-version-number';
+import { getCurrentLanguage, translate } from '../Translation/TranslationService';
 
 const WorkoutsDescription = ({ data, open, setOpen, id }: any) => {
   const [ttsInitialized, setTtsInitialized] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const TextSpeech = `${data?.exercise_instructions}`;
   const [description, SetDescription] = useState('');
+  const [title, setTitle] = useState('');
   const dispatch = useDispatch();
 
   const getSoundOffOn = useSelector((state: any) => state.getSoundOffOn);
   const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
   const cleanText = TextSpeech.replace(/<\/?[^>]+(>|$)/g, '');
   const isIOS18 = PLATFORM_IOS && Platform.Version >= 18
+
+  const lang = getCurrentLanguage()
+
 
 
   const getUserDataDetails = useSelector(
@@ -54,13 +58,15 @@ const WorkoutsDescription = ({ data, open, setOpen, id }: any) => {
           user_id: getUserDataDetails?.id,
           version: VersionNumber.appVersion,
           exercise_id: id,
-          lang: 'pt',
+          lang: lang,
         },
       });
       // SetDescription(res.data[0].exercise_instructions);
       console.log('desc data ... ', res.data, ' // ', res.data.data[0].exercise_instructions);
       if (res.data.data?.length > 0) {
+        SetDescription('');
         SetDescription(res.data.data[0].exercise_instructions);
+        setTitle(res.data.data[0].exercise_title);
         console.log('retunr descr ', description);
       } else {
         console.warn('No data found in response.');
@@ -82,7 +88,12 @@ const WorkoutsDescription = ({ data, open, setOpen, id }: any) => {
           //     ? 'en-GB-default'
           //     : 'com.apple.voice.compact.en-IN.Rishi',
           // );
-          await Tts.setDefaultLanguage('en-IN');
+
+          if (lang == 'en') {
+            await Tts.setDefaultLanguage('en-IN');
+          } else {
+            await Tts.setDefaultLanguage('pt-BR');
+          }
           await Tts.setDucking(true);
           await Tts.setIgnoreSilentSwitch('ignore');
           setTtsInitialized(true);
@@ -105,6 +116,7 @@ const WorkoutsDescription = ({ data, open, setOpen, id }: any) => {
   }, [open, getSoundOffOn]);
 
   useEffect(() => {
+    console.log('id check ',id, data?.exercise_video);
     if (id !== null && id !== undefined) {
       getExerciseDescription();
     }
@@ -166,7 +178,11 @@ const WorkoutsDescription = ({ data, open, setOpen, id }: any) => {
             marginTop: PLATFORM_IOS ? DeviceHeigth * 0.06 : DeviceHeigth * 0.03,
           }}>
           <TouchableOpacity
-            onPress={() => setOpen(false)}
+            onPress={() => {
+              setOpen(false);
+              SetDescription('');
+            }
+            }
             style={{
               width: 25,
               height: 25,
@@ -239,7 +255,7 @@ const WorkoutsDescription = ({ data, open, setOpen, id }: any) => {
                 fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                 color: AppColor.BLACK,
               }}>
-              {data?.workout_title || data?.exercise_title}
+              {title}
             </Text>
             <Text />
             <ScrollView showsVerticalScrollIndicator={false}>

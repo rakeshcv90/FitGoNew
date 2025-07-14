@@ -5,7 +5,7 @@ export const Api = 'https://cvinfotech2@gofit.tentoptoday.com/json/';
 //export const NewApi = 'https://gofit.tentoptoday.com/adserver/public/api/';
 // export const NewApi = 'https://fitme.esapplications.in/adserver/public/api/';
 //export const NewApi = 'https://fitme.cvinfotech.in/adserver/public/api/'; //old Server
-export const NewApi = 'https://fitness.appmmc.com/adserver/public/api/'; //New  Server
+export const NewApi = 'https://fitme.cvinfotechserver.com/adserver/public/api/'; //New  Server
 
 
 export const Appapi = {

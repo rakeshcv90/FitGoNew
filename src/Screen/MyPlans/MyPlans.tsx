@@ -156,6 +156,7 @@ const MyPlans = ({navigation}: any) => {
     (state: any) => state.getExerciseOutTime,
   );
 
+  const lang = getCurrentLanguage();
   useEffect(() => {
     if (start && getExerciseOutTime == '') {
       dispatch(setExerciseInTime(moment().format(format)));
@@ -262,7 +263,7 @@ const MyPlans = ({navigation}: any) => {
           version: VersionNumber.appVersion,
           user_id: getUserDataDetails?.id,
           equipment: getEquipmentExercise == 1 ? 'no' : 'yes',
-          lang:getCurrentLanguage,
+          lang:lang,
         },
       });
       console.log('data event ....', res, getUserDataDetails?.id)
@@ -291,7 +292,7 @@ const MyPlans = ({navigation}: any) => {
     setRefresh(true);
     try {
       const res = await axios({
-        url: NewAppapi.WEEKLY_STATUS + '?user_id=' + getUserDataDetails.id+'&lang='+getCurrentLanguage,
+        url: NewAppapi.WEEKLY_STATUS + '?user_id=' + getUserDataDetails.id+'&lang='+lang,
       });
     
       console.log(' data weekly   ',res.data);
@@ -415,13 +416,13 @@ const MyPlans = ({navigation}: any) => {
       });
     }
     try {
-      const lang = getCurrentLanguage();
+      // const lang = getCurrentLanguage();
             console.log('current day ',datas, ' data ',lang);
 
       const res = await axios({
         url: NewAppapi.CURRENT_DAY_EXERCISE,
         method: 'Post',
-        data: {user_details: datas, type: 'weekly', lang: getCurrentLanguage},
+        data: {user_details: datas, type: 'weekly', lang: lang},
       });
       console.log('current day .. ',res);
       if (
@@ -621,6 +622,7 @@ const MyPlans = ({navigation}: any) => {
     payload.append('workout_id', `-${selectedDay + 1}`);
     payload.append('user_day', WeekArray[selectedDay]);
     payload.append('version', VersionNumber.appVersion);
+    payload.append('lang', lang);
 
     try {
       const res = await axios({
@@ -630,7 +632,6 @@ const MyPlans = ({navigation}: any) => {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-        lang:'en',
       });
       setDownloadedVideoSent(false);
       if (res?.data?.msg == 'Please update the app to the latest version.') {
@@ -1287,7 +1288,8 @@ const MyPlans = ({navigation}: any) => {
           emptyComponent()
         )}
 
-        {enteredCurrentEvent &&
+        {
+        enteredCurrentEvent &&
           coins[WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1]] ==
             null &&
           WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1] ==
