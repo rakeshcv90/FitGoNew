@@ -463,7 +463,7 @@ export const API_CALLS = {
           lang:lang
         },
         ({data, errors, status, message}) => {
-          console.log('all in data... ',data);
+          console.log('all in data... ',data, ' // ',VersionNumber.appVersion);
           if (
             data?.msg == 'Please update the app to the latest version.' ||
             data?.msg == 'version is required'

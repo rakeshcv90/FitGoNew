@@ -45,29 +45,36 @@ const checkAllPermissions = () => {
     });
     if (condition) {
       console.log('211');
-      AdmobInterstitial.showAd()
-        .then(() => {
-          console.log('Ad shown and completed');
-          navigate('PermissionScreen');
-
-        })
-        .catch((err) => {
-          console.error('Ad show failed', err);
-          navigate('PermissionScreen');
-        });
+      if (Platform.OS === 'android') {
+        AdmobInterstitial.showAd()
+          .then(() => {
+            console.log('Ad shown and completed');
+            navigate('PermissionScreen');
+          })
+          .catch((err) => {
+            console.error('Ad show failed', err);
+            navigate('PermissionScreen');
+          });
+      } else {
+        // Directly navigate without showing ad on iOS
+        navigate('PermissionScreen');
+      }
     } else {
       console.log('212');
-      AdmobInterstitial.showAd()
-        .then(() => {
-          console.log('Ad shown and completed');
-          resetAndNavigate('BottomTab');
-
-        })
-        .catch((err) => {
-          console.error('Ad show failed', err);
-          resetAndNavigate('BottomTab');
-
-        });
+      if (Platform.OS === 'android') {
+        AdmobInterstitial.showAd()
+          .then(() => {
+            console.log('Ad shown and completed');
+            resetAndNavigate('BottomTab');
+          })
+          .catch((err) => {
+            console.error('Ad show failed', err);
+            resetAndNavigate('BottomTab');
+          });
+      } else {
+        // Directly navigate without showing ad on iOS
+        resetAndNavigate('BottomTab');
+      }
     }
   });
 };

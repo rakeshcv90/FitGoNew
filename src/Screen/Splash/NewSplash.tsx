@@ -62,7 +62,7 @@ const NewSplash = ({ navigation }: any) => {
   }, []);
 
   useEffect(() => {
-    console.log('loader ',loader);
+    console.log('loader ', loader);
     if (!loader) loadScreen();
   }, [loader]);
 
@@ -99,53 +99,69 @@ const NewSplash = ({ navigation }: any) => {
             checkAllPermissions();
           } else {
             console.log("115");
-            AdmobInterstitial.showAd()
-              .then(() => {
-                console.log('Ad shown and completed');
-                navigation.replace('OfferTerms');
-              })
-              .catch((err) => {
-                console.error('Ad show failed', err);
-                navigation.replace('OfferTerms');
-              });
+            if (Platform.OS === 'android') {
+              AdmobInterstitial.showAd()
+                .then(() => {
+                  console.log('Ad shown and completed');
+                  navigation.replace('OfferTerms');
+                })
+                .catch((err) => {
+                  console.error('Ad show failed', err);
+                  navigation.replace('OfferTerms');
+                });
+            } else {
+              navigation.replace('OfferTerms');
+            }
           }
         } else {
           console.log("116");
-          AdmobInterstitial.showAd()
-            .then(() => {
-              console.log('Ad shown and completed');
-              navigation.navigate('Yourself');
-            })
-            .catch((err) => {
-              console.error('Ad show failed', err);
-              navigation.navigate('Yourself');
-            });
+          if (Platform.OS === 'android') {
+            AdmobInterstitial.showAd()
+              .then(() => {
+                console.log('Ad shown and completed');
+                navigation.navigate('Yourself');
+              })
+              .catch((err) => {
+                console.error('Ad show failed', err);
+                navigation.navigate('Yourself');
+              });
+          } else {
+            navigation.navigate('Yourself');
+          }
         }
       } else {
         console.log("login call from splash")
-        AdmobInterstitial.showAd()
-          .then(() => {
-            console.log('Ad shown and completed');
-            navigation.replace('LogSignUp');
-          })
-          .catch((err) => {
-            console.error('Ad show failed', err);
-            navigation.replace('LogSignUp');
-          });
+        if (Platform.OS === 'android') {
+          AdmobInterstitial.showAd()
+            .then(() => {
+              console.log('Ad shown and completed');
+              navigation.replace('LogSignUp');
+            })
+            .catch((err) => {
+              console.error('Ad show failed', err);
+              navigation.replace('LogSignUp');
+            });
+        } else {
+          navigation.replace('LogSignUp');
+        }
       }
     } else {
       console.log("118");
-      AdmobInterstitial.showAd()
-        .then(() => {
-          console.log('Ad shown and completed');
-          navigation.replace('IntroductionScreen1');
-        })
-        .catch((err) => {
-          console.error('Ad show failed', err);
-          navigation.replace('IntroductionScreen1');
-        });
+      if (Platform.OS === 'android') {
+        AdmobInterstitial.showAd()
+          .then(() => {
+            console.log('Ad shown and completed');
+            navigation.replace('IntroductionScreen1');
+          })
+          .catch((err) => {
+            console.error('Ad show failed', err);
+            navigation.replace('IntroductionScreen1');
+          });
+      } else {
+        navigation.replace('IntroductionScreen1');
+      }
     }
-  afterAdFunction();
+    afterAdFunction();
   };
   //  useSetupAds({ afterAdFunction, setLoader });
 

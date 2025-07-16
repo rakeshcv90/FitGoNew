@@ -1,14 +1,14 @@
-import { NativeModules } from 'react-native';
+// import { NativeModules } from 'react-native';
 
-const { AdmobInterstitial } = NativeModules;
+// const { AdmobInterstitial } = NativeModules;
 
-const InterstitialAdManager = {
-  loadAd: (): Promise<boolean> => {
-    return AdmobInterstitial.loadAd();
-  },
+// const InterstitialAdManager = {
+//   loadAd: (): Promise<boolean> => {
+//     return AdmobInterstitial.loadAd();
+//   },
 
-  showAd: (): Promise<boolean> => {
-    return AdmobInterstitial.showAd();
-  }
-};
-export default InterstitialAdManager;
+//   showAd: (): Promise<boolean> => {
+//     return AdmobInterstitial.showAd();
+//   }
+// };
+// export default InterstitialAdManager;
