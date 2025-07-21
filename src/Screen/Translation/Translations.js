@@ -208,6 +208,13 @@ export const translations = {
     noteIOSPremium: 'You will be charged {price} immediately. Your subscription will automatically renew unless auto-renew is turned off 24 hours before the end of the current period. You can manage or cancel your subscription in your iTunes & App Store / Apple ID account settings anytime. If you are unsure how to cancel a subscription, please visit the Apple Support Website. Note that deleting the app does not cancel your subscription.',
     noteAndroidNonPremium: 'Please NOTE: No Free Trial is available for this plan. You will be charged {price} for monthly plan immediately. Your subscription will renew automatically until you cancel the subscription. You can manage or cancel your subscription anytime from the Google Play Store. If you are unsure how to cancel a subscription, please visit the Google Support website. Note that deleting the app does not cancel your subscription.',
     noteIOSNonPremium: 'You will be charged {price} immediately. Your subscription will automatically renew unless auto-renew is turned off 24 hours before the end of the current period. You can manage or cancel your subscription in your iTunes & App Store / Apple ID account settings anytime. If you are unsure how to cancel a subscription, please visit the Apple Support Website. Note that deleting the app does not cancel your subscription.',
+    selectMeal:'Select meals',
+
+    veg: 'Veg',
+    nonVeg: 'Non-Veg',
+    foodCategories: 'Food Categories',
+    showResult: 'Show Result',
+    
 
   },
   hi: {
@@ -423,5 +430,10 @@ export const translations = {
     basic: 'Básico',
     medium: 'Médio',
     premium: 'Premium',
+    selectMeal:'Selecionar refeições',
+veg: 'Vegetariano',
+    nonVeg: 'Não vegetariano',
+    foodCategories: 'Categorias de Alimentos',
+    showResult: 'Mostrar Resultado',
   },
 };

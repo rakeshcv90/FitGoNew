@@ -32,6 +32,7 @@ import {
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import BottomSheet1 from '../../Component/BottomSheet';
+import { translate } from '../Translation/TranslationService';
 
 const CustomMealList = ({navigation, route}) => {
   const [selectedItems, setSelectedItems] = useState([]);
@@ -50,12 +51,12 @@ const CustomMealList = ({navigation, route}) => {
   const meal_type = [
     {
       id: 1,
-      title: 'Veg',
+      title: translate('veg'),
       ima: require('../../Icon/Images/InAppRewards/Veg.png'),
     },
     {
       id: 2,
-      title: 'Nonveg',
+      title: translate('nonVeg'),
       ima: require('../../Icon/Images/InAppRewards/Nonveg.png'),
     },
   ];
@@ -116,7 +117,7 @@ const CustomMealList = ({navigation, route}) => {
             width: DeviceWidth * 0.9,
             alignSelf: 'center',
           }}>
-          Food Categories
+          {translate('foodCategories')}
         </Text>
         <View
           style={{
@@ -264,7 +265,7 @@ const CustomMealList = ({navigation, route}) => {
                 textAlign: 'center',
                 fontFamily: Fonts.MONTSERRAT_MEDIUM,
               }}>
-              Show Result
+              {translate('showResult')}
             </Text>
           </TouchableOpacity>
         </View>
