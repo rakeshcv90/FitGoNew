@@ -18,6 +18,7 @@ import AnimatedLottieView from 'lottie-react-native';
 import {setSoundOnOff} from '../../Component/ThemeRedux/Actions';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import Video from 'react-native-video';
+import { translate, getCurrentLanguage } from '../Translation/TranslationService';
 
 const WorkoutDetail = ({navigation, route}) => {
   const data = route.params.item;
@@ -29,6 +30,7 @@ const WorkoutDetail = ({navigation, route}) => {
   let isFocuse = useIsFocused();
   const dispatch = useDispatch();
   const cleanText = TextSpeech.replace(/<\/?[^>]+(>|$)/g, '');
+  const lang = getCurrentLanguage();
 
   useEffect(() => {
     const initTts = async () => {
@@ -36,7 +38,11 @@ const WorkoutDetail = ({navigation, route}) => {
 
       if (!ttsStatus.isInitialized) {
         try {
+          if(lang == 'pt'){
+          await Tts.setDefaultLanguage('pt-BR');
+          }else{
           await Tts.setDefaultLanguage('en-IN');
+          }
           await Tts.setDucking(true);
           await Tts.setIgnoreSilentSwitch('ignore');
           setTtsInitialized(true);

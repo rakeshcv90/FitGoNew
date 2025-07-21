@@ -22,6 +22,7 @@ import moment from 'moment';
 import {AnalyticsConsole} from '../../../Component/AnalyticsConsole';
 import ActivityLoader from '../../../Component/ActivityLoader';
 import RatingModal from '../../../Component/RatingModal';
+import { translate, getCurrentLanguage } from '../../Translation/TranslationService';
 const WeekArray = Array(7)
   .fill(0)
   .map(
@@ -50,6 +51,8 @@ const SaveDayExercise = ({navigation, route}: any) => {
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
   );
+
+  const lang = getCurrentLanguage()
 
   const getWeeklyAPI = async () => {
     try {
@@ -122,7 +125,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
           '?version=' +
           VersionNumber.appVersion +
           '&user_id=' +
-          getUserDataDetails?.id,
+          getUserDataDetails?.id+'&lang='+lang,
       });
       if (res.data?.msg != 'version  is required') {
         dispatch(setChallengesData(res.data));
@@ -142,7 +145,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
     try {
       const responseData = await axios.get(
         // `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
-        `${url}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
+        `${url}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}&lang=${lang}`,
       );
 
       if (responseData.data?.msg != 'user id is required') {
@@ -229,7 +232,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
             fontWeight: '600',
             fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
           }}>
-          Congratulations!
+          {translate('congratulations')}
         </Text>
       </View>
       <Text
@@ -242,7 +245,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
           width: DeviceWidth * 0.9,
           textAlign: 'center',
         }}>
-        You have completed your workout.
+        {translate('workoutCompleted')}
       </Text>
 
       <View
@@ -276,7 +279,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
               color: '#505050',
               fontWeight: '500',
             }}>
-            Kcal
+            {translate('kcal')}
           </Text>
         </View>
         <View style={styles.container}>
@@ -303,7 +306,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
               color: '#505050',
               fontWeight: '500',
             }}>
-            Sec
+            {translate('sec')}
           </Text>
         </View>
         <View style={styles.container}>
@@ -330,7 +333,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
               color: '#505050',
               fontWeight: '500',
             }}>
-            Action
+            {translate('action')}
           </Text>
         </View>
       </View>
@@ -342,7 +345,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
             ReviewApp(onPresh)
             // TESTAPI()
           }}
-          text="Save and Continue"
+          text={translate('saveAndContinue')}
           bR={10}
           h={70}
           flex={0.2}

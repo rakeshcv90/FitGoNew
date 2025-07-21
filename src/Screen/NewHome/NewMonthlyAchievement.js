@@ -31,6 +31,7 @@ import {
 import {useFocusEffect} from '@react-navigation/native';
 import {red} from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
+import { translate } from '../Translation/TranslationService';
 const NewMonthlyAchievement = ({navigation}) => {
   const [getDate, setDate] = useState(moment().format('YYYY-MM-DD'));
   const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
@@ -129,7 +130,7 @@ const NewMonthlyAchievement = ({navigation}) => {
   return (
     <SafeAreaView style={styles.Container}>
       {/* <NewHeader header={'Report'} backButton={true}/> */}
-      <NewHeader1 backButton header={'Report'} />
+      <NewHeader1 backButton header={translate('report')} />
       <ScrollView showsVerticalScrollIndicator={false}>
         {getBmi?.Bmi ? (
           <View>
@@ -139,12 +140,12 @@ const NewMonthlyAchievement = ({navigation}) => {
                   styles.txt1,
                   {fontFamily: Fonts.MONTSERRAT_BOLD, fontSize: 19},
                 ]}>
-                BMI
+                {translate('bmi')}
               </Text>
               <TouchableOpacity onPress={() => setModalVisible(true)}>
                 <Text
                   style={[styles.txt1, {fontSize: 19, color: AppColor.RED}]}>
-                  Edit
+                  {translate('edit')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -164,7 +165,7 @@ const NewMonthlyAchievement = ({navigation}) => {
                   paddingHorizontal: 10,
                   alignItems: 'center',
                 }}>
-                <Text style={styles.txt4}>Weight: {getBmi?.userWeight}</Text>
+                <Text style={styles.txt4}>{translate('weight')}: {getBmi?.userWeight}</Text>
                 <View
                   style={{
                     height: 20,
@@ -174,7 +175,7 @@ const NewMonthlyAchievement = ({navigation}) => {
                     marginHorizontal: 10,
                   }}
                 />
-                <Text style={styles.txt4}>Height: {getBmi?.userHeight}</Text>
+                <Text style={styles.txt4}>{translate('height')}: {getBmi?.userHeight}</Text>
               </View>
               <View style={{marginTop: 20}}>
                 <BmiMeter getBmi={getBmi?.Bmi} />
@@ -189,7 +190,7 @@ const NewMonthlyAchievement = ({navigation}) => {
                   styles.txt1,
                   {fontFamily: Fonts.MONTSERRAT_BOLD, fontSize: 19},
                 ]}>
-                BMI
+                {translate('bmi')}
               </Text>
             </View>
             <View style={styles.card}>
@@ -199,7 +200,7 @@ const NewMonthlyAchievement = ({navigation}) => {
                   color: AppColor.BLACK,
                   fontSize: 16,
                 }}>
-                BMI (kg/m²)
+                 {translate('bmiUnit')}
               </Text>
               <Text
                 style={{
@@ -210,7 +211,7 @@ const NewMonthlyAchievement = ({navigation}) => {
                 onPress={() => {
                   setModalVisible(true);
                 }}>
-                Check
+                {translate('check')}
               </Text>
             </View>
           </View>
@@ -222,7 +223,7 @@ const NewMonthlyAchievement = ({navigation}) => {
                 styles.txt1,
                 {fontFamily: Fonts.MONTSERRAT_BOLD, fontSize: 19},
               ]}>
-              Exercise History
+              {translate('exerciseHistory')}
             </Text>
           </View>
           <View style={[styles.card, {flexDirection: 'column'}]}>

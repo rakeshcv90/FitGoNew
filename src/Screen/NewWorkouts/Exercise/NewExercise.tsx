@@ -84,7 +84,7 @@ const NewExercise = ({navigation, route}: any) => {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                marginTop: DeviceWidth * 0.025,
+                marginTop: 40,
               }}>
               <TouchableOpacity
                 onPress={() => {
@@ -144,9 +144,11 @@ const NewExercise = ({navigation, route}: any) => {
                     uri: getStoreVideoLoc[allExercise[number]?.exercise_title],
                   }}
                   onReadyForDisplay={() => {
-                    setPause(true);
+                  console.log('on display working');
+                    // setPause(true);
                   }}
                   onLoad={() => {
+                    console.log('on loade working');
                     setPause(true);
                   }}
                   paused={!pause}

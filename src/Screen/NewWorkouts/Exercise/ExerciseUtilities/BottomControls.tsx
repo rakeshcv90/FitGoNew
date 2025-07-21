@@ -6,25 +6,26 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {AppColor, Fonts} from '../../../../Component/Color';
-import {DeviceHeigth, DeviceWidth} from '../../../../Component/Config';
+import React, { useEffect, useState } from 'react';
+import { AppColor, Fonts } from '../../../../Component/Color';
+import { DeviceHeigth, DeviceWidth } from '../../../../Component/Config';
 import {
   setMusicOnOff,
   setSoundOnOff,
 } from '../../../../Component/ThemeRedux/Actions';
 import FitText from '../../../../Component/Utilities/FitText';
-import {localImage} from '../../../../Component/Image';
-import {useDispatch, useSelector} from 'react-redux';
-import {ExerciseData} from './useExerciseHook';
+import { localImage } from '../../../../Component/Image';
+import { useDispatch, useSelector } from 'react-redux';
+import { ExerciseData } from './useExerciseHook';
 import WorkoutsDescription from '../../WorkoutsDescription';
 import FitToggle from '../../../../Component/Utilities/FitToggle';
 import BottomSheet from 'react-native-easy-bottomsheet';
 import BottomSheetContent from './BottomSheetContent';
 import FitIcon from '../../../../Component/Utilities/FitIcon';
 // import NativeAddTest from '../../../../Component/NativeAd';
-import {BlurView} from '@react-native-community/blur';
-import {ShadowStyle} from '../../../../Component/Utilities/ShadowStyle';
+import { BlurView } from '@react-native-community/blur';
+import { ShadowStyle } from '../../../../Component/Utilities/ShadowStyle';
+import { translate } from '../../../Translation/TranslationService';
 
 type BottomControlsProps = {
   restStart: boolean;
@@ -42,12 +43,12 @@ type BottomControlsProps = {
 const Buttons = [
   {
     id: 1,
-    name: 'Voice Assistant',
+    name: translate('voiceAssistant'),
     image: localImage.NSounds,
   },
   {
     id: 2,
-    name: 'Music',
+    name: translate('music'),
     image: localImage.NMusic,
   },
 ];
@@ -71,7 +72,7 @@ const MusicPopup = ({
       visible={openMusic}
       onRequestClose={() => setOpenMusic(false)}
       animationType="slide">
-      <View style={{backgroundColor: `rgba(0,0,0,0)`, flex: 1}}>
+      <View style={{ backgroundColor: `rgba(0,0,0,0)`, flex: 1 }}>
         <BlurView
           style={styles.modalContainer1}
           blurType="dark"
@@ -90,8 +91,8 @@ const MusicPopup = ({
             width: DeviceWidth,
             ...ShadowStyle,
           }}>
-          <View style={[styles.row, {marginVertical: 10}]}>
-            <FitText type="Heading" value="Sound Setting" />
+          <View style={[styles.row, { marginVertical: 10 }]}>
+            <FitText type="Heading" value={translate('soundSetting')} />
             <FitIcon
               onPress={() => setOpenMusic(false)}
               size={30}
@@ -108,10 +109,10 @@ const MusicPopup = ({
                 marginVertical: 10,
                 justifyContent: 'space-between',
               }}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Image
                   source={v.image}
-                  style={{height: 35, width: 35}}
+                  style={{ height: 35, width: 35 }}
                   resizeMode="contain"
                 />
                 <Text
@@ -124,7 +125,7 @@ const MusicPopup = ({
                   {v.name}
                 </Text>
               </View>
-              <View style={{alignSelf: 'center'}}>
+              <View style={{ alignSelf: 'center' }}>
                 <FitToggle
                   key={v.id}
                   value={v.id == 1 ? sound : music}
@@ -187,7 +188,7 @@ const BottomControls = ({
             color: '#1F2937',
             textAlign: 'center',
           }}>
-          Get Ready
+          {translate('getReady')}
         </Text>
       ) : (
         <View
@@ -207,8 +208,8 @@ const BottomControls = ({
                     ? '70%'
                     : '50%'
                   : isEventPage || allExercise.length <= 1
-                  ? '90%'
-                  : '70%',
+                    ? '90%'
+                    : '70%',
             }}>
             <TouchableOpacity
               onPress={() => setOpenMusic(true)}
@@ -221,12 +222,12 @@ const BottomControls = ({
               }}>
               <Image
                 source={require('../../../../Icon/Images/soundSettings.png')}
-                style={{marginRight: 5, width: 15, height: 15}}
+                style={{ marginRight: 5, width: 15, height: 15 }}
               />
               <FitText
                 type="normal"
                 // value={!getSoundOffOn ? ' Sound Off' : ' Sound On'}
-                value="Sound Setting"
+                value={translate('soundSetting')}
                 color="#6B7280"
                 fontFamily={Fonts.HELVETICA_REGULAR}
                 lineHeight={30}
@@ -253,12 +254,12 @@ const BottomControls = ({
               }}>
               <Image
                 source={require('../../../../Icon/Images/InAppRewards/Exercise_Info1.png')}
-                style={{width: 15, height: 15}}
+                style={{ width: 15, height: 15 }}
                 resizeMode="contain"
               />
               <FitText
                 type="normal"
-                value=" Exercise Info"
+                value= {translate('exerciseInfo')}
                 color="#6B7280"
                 fontFamily={Fonts.HELVETICA_REGULAR}
                 lineHeight={30}
@@ -281,7 +282,7 @@ const BottomControls = ({
               }}>
               <Image
                 source={localImage.Exercise_List}
-                style={{width: 15, height: 15}}
+                style={{ width: 15, height: 15 }}
                 resizeMode="contain"
               />
             </TouchableOpacity>
@@ -297,7 +298,7 @@ const BottomControls = ({
         sound={getSoundOffOn}
       />
       <BottomSheet
-        bottomSheetTitle={'Next Exercises'}
+        bottomSheetTitle={translate('nextExercises')}
         bottomSheetIconColor="#000000"
         bottomSheetStyle={{
           backgroundColor: 'white',
@@ -327,11 +328,14 @@ const BottomControls = ({
         />
       </BottomSheet>
 
-      <WorkoutsDescription
-        open={open}
-        setOpen={setOpen}
-        data={allExercise[number]}
-      />
+      {open && allExercise[number] && (
+        <WorkoutsDescription
+          open={open}
+          setOpen={setOpen}
+          data={allExercise[number]}
+          id={allExercise[number]?.exercise_id}
+        />
+      )}
     </View>
   );
 };

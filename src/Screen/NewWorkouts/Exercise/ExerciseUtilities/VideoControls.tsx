@@ -94,7 +94,11 @@ const VideoControls = ({
         strokeWidth={25}
         changingColorsArray={['#530014', '#F0013B']}
         secondayCircleColor={AppColor.LIGHTGREY2}>
-        <TouchableOpacity onPress={() => setPause(!pause)}>
+        <TouchableOpacity onPress={() => {
+          console.log('set pause', pause);
+          setPause(!pause)
+        }
+          }>
           <FitIcon
             name={!pause ? 'play' : 'pause'}
             type="MaterialCommunityIcons"

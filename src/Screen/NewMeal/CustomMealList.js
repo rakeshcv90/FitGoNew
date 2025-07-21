@@ -32,7 +32,7 @@ import {
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import BottomSheet1 from '../../Component/BottomSheet';
-import { translate } from '../Translation/TranslationService';
+import { translate,getCurrentLanguage } from '../Translation/TranslationService';
 
 const CustomMealList = ({navigation, route}) => {
   const [selectedItems, setSelectedItems] = useState([]);
@@ -46,6 +46,7 @@ const CustomMealList = ({navigation, route}) => {
   );
 
   const [forLoading, setForLoading] = useState(false);
+  const lang = getCurrentLanguage();
 
   const refStandard = useRef();
   const meal_type = [
@@ -86,7 +87,7 @@ const CustomMealList = ({navigation, route}) => {
               color: '#1E1E1E',
               marginLeft: DeviceWidth * 0.06,
             }}>
-            Filter
+            {translate('filter')}
           </Text>
           <TouchableOpacity
             activeOpacity={0.7}
@@ -227,7 +228,7 @@ const CustomMealList = ({navigation, route}) => {
           }}>
           <FitText
             type="normal"
-            value="Clear All"
+            value={translate('clearAll')}
             color={AppColor.RED}
             fontSize={15}
             textDecorationLine="underline"
@@ -455,7 +456,7 @@ const CustomMealList = ({navigation, route}) => {
   const getUserDetailData = async () => {
     try {
       const responseData = await axios.get(
-        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}`,
+        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}&lang=${lang}`,
       );
       setForLoading(false);
       if (
@@ -498,7 +499,11 @@ const CustomMealList = ({navigation, route}) => {
   };
   return (
     <View style={styles.container}>
-      {forLoading ? <ActivityLoader /> : ''}
+       {forLoading && (
+    <View style={styles.loaderContainer}>
+      <ActivityLoader />
+    </View>
+  )}
       <StatusBar barStyle={'dark-content'} backgroundColor={'white'} />
       <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
         <NewHeader1
@@ -534,7 +539,7 @@ const CustomMealList = ({navigation, route}) => {
               } else {
                 showMessage({
                   message:
-                    'Select a meal from the given list to create your personalized diet plan!',
+                    translate('selectMealReminder'),
                   type: 'danger',
                   animationDuration: 500,
                   floating: true,
@@ -571,7 +576,7 @@ const CustomMealList = ({navigation, route}) => {
               tintColor={AppColor.WHITE}
               style={{width: 20, height: 20, marginHorizontal: 10}}
             />
-            <Text style={styles.button}>{'Add Custom'}</Text>
+            <Text style={styles.button}>{translate('addCustom')}</Text>
 
             <Text style={[styles.button, {marginHorizontal: 5}]}>
               ({selectedItems?.length})
@@ -596,9 +601,15 @@ const CustomMealList = ({navigation, route}) => {
 var styles = StyleSheet.create({
   container: {
     flex: 1,
-
     backgroundColor: AppColor.WHITE,
   },
+  loaderContainer: {
+  ...StyleSheet.absoluteFillObject,
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: 'rgba(255, 255, 255, 0.5)', // Optional: light overlay
+  zIndex: 9999,
+},
   listContainer: {
     flex: 1,
     padding: 10,

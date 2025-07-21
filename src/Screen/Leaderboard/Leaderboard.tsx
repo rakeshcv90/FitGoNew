@@ -36,6 +36,7 @@ import PastWinnersComponent from './PastWinnersComponent';
 import LeaderBoardProgressComopnent from './LeaderBoardProgressComopnent';
 // import NativeAddTest from '../../Component/NativeAd';
 import FitText from '../../Component/Utilities/FitText';
+import { translate } from '../Translation/TranslationService';
 
 type TypeData = {
   name: string;
@@ -172,8 +173,7 @@ const Leaderboard = () => {
     const shareWinnerMessage = async () => {
       try {
         const options: ShareOptions = {
-          message: `I just won the fitness challenge with the FitMe app and earned a voucher! 🎉 You can win too—download the FitMe app now and start earning amazing rewards.
-          Download the App Now: ${referralLink} `,
+          message: ` ${translate('shareWinnerMessage')}${referralLink} `,
         };
         const result = await Share.open(options);
         if (result.success) {
@@ -384,7 +384,7 @@ const Leaderboard = () => {
                   marginVertical: 20,
                   paddingHorizontal: 10,
                 }}>
-                <FitText type="normal" value="Won: Voucher" color={AppColor.RED} fontWeight='700' />
+                <FitText type="normal" value={translate('wonVoucher')} color={AppColor.RED} fontWeight='700' />
               </View>
               <View
                 style={{
@@ -403,7 +403,7 @@ const Leaderboard = () => {
                     textAlign: 'center',
                     color: AppColor.PrimaryTextColor,
                   }}>
-                  You're this week's winner!
+                  {translate('winnerAnnouncement')}
                 </Text>
                 <Text
                   style={{
@@ -414,8 +414,7 @@ const Leaderboard = () => {
                     textAlign: 'center',
                     color: AppColor.PrimaryTextColor,
                   }}>
-                  Check your email to claim your prize and don’t forget to share
-                  your achievement on social media!
+                  {translate('checkEmail')}
                 </Text>
               </View>
               <TouchableOpacity
@@ -501,13 +500,14 @@ const Leaderboard = () => {
 
   return (
     <>
-      {loader == true ? (
-        <LoadingScreen />
-      ) : (
+      {
+      // loader == true ? (
+      //   <LoadingScreen />
+      // ) : (
         <View style={styles.container}>
           <Wrapper styles={{backgroundColor: AppColor.Background_New}}>
             <NewHeader1
-              header={'Leaderboard'}
+              header={translate('leaderboard')}
               backButton
               onBackPress={() => {
                 navigation?.goBack();
@@ -675,7 +675,7 @@ const Leaderboard = () => {
                       textAlign: 'center',
                       color: AppColor.PrimaryTextColor,
                     }}>
-                    Join the Weekly Challenge to Win the Exciting Prizes!
+                    {translate('joinWeeklyTitle')}
                   </Text>
                   <View
                     style={{
@@ -718,8 +718,7 @@ const Leaderboard = () => {
                           lineHeight: 20,
                           fontWeight: '500',
                         }}>
-                        Missed this week's challenge? No worries! Join next week
-                        to win big prizes!
+                        {translate('missedChallenge')}
                       </Text>
                     </View>
                     <TouchableOpacity
@@ -749,7 +748,7 @@ const Leaderboard = () => {
                           lineHeight: 18,
                           fontWeight: '500',
                         }}>
-                        Enroll Now
+                        {translate('enrollNow')}
                       </Text>
                     </TouchableOpacity>
                   </View>
@@ -758,7 +757,8 @@ const Leaderboard = () => {
             </ScrollView>
           </Wrapper>
         </View>
-      )}
+      // )
+      }
       <WinnerModal setVisible={setVisible} visible={visible} mainData={mainData} />
     </>
   );

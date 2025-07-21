@@ -5,11 +5,7 @@
         <item name="android:editTextBackground">@android:color/transparent</item>
         <item name="android:windowBackground">@drawable/splash_screen</item>
         <item name="android:fitsSystemWindows">false</item>
-<!--        <item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
-<!--        <item name="android:windowTranslucentStatus">false</item>-->
-<!--        <item name="android:windowTranslucentNavigation">false</item>-->
-<!--        <item name="android:windowFullscreen">false</item>-->
-<!--        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>-->
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
 
         <!--        <item name="android:windowTranslucentStatus">false</item>-->
 <!--        <item name="android:windowTranslucentNavigation">false</item>-->

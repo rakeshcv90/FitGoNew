@@ -1,22 +1,22 @@
-import React, {useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Wrapper from './WorkoutCompleteScreen/Wrapper';
-import {AppColor, Fonts} from '../Component/Color';
+import { AppColor, Fonts } from '../Component/Color';
 import FitText from '../Component/Utilities/FitText';
 import * as Yup from 'yup';
 import FitIcon from '../Component/Utilities/FitIcon';
 import FitInput from '../Component/Utilities/FitInput';
 import FitButton from '../Component/Utilities/FitButton';
-import {Formik, FormikHelpers} from 'formik';
+import { Formik, FormikHelpers } from 'formik';
 import ActivityLoader from '../Component/ActivityLoader';
 import PredefinedStyles from '../Component/Utilities/PredefineStyles';
-import {DeviceHeigth, DeviceWidth} from '../Component/Config';
-import {API_CALLS} from '../API/API_CALLS';
-import {navigate} from '../Component/Utilities/NavigationUtil';
-import {showMessage} from 'react-native-flash-message';
-import {Modal} from 'react-native-paper';
-import VersionNumber, {appVersion} from 'react-native-version-number';
-import { translate } from '../Screen/Translation/TranslationService';
+import { DeviceHeigth, DeviceWidth } from '../Component/Config';
+import { API_CALLS } from '../API/API_CALLS';
+import { navigate } from '../Component/Utilities/NavigationUtil';
+import { showMessage } from 'react-native-flash-message';
+import { Modal } from 'react-native-paper';
+import VersionNumber, { appVersion } from 'react-native-version-number';
+import { translate, getCurrentLanguage } from '../Screen/Translation/TranslationService';
 // import {BannerAdd} from '../Component/BannerAdd';
 // import {bannerAdIdTest} from '../Component/AdsId';
 
@@ -46,9 +46,10 @@ const NewLogin = () => {
     insertedEmail: '',
     name: '',
   });
+  const lang = getCurrentLanguage();
   console.log(VersionNumber, 'postLogin Testing');
   const handleFormSubmit = (values: Values, action?: FormikHelpers<Values>) => {
-    
+
     setVisible(false);
     API_CALLS.postLogin(values?.name, values?.email).then((res: any) => {
       console.log(res, 'LOGIN');
@@ -59,15 +60,15 @@ const NewLogin = () => {
 
 
       if (res?.status && !res?.email) {
-              console.log(res, 'LOGIN....');
-          
-        API_CALLS.getUserDataDetails(res?.user_id).then((data: any) => {
-        console.log(data, 'data....');
+        console.log(res, 'LOGIN....');
+
+        API_CALLS.getUserDataDetails(res?.user_id, lang).then((data: any) => {
+          console.log(data, 'data....');
           if (data) {
-            API_CALLS.getSubscriptionDetails(res?.user_id).then((data2:any) => {
+            API_CALLS.getSubscriptionDetails(res?.user_id, lang).then((data2: any) => {
               console.log(data2, 'LOGINwwwww');
               if (res?.allcompleted) {
-        API_CALLS.getAllWorkouts(res?.user_id)
+                API_CALLS.getAllWorkouts(res?.user_id, lang)
                 navigate('BottomTab');
               } else if (res?.status) {
                 navigate('Yourself');
@@ -82,7 +83,7 @@ const NewLogin = () => {
             });
           }
         });
-    
+
       } else {
         showMessage({
           message: `Multiple User with same userID ${res?.email}`,
@@ -104,7 +105,7 @@ const NewLogin = () => {
       <View
         style={[
           PredefinedStyles.FlexCenter,
-          {backgroundColor: AppColor.BACKGROUNG},
+          { backgroundColor: AppColor.BACKGROUNG },
         ]}>
         <View
           style={{
@@ -141,11 +142,11 @@ const NewLogin = () => {
           <View
             style={[
               PredefinedStyles.rowBetween,
-              {position: 'absolute', bottom: 20, alignSelf: 'center'},
+              { position: 'absolute', bottom: 20, alignSelf: 'center' },
             ]}>
             <FitButton
               onPress={() =>
-              handleFormSubmit({name: allData.name, email: allData.email})
+                handleFormSubmit({ name: allData.name, email: allData.email })
               }
               w={'half'}
               titleText="Continue"
@@ -159,8 +160,8 @@ const NewLogin = () => {
                   allData.email,
                   allData.insertedEmail,
                 ).finally(() =>
-           
-                  handleFormSubmit({name: allData.name, email: allData.insertedEmail}),
+
+                  handleFormSubmit({ name: allData.name, email: allData.insertedEmail }),
                 )
               }
               w={'half'}
@@ -175,9 +176,9 @@ const NewLogin = () => {
   );
 
   return (
-    <Wrapper styles={{paddingTop: DeviceHeigth * 0.1}}>
+    <Wrapper styles={{ paddingTop: DeviceHeigth * 0.1 }}>
       <View
-        style={[PredefinedStyles.FlexCenter, {justifyContent: 'flex-start'}]}>
+        style={[PredefinedStyles.FlexCenter, { justifyContent: 'flex-start' }]}>
         <FitText type="Heading" value={translate('loginheading')} />
         <FitText type="normal" value={translate('loginsubheading')} />
         {loader && <ActivityLoader />}
@@ -231,14 +232,14 @@ const NewLogin = () => {
                 w={'90%'}
                 bottomLine
               />
-              <View style={{position: 'absolute', bottom: 0}}>
+              <View style={{ position: 'absolute', bottom: 0 }}>
                 <FitButton
                   titleText={translate('letstart')}
                   onPress={() => handleSubmit()}
                   textColor={AppColor.WHITE}
                   w={'full'}
                   mV={20}
-                /> 
+                />
                 {/* <BannerAdd bannerAdId={bannerAdIdTest} /> */}
               </View>
             </>

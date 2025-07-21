@@ -92,9 +92,10 @@ const Index = ({ navigation, route }: any) => {
 
   const ProfileDataAPI = async () => {
     try {
-      console.log('profile data with lang', getCurrentLanguage)
+      const lang = getCurrentLanguage();
+      console.log('profile data with lang', lang)
       const res = await axios({
-        url: NewAppapi.Get_COMPLETE_PROFILE+"?lang="+getCurrentLanguage,
+        url: NewAppapi.Get_COMPLETE_PROFILE+"?lang="+lang,
         method: 'get',
       });
       console.log('profile data ... ', res.data)

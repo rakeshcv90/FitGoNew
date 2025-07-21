@@ -25,6 +25,7 @@ import {useIsFocused} from '@react-navigation/native';
 import NewHeader1 from '../Component/Headers/NewHeader1';
 import Wrapper from '../Screen/WorkoutCompleteScreen/Wrapper';
 import BottomSheet1 from '../Component/BottomSheet';
+import { translate } from '../Screen/Translation/TranslationService';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -43,12 +44,12 @@ const DietPlatTabBar = ({navigation}) => {
   const meal_type = [
     {
       id: 1,
-      title: 'Veg',
+      title: translate('veg'),
       ima: require('../Icon/Images/InAppRewards/Veg.png'),
     },
     {
       id: 2,
-      title: 'Non-Veg',
+      title: translate('nonVeg'),
       ima: require('../Icon/Images/InAppRewards/Nonveg.png'),
     },
   ];
@@ -78,7 +79,7 @@ const DietPlatTabBar = ({navigation}) => {
               color: '#1E1E1E',
               marginLeft: DeviceWidth * 0.06,
             }}>
-            Filter
+            {translate('filter')}
           </Text>
           <TouchableOpacity
             activeOpacity={0.7}
@@ -109,7 +110,7 @@ const DietPlatTabBar = ({navigation}) => {
             width: DeviceWidth * 0.9,
             alignSelf: 'center',
           }}>
-          Food Categories
+          {translate('foodCategories')}
         </Text>
         <View
           style={{
@@ -206,7 +207,7 @@ const DietPlatTabBar = ({navigation}) => {
           }}>
           <FitText
             type="normal"
-            value="Clear All"
+            value={translate('clearAll')}
             color={AppColor.RED}
             fontSize={15}
             textDecorationLine="underline"
@@ -241,7 +242,7 @@ const DietPlatTabBar = ({navigation}) => {
                 textAlign: 'center',
                 fontFamily: Fonts.MONTSERRAT_MEDIUM,
               }}>
-              Show Result
+              {translate('showResult')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -254,7 +255,7 @@ const DietPlatTabBar = ({navigation}) => {
       <StatusBar barStyle={'dark-content'} backgroundColor={'white'} />
       <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
         <NewHeader1
-          header={'Diet plan'}
+          header={translate('dietPlan')}
           backButton
           icon={showSearchButton ? true : false}
           onBackPress={() => {

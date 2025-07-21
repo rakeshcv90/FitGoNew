@@ -14,6 +14,8 @@ import {localImage} from '../Image';
 import NewButton from '../NewButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { setStreakModalVisible } from '../ThemeRedux/Actions';
+import { translate } from '../../Screen/Translation/TranslationService';
+
 const StreakModal = ({streakDays, setVisible, WeekArray, missedDay,visible}) => {
   const days = ['M', 'T', 'W', 'T', 'F'];
   const getStreakModalVisible=useSelector(state=>state?.getStreakModalVisible)
@@ -37,12 +39,12 @@ const StreakModal = ({streakDays, setVisible, WeekArray, missedDay,visible}) => 
               dispatch(setStreakModalVisible(false))
             }}
           />
-          <Text style={styles.txt1}>{missedDay ?? +'Days '} missed</Text>
+          <Text style={styles.txt1}>{missedDay ?? +''+translate('daysMissed')}</Text>
           <ImageBackground
             source={localImage.StreakImg}
             style={styles.img1}
             resizeMode="contain">
-            <Text style={styles.txt2}>5 Days</Text>
+            <Text style={styles.txt2}>{translate('days')}</Text>
           </ImageBackground>
           <View
             style={{
@@ -77,7 +79,7 @@ const StreakModal = ({streakDays, setVisible, WeekArray, missedDay,visible}) => 
               styles.txt1,
               {fontFamily: Fonts.MONTSERRAT_SEMIBOLD, marginVertical: 10},
             ]}>
-            5 Days streak
+            {translate('streak')}
           </Text>
           <Text style={styles.txt3}>
             Don’t miss the streak if you do not want to lose

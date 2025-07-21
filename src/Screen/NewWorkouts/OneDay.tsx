@@ -56,6 +56,7 @@ import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import OverExerciseModal from '../../Component/Utilities/OverExercise';
 import {ArrowLeft} from '../../Component/Utilities/Arrows/Arrow';
+import { translate } from '../Translation/TranslationService';
 
 const format = 'hh:mm:ss';
 const OneDay = ({navigation, route}: any) => {
@@ -102,6 +103,7 @@ const OneDay = ({navigation, route}: any) => {
       data?.days['day_' + day] &&
         data?.days['day_' + day]?.exercises &&
         setExerciseData(data?.days['day_' + day]?.exercises);
+    console.log('get exercise data.... ',exerciseData, currentExercise);
       setForLoading(false);
     } else {
       try {
@@ -119,6 +121,7 @@ const OneDay = ({navigation, route}: any) => {
           setExerciseData(res.data);
           setForLoading(false);
           setOpen(true);
+    console.log('get exercise data... ',exerciseData, currentExercise);
         } else {
           setLoader(false);
           data?.days['day_' + day] &&
@@ -126,6 +129,7 @@ const OneDay = ({navigation, route}: any) => {
             setExerciseData(data?.days['day_' + day]?.exercises);
           setForLoading(false);
           setOpen(true);
+    console.log('get exercise data.. ',exerciseData);
         }
       } catch (error) {
         setLoader(false);
@@ -135,6 +139,7 @@ const OneDay = ({navigation, route}: any) => {
         setOpen(true);
       }
     }
+
   };
   const sanitizeFileName = (fileName: string) => {
     fileName = fileName.replace(/\s+/g, '_');
@@ -331,6 +336,7 @@ const OneDay = ({navigation, route}: any) => {
             );
             setOpen(false);
             setCurrentExercise(item);
+            console.log('item data ... ', item);
             setVisible(true);
           }}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -786,7 +792,7 @@ const OneDay = ({navigation, route}: any) => {
           // play={false}
           // oneDay
           flex={0.01}
-          text={downloaded ? `Downloading` : `Start Day ${day}`}
+          text={downloaded ? `Downloading` : `${translate('startDay')} ${day}`}
           h={60}
           textStyle={{
             fontSize: 20,
@@ -825,10 +831,12 @@ const OneDay = ({navigation, route}: any) => {
         />
       </View>
       {loader && <ActivityLoader visible={loader} />}
+  
       <WorkoutDescription
         data={currentExercise}
         open={visible}
         setOpen={setVisible}
+        id = {currentExercise}
       />
       <PaddoMeterPermissionModal />
       <OverExerciseModal

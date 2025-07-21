@@ -18,6 +18,7 @@ import {AnalyticsConsole} from '../AnalyticsConsole';
 import {locationPermission} from '../../Screen/Terms&Country/LocationPermission';
 import {showMessage} from 'react-native-flash-message';
 import FadeText from './FadeText';
+import { localImage } from '../Image';
 
 type NewBannerProps = {
   userDetails: Object | any;
@@ -110,6 +111,7 @@ const NewBanner = ({
           });
         }
       }
+      console.log('render data ', BArray,' // ',getBanners);
       setBannerArray(BArray);
     },
     [enteredCurrentEvent, enteredUpcomingEvent, getBanners],
@@ -281,8 +283,17 @@ const NewBanner = ({
         }}
         resizeMode="stretch"
         source={{uri: item.image}}
-        onLoad={() => setLoading(false)}
-        // defaultSource={localImage.testbanner}
+        onLoad={() => {
+    setLoading(false);
+    console.log('✅ Image loaded successfully:', item.image,' ',item);
+  }}
+  onError={(e) => {
+    console.log('❌ Failed to load image:', item.image, e.nativeEvent);
+  }}
+  onLoadStart={() => {
+    console.log('📡 Image loading started:', item.image);
+  }}
+        defaultSource={localImage.Refer_banner}
       />
     </TouchableOpacity>
   );

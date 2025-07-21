@@ -11,15 +11,13 @@ import useSetupAds from './useSetupAds';
 import { useSelector } from 'react-redux';
 import checkAllPermissions from './checkAllPermissions';
 import LottieView from 'lottie-react-native';
-// import AdmobInterstitial from '../../Component/NativeCodeAds/AdmobInterstitial';
-import { setLanguage, getCurrentLanguage } from '../Translation/TranslationService';
+import AdmobInterstitial from '../../Component/NativeCodeAds/AdmobInterstitial';
+import { setLanguage, getCurrentLanguage, loadLanguage } from '../Translation/TranslationService';
 
 const NewSplash = ({ navigation }: any) => {
 
   const [loader, setLoader] = useState(true);
-  const getUserDataDetails = useSelector(
-    (state: any) => state.getUserDataDetails,
-  );
+
   const getAllExercise = useSelector((state: any) => state.getAllExercise);
   const getOfferAgreement = useSelector(
     (state: any) => state.getOfferAgreement,
@@ -29,6 +27,11 @@ const NewSplash = ({ navigation }: any) => {
     (state: any) => state.getChallengesData,
   );
 
+  const getUserDataDetails = useSelector(
+    (state: any) => state.getUserDataDetails,
+  );
+  const lang = getCurrentLanguage();
+
   const handleLangChange = async (langCode: string) => {
     await setLanguage(langCode);
     console.log('Language changed to:', langCode);
@@ -36,11 +39,11 @@ const NewSplash = ({ navigation }: any) => {
 
   useEffect(() => {
     const applyLanguage = async () => {
-      console.log('get language', getCurrentLanguage)
-      await handleLangChange(getCurrentLanguage); // or 'hi', 'en', etc.
+      console.log('get language', lang)
+      await handleLangChange(lang); // or 'hi', 'en', etc.
     };
-
     applyLanguage();
+    loadLanguage();
   }, []);
 
   // useEffect(() => {
@@ -54,59 +57,118 @@ const NewSplash = ({ navigation }: any) => {
   useEffect(() => {
     const time = setTimeout(() => {
       setLoader(false);
-    }, 10000);
+    }, 20000);
     return () => clearTimeout(time);
   }, []);
 
   useEffect(() => {
+    console.log('loader ', loader);
     if (!loader) loadScreen();
   }, [loader]);
 
   const afterAdFunction = () => {
-    console.log("SDfdsfdsfdsf .... ", getUserDataDetails?.name, getUserDataDetails?.email, getUserDataDetails)
+    console.log("SDfdsfdsfdsf .... ", getUserDataDetails, lang)
     setupSubscription();
-    API_CALLS.getMajorData();
+    API_CALLS.getMajorData(lang);
     if (getUserDataDetails.id != null) {
       API_CALLS.postLogin(getUserDataDetails?.name, getUserDataDetails?.email);
-      API_CALLS.getUserDataDetails(getUserDataDetails?.id);
-      if(getUserDataDetails.gender != null){
-      API_CALLS.getAllWorkouts(getUserDataDetails?.id)
+      API_CALLS.getUserDataDetails(getUserDataDetails?.id, lang);
+      if (getUserDataDetails.gender != null) {
+        API_CALLS.getAllWorkouts(getUserDataDetails?.id, lang)
       }
       API_CALLS.pastWinners()
       getAllExercise &&
         getChallengesData &&
-        API_CALLS.getAllExercisesData(getUserDataDetails?.id);
+        API_CALLS.getAllExercisesData(getUserDataDetails?.id, lang);
     }
-
-    loadScreen()
+    // const time = setTimeout(() => {
+    // loadScreen()
+    // }, 10000);
   };
+
   const loadScreen = () => {
+    setLoader(true);
     if (showIntro) {
+      console.log("111");
       if (getUserDataDetails?.id) {
+        console.log("112");
         if (getUserDataDetails?.profile_compl_status == 1) {
+          console.log("113");
           if (getOfferAgreement?.term_condition == 'Accepted') {
+            console.log("114");
             checkAllPermissions();
           } else {
-            navigation.replace('OfferTerms');
+            console.log("115");
+            if (Platform.OS === 'android') {
+              AdmobInterstitial.showAd()
+                .then(() => {
+                  console.log('Ad shown and completed');
+                  navigation.replace('OfferTerms');
+                })
+                .catch((err) => {
+                  console.error('Ad show failed', err);
+                  navigation.replace('OfferTerms');
+                });
+            } else {
+              navigation.replace('OfferTerms');
+            }
           }
         } else {
-          navigation.navigate('Yourself');
+          console.log("116");
+          if (Platform.OS === 'android') {
+            AdmobInterstitial.showAd()
+              .then(() => {
+                console.log('Ad shown and completed');
+                navigation.navigate('Yourself');
+              })
+              .catch((err) => {
+                console.error('Ad show failed', err);
+                navigation.navigate('Yourself');
+              });
+          } else {
+            navigation.navigate('Yourself');
+          }
         }
       } else {
         console.log("login call from splash")
-        navigation.replace('LogSignUp');
+        if (Platform.OS === 'android') {
+          AdmobInterstitial.showAd()
+            .then(() => {
+              console.log('Ad shown and completed');
+              navigation.replace('LogSignUp');
+            })
+            .catch((err) => {
+              console.error('Ad show failed', err);
+              navigation.replace('LogSignUp');
+            });
+        } else {
+          navigation.replace('LogSignUp');
+        }
       }
     } else {
-      navigation.replace('IntroductionScreen1');
+      console.log("118");
+      if (Platform.OS === 'android') {
+        AdmobInterstitial.showAd()
+          .then(() => {
+            console.log('Ad shown and completed');
+            navigation.replace('IntroductionScreen1');
+          })
+          .catch((err) => {
+            console.error('Ad show failed', err);
+            navigation.replace('IntroductionScreen1');
+          });
+      } else {
+        navigation.replace('IntroductionScreen1');
+      }
     }
+    afterAdFunction();
   };
-
-  useSetupAds({ afterAdFunction, setLoader });
+  //  useSetupAds({ afterAdFunction, setLoader });
 
   return (
     // <ImageBackground
     //   source={localImage.BGSplash}
-    //   style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
+    //   style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
     //   imageStyle={{
     //     flex: 1,
     //     justifyContent: 'center',
@@ -114,7 +176,7 @@ const NewSplash = ({ navigation }: any) => {
     //   }}>
     //   <StatusBar backgroundColor="white" barStyle={'light-content'} />
     //   <SplashAnimation />
-    //   <View style={{position: 'absolute', bottom: 10}}>
+    //   <View style={{ position: 'absolute', bottom: 10 }}>
     //     <ActivityIndicator
     //       animating={loader}
     //       size={'large'}

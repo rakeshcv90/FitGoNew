@@ -40,6 +40,7 @@ import ActivityLoader from '../../Component/ActivityLoader';
 import useMusicPlayer from '../NewWorkouts/Exercise/ExerciseUtilities/useMusicPlayer';
 import {resolveImportedAssetOrPath} from '../NewWorkouts/Exercise/ExerciseUtilities/Helpers';
 import {goBack} from '../../Component/Utilities/NavigationUtil';
+import { translate } from '../Translation/TranslationService';
 interface CircleProps {
   index: number;
   progress: Animated.SharedValue<number>;
@@ -497,7 +498,7 @@ const Breathe = ({navigation, route}) => {
                       top: `55%`,
                     },
                   ]}>
-                  <Text style={[styles.startup, {}]}>Let's start</Text>
+                  <Text style={[styles.startup, {}]}>{translate('letstart')}</Text>
                 </Animated.View>
               </View>
             )}
@@ -514,12 +515,11 @@ const Breathe = ({navigation, route}) => {
                   textAlign: 'center',
                   fontSize: 22,
                 }}>
-                Welcome
+                {translate('welcome')}
               </Text>
-              <Text style={styles.txt3}>to Your Breathing Session!</Text>
+              <Text style={styles.txt3}>{translate('toSession')}</Text>
               <Text style={[styles.txt2]}>
-                Follow the animation to guide your breathing. Let's get started
-                with calming breaths.
+                {translate('guide')}
               </Text>
             </Animated.View>
           </View>
@@ -533,7 +533,7 @@ const Breathe = ({navigation, route}) => {
               },
             ]}>
             <NewButton
-              title={'Get Started'}
+              title={translate('getStarted')}
               ButtonWidth={DeviceWidth * 0.9}
               pV={12}
               buttonColor={AppColor.BREATHE_CIRCLE_COLOR}
@@ -546,7 +546,7 @@ const Breathe = ({navigation, route}) => {
         <View style={{flex: 1}}>
           <Animated.Text
             style={[textAnimationStyle1, styles.txt1, {alignSelf: 'center'}]}>
-            {'Now Inhale....'}
+            {translate('inhale')}
           </Animated.Text>
           <Animated.Text
             style={[
@@ -557,7 +557,7 @@ const Breathe = ({navigation, route}) => {
                 alignSelf: 'center',
               },
             ]}>
-            and Exhale....
+            {translate('exhale')}
           </Animated.Text>
           <Animated.Text
             style={[
@@ -569,7 +569,7 @@ const Breathe = ({navigation, route}) => {
                 alignSelf: 'center',
               },
             ]}>
-            Be still and bring your attention to breath.
+            {translate('focus')}
           </Animated.Text>
           <Animated.View
             style={[
@@ -618,7 +618,7 @@ const Breathe = ({navigation, route}) => {
                 fontFamily: 'Helvetica-Bold',
                 fontSize: 33,
               }}>
-              WELL DONE!
+              {translate('wellDone')}
             </Text>
             <Text
               style={{
@@ -629,9 +629,7 @@ const Breathe = ({navigation, route}) => {
                 lineHeight: 23.5,
                 textAlign: 'center',
               }}>
-              {
-                "You've completed your breathing exercise.\nKeep up the great work and stay healthy with us!"
-              }
+              {translate('completed')}
             </Text>
             {/* <Text
               style={{
@@ -680,7 +678,7 @@ const Breathe = ({navigation, route}) => {
             ]}>
             <NewButton
               buttonColor={AppColor.BREATHE_CIRCLE_COLOR}
-              title={'Done'}
+              title={translate('done')}
               fontFamily={'Helvetica-Bold'}
               pV={12}
               onPress={() => {
@@ -695,15 +693,15 @@ const Breathe = ({navigation, route}) => {
       <Cards
         animation={AnimateCard}
         lottie={localImage.VolumeUp}
-        text1={'Please increase volume for'}
-        text2={'seamless experience'}
+        text1={translate('volumeTitle')}
+        text2={translate('volumeSub')}
         speed={5}
       />
       <Cards
         animation={AnimateCard1}
         lottie={localImage.focusAnimation}
-        text1={'Now close your eyes and start'}
-        text2={'taking deep breaths'}
+        text1={translate('closeEyesTitle')}
+        text2={translate('closeEyesSub')}
         speed={3}
       />
     </View>

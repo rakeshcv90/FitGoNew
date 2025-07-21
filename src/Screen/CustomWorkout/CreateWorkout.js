@@ -36,6 +36,7 @@ import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import {ReviewApp} from '../../Component/ReviewApp';
+import { translate } from '../Translation/TranslationService';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -520,7 +521,7 @@ const CreateWorkout = ({navigation, route}) => {
               tintColor={AppColor.WHITE}
               style={{width: 20, height: 20}}
             />
-            <Text style={styles.button}>{'Add Exercise'}</Text>
+            <Text style={styles.button}>{translate('addexercise')}</Text>
 
             <Text style={[styles.button, {marginHorizontal: -5}]}>
               ({selectedItems?.length})

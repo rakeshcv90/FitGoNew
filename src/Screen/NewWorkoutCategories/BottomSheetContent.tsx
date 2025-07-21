@@ -5,15 +5,16 @@ import {AppColor, Fonts} from '../../Component/Color';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import FitIcon from '../../Component/Utilities/FitIcon';
 import {localImage} from '../../Component/Image';
+import { translate } from '../Translation/TranslationService';
 
 const adjustArray = [
   {
     image: localImage.Workout,
-    text: 'With Equipment',
+    text: translate('withEquipment'),
   },
   {
     image: require('../../Icon/Images/NewHome/WithoutEquipment.png'),
-    text: 'Without Equipment',
+    text: translate('withoutEquipment'),
   },
 ];
 
@@ -51,7 +52,7 @@ const BottomSheetContent: FC<Props> = ({
             color: '#1E1E1E',
             marginLeft: DeviceWidth * 0.06,
           }}>
-          Adjust
+          {translate('adjustTitle')}
         </Text>
         <TouchableOpacity
           activeOpacity={0.7}
@@ -164,7 +165,7 @@ const BottomSheetContent: FC<Props> = ({
               textAlign: 'center',
               fontFamily: Fonts.MONTSERRAT_MEDIUM,
             }}>
-            Show Result
+            {translate('showResult')}
           </Text>
         </TouchableOpacity>
       </View>

@@ -9,7 +9,7 @@ import {
   Platform,
   TouchableWithoutFeedback,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useMemo} from 'react';
 import {DeviceHeigth, DeviceWidth} from '../Config';
 import {AppColor, Fonts, PLATFORM_IOS} from '../Color';
 import {AnalyticsConsole} from '../AnalyticsConsole';
@@ -38,9 +38,27 @@ import {ExerciseTime} from '../../Icon/ExerciseTime';
 import FitButton from '../Utilities/FitButton';
 import {useSelector} from 'react-redux';
 import {API_CALLS} from '../../API/API_CALLS';
-import { translate } from '../../Screen/Translation/TranslationService'
+import { translate , getCurrentLanguage} from '../../Screen/Translation/TranslationService'
 
-const data = [
+
+
+const UserEspecially = () => {
+  // const {showInterstitialAd} = MyInterstitialAd();
+  const navigation = useNavigation();
+  const [locationP, setLocationP] = useState(false);
+  const [breatheData, setBreatheData] = useState({
+    coins: 0,
+    active: false,
+  });
+  const {checkLocationPermission} = useLocation();
+  const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
+  const getUserDataDetails = useSelector(state => state.getUserDataDetails);
+
+  const openBreathe = enteredCurrentEvent ? breatheData.active : true;
+
+  const currentLang = getCurrentLanguage();
+
+const data = useMemo(() => [
   {
     id: 1,
     title: translate('customade'),
@@ -65,21 +83,7 @@ const data = [
     image: require('../../Icon/Images/NewHome/back4.png'),
     text: translate('storetext'),
   },
-];
-
-const UserEspecially = () => {
-  // const {showInterstitialAd} = MyInterstitialAd();
-  const navigation = useNavigation();
-  const [locationP, setLocationP] = useState(false);
-  const [breatheData, setBreatheData] = useState({
-    coins: 0,
-    active: false,
-  });
-  const {checkLocationPermission} = useLocation();
-  const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
-  const getUserDataDetails = useSelector(state => state.getUserDataDetails);
-
-  const openBreathe = enteredCurrentEvent ? breatheData.active : true;
+], [currentLang]);
 
   useEffect(() => {
     API_CALLS.getBreatheTime(getUserDataDetails?.id, setBreatheData);
@@ -383,8 +387,11 @@ const UserEspecially = () => {
                   width: '30%',
                   marginTop: 5,
                 }}
-                onPress={() =>
-                  navigate('Breathe', {slotCoins: breatheData?.coins})
+                onPress={() =>{
+                  // navigate('Breathe', {slotCoins: breatheData?.coins})
+                  navigation.navigate('Breathe', {type: 'Home'});
+                }
+                  
                 }>
                 <FitText
                   {...{
@@ -401,8 +408,8 @@ const UserEspecially = () => {
         )}
         <View style={[PredefinedStyles.rowCenter, {flexWrap: 'wrap'}]}>
           {data.map((item, index) => (
-            <Items item={item} index={index} />
-          ))}
+        <Items item={item} index={index} key={item.id} />
+      ))}
         </View>
       </View>
 

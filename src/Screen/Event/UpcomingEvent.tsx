@@ -45,6 +45,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {CountryCurrencies} from '../../Component/Utilities/CountryCurrencies';
 import {resolveImportedAssetOrPath} from '../NewWorkouts/Exercise/ExerciseUtilities/Helpers';
 import useMusicPlayer from '../NewWorkouts/Exercise/ExerciseUtilities/useMusicPlayer';
+import { translate } from '../Translation/TranslationService';
 
 const UpcomingEvent = ({navigation, route}: any) => {
   const {eventType} = route?.params;
@@ -240,7 +241,7 @@ console.log(getPurchaseHistory)
                 getPurchaseHistory?.allow_usage && (
                 <FitText
                   type="Heading"
-                  value="Gear Up for Your Next Challenge!"
+                  value={ translate('changePlanTitle')}
                   fontSize={18}
                   lineHeight={24}
                   marginVertical={5}
@@ -251,7 +252,7 @@ console.log(getPurchaseHistory)
                 value={
                   getPurchaseHistory?.used_plan <=
                   getPurchaseHistory?.allow_usage
-                    ? 'Every week is a new opportunity. Gear up for your next challenge!'
+                    ? translate('changePlanDescription')
                     : `You want to change your${'\n'} current plan`
                   // ? `You have ${
                   //     getPurchaseHistory?.allow_usage -
@@ -323,7 +324,7 @@ console.log(getPurchaseHistory)
         <NewHeader1
           backButton
           header={
-            eventType == 'upcoming' ? 'Upcoming Challenge' : 'My Challenge'
+            eventType == 'upcoming' ? translate('upcomingChallenge') : translate('myChallenge')
           }
           onBackPress={() => navigation?.navigate('BottomTab')}
         />
@@ -425,7 +426,7 @@ console.log(getPurchaseHistory)
                   borderRadius: 5,
                 }}>
                 <FitText
-                  value={'Starts on:'}
+                  value={translate('startsOn')}
                   type="normal"
                   color="#1E1E1E"
                   fontWeight="600"
@@ -471,16 +472,16 @@ console.log(getPurchaseHistory)
                 </View>
               ) : ( */}
               <View style={{marginLeft: 10}}>
-                <FitText type="Heading" value="Win Voucher" fontSize={18} />
-                <FitText type="normal" value="Earn the amazing price" />
+                <FitText type="Heading" value={translate('winVoucher')} fontSize={18} />
+                <FitText type="normal" value={translate('earnPrize')} />
               </View>
             </LinearGradient>
             <FitText
               type="SubHeading"
               value={
                 eventType == 'upcoming'
-                  ? 'Gear Up for Your Next Challenge!'
-                  : 'Your challenge will start on Monday'
+                  ? translate('changePlanTitle')
+                  : translate('challengeStartsSoon')
               }
               fontStyle="italic"
               fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
@@ -491,8 +492,8 @@ console.log(getPurchaseHistory)
               type="normal"
               value={
                 eventType == 'upcoming'
-                  ? 'Every week is a new opportunity. Gear up for your next challenge!'
-                  : `You can do the exercise using our App until the challenge begins.`
+                  ? translate('changePlanDescription')
+                  : translate('challengeInfo')
               }
               textAlign="center"
               color="#333333"
@@ -501,7 +502,7 @@ console.log(getPurchaseHistory)
             />
             <FitText
               type="normal"
-              value="Note: You will receive the prize as a voucher."
+              value={translate('noteVoucher')}
               textAlign="center"
               color={AppColor.NEW_GREY_TEXT}
               fontFamily={Fonts.MONTSERRAT_MEDIUM}
@@ -511,7 +512,7 @@ console.log(getPurchaseHistory)
             {getPurchaseHistory?.plan != 'noob' && (
               <FitText
                 type="normal"
-                value={`Allow chance `}
+                value={translate('allowChance')}
                 // fontSize={12}
                 textAlign="center"
                 color={AppColor.NEW_GREY}
@@ -557,7 +558,7 @@ console.log(getPurchaseHistory)
               getPurchaseHistory?.allow_usage ? (
                 <FitText
                   type="normal"
-                  value="You've reached your limit to join the challenge. Upgrade your plan to join the new challenge"
+                  value={translate('reachedLimit')}
                   textAlign="center"
                   color="#333333"
                   fontFamily={Fonts.MONTSERRAT_MEDIUM}
@@ -570,7 +571,7 @@ console.log(getPurchaseHistory)
           {getPurchaseHistory?.plan != null && (
             <>
               <FitText
-                value="Your Plan"
+                value={translate('yourPlan')}
                 type="SubHeading"
                 fontFamily={Fonts.MONTSERRAT_BOLD}
                 fontSize={18}
@@ -593,10 +594,10 @@ console.log(getPurchaseHistory)
                   lineHeight={24}
                   value={
                     getPurchaseHistory?.plan == 'noob'
-                      ? 'Basic Plan'
+                      ? translate('basicPlan')
                       : getPurchaseHistory?.plan == 'pro'
-                      ? 'Medium Plan'
-                      : 'Premium Plan'
+                      ? translate('mediumPlan')
+                      : translate('premiumPlan')
                   }
                   marginVertical={5}
                   color={
@@ -632,7 +633,7 @@ console.log(getPurchaseHistory)
                     }}>
                     <FitText
                       type="normal"
-                      value="Active"
+                      value={translate('active')}
                       color={AppColor.GREEN}
                       fontSize={12}
                       lineHeight={16}
@@ -688,7 +689,7 @@ console.log(getPurchaseHistory)
                   />
                   <FitText
                     type="normal"
-                    value="Unlock 150+ Exercises"
+                    value={translate('unlockExercises')}
                     color="#333333E5"
                     marginVertical={3}
                   />
@@ -711,16 +712,16 @@ console.log(getPurchaseHistory)
                     type="normal"
                     value={
                       getPurchaseHistory?.plan == 'noob'
-                        ? '1 event/month'
+                        ? translate('eventsPerMonthBasic')
                         : getPurchaseHistory?.plan == 'pro'
-                        ? '2 events/month'
-                        : '3 events/month'
+                        ? translate('eventsPerMonthPro')
+                        : translate('eventsPerMonthPremium')
                     }
                     color="#333333E5"
                     marginVertical={3}
                   />
                 </View>
-                <View style={styles.row}>
+                {/* <View style={styles.row}>
                   <FitIcon
                     color={
                       getPurchaseHistory?.plan == 'noob'
@@ -746,7 +747,7 @@ console.log(getPurchaseHistory)
                     color="#333333E5"
                     marginVertical={3}
                   />
-                </View>
+                </View> */}
               </ShadowCard>
             </>
           )}
@@ -805,7 +806,7 @@ console.log(getPurchaseHistory)
               }}>
               <FitText
                 type="normal"
-                value="Cancel Plan"
+                value={translate('cancelPlan')}
                 color={AppColor.RED}
                 fontFamily={Fonts.MONTSERRAT_MEDIUM}
               />

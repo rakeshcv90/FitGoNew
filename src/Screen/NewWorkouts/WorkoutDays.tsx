@@ -43,6 +43,7 @@ import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 import NewHeader from '../../Component/Headers/NewHeader';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
+import { translate } from '../Translation/TranslationService';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -519,9 +520,9 @@ const WorkoutDays = ({navigation, route}: any) => {
                     challenge,
                   })
                 : showMessage({
-                    message: `Please complete day ${
+                    message: `${translate('pleaseCompleteDay')} ${
                       index - 1
-                    } workout to unlock day ${index}`,
+                    } ${translate('workoutUnlock')} ${index}`,
                     type: 'danger',
 
                     duration: 1000,
@@ -631,7 +632,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                             : AppColor.BLACK,
                         marginBottom: 10,
                       },
-                    ]}>{`Day-${index}`}</Text>
+                    ]}>{`${translate('day')}-${index}`}</Text>
                   {item?.total_rest == 0 ? (
                     <Text
                       style={[
@@ -666,7 +667,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                             !percent && selectedIndex
                               ? AppColor.BLACK
                               : '#505050',
-                          lineHeight: 20,
+                          lineHeight: 0,
                           marginHorizontal: 10,
                           fontFamily: Fonts.MONTSERRAT_MEDIUM,
                         }}>
@@ -697,7 +698,7 @@ const WorkoutDays = ({navigation, route}: any) => {
             </View>
           </LinearGradient>
         </TouchableOpacity>
-        {getAdsDisplay(index, item)}
+        {/* {getAdsDisplay(index, item)} */}
       </>
     );
   };
@@ -829,7 +830,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.MONTSERRAT_REGULAR,
     fontSize: 12,
     fontWeight: '600',
-    lineHeight: 16,
+    lineHeight: 18,
   },
   box: {
     //   flex: 1,

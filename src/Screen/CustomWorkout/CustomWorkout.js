@@ -291,7 +291,7 @@ const CustomWorkout = ({navigation}) => {
               opacity: 0.6,
               fontFamily: Fonts.MONTSERRAT_MEDIUM,
             }}>
-            on your preferences.
+             {translate('onpreference')}
           </Text>
           <View
             style={{
@@ -412,7 +412,7 @@ const CustomWorkout = ({navigation}) => {
     <>
       <View style={styles.container}>
         <Wrapper>
-          <NewHeader1 header={'Custom Made'} backButton />
+          <NewHeader1 header={translate('customade')} backButton />
           <View style={[styles.meditionBox, {marginTop: 10}]}>
             <FlatList
               data={customWorkoutData}

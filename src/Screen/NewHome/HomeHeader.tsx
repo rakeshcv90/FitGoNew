@@ -94,7 +94,7 @@ const HomeHeader = ({leaderboardData}: Props) => {
           fontWeight="700"
         />
       </View>
-      {enteredCurrentEvent ? (
+      { enteredCurrentEvent ? (
         <View style={[PredefinedStyles.rowBetween, {width: '50%'}]}>
           <FitIcon {...historyIcon} roundIcon />
           <TouchableOpacity
@@ -103,6 +103,7 @@ const HomeHeader = ({leaderboardData}: Props) => {
             onPress={() => {
               AnalyticsConsole('HB');
               navigate('WorkoutHistory');
+                            console.log('check navigatesss');
             }}
             style={[styles.eventContainer, {marginHorizontal: 5}]}>
             <Image
@@ -120,6 +121,7 @@ const HomeHeader = ({leaderboardData}: Props) => {
             onPress={() => {
               AnalyticsConsole('LB');
               navigate('Leaderboard');
+              console.log('check navigate');
             }}
             style={styles.eventContainer}>
             <Image
@@ -133,21 +135,21 @@ const HomeHeader = ({leaderboardData}: Props) => {
           </TouchableOpacity>
         </View>
       ) : (
-        <View style={[PredefinedStyles.rowBetween, {width: '30%'}]}>
-          <FitIcon
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' ,width: '30%'}}>
+          {/* <FitIcon
             {...historyIcon}
             onPress={() => {
               AnalyticsConsole('HB');
               navigate('NewHistory');
             }}
             roundIcon
-          />
+          /> */}
           <TouchableOpacity
             activeOpacity={0.6}
             disabled={(Sat || Sun) == true}
             onPress={() => {
               AnalyticsConsole('HB');
-              navigate('WorkoutHistory');
+              navigate('Leaderboard');
             }}
             style={styles.normalContainer}>
             <Image

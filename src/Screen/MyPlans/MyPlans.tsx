@@ -156,6 +156,7 @@ const MyPlans = ({navigation}: any) => {
     (state: any) => state.getExerciseOutTime,
   );
 
+  const lang = getCurrentLanguage();
   useEffect(() => {
     if (start && getExerciseOutTime == '') {
       dispatch(setExerciseInTime(moment().format(format)));
@@ -262,7 +263,7 @@ const MyPlans = ({navigation}: any) => {
           version: VersionNumber.appVersion,
           user_id: getUserDataDetails?.id,
           equipment: getEquipmentExercise == 1 ? 'no' : 'yes',
-          lang:getCurrentLanguage,
+          lang:lang,
         },
       });
       console.log('data event ....', res, getUserDataDetails?.id)
@@ -291,7 +292,7 @@ const MyPlans = ({navigation}: any) => {
     setRefresh(true);
     try {
       const res = await axios({
-        url: NewAppapi.WEEKLY_STATUS + '?user_id=' + getUserDataDetails.id+'&lang='+getCurrentLanguage,
+        url: NewAppapi.WEEKLY_STATUS + '?user_id=' + getUserDataDetails.id+'&lang='+lang,
       });
     
       console.log(' data weekly   ',res.data);
@@ -415,13 +416,13 @@ const MyPlans = ({navigation}: any) => {
       });
     }
     try {
-      const lang = getCurrentLanguage();
+      // const lang = getCurrentLanguage();
             console.log('current day ',datas, ' data ',lang);
 
       const res = await axios({
         url: NewAppapi.CURRENT_DAY_EXERCISE,
         method: 'Post',
-        data: {user_details: datas, type: 'weekly', lang: getCurrentLanguage},
+        data: {user_details: datas, type: 'weekly', lang: lang},
       });
       console.log('current day .. ',res);
       if (
@@ -621,6 +622,7 @@ const MyPlans = ({navigation}: any) => {
     payload.append('workout_id', `-${selectedDay + 1}`);
     payload.append('user_day', WeekArray[selectedDay]);
     payload.append('version', VersionNumber.appVersion);
+    payload.append('lang', lang);
 
     try {
       const res = await axios({
@@ -630,7 +632,6 @@ const MyPlans = ({navigation}: any) => {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-        lang:'en',
       });
       setDownloadedVideoSent(false);
       if (res?.data?.msg == 'Please update the app to the latest version.') {
@@ -823,7 +824,7 @@ const MyPlans = ({navigation}: any) => {
                 color: AppColor.PrimaryTextColor,
                 textAlign: 'center',
               }}>
-              Adjust Your Workout Plan
+              {translate('adjustWorkoutPlan')}
             </Text>
             <Text
               style={{
@@ -834,8 +835,8 @@ const MyPlans = ({navigation}: any) => {
                 marginVertical: 10,
               }}>
               {getEquipmentExercise == 1
-                ? `Would you like to switch to workouts with equipment or continue with the workouts without equipment?`
-                : `Would you like to switch to without equipment workouts?`}
+                ? translate('switchWithOrWithoutEquipment')
+                : translate('switchToWithoutEquipment')}
             </Text>
             <TouchableOpacity
               // onPress={() => {
@@ -866,7 +867,7 @@ const MyPlans = ({navigation}: any) => {
                       ? AppColor.SecondaryTextColor
                       : AppColor.RED,
                 }}>
-                With Equipment
+                {translate('withEquipment')}
               </Text>
               <Image
                 source={localImage.Workout}
@@ -907,7 +908,7 @@ const MyPlans = ({navigation}: any) => {
                       ? AppColor.SecondaryTextColor
                       : AppColor.RED,
                 }}>
-                Without Equipment
+                {translate('withoutEquipment')}
               </Text>
               <Image
                 source={require('../../Icon/Images/NewHome/WithoutEquipment.png')}
@@ -1041,7 +1042,7 @@ const MyPlans = ({navigation}: any) => {
                     lineHeight: 20,
                     color: AppColor.PrimaryTextColor,
                   }}>
-                  Please wait we are preparing your plan
+                  {translate('preparingTitle')}
                 </Text>
                 <View
                   style={{
@@ -1058,7 +1059,7 @@ const MyPlans = ({navigation}: any) => {
                       color: AppColor.SecondaryTextColor,
                       marginTop: 20,
                     }}>
-                    Just a moment! We're preparing the perfect
+                    {translate('preparingLine1')}
                   </Text>
                   <Text
                     style={{
@@ -1067,7 +1068,7 @@ const MyPlans = ({navigation}: any) => {
                       lineHeight: 20,
                       color: AppColor.SecondaryTextColor,
                     }}>
-                    workout plan for you.
+                    {translate('preparingLine2')}
                   </Text>
                 </View>
               </View>
@@ -1094,7 +1095,7 @@ const MyPlans = ({navigation}: any) => {
                     lineHeight: 20,
                     color: AppColor.PrimaryTextColor,
                   }}>
-                  Congratulations!
+                  {translate('readyTitle')}
                 </Text>
                 <Text
                   style={{
@@ -1104,7 +1105,7 @@ const MyPlans = ({navigation}: any) => {
                     color: AppColor.SecondaryTextColor,
                     marginTop: 20,
                   }}>
-                  Your perfect workout plan is ready.
+                  {translate('readySubtitle')}
                 </Text>
                 <TouchableOpacity
                   onPress={() => {
@@ -1127,7 +1128,7 @@ const MyPlans = ({navigation}: any) => {
                       fontWeight: '500',
                       lineHeight: 18,
                     }}>
-                    Continue Workout
+                    {translate('continueWorkout')}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -1287,7 +1288,8 @@ const MyPlans = ({navigation}: any) => {
           emptyComponent()
         )}
 
-        {enteredCurrentEvent &&
+        {
+        enteredCurrentEvent &&
           coins[WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1]] ==
             null &&
           WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1] ==

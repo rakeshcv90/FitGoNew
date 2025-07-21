@@ -1,14 +1,16 @@
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
-import {localImage} from '../../Component/Image';
-import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
-import {AppColor, Fonts} from '../../Component/Color';
+import { View, Text, StyleSheet, Image, TouchableOpacity, SafeAreaView} from 'react-native';
+import React, { useState } from 'react';
+import { localImage } from '../../Component/Image';
+import { DeviceHeigth, DeviceWidth } from '../../Component/Config';
+import { AppColor, Fonts } from '../../Component/Color';
 import NewButton from '../../Component/NewButton';
-import {FlatList} from 'react-native';
+import { FlatList } from 'react-native';
 import WorkoutsDescription from '../NewWorkouts/WorkoutsDescription';
 import AnimatedLottieView from 'lottie-react-native';
-import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
+import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
 import { translate } from '../Translation/TranslationService';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 export const ExerciseComponetWithoutEvents = ({
   dayObject,
   day,
@@ -22,204 +24,127 @@ export const ExerciseComponetWithoutEvents = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
-  return (
-    <View>
-      {!WeekStatus.includes(day) ? (
-        <>
-          <View style={styles.View1}>
-            <View style={[styles.View2, {justifyContent: 'flex-start'}]}>
-              <Image
-                source={{uri: dayObject?.image}}
-                style={styles.img}
-                resizeMode="contain"
-                defaultSource={localImage?.NOWORKOUT}
-              />
-              <View style={styles.View3}>
-                <Text style={styles.txt1}>
-                  {dayObject?.title ?? 'Power hour'}
-                </Text>
-                <Text style={styles.txt2}>{day ?? 'Monday'}</Text>
-              </View>
-            </View>
-            <NewButton
-              title={translate('startworkout')}
-              onPress={onPress}
-              withAnimation={overExerciseVisible}
-              download={download}
-              isClicked={isClicked}
-              setIsClicked={setIsClicked}
-              fontSize={20}
-              bR={50}
-              buttonColor={AppColor.RED}
-            />
-          </View>
-          <View style={styles.View1}>
-            <Text
-              style={[
-                styles.txt3,
-                {
-                  width: DeviceWidth * 0.9,
-                  alignSelf: 'center',
-                  marginVertical: 15,
-                },
-              ]}>
-              {dayObject?.exercises?.length
-                ? dayObject?.exercises?.length + ' Exercises'
-                : '0 Exercises'}
-            </Text>
-            <FlatList
-              data={dayObject?.exercises}
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={{
-                paddingBottom:
-                  DeviceHeigth <= 667
-                    ? DeviceHeigth * 0.5
-                    : DeviceHeigth * 0.42,
-              }}
-              style={{
-                width: DeviceWidth * 0.9,
-                alignSelf: 'center',
-              }}
-              keyExtractor={item => item?.exercise_id?.toString()}
-              renderItem={({item, index}) => {
-                const time = parseInt(item?.exercise_rest.split(' ')[0]);
-                return (
-                  <View key={index}>
-                    <TouchableOpacity
-                      style={[styles.button, {justifyContent: 'flex-start'}]}
-                      onPress={() => {
-                        console.log("fffffff",item)
-                        setData(item);
-                        setOpen(true);
-                      }}>
-                      <View style={[styles.View4]}>
-                        <Image
-                          source={{uri: item?.exercise_image_link}}
-                          style={{height: 70, width: 70}}
-                          resizeMode="contain"
-                          defaultSource={localImage.NOWORKOUT}
-                        />
-                      </View>
-                      <View style={{marginLeft: 15}}>
-                        <Text style={[styles.txt3, {marginVertical: 6}]}>
-                          {item?.exercise_title}
-                        </Text>
-                        <View
-                          style={{flexDirection: 'row', alignItems: 'center'}}>
-                          <Text style={styles.txt2}>
-                            {'Time - ' +
-                              '1 x ' +
-                              (time > 60
-                                ? Math.floor(time / 60) + ' min'
-                                : time + ' sec')}{' '}
-                            |{' '}
-                          </Text>
-                          <Text style={styles.txt2}>
-                            {'Set - ' + item?.exercise_sets}
-                          </Text>
-                        </View>
-                      </View>
-                    </TouchableOpacity>
-                    {dayObject?.exercises.length - 1 == index ? null : (
-                      <View style={styles.border} />
-                    )}
-                  </View>
-                );
-              }}
-            />
-          </View>
-          <WorkoutsDescription data={data} open={open} setOpen={setOpen} id={data.exercise_id} />
-        </>
-      ) : (
-        <>
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              paddingVertical: 5,
-              borderWidth: 1,
-              borderColor: AppColor.RED,
-              borderRadius: 15,
-              alignSelf: 'center',
-              marginTop: DeviceHeigth * 0.05,
-              width: DeviceWidth * 0.9,
-            }}>
-            <AnimatedLottieView
-              source={require('../../Icon/Images/RedTick.json')}
-              speed={1}
-              autoPlay
-              loop
+  const insets = useSafeAreaInsets();
+
+const renderExerciseItem = ({ item, index }) => {
+    const time = parseInt(item?.exercise_rest?.split(' ')[0]) || 0;
+
+    return (
+      <View key={index}>
+        <TouchableOpacity
+          style={[styles.button, { justifyContent: 'flex-start' }]}
+          onPress={() => {
+            setData(item);
+            setOpen(true);
+          }}>
+          <View style={styles.View4}>
+            <Image
+              source={{ uri: item?.exercise_image_link }}
+              style={{ height: 70, width: 70 }}
               resizeMode="contain"
-              style={{
-                width: DeviceWidth * 0.2,
-                height: DeviceHeigth * 0.2,
-              }}
+              defaultSource={localImage.NOWORKOUT}
             />
-            <Text
-              style={{
-                fontFamily: Fonts.MONTSERRAT_BOLD,
-                fontSize: 18,
-                fontWeight: '600',
-                top: -20,
-                color: AppColor.LITELTEXTCOLOR,
-                lineHeight: 30,
-              }}>
-              Workout Completed
+          </View>
+          <View style={{ marginLeft: 15 }}>
+            <Text style={[styles.txt3, { marginVertical: 6 }]}>
+              {item?.exercise_title}
             </Text>
-            <Text
-              style={{
-                fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                fontSize: 14,
-                fontWeight: '500',
-                top: -10,
-                color: AppColor.LITELTEXTCOLOR,
-                lineHeight: 20,
-              }}>
-              {day}
-            </Text>
-            <View
-              style={{
-                width: DeviceWidth * 0.8,
-                height: 1,
-                backgroundColor: 'lightgrey',
-                marginTop: DeviceWidth * 0.05,
-              }}
-            />
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginVertical: DeviceWidth * 0.05,
-              }}>
-              <Image
-                source={{
-                  uri: getWeeklyPlansData[day]?.image,
-                }}
-                // onLoad={() => setIsLoading(false)}
-                style={{
-                  height: 40,
-                  width: 40,
-                  alignSelf: 'center',
-                  marginRight: 20,
-                }}
-                resizeMode="contain"
-              />
-              <Text
-                style={{
-                  fontFamily: Fonts.MONTSERRAT_BOLD,
-                  fontSize: 16,
-                  fontWeight: '700',
-                  color: AppColor.RED,
-                  lineHeight: 30,
-                }}>
-                {getWeeklyPlansData[day]?.title}
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={styles.txt2}>
+                {'Time - 1 x ' +
+                  (time > 60
+                    ? `${Math.floor(time / 60)} min`
+                    : `${time} sec`)}{' '}
+                |{' '}
+              </Text>
+              <Text style={styles.txt2}>
+                {'Set - ' + item?.exercise_sets}
               </Text>
             </View>
           </View>
-        </>
-      )}
-    </View>
+        </TouchableOpacity>
+        {index !== dayObject.exercises.length - 1 && <View style={styles.border} />}
+      </View>
+    );
+  };
+
+  if (WeekStatus.includes(day)) {
+    return (
+      <SafeAreaView style={styles.safe}>
+        <View style={styles.completedWrapper}>
+          <Text style={styles.completedText}>Workout Completed</Text>
+          <Text style={styles.completedDay}>{day}</Text>
+          <Image
+            source={{ uri: getWeeklyPlansData[day]?.image }}
+            style={{ height: 40, width: 40 }}
+            resizeMode="contain"
+          />
+          <Text style={styles.txt1}>{getWeeklyPlansData[day]?.title}</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  return (
+    <SafeAreaView style={styles.safe}>
+      <FlatList
+        data={dayObject?.exercises}
+        ListHeaderComponent={
+          <>
+            {/* Header Info */}
+            <View style={styles.View1}>
+              <View style={[styles.View2, { justifyContent: 'flex-start' }]}>
+                <Image
+                  source={{ uri: dayObject?.image }}
+                  style={styles.img}
+                  resizeMode="contain"
+                  defaultSource={localImage?.NOWORKOUT}
+                />
+                <View style={styles.View3}>
+                  <Text style={styles.txt1}>{dayObject?.title ?? 'Power hour'}</Text>
+                  <Text style={styles.txt2}>{day ?? 'Monday'}</Text>
+                </View>
+              </View>
+              <NewButton
+                title={translate('startworkout')}
+                onPress={onPress}
+                withAnimation={overExerciseVisible}
+                download={download}
+                isClicked={isClicked}
+                setIsClicked={setIsClicked}
+                fontSize={20}
+                bR={50}
+                buttonColor={AppColor.RED}
+              />
+            </View>
+
+            {/* Exercises Title */}
+            <View style={styles.View1}>
+              <Text
+                style={[
+                  styles.txt3,
+                  {
+                    width: DeviceWidth * 0.9,
+                    alignSelf: 'center',
+                    marginVertical: 15,
+                  },
+                ]}>
+                {`${dayObject?.exercises?.length || 0} ${translate('exercises')}`}
+              </Text>
+            </View>
+          </>
+        }
+        renderItem={renderExerciseItem}
+        keyExtractor={(item, index) => item?.exercise_id?.toString() || index.toString()}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingBottom:
+            insets.bottom + 170,
+          paddingHorizontal: DeviceWidth * 0.05,
+        }}
+      />
+      <WorkoutsDescription data={data} open={open} setOpen={setOpen} id={data.exercise_id} />
+    </SafeAreaView>
   );
 };
 export const ExerciseComponentWithEvent = ({
@@ -237,241 +162,202 @@ export const ExerciseComponentWithEvent = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
+  const insets = useSafeAreaInsets();
+
+  const renderExerciseItem = ({ item, index }) => {
+    const time = parseInt(item?.exercise_rest?.split(' ')[0]) || 0;
+    return (
+      <View key={index}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            setData(item);
+            setOpen(true);
+          }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={styles.View4}>
+              <Image
+                source={{ uri: item?.exercise_image_link || '' }}
+                style={{ height: 70, width: 70 }}
+                resizeMode="contain"
+                defaultSource={localImage.NOWORKOUT}
+              />
+            </View>
+            <View style={{ marginLeft: 15, width: DeviceWidth * 0.55 }}>
+              <Text style={styles.txt3}>{item?.exercise_title}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={styles.txt2}>
+                  {'Time - 1 x ' +
+                    (time > 60 ? `${Math.floor(time / 60)} min` : `${time} sec`)}{' '}
+                  |{' '}
+                </Text>
+                <Text style={styles.txt2}>{'Set - ' + item?.exercise_sets}</Text>
+              </View>
+            </View>
+          </View>
+        </TouchableOpacity>
+        {index !== dayObject?.exercises.length - 1 && (
+          <View style={styles.border} />
+        )}
+      </View>
+    );
+  };
 
   return (
-    <View>
+    <SafeAreaView style={{ flex: 1, backgroundColor: AppColor.WHITE }}>
       {dayWiseCoins[day] == null || dayWiseCoins[day] < 0 ? (
         <>
-          <View style={styles.View1}>
-            <View style={styles.View2}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Image
-                  source={{uri: dayObject?.image}}
-                  style={styles.img}
-                  resizeMode="contain"
-                />
-                <View style={styles.View3}>
-                  <Text style={styles.txt1}>
-                    {dayObject?.title ?? 'Power hour'}
-                  </Text>
-                  <Text style={styles.txt2}>{day ?? '--'}</Text>
-                </View>
-              </View>
-              {/* <TouchableOpacity
-              style={{}}
-              onPress={() => {
-                AnalyticsConsole(`O_EWS`);
-                navigation.navigate('AddWorkouts', {
-                  dayExercises: dayObject?.exercises,
-                  day: day,
-                  image: dayObject?.image,
-                  title: dayObject?.title,
-                });
-              }}>
-              {day == WeekArray[currentDay] ? (
-                <Image source={localImage.EditPen} style={styles.edit} />
-              ) : null}
-            </TouchableOpacity> */}
-            </View>
-            {day == WeekArray[currentDay] ? (
-              <NewButton
-                title={translate('startworkout')}
-                onPress={onPress}
-                withAnimation={overExerciseVisible}
-                download={download}
-                fontSize={20}
-                bR={50}
-                buttonColor={AppColor.RED}
-                ButtonWidth={DeviceWidth * 0.8}
-              />
-            ) : null}
-          </View>
-          <View style={styles.View1}>
-            <Text
-              style={[
-                styles.txt3,
-                {
-                  width: DeviceWidth * 0.9,
-                  alignSelf: 'center',
-                  marginVertical: 15,
-                },
-              ]}>
-              {dayObject?.exercises?.length
-                ? dayObject?.exercises?.length + ' Exercises'
-                : '10 Exercises'}
-            </Text>
-            <FlatList
-              data={dayObject?.exercises}
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={{
-                paddingBottom:
-                  DeviceHeigth <= 667
-                    ? DeviceHeigth * 0.5
-                    : DeviceHeigth * 0.42,
-              }}
-              style={{
-                width: DeviceWidth * 0.9,
-                alignSelf: 'center',
-                // marginBottom: DeviceHeigth * 0.35,
-              }}
-              keyExtractor={item => item?.exercise_id?.toString()}
-              renderItem={({item, index}) => {
-                const time = parseInt(item?.exercise_rest.split(' ')[0]);
-                return (
-                  <View key={index}>
-                    <TouchableOpacity
-                      style={styles.button}
-                      onPress={() => {
-                        setData(item);
-                        setOpen(true);
-                      }}>
-                      <View
-                        style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <View style={styles.View4}>
-                          <Image
-                            source={{uri: item?.exercise_image_link}}
-                            style={{height: 70, width: 70}}
-                            resizeMode="contain"
-                            defaultSource={localImage.NOWORKOUT}
-                          />
-                        </View>
-                        <View
-                          style={{marginLeft: 15, width: DeviceWidth * 0.55}}>
-                          <Text style={[styles.txt3]}>
-                            {item?.exercise_title}
-                          </Text>
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              alignItems: 'center',
-                            }}>
-                            <Text style={styles.txt2}>
-                              {'Time - ' +
-                                '1 x ' +
-                                (time > 60
-                                  ? Math.floor(time / 60) + ' min'
-                                  : time + ' sec')}{' '}
-                              |{' '}
-                            </Text>
-                            <Text style={styles.txt2}>
-                              {'Set - ' + item?.exercise_sets}
-                            </Text>
-                          </View>
-                        </View>
+          <FlatList
+            data={dayObject?.exercises}
+            ListHeaderComponent={
+              <>
+                <View style={styles.View1}>
+                  <View style={styles.View2}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <Image
+                        source={{ uri: dayObject?.image }}
+                        style={styles.img}
+                        resizeMode="contain"
+                      />
+                      <View style={styles.View3}>
+                        <Text style={styles.txt1}>
+                          {dayObject?.title ?? 'Power hour'}
+                        </Text>
+                        <Text style={styles.txt2}>{day ?? '--'}</Text>
                       </View>
-                    </TouchableOpacity>
-                    {dayObject?.exercises.length - 1 == index ? null : (
-                      <View style={styles.border} />
-                    )}
+                    </View>
                   </View>
-                );
-              }}
-            />
-          </View>
+                  {day === WeekArray[currentDay] && (
+                    <NewButton
+                      title={translate('startworkout')}
+                      onPress={onPress}
+                      withAnimation={overExerciseVisible}
+                      download={download}
+                      fontSize={20}
+                      bR={50}
+                      buttonColor={AppColor.RED}
+                      ButtonWidth={DeviceWidth * 0.8}
+                    />
+                  )}
+                </View>
+                <View style={styles.View1}>
+                  <Text
+                    style={[
+                      styles.txt3,
+                      {
+                        width: DeviceWidth * 0.9,
+                        alignSelf: 'center',
+                        marginVertical: 15,
+                      },
+                    ]}>
+                    {`${dayObject?.exercises?.length || 0} ${translate('exercises')}`}
+                  </Text>
+                </View>
+              </>
+            }
+            renderItem={renderExerciseItem}
+            keyExtractor={(item, index) =>
+              item?.exercise_id?.toString() || index.toString()
+            }
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingBottom: insets.bottom + 100,
+              paddingHorizontal: DeviceWidth * 0.05,
+            }}
+          />
           <WorkoutsDescription data={data} open={open} setOpen={setOpen} />
         </>
       ) : (
-        <>
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingVertical: 5,
+            borderColor: AppColor.RED,
+            borderRadius: 15,
+            alignSelf: 'center',
+            marginTop: DeviceHeigth * 0.05,
+            borderWidth: 1,
+            width: DeviceWidth * 0.9,
+          }}>
+          <AnimatedLottieView
+            source={require('../../Icon/Images/RedTick.json')}
+            speed={1}
+            autoPlay
+            loop
+            resizeMode="contain"
+            style={{
+              width: DeviceWidth * 0.2,
+              height: DeviceHeigth * 0.2,
+            }}
+          />
+          <Text
+            style={{
+              fontFamily: Fonts.MONTSERRAT_BOLD,
+              fontSize: 18,
+              fontWeight: '600',
+              top: -20,
+              color: AppColor.LITELTEXTCOLOR,
+              lineHeight: 30,
+            }}>
+            Workout Completed
+          </Text>
+          <Text
+            style={{
+              fontFamily: Fonts.MONTSERRAT_MEDIUM,
+              fontSize: 14,
+              fontWeight: '500',
+              top: -10,
+              color: AppColor.LITELTEXTCOLOR,
+              lineHeight: 20,
+            }}>
+            {day}
+          </Text>
           <View
             style={{
+              width: DeviceWidth * 0.8,
+              height: 1,
+              backgroundColor: 'lightgrey',
+              marginTop: DeviceWidth * 0.05,
+            }}
+          />
+          <View
+            style={{
+              flexDirection: 'row',
               justifyContent: 'center',
               alignItems: 'center',
-              paddingVertical: 5,
-              borderColor: AppColor.RED,
-              borderRadius: 15,
-              alignSelf: 'center',
-              marginTop: DeviceHeigth * 0.05,
-              borderWidth: 1,
-              borderColor: AppColor.RED,
-              borderRadius: 15,
-              width: DeviceWidth * 0.9,
+              marginVertical: DeviceWidth * 0.05,
             }}>
-            <AnimatedLottieView
-              source={require('../../Icon/Images/RedTick.json')}
-              speed={1}
-              autoPlay
-              loop
-              resizeMode="contain"
+            <Image
+              source={
+                getWeeklyPlansData[WeekArray[selectedDay]]?.image == null
+                  ? localImage.NOWORKOUT
+                  : {
+                      uri: getWeeklyPlansData[WeekArray[selectedDay]]?.image,
+                    }
+              }
               style={{
-                width: DeviceWidth * 0.2,
-                height: DeviceHeigth * 0.2,
+                height: 40,
+                width: 40,
+                alignSelf: 'center',
+                marginRight: 25,
               }}
+              resizeMode="contain"
             />
             <Text
               style={{
                 fontFamily: Fonts.MONTSERRAT_BOLD,
-                fontSize: 18,
-                fontWeight: '600',
-                top: -20,
-                color: AppColor.LITELTEXTCOLOR,
+                fontSize: 16,
+                fontWeight: '700',
+                color: AppColor.RED1,
                 lineHeight: 30,
               }}>
-              Workout Completed
+              {getWeeklyPlansData[day]?.title ?? 'Completed'}
             </Text>
-            <Text
-              style={{
-                fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                fontSize: 14,
-                fontWeight: '500',
-                top: -10,
-                color: AppColor.LITELTEXTCOLOR,
-                lineHeight: 20,
-              }}>
-              {day}
-            </Text>
-            <View
-              style={{
-                width: DeviceWidth * 0.8,
-                height: 1,
-                backgroundColor: 'lightgrey',
-                marginTop: DeviceWidth * 0.05,
-              }}
-            />
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginVertical: DeviceWidth * 0.05,
-              }}>
-              <Image
-                // source={{
-                //   uri: getWeeklyPlansData[WeekArray[selectedDay]]?.image,
-                // }}
-                source={
-                  getWeeklyPlansData[WeekArray[selectedDay]]?.image == null
-                    ? localImage.NOWORKOUT
-                    : {
-                        uri: getWeeklyPlansData[WeekArray[selectedDay]]?.image,
-                      }
-                }
-                // onLoad={() => setIsLoading(false)}
-                style={{
-                  height: 40,
-                  width: 40,
-                  alignSelf: 'center',
-                  marginRight: 25,
-                }}
-                resizeMode="contain"
-              />
-
-              <Text
-                style={{
-                  fontFamily: Fonts.MONTSERRAT_BOLD,
-                  fontSize: 16,
-                  fontWeight: '700',
-                  color: AppColor.RED1,
-                  lineHeight: 30,
-                }}>
-                {getWeeklyPlansData[day]?.title != null
-                  ? getWeeklyPlansData[day]?.title
-                  : 'Commpleted'}
-              </Text>
-            </View>
           </View>
-        </>
+        </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
@@ -515,7 +401,7 @@ const styles = StyleSheet.create({
     height: 70,
     width: 70,
   },
-  edit: {height: 23, width: 23, alignItems: 'flex-end'},
+  edit: { height: 23, width: 23, alignItems: 'flex-end' },
   //txts
   txt1: {
     color: AppColor.BLACK,
