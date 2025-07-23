@@ -400,7 +400,7 @@ const CustomMealList = ({navigation, route}) => {
   const createMealPlan = async () => {
     AnalyticsConsole(`Custom_Meal_BUTTON`);
     const url =
-      'https://fitme.cvinfotechserver.com/adserver/public/api/test_create_custom_diet';
+      'https://fitness.appmmc.com/adserver/public/api/test_create_custom_diet';
     if (selectedItems.length <= 0) {
       showMessage({
         message: 'Please select meal',

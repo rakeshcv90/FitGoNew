@@ -71,6 +71,7 @@ export const translations = {
     voiceassistant: 'Voice Assistant',
     musicsound: 'Music Sound',
     displayon: 'Display Always On',
+    displayoff: 'Display Always Off',
     report: 'Report',
     contactus: 'Contact Us',
     privacypolicy: 'Privacy Policy',
@@ -396,9 +397,7 @@ export const translations = {
     pleaseCompleteDay: 'Please complete day',
     workoutUnlock: 'workout to unlock day',
     startDay: "Start Day",
-
-
-
+    topRecipe: "Top Recipes",
   },
   hi: {
     intro1title: 'अपना फिटनेस का सफर खुद तय करें!',
@@ -476,6 +475,7 @@ export const translations = {
     voiceassistant: 'Assistente de Voz',
     musicsound: 'Som da Música',
     displayon: 'Tela Sempre Ativa',
+    displayoff: 'Tela Sempre Desligada',
     report: 'Relatar',
     contactus: 'Fale Conosco',
     privacypolicy: 'Política de Privacidade',
@@ -804,5 +804,6 @@ export const translations = {
     pleaseCompleteDay: 'Conclua o treino do dia',
     workoutUnlock: 'para desbloquear o dia',
     startDay: "Iniciar Dia",
+    topRecipe: "Receitas Principais",
   },
 };

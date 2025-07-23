@@ -12,16 +12,16 @@ import {
   StatusBar,
   BackHandler,
 } from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {AppColor, Fonts} from '../../Component/Color';
+import React, { useCallback, useEffect, useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { AppColor, Fonts } from '../../Component/Color';
 
-import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
-import {useDispatch, useSelector} from 'react-redux';
+import { DeviceHeigth, DeviceWidth, NewAppapi } from '../../Component/Config';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import GradientButton from '../../Component/GradientButton';
-import {useFocusEffect, useIsFocused} from '@react-navigation/native';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {
   setCount,
@@ -30,10 +30,10 @@ import {
   setSubscriptiomModal,
   setVideoLocation,
 } from '../../Component/ThemeRedux/Actions';
-import {localImage} from '../../Component/Image';
+import { localImage } from '../../Component/Image';
 import WorkoutDescription from '../NewWorkouts/WorkoutsDescription';
 import VersionNumber from 'react-native-version-number';
-import {showMessage} from 'react-native-flash-message';
+import { showMessage } from 'react-native-flash-message';
 
 import analytics from '@react-native-firebase/analytics';
 
@@ -55,12 +55,12 @@ import RNFetchBlob from 'rn-fetch-blob';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import OverExerciseModal from '../../Component/Utilities/OverExercise';
-import {ArrowLeft} from '../../Component/Utilities/Arrows/Arrow';
+import { ArrowLeft } from '../../Component/Utilities/Arrows/Arrow';
 import { translate } from '../Translation/TranslationService';
 
 const format = 'hh:mm:ss';
-const OneDay = ({navigation, route}: any) => {
-  const {data, dayData, day, trainingCount, challenge} = route.params;
+const OneDay = ({ navigation, route }: any) => {
+  const { data, dayData, day, trainingCount, challenge } = route.params;
   const [exerciseData, setExerciseData] = useState([]);
   const [currentExercise, setCurrentExercise] = useState([]);
   const [trackerData, setTrackerData] = useState([]);
@@ -103,7 +103,7 @@ const OneDay = ({navigation, route}: any) => {
       data?.days['day_' + day] &&
         data?.days['day_' + day]?.exercises &&
         setExerciseData(data?.days['day_' + day]?.exercises);
-    console.log('get exercise data.... ',exerciseData, currentExercise);
+      console.log('get exercise data.... ', exerciseData, currentExercise);
       setForLoading(false);
     } else {
       try {
@@ -121,7 +121,7 @@ const OneDay = ({navigation, route}: any) => {
           setExerciseData(res.data);
           setForLoading(false);
           setOpen(true);
-    console.log('get exercise data... ',exerciseData, currentExercise);
+          console.log('get exercise data... ', exerciseData, currentExercise);
         } else {
           setLoader(false);
           data?.days['day_' + day] &&
@@ -129,7 +129,7 @@ const OneDay = ({navigation, route}: any) => {
             setExerciseData(data?.days['day_' + day]?.exercises);
           setForLoading(false);
           setOpen(true);
-    console.log('get exercise data.. ',exerciseData);
+          console.log('get exercise data.. ', exerciseData);
         }
       } catch (error) {
         setLoader(false);
@@ -198,7 +198,7 @@ const OneDay = ({navigation, route}: any) => {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-        lang:'en',
+        lang: 'en',
       });
 
       if (res?.data?.msg == 'Please update the app to the latest version.') {
@@ -207,7 +207,7 @@ const OneDay = ({navigation, route}: any) => {
           type: 'danger',
           animationDuration: 500,
           floating: true,
-          icon: {icon: 'auto', position: 'left'},
+          icon: { icon: 'auto', position: 'left' },
         });
       } else if (res.data?.user_details) {
         setTrackerData(res.data?.user_details);
@@ -273,8 +273,8 @@ const OneDay = ({navigation, route}: any) => {
             ? NewAppapi.CURRENT_DAY_CHALLENGE_EXERCISE
             : NewAppapi.CURRENT_DAY_EXERCISE,
           method: 'Post',
-          data: {user_details: datas,type: 'day'},
-          lang:'en'
+          data: { user_details: datas, type: 'day' },
+          lang: 'en'
         });
         if (res.data) {
           if (
@@ -322,7 +322,7 @@ const OneDay = ({navigation, route}: any) => {
     });
   };
 
-  const Box = ({selected, item, index}: any) => {
+  const Box = ({ selected, item, index }: any) => {
     const [isLoading, setIsLoading] = useState(true);
     const time = parseInt(item?.exercise_rest.split(' ')[0]);
     return (
@@ -339,7 +339,7 @@ const OneDay = ({navigation, route}: any) => {
             console.log('item data ... ', item);
             setVisible(true);
           }}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <View
               style={{
                 height: 80,
@@ -351,7 +351,7 @@ const OneDay = ({navigation, route}: any) => {
                 borderColor: '#D9D9D9',
               }}>
               <Image
-                style={{height: 75, width: 75, alignSelf: 'center'}}
+                style={{ height: 75, width: 75, alignSelf: 'center' }}
                 source={{
                   uri:
                     item.exercise_image_link != ''
@@ -370,14 +370,14 @@ const OneDay = ({navigation, route}: any) => {
                       Platform.OS == 'android'
                         ? DeviceHeigth * 0.05
                         : DeviceHeigth > 667
-                        ? DeviceHeigth * 0.05
-                        : DeviceHeigth * 0.06,
+                          ? DeviceHeigth * 0.05
+                          : DeviceHeigth * 0.06,
                     marginTop:
                       Platform.OS == 'android'
                         ? -DeviceHeigth * 0.035
                         : DeviceHeigth > 667
-                        ? -DeviceHeigth * 0.03
-                        : -DeviceHeigth * 0.035,
+                          ? -DeviceHeigth * 0.03
+                          : -DeviceHeigth * 0.035,
                   }}
                   resizeMode="contain"
                 />
@@ -390,7 +390,7 @@ const OneDay = ({navigation, route}: any) => {
               }}>
               <View>
                 <Text style={styles.small2}>{item?.exercise_title}</Text>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Text style={styles.small}>
                     {'Time - ' +
                       '1 x ' +
@@ -431,7 +431,7 @@ const OneDay = ({navigation, route}: any) => {
   const Box2 = () => {
     return (
       <View style={styles.box}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <View
             style={{
               height: 80,
@@ -458,13 +458,13 @@ const OneDay = ({navigation, route}: any) => {
             }}>
             <View>
               <ShimmerPlaceholder
-                style={{height: 10, width: 100, alignSelf: 'center'}}
+                style={{ height: 10, width: 100, alignSelf: 'center' }}
                 autoRun
                 ref={avatarRef}
               />
 
               <ShimmerPlaceholder
-                style={{height: 10, width: 100, alignSelf: 'center'}}
+                style={{ height: 10, width: 100, alignSelf: 'center' }}
                 autoRun
                 ref={avatarRef}
               />
@@ -474,7 +474,7 @@ const OneDay = ({navigation, route}: any) => {
 
         <View style={{}}>
           <ShimmerPlaceholder
-            style={{height: 20, width: 40, alignSelf: 'center', top: 10}}
+            style={{ height: 20, width: 40, alignSelf: 'center', top: 10 }}
             autoRun
             ref={avatarRef}
           />
@@ -627,8 +627,8 @@ const OneDay = ({navigation, route}: any) => {
                 dispatch(setSubscriptiomModal(false));
               }}>
               <LinearGradient
-                start={{x: 0, y: 1}}
-                end={{x: 1, y: 0}}
+                start={{ x: 0, y: 1 }}
+                end={{ x: 1, y: 0 }}
                 colors={['#D5191A', '#941000']}
                 style={[
                   styles.buttonPaddo,
@@ -638,14 +638,14 @@ const OneDay = ({navigation, route}: any) => {
                 ]}>
                 <Image
                   source={require('../../Icon/Images/NewImage/vip.png')}
-                  style={{width: 25, height: 25}}
+                  style={{ width: 25, height: 25 }}
                   tintColor={AppColor.WHITE}
                 />
-                <Text style={[styles.buttonText, {left: 10}]}>Subscribe</Text>
+                <Text style={[styles.buttonText, { left: 10 }]}>Subscribe</Text>
               </LinearGradient>
             </TouchableOpacity>
-            <View style={{marginVertical: 10}}>
-              <Text style={[styles.buttonText, {color: '#505050'}]}>OR</Text>
+            <View style={{ marginVertical: 10 }}>
+              <Text style={[styles.buttonText, { color: '#505050' }]}>OR</Text>
             </View>
             <TouchableOpacity
               style={[
@@ -660,8 +660,8 @@ const OneDay = ({navigation, route}: any) => {
                 dispatch(setSubscriptiomModal(false));
               }}>
               <LinearGradient
-                start={{x: 0, y: 1}}
-                end={{x: 1, y: 0}}
+                start={{ x: 0, y: 1 }}
+                end={{ x: 1, y: 0 }}
                 colors={['#D9D9D9', '#D9D9D9']}
                 style={[
                   styles.buttonPaddo2,
@@ -671,9 +671,9 @@ const OneDay = ({navigation, route}: any) => {
                 ]}>
                 <Image
                   source={require('../../Icon/Images/NewImage/ads.png')}
-                  style={{width: 25, height: 25}}
+                  style={{ width: 25, height: 25 }}
                 />
-                <Text style={[styles.buttonText, {color: '#505050', left: 10}]}>
+                <Text style={[styles.buttonText, { color: '#505050', left: 10 }]}>
                   Watch Ads to unlock Workouts
                 </Text>
               </LinearGradient>
@@ -684,7 +684,7 @@ const OneDay = ({navigation, route}: any) => {
     );
   };
   return (
-    <View style={{flex: 1, backgroundColor: AppColor.WHITE}}>
+    <View style={{ flex: 1, backgroundColor: AppColor.WHITE }}>
       <StatusBar
         barStyle={'light-content'}
         translucent={true}
@@ -692,15 +692,15 @@ const OneDay = ({navigation, route}: any) => {
       />
       <ImageBackground
         translucent={true}
-        style={{width: '100%', height: DeviceHeigth * 0.4}}
+        style={{ width: '100%', height: DeviceHeigth * 0.4 }}
         resizeMode="cover"
         source={{
           uri:
             getStoreVideoLoc[data?.workout_title + 'Image'] != undefined
               ? 'file://' + getStoreVideoLoc[data?.workout_title + 'Image']
               : // : data?.workout_image_link != ''
-                // ? data?.workout_image_link
-                data?.workout_image,
+              // ? data?.workout_image_link
+              data?.workout_image,
         }}
       />
       <View
@@ -722,14 +722,14 @@ const OneDay = ({navigation, route}: any) => {
                 type: 'info',
                 animationDuration: 500,
                 floating: true,
-                icon: {icon: 'auto', position: 'left'},
+                icon: { icon: 'auto', position: 'left' },
               });
             } else {
               navigation.goBack();
               setOpen(false);
             }
           }}
-          style={{marginTop: DeviceWidth * 0.04}}>
+          style={{ marginTop: DeviceWidth * 0.04 }}>
           {/* <AntDesign name={'arrowleft'} size={25} color={AppColor.WHITE} /> */}
           <ArrowLeft fillColor={AppColor.WHITE} />
         </TouchableOpacity>
@@ -770,21 +770,21 @@ const OneDay = ({navigation, route}: any) => {
         {forLoading ? (
           <FlatList
             data={simerData}
-            renderItem={({item, index}: any) => <Box2 />}
-            contentContainerStyle={{flexGrow: 1}}
+            renderItem={({ item, index }: any) => <Box2 />}
+            contentContainerStyle={{ flexGrow: 1 }}
             showsVerticalScrollIndicator={false}
-            style={{marginBottom: 100, flex: 1}}
+            style={{ marginBottom: 100, flex: 1 }}
           />
         ) : (
           <FlatList
             data={exerciseData}
-            renderItem={({item, index}: any) => (
+            renderItem={({ item, index }: any) => (
               <Box selected={-1} index={index + 1} item={item} key={index} />
             )}
             ListEmptyComponent={emptyComponent}
-            contentContainerStyle={{flexGrow: 1}}
+            contentContainerStyle={{ flexGrow: 1 }}
             showsVerticalScrollIndicator={false}
-            style={{marginBottom: 100, flex: 1}}
+            style={{ marginBottom: 100, flex: 1 }}
           />
         )}
 
@@ -831,13 +831,15 @@ const OneDay = ({navigation, route}: any) => {
         />
       </View>
       {loader && <ActivityLoader visible={loader} />}
-  
-      <WorkoutDescription
-        data={currentExercise}
-        open={visible}
-        setOpen={setVisible}
-        id = {currentExercise}
-      />
+
+      {visible && currentExercise && (
+        <WorkoutDescription
+          data={currentExercise}
+          open={visible}
+          setOpen={setVisible}
+          id={currentExercise?.exercise_id}
+        />
+      )}
       <PaddoMeterPermissionModal />
       <OverExerciseModal
         setOverExerciseVisible={setOverExerciseVisible}
@@ -866,14 +868,14 @@ const styles = StyleSheet.create({
     ...Platform.select({
       ios: {
         shadowColor: 'rgba(0, 0, 0, 0.6)',
-        shadowOffset: {width: 0, height: 1},
+        shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 5,
         // shadowRadius: 10,
       },
       android: {
         elevation: 10,
         shadowColor: 'rgba(0, 0, 0, 0.6)',
-        shadowOffset: {width: 5, height: 5},
+        shadowOffset: { width: 5, height: 5 },
         shadowOpacity: 0.9,
         // shadowRadius: 10,
       },
@@ -937,7 +939,7 @@ const styles = StyleSheet.create({
     // shadowColor: 'rgba(0, 0, 0, 1)',
     ...Platform.select({
       ios: {
-        shadowOffset: {width: 0, height: 2},
+        shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.3,
         // shadowRadius: 4,
       },
@@ -960,7 +962,7 @@ const styles = StyleSheet.create({
     shadowColor: 'rgba(0, 0, 0, 1)',
     ...Platform.select({
       ios: {
-        shadowOffset: {width: 0, height: 2},
+        shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.3,
         // shadowRadius: 4,
       },

@@ -50,7 +50,7 @@ const WorkoutsDescription = ({ data, open, setOpen, id }: any) => {
     console.log('descrppp ....', id, ' / ', getUserDataDetails?.id, '/', VersionNumber.appVersion);
 
     if (id !== null && id !== undefined) {
-      console.log('descrp ....', id, ' / ', getUserDataDetails?.id, '/', VersionNumber.appVersion);
+      console.log('descrp ....', id, ' / ', getUserDataDetails?.id, '/', VersionNumber.appVersion, lang);
       const res = await axios({
         url: NewAppapi.GET_SINGLE_EXERCISE,
         method: 'GET',
@@ -116,11 +116,11 @@ const WorkoutsDescription = ({ data, open, setOpen, id }: any) => {
   }, [open, getSoundOffOn]);
 
   useEffect(() => {
-    console.log('id check ',id, data?.exercise_video);
+    console.log('id check ',id, data?.exercise_video, data);
     if (id !== null && id !== undefined) {
       getExerciseDescription();
     }
-  }, [id]);
+  }, []);
   const tag = {
     p: {
       color: '#3A4750',

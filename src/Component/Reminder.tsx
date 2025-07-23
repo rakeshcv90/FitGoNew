@@ -206,9 +206,10 @@ const Reminder = ({
               style={{
                 flexDirection: 'row',
                 height: '70%',
+                
               }}>
               <Picker
-                style={{flex: 1}}
+                style={{flex: 1,}}
                 selectedValue={hours}
                 dropdownIconColor={AppColor.BLACK}
                 onValueChange={(itemValue: any, itemIndex) => {
@@ -219,7 +220,8 @@ const Reminder = ({
                     label={hr}
                     value={hr}
                     color={AppColor.BLACK}
-                    style={{backgroundColor: AppColor.WHITE}}
+                    style={{backgroundColor: AppColor.WHITE,}}
+                    
                   />
                 ))}
               </Picker>

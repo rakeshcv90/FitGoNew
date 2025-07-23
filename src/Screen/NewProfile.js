@@ -606,14 +606,14 @@ const NewProfile = ({ navigation }) => {
     if (!value) {
       showMessage({
         message:
-          name == 'Screen' ? 'Display always on.' : isSound + ' unmuted.',
+          name == 'Screen' ? translate('displayon') : isSound + ' unmuted.',
         type: 'success',
         animationDuration: 500,
         floating: true,
       });
     } else {
       showMessage({
-        message: name == 'Screen' ? 'Display always off.' : isSound + ' muted.',
+        message: name == 'Screen' ? translate('displayoff') : isSound + ' muted.',
         animationDuration: 500,
         type: 'danger',
         floating: true,

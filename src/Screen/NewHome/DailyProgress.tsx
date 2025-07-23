@@ -13,7 +13,35 @@ import moment from 'moment';
 import {historyData} from '../../API/responseTypes';
 import { translate } from '../Translation/TranslationService';
 
-const arr = [
+const eventStatic = {
+  total_calories: 0,
+  total_exercise_count: 0,
+  total_time: 0,
+};
+const normalStatic = {
+  normal_exercises: {
+    exercise_data: [],
+    summary: {
+      formatted_time: '',
+      total_calories: 0,
+      total_exercises: 0,
+      total_time_seconds: 0,
+    },
+  },
+  step_count: {
+    steps: 0,
+    calories: 0,
+    distance: 0,
+  },
+};
+const DailyProgress = ({currentEvent}: any) => {
+  const [eventData, setEventData] = useState(eventStatic);
+  const [normalData, setNormalData] = useState<historyData>(normalStatic);
+  const getUserDataDetails = useSelector(
+    (state: any) => state.getUserDataDetails,
+  );
+
+  const arr = [
   {
     id: 1,
     val: translate('exercises'),
@@ -36,28 +64,9 @@ const arr = [
     bgColor: '#34C7591F',
   },
 ];
-const eventStatic = {
-  total_calories: 0,
-  total_exercise_count: 0,
-  total_time: 0,
-};
-const normalStatic = {
-  normal_exercises: {
-    exercise_data: [],
-    summary: {
-      formatted_time: '',
-      total_calories: 0,
-      total_exercises: 0,
-      total_time_seconds: 0,
-    },
-  },
-  step_count: {
-    steps: 0,
-    calories: 0,
-    distance: 0,
-  },
-};
+
 const TripView = ({data, val}: {data: (typeof arr)[0]; val: number}) => (
+  console.log('datat of progree ', data),
   <View
     style={[
       {
@@ -79,7 +88,7 @@ const TripView = ({data, val}: {data: (typeof arr)[0]; val: number}) => (
     </View>
     <FitText
       type="SubHeading"
-      value={val ?val + '': '0'}
+      value={val ? val + '': '0'}
       color={AppColor.PrimaryTextColor}
     />
     <FitText
@@ -89,12 +98,6 @@ const TripView = ({data, val}: {data: (typeof arr)[0]; val: number}) => (
     />
   </View>
 );
-const DailyProgress = ({currentEvent}: any) => {
-  const [eventData, setEventData] = useState(eventStatic);
-  const [normalData, setNormalData] = useState<historyData>(normalStatic);
-  const getUserDataDetails = useSelector(
-    (state: any) => state.getUserDataDetails,
-  );
 
   useEffect(() => {
     currentEvent

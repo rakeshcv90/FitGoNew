@@ -18,6 +18,7 @@ import {AppColor, Fonts} from '../../Component/Color';
 import PredefinedStyles from '../../Component/Utilities/PredefineStyles';
 import FitIcon from '../../Component/Utilities/FitIcon';
 import FitText from '../../Component/Utilities/FitText';
+import {translate} from '../Translation/TranslationService';
 
 type Item = {
   diet_calories: string;
@@ -152,7 +153,7 @@ const MealList = ({data}: any) => {
       <View style={{alignSelf: 'flex-start', marginLeft: 20}}>
         <FitText
           type="Heading"
-          value="Top Recipies"
+          value={translate('topRecipe')}
           fontSize={20}
           marginVertical={10}
         />
