@@ -376,7 +376,7 @@ const data = useMemo(() => [
               />
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <ExerciseTime stroke={AppColor.WHITE} />
-                <FitText type="normal" value=" 30 sec" marginTop={2} color={AppColor.WHITE} />
+                <FitText type="normal" value={` 30 ${translate('sec')}`}marginTop={2} color={AppColor.WHITE} />
               </View>
               <TouchableOpacity
                 style={{

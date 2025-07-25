@@ -66,7 +66,7 @@ const DailyProgress = ({currentEvent}: any) => {
 ];
 
 const TripView = ({data, val}: {data: (typeof arr)[0]; val: number}) => (
-  console.log('datat of progree ', data),
+
   <View
     style={[
       {

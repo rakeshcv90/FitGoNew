@@ -266,7 +266,7 @@ const MyPlans = ({navigation}: any) => {
           lang:lang,
         },
       });
-      console.log('data event ....', res, getUserDataDetails?.id)
+      
 
       if (res.data?.msg == 'User not exist.') {
         showMessage({
@@ -1272,11 +1272,14 @@ const MyPlans = ({navigation}: any) => {
                 />
                 <Progress myPlans />
               </View>
+    
               <ExerciseComponetWithoutEvents
                 dayObject={getWeeklyPlansData[WeekArray[selectedDay]]}
                 day={WeekArray[selectedDay]}
                 onPress={handleStart}
                 WeekStatus={WeekStatus}
+
+
                 WeekArray={WeekArray}
                 getWeeklyPlansData={getWeeklyPlansData}
                 download={downloaded}

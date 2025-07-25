@@ -31,8 +31,101 @@ import {
 import {useFocusEffect} from '@react-navigation/native';
 import {red} from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
-import { translate } from '../Translation/TranslationService';
+import {getCurrentLanguage, translate} from '../Translation/TranslationService';
+
+import {LocaleConfig} from 'react-native-calendars';
+
+LocaleConfig.locales['pt'] = {
+  monthNames: [
+    'Janeiro',
+    'Fevereiro',
+    'Março',
+    'Abril',
+    'Maio',
+    'Junho',
+    'Julho',
+    'Agosto',
+    'Setembro',
+    'Outubro',
+    'Novembro',
+    'Dezembro',
+  ],
+  monthNamesShort: [
+    'Jan',
+    'Fev',
+    'Mar',
+    'Abr',
+    'Mai',
+    'Jun',
+    'Jul',
+    'Ago',
+    'Set',
+    'Out',
+    'Nov',
+    'Dez',
+  ],
+  dayNames: [
+    'Domingo',
+    'Segunda-feira',
+    'Terça-feira',
+    'Quarta-feira',
+    'Quinta-feira',
+    'Sexta-feira',
+    'Sábado',
+  ],
+  dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+  today: 'Hoje',
+};
+
+LocaleConfig.locales['en'] = {
+  monthNames: [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ],
+  monthNamesShort: [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ],
+  dayNames: [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ],
+  dayNamesShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+  today: 'Today',
+};
+
+// ✅ Set default language before rendering anything
+
 const NewMonthlyAchievement = ({navigation}) => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    DateWiseData(moment.utc().format('YYYY-MM-DD')); // to get the datewise data
+  }, []);
   const [getDate, setDate] = useState(moment().format('YYYY-MM-DD'));
   const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
   const getBmi = useSelector(state => state.getBmi);
@@ -40,10 +133,10 @@ const NewMonthlyAchievement = ({navigation}) => {
   const [WokoutCalories, setWorkoutCalories] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    DateWiseData(moment.utc().format('YYYY-MM-DD')); // to get the datewise data
-  }, []);
+  const lang = getCurrentLanguage();
+
+  LocaleConfig.defaultLocale = lang === 'pt' ? 'pt' : 'en';
+
   const DateWiseData = async Date1 => {
     const payload = new FormData();
     payload.append('user_id', getUserDataDetails?.id);
@@ -55,7 +148,7 @@ const NewMonthlyAchievement = ({navigation}) => {
         method: 'POST',
         headers: {'Content-Type': 'multipart/form-data'},
         data: payload,
-        lang:'en',
+        lang: 'en',
       });
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
@@ -165,7 +258,9 @@ const NewMonthlyAchievement = ({navigation}) => {
                   paddingHorizontal: 10,
                   alignItems: 'center',
                 }}>
-                <Text style={styles.txt4}>{translate('weight')}: {getBmi?.userWeight}</Text>
+                <Text style={styles.txt4}>
+                  {translate('weight')}: {getBmi?.userWeight}
+                </Text>
                 <View
                   style={{
                     height: 20,
@@ -175,7 +270,9 @@ const NewMonthlyAchievement = ({navigation}) => {
                     marginHorizontal: 10,
                   }}
                 />
-                <Text style={styles.txt4}>{translate('height')}: {getBmi?.userHeight}</Text>
+                <Text style={styles.txt4}>
+                  {translate('height')}: {getBmi?.userHeight}
+                </Text>
               </View>
               <View style={{marginTop: 20}}>
                 <BmiMeter getBmi={getBmi?.Bmi} />
@@ -200,7 +297,7 @@ const NewMonthlyAchievement = ({navigation}) => {
                   color: AppColor.BLACK,
                   fontSize: 16,
                 }}>
-                 {translate('bmiUnit')}
+                {translate('bmiUnit')}
               </Text>
               <Text
                 style={{
@@ -249,11 +346,11 @@ const NewMonthlyAchievement = ({navigation}) => {
                 [moment().format('YYYY-MM-DD')]: {
                   marked: true,
                   startingDay: true,
-                  selected:true,
-                  color:AppColor.GRAAY6,
+                  selected: true,
+                  color: AppColor.GRAAY6,
                   endingDay: true,
                   textColor: AppColor.WHITE,
-                  selectedDotColor:AppColor.RED
+                  selectedDotColor: AppColor.RED,
                 },
               }}
               style={[

@@ -111,7 +111,7 @@ const NewBanner = ({
           });
         }
       }
-      console.log('render data ', BArray,' // ',getBanners);
+      
       setBannerArray(BArray);
     },
     [enteredCurrentEvent, enteredUpcomingEvent, getBanners],

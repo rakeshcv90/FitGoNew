@@ -6,26 +6,26 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { AppColor, Fonts } from '../../../../Component/Color';
-import { DeviceHeigth, DeviceWidth } from '../../../../Component/Config';
+import React, {useEffect, useState} from 'react';
+import {AppColor, Fonts} from '../../../../Component/Color';
+import {DeviceHeigth, DeviceWidth} from '../../../../Component/Config';
 import {
   setMusicOnOff,
   setSoundOnOff,
 } from '../../../../Component/ThemeRedux/Actions';
 import FitText from '../../../../Component/Utilities/FitText';
-import { localImage } from '../../../../Component/Image';
-import { useDispatch, useSelector } from 'react-redux';
-import { ExerciseData } from './useExerciseHook';
+import {localImage} from '../../../../Component/Image';
+import {useDispatch, useSelector} from 'react-redux';
+import {ExerciseData} from './useExerciseHook';
 import WorkoutsDescription from '../../WorkoutsDescription';
 import FitToggle from '../../../../Component/Utilities/FitToggle';
 import BottomSheet from 'react-native-easy-bottomsheet';
 import BottomSheetContent from './BottomSheetContent';
 import FitIcon from '../../../../Component/Utilities/FitIcon';
 // import NativeAddTest from '../../../../Component/NativeAd';
-import { BlurView } from '@react-native-community/blur';
-import { ShadowStyle } from '../../../../Component/Utilities/ShadowStyle';
-import { translate } from '../../../Translation/TranslationService';
+import {BlurView} from '@react-native-community/blur';
+import {ShadowStyle} from '../../../../Component/Utilities/ShadowStyle';
+import {translate} from '../../../Translation/TranslationService';
 
 type BottomControlsProps = {
   restStart: boolean;
@@ -72,7 +72,7 @@ const MusicPopup = ({
       visible={openMusic}
       onRequestClose={() => setOpenMusic(false)}
       animationType="slide">
-      <View style={{ backgroundColor: `rgba(0,0,0,0)`, flex: 1 }}>
+      <View style={{backgroundColor: `rgba(0,0,0,0)`, flex: 1}}>
         <BlurView
           style={styles.modalContainer1}
           blurType="dark"
@@ -91,7 +91,7 @@ const MusicPopup = ({
             width: DeviceWidth,
             ...ShadowStyle,
           }}>
-          <View style={[styles.row, { marginVertical: 10 }]}>
+          <View style={[styles.row, {marginVertical: 10}]}>
             <FitText type="Heading" value={translate('soundSetting')} />
             <FitIcon
               onPress={() => setOpenMusic(false)}
@@ -109,10 +109,10 @@ const MusicPopup = ({
                 marginVertical: 10,
                 justifyContent: 'space-between',
               }}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Image
                   source={v.image}
-                  style={{ height: 35, width: 35 }}
+                  style={{height: 35, width: 35}}
                   resizeMode="contain"
                 />
                 <Text
@@ -125,7 +125,7 @@ const MusicPopup = ({
                   {v.name}
                 </Text>
               </View>
-              <View style={{ alignSelf: 'center' }}>
+              <View style={{alignSelf: 'center'}}>
                 <FitToggle
                   key={v.id}
                   value={v.id == 1 ? sound : music}
@@ -194,13 +194,15 @@ const BottomControls = ({
         <View
           style={{
             flexDirection: 'row',
-            justifyContent: 'space-between',
+            justifyContent: 'center',
+            gap: 20,
             alignItems: 'center',
           }}>
           <View
             style={{
               flexDirection: 'row',
-              justifyContent: 'space-between',
+              justifyContent: 'center',
+              gap: 20,
               alignItems: 'center',
               width:
                 DeviceHeigth >= 1024
@@ -208,8 +210,8 @@ const BottomControls = ({
                     ? '70%'
                     : '50%'
                   : isEventPage || allExercise.length <= 1
-                    ? '90%'
-                    : '70%',
+                  ? '90%'
+                  : '70%',
             }}>
             <TouchableOpacity
               onPress={() => setOpenMusic(true)}
@@ -222,26 +224,26 @@ const BottomControls = ({
               }}>
               <Image
                 source={require('../../../../Icon/Images/soundSettings.png')}
-                style={{ marginRight: 5, width: 15, height: 15 }}
+                  style={{width: 25, height: 25}}
               />
-              <FitText
+              {/* <FitText
                 type="normal"
                 // value={!getSoundOffOn ? ' Sound Off' : ' Sound On'}
                 value={translate('soundSetting')}
                 color="#6B7280"
                 fontFamily={Fonts.HELVETICA_REGULAR}
                 lineHeight={30}
-              />
+              /> */}
             </TouchableOpacity>
-            <View
+            {/* <View
               style={{
                 backgroundColor: '#6B7280',
                 width: 1,
                 height: 20,
                 opacity: 0.5,
-                marginRight: 5,
+                // marginRight: 5,
               }}
-            />
+            /> */}
             <TouchableOpacity
               onPress={() => {
                 setOpen(true);
@@ -254,39 +256,39 @@ const BottomControls = ({
               }}>
               <Image
                 source={require('../../../../Icon/Images/InAppRewards/Exercise_Info1.png')}
-                style={{ width: 15, height: 15 }}
+              style={{width: 25, height: 25}}
                 resizeMode="contain"
               />
-              <FitText
+              {/* <FitText
                 type="normal"
-                value= {translate('exerciseInfo')}
+                value= {}
                 color="#6B7280"
                 fontFamily={Fonts.HELVETICA_REGULAR}
                 lineHeight={30}
-              />
+              /> */}
             </TouchableOpacity>
+            {!isEventPage && allExercise.length > 1 && (
+              <TouchableOpacity
+                onPress={() => {
+                  setRestStart(false);
+                  setOpenSheet(true);
+                }}
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 5,
+                  width: 30,
+                  height: 30,
+                  marginVertical: 5,
+                }}>
+                <Image
+                  source={localImage.Exercise_List}
+                  style={{width: 25, height: 25}}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+            )}
           </View>
-          {!isEventPage && allExercise.length > 1 && (
-            <TouchableOpacity
-              onPress={() => {
-                setRestStart(false);
-                setOpenSheet(true);
-              }}
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: 5,
-                width: 30,
-                height: 30,
-                marginVertical: 5,
-              }}>
-              <Image
-                source={localImage.Exercise_List}
-                style={{ width: 15, height: 15 }}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-          )}
         </View>
       )}
 

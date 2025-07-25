@@ -139,7 +139,7 @@ const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
         const Sun = getPurchaseHistory?.currentDay == 0;
         const onPress = () => {
           // AnalyticsConsole(`${route.name}_TAB`);
-          console.log('Tab:', route.name, '| Image Key:', Object.keys(imageSourceMap), '| Source:', imageSource);
+
 
           if (enteredCurrentEvent && route.key?.includes(translate('myplans')) && Sat) {
             showMessage({

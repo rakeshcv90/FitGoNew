@@ -35,6 +35,8 @@ import UpcomingEventModal from '../../Component/Utilities/UpcomingEventModal';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
+import { translate } from '../Translation/TranslationService';
+ 
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -311,7 +313,8 @@ const MeditationDetails = ({navigation, route}) => {
               fontSize: 18,
               alignItems: 'center',
             }}>
-            Categories
+            {translate('categories')}
+            
           </Text>
           <Text
             style={{
@@ -321,7 +324,8 @@ const MeditationDetails = ({navigation, route}) => {
               lineHeight: 20,
               fontSize: 14,
             }}>
-            Looking for something specific?
+          
+              {translate('categoriesSubtitle')}
           </Text>
         </View>
         <View style={styles.meditionBox}>
@@ -360,7 +364,7 @@ const MeditationDetails = ({navigation, route}) => {
               fontSize: 18,
               alignItems: 'center',
             }}>
-            Explore
+                     {translate('explore')}
           </Text>
           <Text
             style={{
@@ -370,7 +374,8 @@ const MeditationDetails = ({navigation, route}) => {
               lineHeight: 20,
               fontSize: 14,
             }}>
-            Start the meditation of your choice.
+           
+             {translate('exploreSubtitle')}
           </Text>
         </View>
         <View style={[styles.meditionBox, {flex: 1}]}>

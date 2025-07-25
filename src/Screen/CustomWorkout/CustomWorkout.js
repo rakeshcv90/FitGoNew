@@ -512,7 +512,7 @@ const CustomWorkout = ({navigation}) => {
               underlineColor="#20202099"
               activeUnderlineColor="#20202099"
               outlineStyle={{borderRadius: 15}}
-              placeholder="Eg: Monday, chest day"
+              placeholder={translate('customplaceholder')}
               isFocused={true}
               style={{
                 marginVertical: 10,

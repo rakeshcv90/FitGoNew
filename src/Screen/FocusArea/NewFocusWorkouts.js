@@ -48,8 +48,8 @@ import OverExerciseModal from '../../Component/Utilities/OverExercise';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import BottomSheet1 from '../../Component/BottomSheet';
-import { CircularProgressBase } from 'react-native-circular-progress-indicator';
-import { translate } from '../Translation/TranslationService';
+import {CircularProgressBase} from 'react-native-circular-progress-indicator';
+import {translate} from '../Translation/TranslationService';
 
 const format = 'hh:mm:ss';
 
@@ -562,7 +562,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                 fontSize: 16,
                 marginBottom: 16,
               }}>
-              {translate('adjust')}
+              {translate('adjustTitle')}
             </Text>
           )}
           <TouchableOpacity
@@ -810,7 +810,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
           <NewHeader1
             header={
               startSelection
-                ? `${selectedExerciseIds?.size} Selected`
+                ? `${selectedExerciseIds?.size} ${translate('selected')}`
                 : route?.params?.focusedPart
             }
             iconSource={require('../../Icon/Images/NewImage2/filter.png')}
@@ -824,7 +824,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
               if (downloaded > 0) {
                 showMessage({
                   message:
-                    'Please wait, downloading in progress. Do not press back.',
+                    translate('messageDownload'),
                   type: 'info',
                   animationDuration: 500,
                   floating: true,
@@ -857,7 +857,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
             }}>
             <Icons name="magnify" size={20} color={'#33333380'} />
             <TextInput
-              placeholder="Search Exercise"
+              placeholder={translate('searchExercise')}
               placeholderTextColor="#33333380"
               value={searchQuery}
               onChangeText={text => {
@@ -893,7 +893,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                           handleSelection(item?.exercise_id);
                           return;
                         } else if (!visible) {
-                          console.log('item data ,... ',item);
+                          console.log('item data ,... ', item);
                           setVisible(true);
                           setitem(item);
                         }
@@ -909,7 +909,8 @@ const NewFocusWorkouts = ({route, navigation}) => {
                           borderColor: '#D9D9D9',
                         }}
                         source={{
-                          uri: item?.exercise_image_link??localImage.NOWORKOUT,
+                          uri:
+                            item?.exercise_image_link ?? localImage.NOWORKOUT,
                         }}
                         resizeMode={'contain'}
                       />
@@ -935,15 +936,15 @@ const NewFocusWorkouts = ({route, navigation}) => {
                         <View
                           style={{flexDirection: 'row', alignItems: 'center'}}>
                           <Text style={styles.txt2}>
-                            {'Time - ' +
+                            {translate('time')+' - ' +
                               '1 x ' +
                               (time > 60
                                 ? Math.floor(time / 60) + ' min'
-                                : time + ' sec')}{' '}
+                                : time + ' '+translate('sec'))}{' '}
                             |{' '}
                           </Text>
                           <Text style={styles.txt2}>
-                            {'Set - ' + item?.exercise_sets}
+                            {translate('set')+' - ' + item?.exercise_sets}
                           </Text>
                         </View>
                       </View>
@@ -1042,8 +1043,8 @@ const NewFocusWorkouts = ({route, navigation}) => {
               bottom={10}
               title={
                 selectedExerciseIds.size < 1
-                  ? 'Select Exercises'
-                  : 'Start Workout'
+                  ? translate('selectExercises')
+                  : translate('startWorkout')
               }
               fontSize={20}
               withAnimation={downloaded > 0}
@@ -1057,7 +1058,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                   Start();
                 } else {
                   showMessage({
-                    message: 'Please select exercises to start.',
+                    message: translate('selectExercise'),
                     type: 'info',
                     animationDuration: 500,
                     floating: true,

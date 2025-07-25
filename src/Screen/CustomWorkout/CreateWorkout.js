@@ -36,9 +36,21 @@ import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import {ReviewApp} from '../../Component/ReviewApp';
-import { translate } from '../Translation/TranslationService';
+import {translate} from '../Translation/TranslationService';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
+const bordypart = [
+  'Chest',
+  'Legs',
+  'Triceps',
+  'Abs',
+  'Shoulders',
+  'Back',
+  'Calves',
+  'Cardio',
+  'Forearms',
+  'Biceps',
+];
 
 const CreateWorkout = ({navigation, route}) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -52,33 +64,32 @@ const CreateWorkout = ({navigation, route}) => {
   const [forLoading, setForLoading] = useState(false);
 
   const completeProfileData = useSelector(state => state.completeProfileData);
+
   const {getUserID} = useSelector(state => state);
   const [bodyPart, setBodyPart] = useState(
     completeProfileData?.focusarea[0].bodypart_title,
   );
+  const [indexData, setIndexData] = useState(0);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const avatarRef = React.createRef();
   const [filteredCategories, setFilteredCategories] = useState([]);
 
   useEffect(() => {
-    console.log('bodyparts.. ',bodyPart, getAllExercise)
     const datalist = getAllExercise?.filter(listdata => {
-      if (bodyPart == 'Biceps') {
+      if (bordypart[indexData] == 'Biceps') {
         return listdata.exercise_bodypart == 'Triceps';
-      } else if (bodyPart == 'Quads') {
+      } else if (bordypart[indexData] == 'Quads') {
         return listdata.exercise_bodypart == 'Abs';
-      } else if (bodyPart == 'Calves') {
+      } else if (bordypart[indexData] == 'Calves') {
         return listdata.exercise_bodypart == 'Legs';
       } else {
-        return listdata.exercise_bodypart == bodyPart;
+        return listdata.exercise_bodypart == bordypart[indexData];
       }
     });
 
-
-
     setWorkoutList(datalist);
     setFilteredCategories(datalist);
-  }, [bodyPart]);
+  }, [indexData]);
 
   const renderItem1 = useMemo(
     () =>
@@ -289,19 +300,19 @@ const CreateWorkout = ({navigation, route}) => {
     } else {
       setForLoading(true);
       const payload = new FormData();
-
+      payload.append('user_id', getUserDataDetails?.id ?? getUserID);
       for (var i = 0; i < selectedItems.length; i++) {
         payload.append('exercises[]', selectedItems[i]);
       }
       payload.append('workout_name', route?.params?.workoutTitle);
-      payload.append('user_id', getUserDataDetails?.id) ?? getUserID;
+      // payload.append('user_id', getUserDataDetails?.id) ?? getUserID;
       // payload.append('id', getUserID != 0 ? getUserID : null);
       payload.append('image', {
         name: route?.params?.workoutImg?.fileName,
         type: route?.params?.workoutImg?.type,
         uri: route?.params?.workoutImg?.uri,
       });
-
+      console.log('List Data', getUserDataDetails?.id);
       try {
         const res = await axios(`${NewAppapi.USER_CUSTOM_WORKOUT}`, {
           data: payload,
@@ -318,7 +329,7 @@ const CreateWorkout = ({navigation, route}) => {
         }
       } catch (error) {
         setForLoading(false);
-
+        console.log('Error', error);
         showMessage({
           message: 'Something went wrong please try again!',
           type: 'danger',
@@ -399,7 +410,7 @@ const CreateWorkout = ({navigation, route}) => {
             }}>
             <Icons name="search" size={18} color={'#333333E5'} />
             <TextInput
-              placeholder="Search Exercise"
+              placeholder={translate('searchExercise')}
               placeholderTextColor="#33333380"
               value={searchQuery}
               onChangeText={text => {
@@ -449,6 +460,7 @@ const CreateWorkout = ({navigation, route}) => {
                   ]}
                   onPress={() => {
                     setBodyPart(item.bodypart_title);
+                    setIndexData(index);
                   }}>
                   <Text
                     style={{

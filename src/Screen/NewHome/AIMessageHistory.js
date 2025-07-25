@@ -10,6 +10,7 @@ import {Image} from 'react-native';
 import {localImage} from '../../Component/Image';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
+import { translate } from '../Translation/TranslationService';
 
 const AIMessageHistory = () => {
   const {getAIMessageHistory} = useSelector(state => state);
@@ -24,9 +25,9 @@ const AIMessageHistory = () => {
           headerStyle={{
             color: AppColor.BLACK,
             fontFamily: Fonts.HELVETICA_BOLD,
-            fontSize: 20,
+            fontSize: 18,
           }}
-          header={'AI Message History'}
+          header={translate("aimessagehistory")}
           backButton={true}
         />
         <ScrollView

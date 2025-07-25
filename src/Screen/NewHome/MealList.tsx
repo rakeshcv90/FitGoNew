@@ -66,13 +66,13 @@ const MealList = ({data}: any) => {
     if (test == -1) {
       setFilterMealList(data);
     } else if (test == 0) {
-      filteredItems = data.filter(
+      filteredItems = data?.filter(
         (item: any) => item?.meal_type.toLowerCase() == 'veg',
       );
 
       setFilterMealList(filteredItems);
     } else {
-      filteredItems = data.filter(
+      filteredItems = data?.filter(
         (item: any) => item?.meal_type.toLowerCase() == 'non_veg',
       );
 

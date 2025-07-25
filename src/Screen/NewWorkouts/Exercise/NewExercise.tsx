@@ -104,7 +104,7 @@ const NewExercise = ({navigation, route}: any) => {
                   lineHeight: 20,
                   fontWeight: '600',
                 }}>
-                {/* {allExercise[number]?.exercise_title} */}
+        
               </Text>
               <View
                 style={{

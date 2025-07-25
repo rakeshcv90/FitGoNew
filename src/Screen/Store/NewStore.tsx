@@ -21,6 +21,7 @@ import {localImage} from '../../Component/Image';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import {ShadowStyle} from '../../Component/Utilities/ShadowStyle';
 import PredefinedStyles from '../../Component/Utilities/PredefineStyles';
+import { translate } from '../Translation/TranslationService';
 
 type StoreItemProps = {
   type_id: number;
@@ -48,7 +49,7 @@ const NewStore = ({navigation}: any) => {
     return (
       <View style={[styles.searchContainer, styles.centerStyle]}>
         <TextInput
-          placeholder="Search Product"
+          placeholder={translate('searchproduct')}
           value={searchWord}
           onChangeText={updateSearchWord}
           placeholderTextColor="#49454F"
@@ -119,7 +120,7 @@ const NewStore = ({navigation}: any) => {
     <View style={{flex: 1, backgroundColor: '#F9F9F9'}}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <Wrapper styles={{backgroundColor: '#F9F9F9'}}>
-        <NewHeader1 header={'Store'} backButton />
+        <NewHeader1 header={translate('store')} backButton />
         {SearchBar}
         <FlatList
           data={filteredCategories}

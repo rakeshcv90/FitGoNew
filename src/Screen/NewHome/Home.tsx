@@ -57,7 +57,7 @@ const Home = () => {
     AppleHealthKitData();
   }, [loader]);
   useEffect(() => {
-    console.log('Has free event:', hasFreeEvent(getPurchaseHistory), getPurchaseHistory);
+  
     if (getPurchaseHistory && hasFreeEvent(getPurchaseHistory)) {
       setTimeout(() => {
         console.log('Modal visible');

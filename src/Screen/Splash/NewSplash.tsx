@@ -67,7 +67,7 @@ const NewSplash = ({ navigation }: any) => {
   }, [loader]);
 
   const afterAdFunction = () => {
-    console.log("SDfdsfdsfdsf .... ", getUserDataDetails, lang)
+  
     setupSubscription();
     API_CALLS.getMajorData(lang);
     if (getUserDataDetails.id != null) {

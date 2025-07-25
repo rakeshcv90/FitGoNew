@@ -1,15 +1,46 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, SafeAreaView} from 'react-native';
-import React, { useState } from 'react';
-import { localImage } from '../../Component/Image';
-import { DeviceHeigth, DeviceWidth } from '../../Component/Config';
-import { AppColor, Fonts } from '../../Component/Color';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  SafeAreaView,
+} from 'react-native';
+import React, {useState} from 'react';
+import {localImage} from '../../Component/Image';
+import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
+import {AppColor, Fonts} from '../../Component/Color';
 import NewButton from '../../Component/NewButton';
-import { FlatList } from 'react-native';
+import {FlatList} from 'react-native';
 import WorkoutsDescription from '../NewWorkouts/WorkoutsDescription';
 import AnimatedLottieView from 'lottie-react-native';
-import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
-import { translate } from '../Translation/TranslationService';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
+import {getCurrentLanguage, translate} from '../Translation/TranslationService';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import 'moment/locale/pt';
+import 'moment/locale/en-gb'; // or 'en' if needed
+import moment from 'moment';
+
+const dayNameMap = {
+  en: {
+    Monday: 'Monday',
+    Tuesday: 'Tuesday',
+    Wednesday: 'Wednesday',
+    Thursday: 'Thursday',
+    Friday: 'Friday',
+    Saturday: 'Saturday',
+    Sunday: 'Sunday',
+  },
+  pt: {
+    Monday: 'Segunda',
+    Tuesday: 'Terça',
+    Wednesday: 'Quarta',
+    Thursday: 'Quinta',
+    Friday: 'Sexta',
+    Saturday: 'Sábado',
+    Sunday: 'Domingo',
+  },
+};
 
 export const ExerciseComponetWithoutEvents = ({
   dayObject,
@@ -25,31 +56,35 @@ export const ExerciseComponetWithoutEvents = ({
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
   const insets = useSafeAreaInsets();
+  const lang = getCurrentLanguage();
+  moment.locale(lang);
+  const translatedDay = dayNameMap[lang]?.[day] || day;
 
-const renderExerciseItem = ({ item, index }) => {
+  console.log('Translated:', translatedDay);
+  const renderExerciseItem = ({item, index}) => {
     const time = parseInt(item?.exercise_rest?.split(' ')[0]) || 0;
 
     return (
       <View key={index}>
         <TouchableOpacity
-          style={[styles.button, { justifyContent: 'flex-start' }]}
+          style={[styles.button, {justifyContent: 'flex-start'}]}
           onPress={() => {
             setData(item);
             setOpen(true);
           }}>
           <View style={styles.View4}>
             <Image
-              source={{ uri: item?.exercise_image_link }}
-              style={{ height: 70, width: 70 }}
+              source={{uri: item?.exercise_image_link}}
+              style={{height: 70, width: 70}}
               resizeMode="contain"
               defaultSource={localImage.NOWORKOUT}
             />
           </View>
-          <View style={{ marginLeft: 15 }}>
-            <Text style={[styles.txt3, { marginVertical: 6 }]}>
+          <View style={{marginLeft: 15}}>
+            <Text style={[styles.txt3, {marginVertical: 6}]}>
               {item?.exercise_title}
             </Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Text style={styles.txt2}>
                 {'Time - 1 x ' +
                   (time > 60
@@ -57,13 +92,13 @@ const renderExerciseItem = ({ item, index }) => {
                     : `${time} sec`)}{' '}
                 |{' '}
               </Text>
-              <Text style={styles.txt2}>
-                {'Set - ' + item?.exercise_sets}
-              </Text>
+              <Text style={styles.txt2}>{'Set - ' + item?.exercise_sets}</Text>
             </View>
           </View>
         </TouchableOpacity>
-        {index !== dayObject.exercises.length - 1 && <View style={styles.border} />}
+        {index !== dayObject.exercises.length - 1 && (
+          <View style={styles.border} />
+        )}
       </View>
     );
   };
@@ -75,8 +110,8 @@ const renderExerciseItem = ({ item, index }) => {
           <Text style={styles.completedText}>Workout Completed</Text>
           <Text style={styles.completedDay}>{day}</Text>
           <Image
-            source={{ uri: getWeeklyPlansData[day]?.image }}
-            style={{ height: 40, width: 40 }}
+            source={{uri: getWeeklyPlansData[day]?.image}}
+            style={{height: 40, width: 40}}
             resizeMode="contain"
           />
           <Text style={styles.txt1}>{getWeeklyPlansData[day]?.title}</Text>
@@ -93,16 +128,21 @@ const renderExerciseItem = ({ item, index }) => {
           <>
             {/* Header Info */}
             <View style={styles.View1}>
-              <View style={[styles.View2, { justifyContent: 'flex-start' }]}>
+              <View style={[styles.View2, {justifyContent: 'flex-start'}]}>
                 <Image
-                  source={{ uri: dayObject?.image }}
+                  source={{uri: dayObject?.image}}
                   style={styles.img}
                   resizeMode="contain"
                   defaultSource={localImage?.NOWORKOUT}
                 />
+
                 <View style={styles.View3}>
-                  <Text style={styles.txt1}>{dayObject?.title ?? 'Power hour'}</Text>
-                  <Text style={styles.txt2}>{day ?? 'Monday'}</Text>
+                  <Text style={styles.txt1}>
+                    {dayObject?.title ?? 'Power hour'}
+                  </Text>
+                  <Text style={styles.txt2}>
+                    {dayNameMap[lang]?.[day] ?? day ?? 'Monday'}
+                  </Text>
                 </View>
               </View>
               <NewButton
@@ -129,21 +169,29 @@ const renderExerciseItem = ({ item, index }) => {
                     marginVertical: 15,
                   },
                 ]}>
-                {`${dayObject?.exercises?.length || 0} ${translate('exercises')}`}
+                {`${dayObject?.exercises?.length || 0} ${translate(
+                  'exercises',
+                )}`}
               </Text>
             </View>
           </>
         }
         renderItem={renderExerciseItem}
-        keyExtractor={(item, index) => item?.exercise_id?.toString() || index.toString()}
+        keyExtractor={(item, index) =>
+          item?.exercise_id?.toString() || index.toString()
+        }
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingBottom:
-            insets.bottom + 170,
+          paddingBottom: insets.bottom + 170,
           paddingHorizontal: DeviceWidth * 0.05,
         }}
       />
-      <WorkoutsDescription data={data} open={open} setOpen={setOpen} id={data.exercise_id} />
+      <WorkoutsDescription
+        data={data}
+        open={open}
+        setOpen={setOpen}
+        id={data.exercise_id}
+      />
     </SafeAreaView>
   );
 };
@@ -164,7 +212,7 @@ export const ExerciseComponentWithEvent = ({
   const [data, setData] = useState([]);
   const insets = useSafeAreaInsets();
 
-  const renderExerciseItem = ({ item, index }) => {
+  const renderExerciseItem = ({item, index}) => {
     const time = parseInt(item?.exercise_rest?.split(' ')[0]) || 0;
     return (
       <View key={index}>
@@ -174,24 +222,28 @@ export const ExerciseComponentWithEvent = ({
             setData(item);
             setOpen(true);
           }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <View style={styles.View4}>
               <Image
-                source={{ uri: item?.exercise_image_link || '' }}
-                style={{ height: 70, width: 70 }}
+                source={{uri: item?.exercise_image_link || ''}}
+                style={{height: 70, width: 70}}
                 resizeMode="contain"
                 defaultSource={localImage.NOWORKOUT}
               />
             </View>
-            <View style={{ marginLeft: 15, width: DeviceWidth * 0.55 }}>
+            <View style={{marginLeft: 15, width: DeviceWidth * 0.55}}>
               <Text style={styles.txt3}>{item?.exercise_title}</Text>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Text style={styles.txt2}>
                   {'Time - 1 x ' +
-                    (time > 60 ? `${Math.floor(time / 60)} min` : `${time} sec`)}{' '}
+                    (time > 60
+                      ? `${Math.floor(time / 60)} min`
+                      : `${time} sec`)}{' '}
                   |{' '}
                 </Text>
-                <Text style={styles.txt2}>{'Set - ' + item?.exercise_sets}</Text>
+                <Text style={styles.txt2}>
+                  {'Set - ' + item?.exercise_sets}
+                </Text>
               </View>
             </View>
           </View>
@@ -204,7 +256,7 @@ export const ExerciseComponentWithEvent = ({
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: AppColor.WHITE }}>
+    <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
       {dayWiseCoins[day] == null || dayWiseCoins[day] < 0 ? (
         <>
           <FlatList
@@ -213,9 +265,9 @@ export const ExerciseComponentWithEvent = ({
               <>
                 <View style={styles.View1}>
                   <View style={styles.View2}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <Image
-                        source={{ uri: dayObject?.image }}
+                        source={{uri: dayObject?.image}}
                         style={styles.img}
                         resizeMode="contain"
                       />
@@ -250,7 +302,9 @@ export const ExerciseComponentWithEvent = ({
                         marginVertical: 15,
                       },
                     ]}>
-                    {`${dayObject?.exercises?.length || 0} ${translate('exercises')}`}
+                    {`${dayObject?.exercises?.length || 0} ${translate(
+                      'exercises',
+                    )}`}
                   </Text>
                 </View>
               </>
@@ -401,7 +455,7 @@ const styles = StyleSheet.create({
     height: 70,
     width: 70,
   },
-  edit: { height: 23, width: 23, alignItems: 'flex-end' },
+  edit: {height: 23, width: 23, alignItems: 'flex-end'},
   //txts
   txt1: {
     color: AppColor.BLACK,

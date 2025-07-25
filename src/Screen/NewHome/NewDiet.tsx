@@ -15,11 +15,17 @@ import FitIcon from '../../Component/Utilities/FitIcon';
 import PredefinedStyles from '../../Component/Utilities/PredefineStyles';
 import MealList from './MealList';
 import CreateMealList from '../NewMeal/CreateMealList';
-import { translate } from '../Translation/TranslationService';
+import {translate} from '../Translation/TranslationService';
 // import { BannerAdd } from '../../Component/BannerAdd';
 // import { bannerAdId } from '../../Component/AdsId';
 
-const eatTime = ['Breakfast', 'Lunch', 'Dinner', 'Your meal'];
+const eatTime = [
+  translate('breakfast'),
+  translate('lunch'),
+  translate('dinner'),
+  translate('yourmeal'),
+];
+const eatTime1 = ['Breakfast', 'Lunch', 'Dinner', '  Your meal'];
 
 const NewDiet = () => {
   const getCustomDietData = useSelector(
@@ -275,7 +281,9 @@ const NewDiet = () => {
               activeOpacity={0.8}
               style={{
                 height: 50,
-                width: '25%',
+                // width: '50%',
+                paddingLeft: 10,
+                paddingRight: 10,
                 backgroundColor:
                   selectedItem == index ? AppColor.RED : '#f0f1f3',
                 justifyContent: 'center',
@@ -294,16 +302,17 @@ const NewDiet = () => {
                     ? AppColor.WHITE
                     : AppColor.PrimaryTextColor
                 }
-                fontSize={15}
+                fontSize={13}
               />
             </TouchableOpacity>
           );
         })}
       </View>
+
       {selectedItem == 3 ? (
         <CreateMealList />
       ) : (
-        <MealList data={mealData[eatTime[selectedItem]?.toLowerCase()]} />
+        <MealList data={mealData[eatTime1[selectedItem]?.toLowerCase()]} />
       )}
       {/* <BannerAdd bannerAdId={bannerAdId} /> */}
       <BottomSheet1 ref={refStandard}>
@@ -327,7 +336,8 @@ const styles = StyleSheet.create({
   },
   tab: {
     height: 50,
-    width: DeviceWidth * 0.9,
+    // width: DeviceWidth * 0.95,
+
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

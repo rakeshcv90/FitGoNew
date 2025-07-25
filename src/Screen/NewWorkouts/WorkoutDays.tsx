@@ -43,7 +43,7 @@ import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 import NewHeader from '../../Component/Headers/NewHeader';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
-import { translate } from '../Translation/TranslationService';
+import {translate} from '../Translation/TranslationService';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -109,7 +109,7 @@ const WorkoutDays = ({navigation, route}: any) => {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-        lang:'en',
+        lang: 'en',
       });
 
       if (res.data?.msg != 'No data found') {
@@ -446,7 +446,7 @@ const WorkoutDays = ({navigation, route}: any) => {
       </Modal>
     );
   };
-  
+
   const Box = ({
     selected,
     item,
@@ -493,9 +493,9 @@ const WorkoutDays = ({navigation, route}: any) => {
                     challenge,
                   })
                 : showMessage({
-                    message: `Please complete day ${
+                    message: `${translate('pleaseCompleteDay')} ${
                       index - 1
-                    } workout to unlock day ${index}`,
+                    } ${translate('workoutToUnlockDay')} ${index}`,
                     type: 'danger',
 
                     duration: 1000,

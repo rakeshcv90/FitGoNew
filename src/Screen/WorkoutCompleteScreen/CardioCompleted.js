@@ -61,7 +61,7 @@ const CardioCompleted = ({navigation}) => {
           data: payload,
         },
       );
-      console.log('WEEKLY CAL', res.data, payload);
+    
       setCoins(res?.data?.coins);
     getLeaderboardDataAPI()
     } catch (error) {

@@ -17,6 +17,7 @@ import {downloadVideos} from './categoriesHelper';
 import BottomSheet1 from '../../Component/BottomSheet';
 import BottomSheetContent from './BottomSheetContent';
 import {useIsFocused} from '@react-navigation/native';
+import {translate} from '../Translation/TranslationService';
 
 const NewCategories = ({navigation, route}: any) => {
   const {categoryExercise, CategoryDetails} = route?.params;
@@ -106,7 +107,7 @@ const NewCategories = ({navigation, route}: any) => {
         <NewHeader1
           header={
             switchButton
-              ? `${selectedExIDs.length} selected`
+              ? `${selectedExIDs.length} ${translate('selected')}`
               : CategoryDetails?.bodypart_title == undefined
               ? CategoryDetails?.title
               : CategoryDetails?.bodypart_title
@@ -116,8 +117,7 @@ const NewCategories = ({navigation, route}: any) => {
           onBackPress={() => {
             if (progressPercent > 0 && switchButton) {
               showMessage({
-                message:
-                  'Please wait, downloading in progress. Do not press back.',
+                message: translate('messageDownload'),
                 type: 'info',
                 animationDuration: 500,
                 floating: true,
@@ -148,7 +148,7 @@ const NewCategories = ({navigation, route}: any) => {
               color={'#333333E5'}
             />
             <TextInput
-              placeholder="Search Exercise"
+              placeholder={translate('searchExercise')}
               placeholderTextColor="#33333380"
               value={searchValue}
               onChangeText={searchFunction}
@@ -169,10 +169,10 @@ const NewCategories = ({navigation, route}: any) => {
             bottom={10}
             title={
               progressPercent > 0
-                ? `Downloading`
+                ? translate('downloading')
                 : switchButton
-                ? `Start Workout`
-                : 'Select Exercises'
+                ? translate('startWorkout')
+                : translate('selectExercises')
             }
             fontSize={20}
             disabled={switchButton && selectedExIDs.length == 0}
@@ -199,7 +199,6 @@ const NewCategories = ({navigation, route}: any) => {
     </SafeAreaView>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -265,6 +264,5 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
 });
-
 
 export default NewCategories;

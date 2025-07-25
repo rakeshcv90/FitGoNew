@@ -60,6 +60,7 @@ import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import FitIcon from '../../Component/Utilities/FitIcon';
 import BottomSheet1 from '../../Component/BottomSheet';
+import { translate } from '../Translation/TranslationService';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 interface BoxProps {
   item: any;
@@ -677,7 +678,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
             if (downloaded > 0 || (downloadProgress > 0 && switchButton)) {
               showMessage({
                 message:
-                  'Please wait, downloading in progress. Do not press back.',
+                  translate('messageDownload'),
                 type: 'info',
                 animationDuration: 500,
                 floating: true,
@@ -718,7 +719,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
             }}>
             <Icons1 name="search" size={18} color={'#333333E5'} />
             <TextInput
-              placeholder="Search Exercise"
+              placeholder={translate('searchExercise')}
               placeholderTextColor="#33333380"
               value={searchValue}
               onChangeText={text => {
@@ -761,10 +762,10 @@ const WorkoutCategories = ({navigation, route}: any) => {
                 // flex={0.01}
                 text={
                   downloaded > 0
-                    ? `Downloading`
+                    ? translate('downloading')
                     : switchButton
-                    ? `Start Workout`
-                    : 'Select Exercises'
+                    ? translate('startWorkout')
+                    : translate('selectExercises')
                 }
                 h={50}
                 colors={['#f0013b', '#f0013b']}

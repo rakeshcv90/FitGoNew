@@ -14,6 +14,7 @@ import {Platform} from 'react-native';
 import {Linking} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {setRatingTrack} from './ThemeRedux/Actions';
+import { translate } from '../Screen/Translation/TranslationService';
 const RatingModal = ({getVisibility,setModalVisibilty}) => {
   const [rating, setRating] = useState(5);
   const getRatingStatus=useSelector(state=>state?.getRatingStatus);
@@ -24,35 +25,35 @@ const RatingModal = ({getVisibility,setModalVisibilty}) => {
       id: 0,
       txt1: ' Lorem Ipsum is simply dummy text of the printing.',
       img: localImage.Rating1,
-      txt2: 'Disappointed',
+      txt2: translate('disappointed'),
       startCount: 1,
     },
     {
       id: 1,
       txt1: ' Lorem Ipsum is simply dummy text of the printing.',
       img: localImage.Rating2,
-      txt2: 'Unhappy',
+      txt2: translate('unhappy'),
       startCount: 2,
     },
     {
       id: 2,
       txt1: ' Lorem Ipsum is simply dummy text of the printing.',
       img: localImage.Rating3,
-      txt2: 'Cool',
+      txt2: translate('cool'),
       startCount: 3,
     },
     {
       id: 3,
       txt1: ' Lorem Ipsum is simply dummy text of the printing.',
       img: localImage.Rating4,
-      txt2: 'Great',
+      txt2: translate('great'),
       startCount: 4,
     },
     {
       id: 4,
       txt1: ' Lorem Ipsum is simply dummy text of the printing.',
       img: localImage.Rating5,
-      txt2: 'Awesome',
+      txt2:translate('awesome'),
       startCount: 5,
     },
   ];
@@ -98,7 +99,7 @@ const RatingModal = ({getVisibility,setModalVisibilty}) => {
         />
         <Text style={styles.txt1}>
           {
-            'Love our app? Rate us and share your feedback to help us improve and keep you motivated!'
+           translate('rate1')
           }
         </Text>
         <View style={styles.View2}>
@@ -130,7 +131,7 @@ const RatingModal = ({getVisibility,setModalVisibilty}) => {
           ButtonWidth={DeviceWidth * 0.9}
           buttonColor={AppColor.BLACK}
           bR={5}
-          title={'Submit'}
+          title={translate('buttonname')}
           pV={14}
           position={'absolute'}
           bottom={DeviceHeigth * 0.05}

@@ -389,12 +389,12 @@ export const API_CALLS = {
           lang:lang,
         },
         ({data, errors, status, message}) => {
-          console.log('subscription data .... ',data, ' // ',status);
+      
           if (data?.msg == 'Please update the app to the latest version.') {
             console.log('subscription data upgrade ',data, ' // ',status);
             reject(UpgradeAppResponse());
           } else if (status == 200) {
-            console.log('subscription data working  ',data, ' // ',status);
+          
             dispatch(setCustomWorkoutData(data?.workout_data));
             dispatch(setOfferAgreement(data?.additional_data));
             dispatch(setUserProfileData(data?.profile));
@@ -463,7 +463,7 @@ export const API_CALLS = {
           lang:lang
         },
         ({data, errors, status, message}) => {
-          console.log('all in data... ',data, ' // ',VersionNumber.appVersion);
+        
           if (
             data?.msg == 'Please update the app to the latest version.' ||
             data?.msg == 'version is required'
@@ -472,11 +472,11 @@ export const API_CALLS = {
           } else if (status == 200) {
             const objects: any = {};
             data?.data?.forEach((item: any) => {
-            console.log('all in data images... ',item);
+         
 
               objects[item?.type] = item?.image;
             });
-              console.log('all in check ... ',data, objects);
+              
             downloadImages(data?.custom_dailog_data[0], dispatch);
             dispatch(setDynamicPopupValues(data?.custom_dailog_data[0]));
 
@@ -505,7 +505,7 @@ export const API_CALLS = {
         },
       
         ({data, errors, status, message}) => {
-       console.log('all users with condition .... ',data, ' // ',status, '// ',message)
+      
           if (
             data?.msg == 'user id is required' ||
             data?.msg == 'version is required'
@@ -513,6 +513,7 @@ export const API_CALLS = {
             reject(UpgradeAppResponse());
           } else if (status == 200) {
             dispatch(setChallengesData(data?.challenge_data));
+            dispatch(setAllExercise(''));
             dispatch(setAllExercise(data?.data));
             resolve(status);
           } else {
@@ -533,7 +534,7 @@ export const API_CALLS = {
           lang:lang,
         },
         ({data, errors, status, message}) => {
-         console.log('workout data .....', data , ' // ',status, '// ', id, ' ///', lang);
+      
           if (
             data?.msg == 'user id is required' ||
             data?.msg == 'Please update the app to the latest version.'

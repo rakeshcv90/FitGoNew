@@ -352,7 +352,7 @@ console.log(getPurchaseHistory)
                 },
               ]}>
               <FitText
-                value={`Hi ${getUserDataDetails?.name}`}
+                value={`${translate('hi')} ${getUserDataDetails?.name}`}
                 type="SubHeading"
                 color="#1E1E1E"
                 fontWeight="600"
@@ -383,16 +383,16 @@ console.log(getPurchaseHistory)
                             moment()
                               .day(getPurchaseHistory?.currentDay)
                               .format('YYYY-MM-DD'),
-                            'days',
-                          )} days left`
+                            translate('day'),
+                          )} ${translate('daysleft')}`
                         : `${moment(dayLeft)
                             .add(7, 'days')
                             .diff(
                               moment()
                                 .day(getPurchaseHistory?.currentDay)
                                 .format('YYYY-MM-DD'),
-                              'days',
-                            )} days left`
+                              translate('day'),
+                            )} ${translate('daysleft')}`
                     }
                     color={AppColor.ORANGE}
                     fontSize={14}
@@ -435,10 +435,10 @@ console.log(getPurchaseHistory)
                 <FitText
                   value={
                     getPurchaseHistory?.upcoming_day_status == 1
-                      ? `${moment(dayLeft).format('DD-MMM-YYYY')} | Monday`
+                      ? `${moment(dayLeft).format('DD-MMM-YYYY')} | ${translate('monday')}`
                       : `${moment(dayLeft)
                           .add(7, 'days')
-                          .format('DD-MMM-YYYY')} | Monday`
+                          .format('DD-MMM-YYYY')} |  ${translate('monday')}`
                   }
                   type="normal"
                   color="#1E1E1E"
@@ -783,7 +783,7 @@ console.log(getPurchaseHistory)
                 }}>
                 <FitText
                   type="normal"
-                  value="Upgrade Plan"
+                  value={translate('upgradePlan')}
                   color={AppColor.RED}
                   fontFamily={Fonts.MONTSERRAT_MEDIUM}
                 />

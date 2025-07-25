@@ -24,7 +24,7 @@ import {Ad} from '../../Icon/Ad';
 import { translate } from '../Translation/TranslationService';
 
 const AdEventPopup = ({modalVisible,onClose}) => {
-  console.log('Modal visible');
+
   // const [modalVisible, setModalVisible] = useState(false);
   const [loader, setLoader] = useState(false);
 

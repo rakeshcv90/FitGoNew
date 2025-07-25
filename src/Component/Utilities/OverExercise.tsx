@@ -17,6 +17,7 @@ import FitText from './FitText';
 import {useDispatch, useSelector} from 'react-redux';
 import {setExerciseInTime, setExerciseOutTime} from '../ThemeRedux/Actions';
 import {ActivityIndicator} from 'react-native';
+import { translate } from '../../Screen/Translation/TranslationService';
 
 type OverExerciseType = {
   overExerciseVisible: boolean;
@@ -73,7 +74,7 @@ const OverExerciseModal = ({
             />
             <FitText
               type="SubHeading"
-              value={`Today's 45-min Workout Goal Achieved!`}
+              value={translate('workoutTitle')}
               fontFamily={Fonts.HELVETICA_REGULAR}
               fontSize={22}
               color="#1F2937"
@@ -83,7 +84,7 @@ const OverExerciseModal = ({
             />
             <FitText
               type="normal"
-              value={`You’ve Completed a 45-Minute Workout! We Recommend You to Take a Break and Give Your Body the Rest It Deserves.`}
+              value={translate('workoutText')}
               color="#6B7280"
               textAlign="center"
               lineHeight={23}
@@ -116,7 +117,7 @@ const OverExerciseModal = ({
               ) : (
                 <FitText
                   type="SubHeading"
-                  value="Take a break"
+                  value={translate('takebreak')}
                   color={AppColor.RED}
                   fontWeight="600"
                   fontFamily={Fonts.HELVETICA_REGULAR}
@@ -126,7 +127,7 @@ const OverExerciseModal = ({
             <TouchableOpacity onPress={close}>
               <FitText
                 type="SubHeading"
-                value="Continue Exercise"
+                value={translate('continueexercise')}
                 color="#6B7280"
                 fontWeight="600"
                 fontFamily={Fonts.HELVETICA_REGULAR}

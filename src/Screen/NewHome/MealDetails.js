@@ -22,8 +22,9 @@ import HTMLRender from 'react-native-render-html';
 // import {BannerAdd} from '../../Component/BannerAdd';
 // import {bannerAdId} from '../../Component/AdsId';
 import moment from 'moment';
-import { ArrowLeft } from '../../Component/Utilities/Arrows/Arrow';
-import { ReviewApp } from '../../Component/ReviewApp';
+import {ArrowLeft} from '../../Component/Utilities/Arrows/Arrow';
+import {ReviewApp} from '../../Component/ReviewApp';
+import {translate} from '../Translation/TranslationService';
 
 const MealDetails = ({route, navigation}) => {
   const getStoreVideoLoc = useSelector(state => state.getStoreVideoLoc);
@@ -35,10 +36,10 @@ const MealDetails = ({route, navigation}) => {
     fontWeight: '400',
     color: AppColor.INPUTLABLECOLOR,
   };
-useEffect(() => {
-  ReviewApp(temp)
-},[])
-const temp = () => {}
+  useEffect(() => {
+    ReviewApp(temp);
+  }, []);
+  const temp = () => {};
   // const bannerAdsDisplay = () => {
   //   if (getPurchaseHistory.length > 0) {
   //     if (
@@ -235,7 +236,7 @@ const temp = () => {}
                     fontWeight: '700',
                     color: AppColor.LITELTEXTCOLOR,
                   }}>
-                  Summary
+                  {translate('summary')}
                 </Text>
                 <View style={{top: -10}}>
                   <HTMLRender
@@ -283,7 +284,7 @@ const temp = () => {}
                     fontWeight: '700',
                     color: AppColor.LITELTEXTCOLOR,
                   }}>
-                  Ingredients
+                  {translate('ingredients')}
                 </Text>
                 <View style={{top: -10}}>
                   <HTMLRender
@@ -335,7 +336,7 @@ const temp = () => {}
                     fontWeight: '700',
                     color: AppColor.LITELTEXTCOLOR,
                   }}>
-                  Instructions
+              {translate('instructions')}
                 </Text>
 
                 <View style={{top: -10}}>
@@ -369,13 +370,11 @@ const temp = () => {}
             </View>
           </ScrollView>
         </View>
-
-        
       </View>
       {/* {bannerAdsDisplay()} */}
-          <View style={{marginBottom: DeviceHeigth <= 846 ? -1 : -10}}>
-            {/* <BannerAdd bannerAdId={bannerAdId} /> */}
-          </View>
+      <View style={{marginBottom: DeviceHeigth <= 846 ? -1 : -10}}>
+        {/* <BannerAdd bannerAdId={bannerAdId} /> */}
+      </View>
     </>
   );
 };
