@@ -820,7 +820,7 @@ export const translations = {
     termsOfUse: ' Termos de Uso',
     upcomingChallenge: 'Desafio Futuro',
     myChallenge: 'Meu Desafio',
-    startsOn: 'Começa em:',
+    startsOn: 'Começa em:', 
     winVoucher: 'Ganhe Vale-Presente',
     earnPrize: 'Ganhe um prêmio incrível',
     gearUpTitle: 'Prepare-se para seu próximo desafio!',
