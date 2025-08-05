@@ -430,7 +430,7 @@ const CustomMealList = ({navigation, route}) => {
         });
         if (res.data.msg == 'diet updated successfully.') {
           showMessage({
-            message: 'Custom diet created successfully.',
+            message:translate('customDietSuccess'),
             type: 'success',
             animationDuration: 500,
             floating: true,
@@ -444,7 +444,7 @@ const CustomMealList = ({navigation, route}) => {
         setForLoading(false);
 
         showMessage({
-          message: 'Something went wrong please try again!',
+           message:translate('somthingwrong'),
           type: 'danger',
           animationDuration: 500,
           floating: true,
@@ -507,7 +507,7 @@ const CustomMealList = ({navigation, route}) => {
       <StatusBar barStyle={'dark-content'} backgroundColor={'white'} />
       <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
         <NewHeader1
-          header={'Select meals'}
+          header={translate('selectMeals')}
           backButton
           onBackPress={() => {
             navigation?.goBack();

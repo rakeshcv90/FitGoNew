@@ -30,6 +30,7 @@ import {RequestAPI} from '../../../../Component/Utilities/RequestAPI';
 // import {OpenAppAds} from '../../../../Component/BannerAdd';
 import RestButtons from './RestButtons';
 import FitText from '../../../../Component/Utilities/FitText';
+import { translate } from '../../../Translation/TranslationService';
 
 type ExerciseControlsProps = {
   pause: boolean;
@@ -465,7 +466,7 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
         )}
         <View style={{height: DeviceHeigth >= 1024 ? 20 : 0}} />
         {restSet && !restStart ? (
-          <FitText type="Heading" value="Take a Rest" textAlign="center" />
+          <FitText type="Heading" value={translate('takerest')} textAlign="center" />
         ) : (
           <BottomControls
             allExercise={allExercise}

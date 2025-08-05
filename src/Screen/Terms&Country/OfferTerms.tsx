@@ -210,17 +210,7 @@ const OfferTerms = ({navigation, route}: any) => {
         style={{
           backgroundColor: 'white',
           paddingVertical: (DeviceWidth * 0.1) / 2,
-          // shadowColor: 'grey',
-          // ...Platform.select({
-          //   ios: {
-          //     shadowOffset: {width: 1, height: 0},
-          //     shadowOpacity: 0.3,
-          //     shadowRadius: 2,
-          //   },
-          //   android: {
-          //     elevation: 4,
-          //   },
-          // }),
+         
         }}>
         {loaded ? null : <ActivityLoader />}
         {screenType ? (
@@ -340,12 +330,12 @@ const OfferTerms = ({navigation, route}: any) => {
                         <View
                           style={{flexDirection: 'row', alignItems: 'center'}}>
                           <RadioButton
-                            value="Hindi"
+                            value="Portuguese"
                             status={
-                              language === 'Hindi' ? 'checked' : 'unchecked'
+                              language === 'Portuguese' ? 'checked' : 'unchecked'
                             }
                             onPress={() => {
-                              setLanguage('Hindi');
+                              setLanguage('Portuguese');
                               handleRadioButton('term_condition_hindi');
                               setTimeout(() => {
                                 setOpened(!opened);
@@ -357,13 +347,13 @@ const OfferTerms = ({navigation, route}: any) => {
                           <Text
                             style={{color: AppColor.BLACK}}
                             onPress={() => {
-                              setLanguage('Hindi');
+                              setLanguage('Portuguese');
                               handleRadioButton('term_condition_hindi');
                               setTimeout(() => {
                                 setOpened(!opened);
                               }, 250);
                             }}>
-                            Hindi
+                            Portuguese
                           </Text>
                         </View>
                       </View>

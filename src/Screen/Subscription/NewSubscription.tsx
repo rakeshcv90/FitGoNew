@@ -11,17 +11,17 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import FitText from '../../Component/Utilities/FitText';
-import { AppColor, Fonts, PLATFORM_IOS } from '../../Component/Color';
-import { DeviceHeigth, DeviceWidth, NewAppapi } from '../../Component/Config';
-import { useDispatch, useSelector } from 'react-redux';
-import { ShadowStyle } from '../../Component/Utilities/ShadowStyle';
+import {AppColor, Fonts, PLATFORM_IOS} from '../../Component/Color';
+import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
+import {useDispatch, useSelector} from 'react-redux';
+import {ShadowStyle} from '../../Component/Utilities/ShadowStyle';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import GradientButton from '../../Component/GradientButton';
-import { localImage } from '../../Component/Image';
-import { showMessage } from 'react-native-flash-message';
+import {localImage} from '../../Component/Image';
+import {showMessage} from 'react-native-flash-message';
 import * as RNIap from 'react-native-iap';
 import moment from 'moment';
 import axios from 'axios';
@@ -34,23 +34,23 @@ import {
   setPurchaseHistory,
   setUserProfileData,
 } from '../../Component/ThemeRedux/Actions';
-import { useIsFocused } from '@react-navigation/native';
-import { EnteringEventFunction } from '../Event/EnteringEventFunction';
+import {useIsFocused} from '@react-navigation/native';
+import {EnteringEventFunction} from '../Event/EnteringEventFunction';
 // import Carousel from 'react-native-snap-carousel';
 import ActivityLoader from '../../Component/ActivityLoader';
-import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
-import VersionNumber, { appVersion } from 'react-native-version-number';
-import { findKeyInObject } from '../../Component/Utilities/FindkeyinObject';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
+import VersionNumber, {appVersion} from 'react-native-version-number';
+import {findKeyInObject} from '../../Component/Utilities/FindkeyinObject';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import useMusicPlayer from '../NewWorkouts/Exercise/ExerciseUtilities/useMusicPlayer';
-import { resolveImportedAssetOrPath } from '../NewWorkouts/Exercise/ExerciseUtilities/Helpers';
-import { translate } from '../Translation/TranslationService';
+import {resolveImportedAssetOrPath} from '../NewWorkouts/Exercise/ExerciseUtilities/Helpers';
+import {translate} from '../Translation/TranslationService';
 // import {MyRewardedAd} from '../../Component/BannerAdd';
 
-const NewSubscription = ({ navigation, route }: any) => {
-  const { upgrade } = route.params;
+const NewSubscription = ({navigation, route}: any) => {
+  const {upgrade} = route.params;
   const dispatch = useDispatch();
   const getInAppPurchase = useSelector((state: any) => state.getInAppPurchase);
   // const getOfferAgreement = useSelector(
@@ -67,11 +67,11 @@ const NewSubscription = ({ navigation, route }: any) => {
   // Sorting the subscriptions by title (Basic, Pro, Premium)
   const sortedSubscriptions: any = PLATFORM_IOS
     ? getInAppPurchase.sort((a: any, b: any) => {
-      return order.indexOf(a.title) - order.indexOf(b.title);
-    })
+        return order.indexOf(a.title) - order.indexOf(b.title);
+      })
     : getInAppPurchase.sort((a: any, b: any) => {
-      return order.indexOf(a.name) - order.indexOf(b.name);
-    });
+        return order.indexOf(a.name) - order.indexOf(b.name);
+      });
   const [selected, setSelected] = useState<any>(sortedSubscriptions[2]);
   const [loading, setForLoading] = useState(false);
   const [currentSelected, setCurrentSelected] = useState(2);
@@ -81,7 +81,6 @@ const NewSubscription = ({ navigation, route }: any) => {
   const [pause, setPause] = useState(false);
   const flatListRef = React.useRef(null);
 
-
   useEffect(() => {
     if (isFocused) {
       const selected =
@@ -89,8 +88,8 @@ const NewSubscription = ({ navigation, route }: any) => {
           ? getPurchaseHistory?.plan == 'noob'
             ? 0
             : getPurchaseHistory?.plan == 'pro'
-              ? 1
-              : 2
+            ? 1
+            : 2
           : 2;
       setCurrentSelected(selected);
       EnteringEventFunction(
@@ -107,7 +106,7 @@ const NewSubscription = ({ navigation, route }: any) => {
       async purchase => {
         const receipt = purchase.transactionReceipt;
         if (receipt) {
-          await RNIap.finishTransaction({ purchase });
+          await RNIap.finishTransaction({purchase});
         }
       },
     );
@@ -116,7 +115,7 @@ const NewSubscription = ({ navigation, route }: any) => {
         if (Platform.OS == 'android') {
           showMessage({
             message: error.message,
-            titleStyle: { textAlign: 'center' },
+            titleStyle: {textAlign: 'center'},
             type: 'danger',
             floating: true,
           });
@@ -124,14 +123,14 @@ const NewSubscription = ({ navigation, route }: any) => {
           if (error.responseCode === '2') {
             showMessage({
               message: 'You have cancelled the transaction. Please try again.',
-              titleStyle: { textAlign: 'center' },
+              titleStyle: {textAlign: 'center'},
               type: 'danger',
               floating: true,
             });
           } else {
             showMessage({
               message: error.message,
-              titleStyle: { textAlign: 'center' },
+              titleStyle: {textAlign: 'center'},
               type: 'danger',
               floating: true,
             });
@@ -399,8 +398,8 @@ const NewSubscription = ({ navigation, route }: any) => {
         item.auto_renew_product_id == 'fitme_noob'
           ? 'noob'
           : item.auto_renew_product_id == 'fitme_pro'
-            ? 'pro'
-            : 'premium',
+          ? 'pro'
+          : 'premium',
       platform: Platform.OS,
       product_id: item.auto_renew_product_id,
       plan_value: parseInt(price.substring(1)),
@@ -416,13 +415,13 @@ const NewSubscription = ({ navigation, route }: any) => {
   // PURCHASE START ANDROID
   const purchaseItemsAndroid = async (sku: RNIap.Sku, offerToken: any) => {
     try {
-      console.log("get plan details ...  ", sku)
+      console.log('get plan details ...  ', sku);
       const purchase: any = await RNIap.requestSubscription({
         sku,
-        ...(offerToken && { subscriptionOffers: [{ sku, offerToken }] }),
+        ...(offerToken && {subscriptionOffers: [{sku, offerToken}]}),
       });
 
-      console.log('pruchase details ', purchase)
+      console.log('pruchase details ', purchase);
 
       fetchPurchaseHistoryAndroid(purchase[0].dataAndroid);
     } catch (error) {
@@ -440,17 +439,12 @@ const NewSubscription = ({ navigation, route }: any) => {
         jsonObject.productId == 'fitme_monthly'
           ? 'noob'
           : jsonObject.productId == 'a_monthly'
-            ? 'pro'
-            : 'premium',
+          ? 'pro'
+          : 'premium',
       transaction_id: jsonObject.orderId,
       platform: Platform.OS,
       product_id: jsonObject?.productId,
       plan_value: parseInt(price.substring(1)),
-      // jsonObject.productId == 'fitme_monthly'
-      //   ? 30
-      //   : jsonObject.productId == 'a_monthly'
-      //   ? 69
-      //   : 149,
     };
 
     PlanPurchasetoBackendAPI(postData);
@@ -475,7 +469,7 @@ const NewSubscription = ({ navigation, route }: any) => {
         setForLoading(false);
         stopMusic();
         setTimeout(() => {
-          navigation.navigate('UpcomingEvent', { eventType: 'current' });
+          navigation.navigate('UpcomingEvent', {eventType: 'current'});
         }, 2500);
       } else if (
         res.data.message == 'Plan upgraded and new event created successfully'
@@ -486,7 +480,7 @@ const NewSubscription = ({ navigation, route }: any) => {
         setForLoading(false);
         stopMusic();
         setTimeout(() => {
-          navigation.navigate('UpcomingEvent', { eventType: 'current' });
+          navigation.navigate('UpcomingEvent', {eventType: 'current'});
         }, 2500);
       } else if (
         res.data.message ==
@@ -496,7 +490,7 @@ const NewSubscription = ({ navigation, route }: any) => {
         setForLoading(false);
         stopMusic();
         setTimeout(() => {
-          navigation.navigate('UpcomingEvent', { eventType: 'upcoming' });
+          navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
         }, 2500);
       } else {
         setForLoading(false);
@@ -540,10 +534,10 @@ const NewSubscription = ({ navigation, route }: any) => {
         upgrade
           ? setCurrentSelected(2)
           : result.data.data?.plan == 'noob'
-            ? setCurrentSelected(0)
-            : result.data.data?.plan == 'pro'
-              ? setCurrentSelected(1)
-              : setCurrentSelected(2);
+          ? setCurrentSelected(0)
+          : result.data.data?.plan == 'pro'
+          ? setCurrentSelected(1)
+          : setCurrentSelected(2);
         EnteringEventFunction(
           dispatch,
           result.data?.data,
@@ -574,7 +568,7 @@ const NewSubscription = ({ navigation, route }: any) => {
           type: 'danger',
           animationDuration: 500,
           floating: true,
-          icon: { icon: 'auto', position: 'left' },
+          icon: {icon: 'auto', position: 'left'},
         });
       } else {
         dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
@@ -603,8 +597,8 @@ const NewSubscription = ({ navigation, route }: any) => {
           responseData?.data?.event_details.plan == 'noob'
             ? setCurrentSelected(0)
             : responseData?.data?.event_details?.plan == 'pro'
-              ? setCurrentSelected(1)
-              : setCurrentSelected(2);
+            ? setCurrentSelected(1)
+            : setCurrentSelected(2);
           EnteringEventFunction(
             dispatch,
             responseData?.data.event_details,
@@ -621,7 +615,7 @@ const NewSubscription = ({ navigation, route }: any) => {
     }
   };
 
-  const RenderItem = ({ item, index }: any) => {
+  const RenderItem = ({item, index}: any) => {
     const planCap: string = findKeyInObject(
       item,
       PLATFORM_IOS ? 'title' : 'name',
@@ -637,9 +631,9 @@ const NewSubscription = ({ navigation, route }: any) => {
           ? temp[0]?.formattedPrice
           : temp[1]?.formattedPrice
         : findKeyInObject(
-          item,
-          PLATFORM_IOS ? 'localizedPrice' : 'formattedPrice',
-        );
+            item,
+            PLATFORM_IOS ? 'localizedPrice' : 'formattedPrice',
+          );
 
     const normalizedPrice = PLATFORM_IOS ? price.replace(/\s/g, '') : price;
 
@@ -647,12 +641,12 @@ const NewSubscription = ({ navigation, route }: any) => {
     const color = planName.includes('noob')
       ? AppColor.NEW_SUBS_BLUE
       : planName.includes('pro')
-        ? AppColor.NEW_SUBS_GREEN
-        : AppColor.NEW_SUBS_ORANGE;
+      ? AppColor.NEW_SUBS_GREEN
+      : AppColor.NEW_SUBS_ORANGE;
     const CheckIcon = () => (
       <Image
         source={localImage.PlanBenifits}
-        style={{ marginRight: 10, width: 15, height: 15 }}
+        style={{marginRight: 10, width: 15, height: 15}}
         resizeMode="contain"
         tintColor={color}
       />
@@ -661,7 +655,7 @@ const NewSubscription = ({ navigation, route }: any) => {
       (item: any) => getPurchaseHistory?.product_id == item?.productId,
     );
     const Line = () => (
-      <Text numberOfLines={1} style={{ color: '#3333331A' }} ellipsizeMode="clip">
+      <Text numberOfLines={1} style={{color: '#3333331A'}} ellipsizeMode="clip">
         {Array(80).fill('- ')}
       </Text>
     );
@@ -677,12 +671,7 @@ const NewSubscription = ({ navigation, route }: any) => {
           justifyContent: 'center',
           alignItems: 'center',
           height: DeviceHeigth <= 640 ? DeviceHeigth * 0.8 : DeviceHeigth * 0.6,
-          // !planName.includes('noob') &&
-          // !planName.includes('pro') &&
-          // !PLATFORM_IOS &&
-          // getPurchaseHistory?.plan_value == null
-          //   ? DeviceHeigth * 0.65
-          //   : DeviceHeigth * 0.55,
+
           width: DeviceWidth * 0.85,
           alignSelf: 'center',
           margin: 10,
@@ -717,8 +706,8 @@ const NewSubscription = ({ navigation, route }: any) => {
             index == 0
               ? localImage.BasicPlan
               : index == 1
-                ? localImage.MediumPlan
-                : localImage.PremiumPlan
+              ? localImage.MediumPlan
+              : localImage.PremiumPlan
           }
           resizeMode="contain"
           style={{
@@ -744,8 +733,8 @@ const NewSubscription = ({ navigation, route }: any) => {
             planName.includes('noob')
               ? translate('basicPlan')
               : planName.includes('pro')
-                ? translate('mediumPlan')
-                : translate('premiumPlan')
+              ? translate('mediumPlan')
+              : translate('premiumPlan')
           }
           marginVertical={5}
         />
@@ -756,27 +745,11 @@ const NewSubscription = ({ navigation, route }: any) => {
             alignItems: 'center',
             marginBottom: 10,
           }}>
-          {/* <FitText
-            type="Heading"
-            value={
-              planName.includes('noob')
-                ? '₹99'
-                : planName.includes('pro')
-                ? '₹199'
-                : '₹399'
-            }
-            fontSize={28}
-            lineHeight={34}
-            marginVertical={5}
-            fontFamily={Fonts.MONTSERRAT_MEDIUM}
-            color="#ADADAD"
-            textDecorationLine="line-through"
-          /> */}
-
           <FitText
             type="Heading"
-            value={` ${PLATFORM_IOS ? normalizedPrice : normalizedPrice.split('.')[0]
-              }/month`}
+            value={` ${
+              PLATFORM_IOS ? normalizedPrice : normalizedPrice.split('.')[0]
+            }/${translate('month')}`}
             fontSize={28}
             lineHeight={34}
             marginVertical={5}
@@ -806,23 +779,7 @@ const NewSubscription = ({ navigation, route }: any) => {
         {!planName.includes('noob') &&
           !planName.includes('pro') &&
           !PLATFORM_IOS && <Line />}
-        {/* <View
-          style={[
-            styles.row,
-            {
-              width: '90%',
-            },
-          ]}>
-          <CheckIcon />
-          <FitText
-            type="normal"
-            value="Winning price ₹1000/-"
-            color="#333333E5"
-            fontFamily={Fonts.MONTSERRAT_MEDIUM}
-            marginVertical={3}
-          />
-        </View>
-        <Line /> */}
+
         <View
           style={[
             styles.row,
@@ -837,8 +794,8 @@ const NewSubscription = ({ navigation, route }: any) => {
               planName.includes('noob')
                 ? translate('eventsPerMonthBasic')
                 : planName.includes('pro')
-                  ? translate('eventsPerMonthPro')
-                  : translate('eventsPerMonthPremium')
+                ? translate('eventsPerMonthPro')
+                : translate('eventsPerMonthPremium')
             }
             color="#333333E5"
             fontFamily={Fonts.MONTSERRAT_MEDIUM}
@@ -863,7 +820,7 @@ const NewSubscription = ({ navigation, route }: any) => {
           />
         </View>
         <Line />
-        <View
+        {/* <View
           style={[
             styles.row,
             {
@@ -878,10 +835,10 @@ const NewSubscription = ({ navigation, route }: any) => {
             fontFamily={Fonts.MONTSERRAT_MEDIUM}
             marginVertical={3}
           />
-        </View>
+        </View> */}
         {(planName.includes('noob') || planName.includes('pro')) &&
           getPurchaseHistory?.plan_value == null && (
-            <View style={{ height: 50, width: '100%' }} />
+            <View style={{height: 50, width: '100%'}} />
           )}
 
         <GradientButton
@@ -935,8 +892,9 @@ const NewSubscription = ({ navigation, route }: any) => {
         getPurchaseHistory?.used_plan < getPurchaseHistory?.allow_usage
       ) {
         showMessage({
-          message: `You have ${getPurchaseHistory?.allow_usage - getPurchaseHistory?.used_plan
-            } limit left. Please use them before Purchase new Plan`,
+          message: `You have ${
+            getPurchaseHistory?.allow_usage - getPurchaseHistory?.used_plan
+          } limit left. Please use them before Purchase new Plan`,
           type: 'danger',
           floating: true,
           duration: 2000,
@@ -952,17 +910,17 @@ const NewSubscription = ({ navigation, route }: any) => {
         PLATFORM_IOS
           ? purchaseItems(item)
           : purchaseItemsAndroid(
-            item.productId,
-            item.subscriptionOfferDetails[0].offerToken,
-          );
+              item.productId,
+              item.subscriptionOfferDetails[0].offerToken,
+            );
       }
     } else {
       PLATFORM_IOS
         ? purchaseItems(item)
         : purchaseItemsAndroid(
-          item.productId,
-          item.subscriptionOfferDetails[0].offerToken,
-        );
+            item.productId,
+            item.subscriptionOfferDetails[0].offerToken,
+          );
     }
   };
   const getPrice = (item: any) => {
@@ -970,25 +928,28 @@ const NewSubscription = ({ navigation, route }: any) => {
       Platform.OS == 'ios'
         ? []
         : item?.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList;
-    console.log("price check workiong on ... ", item?.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList)
+    console.log(
+      'price check workiong on ... ',
+      item?.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList,
+    );
     const price: string =
       currentSelected == 2 && Platform.OS == 'android'
         ? temp?.length == 1
           ? temp[0]?.formattedPrice
           : temp[1]?.formattedPrice
         : findKeyInObject(
-          item,
-          PLATFORM_IOS ? 'localizedPrice' : 'formattedPrice',
-        );
+            item,
+            PLATFORM_IOS ? 'localizedPrice' : 'formattedPrice',
+          );
     const normalizedPrice = PLATFORM_IOS ? price.replace(/\s/g, '') : price;
     return normalizedPrice;
   };
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: AppColor.WHITE }}>
+    <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
       <StatusBar backgroundColor={AppColor.WHITE} barStyle={'dark-content'} />
-      <Wrapper styles={{ backgroundColor: AppColor.WHITE }}>
+      <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
         <NewHeader1 header={translate('header')} backButton />
-        <View style={{ flex: 1, marginHorizontal: 20, marginTop: 10 }}>
+        <View style={{flex: 1, marginHorizontal: 20, marginTop: 10}}>
           <ScrollView
             showsVerticalScrollIndicator={false}
             refreshControl={
@@ -1013,24 +974,26 @@ const NewSubscription = ({ navigation, route }: any) => {
               />
               <TouchableOpacity
                 onPress={() => {
-                  // PLATFORM_IOS
-                  //   ? restorePurchase()
-                  //   : Linking.openURL(
-                  //       'https://play.google.com/store/account/subscriptions',
-                  //     );
-                  // showRewardedAd();
-                  // rewardAdClosed().then(isClosed => {
-                  //   if (isClosed) {
+                  if (getPurchaseHistory?.plan == null) {
+                    showMessage({
+                      message: translate('activePlan'),
+                      type: 'danger',
+                      animationDuration: 500,
+
+                      floating: true,
+                      // icon: {icon: 'auto', position: 'left'},
+                    });
+                    return;
+                  }
+
                   PlanPurchasetoBackendAPI({
                     user_id: getUserDataDetails.id,
-                    transaction_id: 'free',
-                    plan: 'free',
-                    platform: Platform.OS,
-                    product_id: 'fitme_free',
-                    plan_value: 0,
+                    transaction_id: getPurchaseHistory?.transaction_id,
+                    plan: getPurchaseHistory?.plan,
+                    platform: getPurchaseHistory?.platform,
+                    product_id: getPurchaseHistory?.product_id,
+                    plan_value: getPurchaseHistory?.plan_value,
                   });
-                  //   }
-                  // });
                 }}>
                 <Text
                   style={{
@@ -1041,13 +1004,15 @@ const NewSubscription = ({ navigation, route }: any) => {
                     color: '#333333',
                     textDecorationLine: 'underline',
                   }}>
-                  {PLATFORM_IOS ? translate('restorePlan') : translate('managePlan')}
+                  {PLATFORM_IOS
+                    ? translate('restorePlan')
+                    : translate('managePlan')}
                 </Text>
               </TouchableOpacity>
             </View>
             {sortedSubscriptions && (
               <FlatList
-              ref={flatListRef}
+                ref={flatListRef}
                 data={sortedSubscriptions}
                 keyExtractor={(_, index) => index.toString()}
                 horizontal
@@ -1061,9 +1026,9 @@ const NewSubscription = ({ navigation, route }: any) => {
                 onMomentumScrollEnd={event => {
                   const index = Math.round(
                     event.nativeEvent.contentOffset.x /
-                    (DeviceHeigth >= 1024
-                      ? DeviceWidth * 0.95
-                      : DeviceWidth * 0.9),
+                      (DeviceHeigth >= 1024
+                        ? DeviceWidth * 0.95
+                        : DeviceWidth * 0.9),
                   );
                   setCurrentSelected(index);
                 }}
@@ -1080,7 +1045,7 @@ const NewSubscription = ({ navigation, route }: any) => {
                       : DeviceWidth * 0.9),
                   index,
                 })}
-                renderItem={({ item, index }) => RenderItem({ item, index })}
+                renderItem={({item, index}) => RenderItem({item, index})}
               />
             )}
 
@@ -1092,8 +1057,8 @@ const NewSubscription = ({ navigation, route }: any) => {
                     DeviceHeigth >= 1024
                       ? DeviceHeigth * 0.05
                       : DeviceHeigth >= 640
-                        ? DeviceHeigth * 0.06
-                        : DeviceHeigth * 0.05,
+                      ? DeviceHeigth * 0.06
+                      : DeviceHeigth * 0.05,
                 },
               ]}>
               {sortedSubscriptions?.map((item: any, index: number) => {
@@ -1116,14 +1081,14 @@ const NewSubscription = ({ navigation, route }: any) => {
                           DeviceHeigth >= 1024
                             ? DeviceHeigth * 0.05
                             : DeviceHeigth >= 640
-                              ? DeviceHeigth * 0.06
-                              : DeviceHeigth * 0.05,
+                            ? DeviceHeigth * 0.06
+                            : DeviceHeigth * 0.05,
                         backgroundColor: isSelected
                           ? index == 0
                             ? AppColor.NEW_SUBS_BLUE
                             : index == 1
-                              ? AppColor.NEW_SUBS_GREEN
-                              : AppColor.NEW_SUBS_ORANGE
+                            ? AppColor.NEW_SUBS_GREEN
+                            : AppColor.NEW_SUBS_ORANGE
                           : 'transparent',
                       },
                     ]}>
@@ -1140,7 +1105,11 @@ const NewSubscription = ({ navigation, route }: any) => {
                         textAlign: 'center',
                         opacity: isSelected ? 1 : 0.7,
                       }}>
-                      {index == 0 ? translate('basic') : index == 1 ? translate('medium') : translate('premium')}
+                      {index == 0
+                        ? translate('basic')
+                        : index == 1
+                        ? translate('medium')
+                        : translate('premium')}
                     </Text>
                   </TouchableOpacity>
                 );
@@ -1166,17 +1135,6 @@ const NewSubscription = ({ navigation, route }: any) => {
                       lineHeight: 16,
                       color: '#333333',
                     }}>
-                    {/* Please NOTE: Enjoy the 3-day free trial then you will be
-                    charged {getPrice(sortedSubscriptions[currentSelected])}{' '}
-                    monthly. You can cancel the subscription before your trial
-                    period ends if you do not want to convert to a paid
-                    subscription. Your subscription will renew automatically
-                    until you cancel the subscription, you can manage or cancel
-                    your subscription anytime from the Google Play Store. If you
-                    are unsure how to cancel a subscription, please visit the
-                    Google Support website. Note that deleting the app does not
-                    cancel your subscription. */}
-
                     {translate('noteAndroidPremium')}
                   </Text>
                 ) : (
@@ -1319,7 +1277,7 @@ const styles = StyleSheet.create({
     shadowColor: '#121212B2',
     ...Platform.select({
       ios: {
-        shadowOffset: { width: 1, height: 2 },
+        shadowOffset: {width: 1, height: 2},
         shadowOpacity: 0.5,
         shadowRadius: 2,
       },

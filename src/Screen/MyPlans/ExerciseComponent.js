@@ -60,7 +60,7 @@ export const ExerciseComponetWithoutEvents = ({
   moment.locale(lang);
   const translatedDay = dayNameMap[lang]?.[day] || day;
 
-  console.log('Translated:', translatedDay);
+
   const renderExerciseItem = ({item, index}) => {
     const time = parseInt(item?.exercise_rest?.split(' ')[0]) || 0;
 
@@ -80,8 +80,8 @@ export const ExerciseComponetWithoutEvents = ({
               defaultSource={localImage.NOWORKOUT}
             />
           </View>
-          <View style={{marginLeft: 15}}>
-            <Text style={[styles.txt3, {marginVertical: 6}]}>
+          <View style={{marginLeft: 15,width:260}}>
+            <Text style={[styles.txt3, {marginVertical: 6}]} >
               {item?.exercise_title}
             </Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>

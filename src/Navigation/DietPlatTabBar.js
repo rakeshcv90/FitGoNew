@@ -254,7 +254,7 @@ const DietPlatTabBar = ({navigation}) => {
     <View style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'white'} />
       <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
-        <NewHeader1
+        {/* <NewHeader1
           header={translate('dietPlan')}
           backButton
           icon={showSearchButton ? true : false}
@@ -266,7 +266,7 @@ const DietPlatTabBar = ({navigation}) => {
             refStandard.current.openSheet();
           }}
           iconSource={require('../Icon/Images/NewImage2/filter.png')}
-        />
+        /> */}
         {/* <Tab.Navigator
           initialRouteName="Breakfast"
           screenOptions={{

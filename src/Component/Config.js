@@ -8,6 +8,7 @@ export const Api = 'https://cvinfotech2@gofit.tentoptoday.com/json/';
 export const NewApi = 'https://fitness.appmmc.com/adserver/public/api/'; //New  Server
 
 
+
 export const Appapi = {
   login: 'user_login.php',
   signup: 'user_registration.php',
@@ -139,4 +140,5 @@ export const NewAppapi = {
   GET_ALL_HISTORY:NewApi+'get_exercise_history',
   GET_BOTH_HISTORY:NewApi+'get_eventwithoutenvent_history',
   GET_SINGLE_EXERCISE:NewApi+'get_single_exercise',
+ SINGLE_DIET :NewApi+'singleDiet'
 };

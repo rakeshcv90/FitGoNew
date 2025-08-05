@@ -41,12 +41,18 @@ type Item = {
 };
 
 const MealList = ({data}: any) => {
-  // const {showInterstitialAd} = MyInterstitialAd();
+
   const getDietFilterData = useSelector(
     (state: any) => state?.getDietFilterData,
   );
+
+
   const mealData = useSelector((state: any) => state.mealData);
+  
   const [filterMealList, setFilterMealList] = useState(data);
+//   useEffect(() => {
+//   setFilterMealList(data);
+// }, [data]);
   const checkMealAddCount = (item: Item) => {
     let checkAdsShow = AddCountFunction();
 
@@ -59,7 +65,7 @@ const MealList = ({data}: any) => {
   };
   useEffect(() => {
     updateFilteredCategories(getDietFilterData);
-  }, [getDietFilterData]);
+  }, [getDietFilterData,data]);
 
   const updateFilteredCategories = (test: number) => {
     let filteredItems = [];

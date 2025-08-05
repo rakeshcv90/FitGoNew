@@ -19,6 +19,7 @@ import {DeviceHeigth, DeviceWidth} from './Config';
 import {AppColor, PLATFORM_IOS} from './Color';
 import {showMessage} from 'react-native-flash-message';
 import {BlurView} from '@react-native-community/blur';
+import { translate } from '../Screen/Translation/TranslationService';
 
 export const AlarmNotification = async (time: any) => {
   const trigger: TimestampTrigger = {
@@ -28,8 +29,8 @@ export const AlarmNotification = async (time: any) => {
   };
   await notifee.createTriggerNotification(
     {
-      title: 'Exercise Time',
-      body: `It's time to Exercise`,
+      title: translate('ExerciseTime'),
+      body:  translate('ExerciseTime1'),
       android: {
         channelId: 'Time',
         importance: AndroidImportance.HIGH,
@@ -200,7 +201,7 @@ const Reminder = ({
                 fontFamily: 'Poppins',
                 lineHeight: 25,
               }}>
-              Set a Reminder
+              {translate('Definir um lembrete')}
             </Text>
             <View
               style={{
@@ -276,7 +277,7 @@ const Reminder = ({
                     fontFamily: 'Poppins',
                     lineHeight: 25,
                   }}>
-                  Cancel
+                 {translate('cancel')}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={onCreateTriggerNotification}>
@@ -288,7 +289,7 @@ const Reminder = ({
                     fontFamily: 'Poppins',
                     lineHeight: 25,
                   }}>
-                  Set
+                  {translate('set')}
                 </Text>
               </TouchableOpacity>
             </View>

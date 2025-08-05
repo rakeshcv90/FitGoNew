@@ -168,8 +168,8 @@ const PermissionScreen = () => {
               itemKey == 'healthkit'
                 ? 'Sync Healthkit Data'
                 : grantedPermissions
-                ? 'Allowed'
-                : 'Allow'
+                ? translate('allowed')
+                : translate('allow')
             }
             pV={8}
             buttonColor={grantedPermissions ? AppColor.RED : AppColor.WHITE}
@@ -222,8 +222,8 @@ const PermissionScreen = () => {
           title={
             permissionState.location &&
             permissionState.notification 
-              ? 'Continue to app'
-              : 'Grant All Permissions'
+              ?  translate('continueapp')
+              : translate('grantPermissions')
           }
           fontFamily={Fonts.HELVETICA_REGULAR}
           position={'absolute'}

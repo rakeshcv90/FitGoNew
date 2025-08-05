@@ -35,7 +35,7 @@ const useMusicPlayer = ({song, restStart, pause, getSoundOffOn}: Props) => {
   }, []);
 
   const setupMusic = async () => {
-    console.log('INITIALIZNG', song);
+   
     const isInitialized = await MusicPlayer?.setupPlayer(song);
     console.log('Initiailedddd', isInitialized);
     if (isInitialized) {

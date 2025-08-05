@@ -78,7 +78,7 @@ const HomeHeader = ({leaderboardData}: Props) => {
       navigate('WorkoutHistory');
     },
   };
-
+  console.log('check navigatesss',enteredCurrentEvent);
   return (
     <View style={[PredefinedStyles.rowBetween, styles.container]}>
       <View style={{width: '45%'}}>
@@ -136,14 +136,7 @@ const HomeHeader = ({leaderboardData}: Props) => {
         </View>
       ) : (
         <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' ,width: '30%'}}>
-          {/* <FitIcon
-            {...historyIcon}
-            onPress={() => {
-              AnalyticsConsole('HB');
-              navigate('NewHistory');
-            }}
-            roundIcon
-          /> */}
+  
           <TouchableOpacity
             activeOpacity={0.6}
             disabled={(Sat || Sun) == true}

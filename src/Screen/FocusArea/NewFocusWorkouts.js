@@ -117,7 +117,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
     {
       id: 1,
       title: translate('legs'),
-      ima: require('../../Icon/Images/NewImage2/calves.png'),
+      ima: require('../../Icon/Images/NewImage2/leg.png'),
       exCount: getExerciseCount?.exCount1 ?? 0,
     },
     // {
@@ -151,14 +151,14 @@ const NewFocusWorkouts = ({route, navigation}) => {
   useEffect(() => {
     // delay for smooth animation
     setTimeout(() => {
-      if (route?.params?.focusedPart == 'Upper Body' && getUprBodyCount == 0) {
+      if (route?.params?.focusedPart == translate('upperbody') && getUprBodyCount == 0) {
         bottomSheetRef.current?.openSheet();
       } else if (
-        route?.params?.focusedPart == 'Lower Body' &&
+        route?.params?.focusedPart ==  translate('lowerbody') &&
         getLowerBodyCount == 0
       ) {
         bottomSheetRef.current?.openSheet();
-      } else if (route?.params?.focusedPart == 'Core' && getCoreCount == 0) {
+      } else if (route?.params?.focusedPart == translate('core') && getCoreCount == 0) {
         bottomSheetRef.current?.openSheet();
       }
       // else {
@@ -248,11 +248,11 @@ const NewFocusWorkouts = ({route, navigation}) => {
     }
 
     const focusedPart = route?.params?.focusedPart;
-    if (focusedPart === 'Upper Body') {
+    if (focusedPart === translate('upperbody')) {
       dispatch(setUprBdyOpt(filterCriteria));
-    } else if (focusedPart === 'Lower Body') {
+    } else if (focusedPart ===  translate('lowerbody')) {
       dispatch(setLowerBodyFilOpt(filterCriteria));
-    } else if (focusedPart === 'Core') {
+    } else if (focusedPart === translate('core')) {
       dispatch(setCoreFilOpt(filterCriteria));
     } else {
       return searchCriteria;
@@ -261,11 +261,11 @@ const NewFocusWorkouts = ({route, navigation}) => {
   const handleFilterVisibilty = () => {
     bottomSheetRef.current?.closeSheet();
     const focusedPart = route?.params?.focusedPart;
-    if (focusedPart === 'Upper Body') {
+    if (focusedPart === translate('upperbody')) {
       dispatch(setUprBodyCount(1));
-    } else if (focusedPart === 'Lower Body') {
+    } else if (focusedPart ===  translate('lowerbody')) {
       dispatch(setLowerBodyCount(1));
-    } else if (focusedPart === 'Core') {
+    } else if (focusedPart ===  translate('core')) {
       dispatch(setCoreCount(1));
     }
   };
@@ -322,15 +322,15 @@ const NewFocusWorkouts = ({route, navigation}) => {
       searchCriteria,
     ) => {
       const focusedPart = route?.params?.focusedPart;
-      if (focusedPart === 'Upper Body') {
+      if (focusedPart === translate('upperbody')) {
         return getUperBodyFilOption.length === 0
           ? searchCriteria
           : getUperBodyFilOption;
-      } else if (focusedPart === 'Lower Body') {
+      } else if (focusedPart === translate('lowerbody')) {
         return getLowerBodyFilOpt.length === 0
           ? searchCriteria
           : getLowerBodyFilOpt;
-      } else if (focusedPart === 'Core') {
+      } else if (focusedPart === translate('core')) {
         return getCoreFiltOpt.length === 0 ? searchCriteria : getCoreFiltOpt;
       } else {
         return searchCriteria;
@@ -346,8 +346,9 @@ const NewFocusWorkouts = ({route, navigation}) => {
         searchCriteria,
       ),
     );
-    // handle whenever filter data changes
+console.log("eeeeeeeee",filterCritera)
     const handleFilterChange = bodyPart => {
+      
       setFilterCriteria(prev =>
         prev.includes(bodyPart)
           ? prev.length > 1
@@ -373,7 +374,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
           getCoreFiltOpt,
           searchCriteria,
         ),
-      ) || adjustSelected !== getEquipmentExercise; // extra condition for adjust change detection
+      ) || adjustSelected !== getEquipmentExercise; 
     const adjustArray = [
       {
         image: localImage.Workout,
@@ -445,11 +446,11 @@ const NewFocusWorkouts = ({route, navigation}) => {
           }}>
           <FlatList
             data={
-              route?.params?.focusedPart == 'Upper Body'
+              route?.params?.focusedPart == translate('upperbody')
                 ? uperBody
-                : route?.params?.focusedPart == 'Lower Body'
+                : route?.params?.focusedPart == translate('lowerbody')
                 ? lowerBody
-                : route?.params?.focusedPart == 'Core'
+                : route?.params?.focusedPart == translate('core')
                 ? core
                 : []
             }
@@ -482,6 +483,8 @@ const NewFocusWorkouts = ({route, navigation}) => {
                         ? AppColor.RED
                         : AppColor.LIGHTGREY2,
                     }}>
+
+                    {console.log("zzfffff",filterCritera,item.title)}
                     <View
                       style={{
                         width: 25,
@@ -520,6 +523,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                         {item.title}
                       </Text>
                     </View>
+                    
                     <Icon
                       name={
                         filterCritera.includes(item.title)
@@ -823,8 +827,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
               }
               if (downloaded > 0) {
                 showMessage({
-                  message:
-                    translate('messageDownload'),
+                  message: translate('messageDownload'),
                   type: 'info',
                   animationDuration: 500,
                   floating: true,
@@ -936,15 +939,16 @@ const NewFocusWorkouts = ({route, navigation}) => {
                         <View
                           style={{flexDirection: 'row', alignItems: 'center'}}>
                           <Text style={styles.txt2}>
-                            {translate('time')+' - ' +
+                            {translate('time') +
+                              ' - ' +
                               '1 x ' +
                               (time > 60
                                 ? Math.floor(time / 60) + ' min'
-                                : time + ' '+translate('sec'))}{' '}
+                                : time + ' ' + translate('sec'))}{' '}
                             |{' '}
                           </Text>
                           <Text style={styles.txt2}>
-                            {translate('set')+' - ' + item?.exercise_sets}
+                            {translate('set') + ' - ' + item?.exercise_sets}
                           </Text>
                         </View>
                       </View>

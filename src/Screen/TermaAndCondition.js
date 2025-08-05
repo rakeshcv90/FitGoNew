@@ -24,6 +24,7 @@ import {AppColor} from '../Component/Color';
 import NewHeader from '../Component/Headers/NewHeader';
 import NewHeader1 from '../Component/Headers/NewHeader1';
 import Wrapper from './WorkoutCompleteScreen/Wrapper';
+import {translate} from './Translation/TranslationService';
 
 const TermaAndCondition = ({route}) => {
   const [isLoaded, setIsLoaded] = useState(true);
@@ -35,7 +36,14 @@ const TermaAndCondition = ({route}) => {
         {backgroundColor: defaultTheme ? '#000' : '#fff'},
       ]}>
       <Wrapper>
-        <NewHeader1 header={route?.params?.title} backButton />
+        <NewHeader1
+          header={
+            route?.params?.title == 'Privacy Policy'
+              ? translate('privacypolicy')
+              : translate('TermaAndCondition')
+          }
+          backButton
+        />
         <ActivityIndicator
           animating={isLoaded}
           size={'large'}
@@ -52,8 +60,8 @@ const TermaAndCondition = ({route}) => {
           source={{
             uri:
               route.params.title === 'Privacy Policy'
-                ? 'https://thefitnessandworkout.com/privacy-policy/'
-                : 'https://thefitnessandworkout.com/terms-condition/',
+                ? 'https://www.mmcorpo.com.br/privacy-policy-2/'
+                : 'https://www.mmcorpo.com.br/privacy-policy-2/',
           }}
           style={{flex: 1}}
           onLoad={() => setIsLoaded(false)} // Set loading to false when content is loaded

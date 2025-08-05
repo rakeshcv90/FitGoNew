@@ -40,6 +40,8 @@ import NewButton from '../../Component/NewButton';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import {ArrowLeft} from '../../Component/Utilities/Arrows/Arrow';
+import {translate} from '../Translation/TranslationService';
+import WorkoutsDescription from '../NewWorkouts/WorkoutsDescription';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -54,7 +56,8 @@ const CustomWorkoutDetails = ({navigation, route}) => {
   const [backBlock, setBackBlock] = useState(false);
   const [VideoDownload, setVideoDownload] = useState(0);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
-
+  const [open, setOpen] = useState(false);
+  const [exercisedata, setexercisedata] = useState([]);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const dispatch = useDispatch();
   let isFocuse = useIsFocused();
@@ -123,7 +126,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-        lang:'en',
+        lang: 'en',
       });
 
       if (res?.data?.msg == 'Please update the app to the latest version.') {
@@ -170,8 +173,8 @@ const CustomWorkoutDetails = ({navigation, route}) => {
         const res = await axios({
           url: NewAppapi.CURRENT_DAY_EXERCISE,
           method: 'Post',
-          data: {user_details: datas,type: 'custom'},
-          lang:'en'
+          data: {user_details: datas, type: 'custom'},
+          lang: 'en',
         });
 
         if (res.data) {
@@ -230,8 +233,12 @@ const CustomWorkoutDetails = ({navigation, route}) => {
           <>
             <TouchableOpacity
               onPress={() => {
-                AnalyticsConsole(`${item?.exercise_title?.split(' ')[0]}_DESC`);
-                navigation.navigate('WorkoutDetail', {item: item});
+                // navigation.navigate('WorkoutDetail', {item: item});
+                setexercisedata([]);
+                setexercisedata(item);
+                setTimeout(() => {
+                  setOpen(true);
+                }, 500);
               }}
               activeOpacity={0.8}
               style={{
@@ -290,15 +297,16 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                   </Text>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Text style={styles.txt2}>
-                      {'Time - ' +
+                      {translate('time') +
+                        ' - ' +
                         '1 x ' +
                         (time > 60
                           ? Math.floor(time / 60) + ' min'
-                          : time + ' sec')}{' '}
+                          : time + translate('sec'))}{' '}
                       |{' '}
                     </Text>
                     <Text style={styles.txt2}>
-                      {'Set - ' + item?.exercise_sets}
+                      {translate('set') + ' - ' + item?.exercise_sets}
                     </Text>
                   </View>
                 </View>
@@ -377,7 +385,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
         // getCustomWorkout();
         getUserDetailData();
         showMessage({
-          message: 'Workout deleted successfully.',
+          message: translate('deleteWorkout'),
           type: 'success',
           animationDuration: 500,
           floating: true,
@@ -460,19 +468,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
       setForLoading(false);
     }
   };
-  // const bannerAdsDisplay = () => {
-  //   if (getPurchaseHistory.length > 0) {
-  //     if (
-  //       getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-  //     ) {
-  //       return null;
-  //     } else {
-  //       return <BannerAdd bannerAdId={bannerAdId} />;
-  //     }
-  //   } else {
-  //     return <BannerAdd bannerAdId={bannerAdId} />;
-  //   }
-  // };
+
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
@@ -488,14 +484,13 @@ const CustomWorkoutDetails = ({navigation, route}) => {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: 10
+            padding: 10,
           }}>
           <TouchableOpacity
             onPress={() => {
               if (backBlock) {
                 showMessage({
-                  message:
-                    'Please wait, downloading in progress. Do not press back.',
+                  message: translate('messageDownload'),
                   type: 'info',
                   animationDuration: 500,
                   floating: true,
@@ -576,8 +571,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
 
                       fontFamily: Fonts.MONTSERRAT_MEDIUM,
                     }}>
-                    {data?.total_exercises}
-                    {' Exercises'}
+                    {data?.total_exercises} {translate('exercises')}
                   </Text>
                 </View>
               </View>
@@ -594,7 +588,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                   marginVertical: 15,
                   alignItems: 'center',
                 }}>
-                Exercises
+                {translate('exercises')}
               </Text>
             </View>
             <View style={{paddingBottom: 10}}>
@@ -615,7 +609,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
           {data?.exercise_data.length > 0 && (
             <NewButton
               position={'absolute'}
-              title={'Start Workout'}
+              title={translate('startWorkout')}
               bottom={20}
               pV={10}
               pH={10}
@@ -680,7 +674,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                     textAlign: 'center',
                     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                   }}>
-                  Edit
+                  {translate('edit')}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -704,13 +698,19 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                     textAlign: 'center',
                     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                   }}>
-                  Delete
+                  {translate('delete')}
                 </Text>
               </TouchableOpacity>
             </View>
           </TouchableOpacity>
         </BlurView>
       </Modal>
+      <WorkoutsDescription
+        data={exercisedata}
+        open={open}
+        setOpen={setOpen}
+        id={exercisedata?.exercise_id}
+      />
     </>
   );
 };

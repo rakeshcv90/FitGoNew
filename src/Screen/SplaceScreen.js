@@ -360,7 +360,7 @@ const SplaceScreen = ({navigation, route}) => {
       const responseData = await axios.get(
         `${NewAppapi.GET_ALL_IN_ONE}?version=${VersionNumber.appVersion}`,
       );
-console.log("SDFsdfdsfsdfdsfsfdsfds",responseData?.data)
+
       if (
         responseData?.data?.msg ==
         'Please update the app to the latest version.'

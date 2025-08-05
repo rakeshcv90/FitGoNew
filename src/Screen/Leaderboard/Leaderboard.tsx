@@ -500,10 +500,8 @@ const Leaderboard = () => {
 
   return (
     <>
-      {
-      // loader == true ? (
-      //   <LoadingScreen />
-      // ) : (
+      
+    
         <View style={styles.container}>
           <Wrapper styles={{backgroundColor: AppColor.Background_New}}>
             <NewHeader1
@@ -623,10 +621,10 @@ const Leaderboard = () => {
                 listData={otherData}
                 totalData={totalData}
               />
-              <PastWinnersComponent
+              {/* <PastWinnersComponent
                 pastWinners={pastWinners}
                 navigation={navigation}
-              />
+              /> */}
               {enteredCurrentEvent ? (
                 (Sat || Sun) != true ? (
                   <LeaderBoardProgressComopnent
@@ -638,12 +636,12 @@ const Leaderboard = () => {
                   />
                 ) : (
                   <View style={{marginTop: 10}}>
-                    {/* <NativeAddTest media={true} type="image" /> */}
+                   
                   </View>
                 )
               ) : enteredUpcomingEvent ? (
                 <View style={{marginTop: 10}}>
-                  {/* <NativeAddTest media={true} type="image" /> */}
+       
                 </View>
               ) : (
                 <View
@@ -757,8 +755,7 @@ const Leaderboard = () => {
             </ScrollView>
           </Wrapper>
         </View>
-      // )
-      }
+    
       <WinnerModal setVisible={setVisible} visible={visible} mainData={mainData} />
     </>
   );

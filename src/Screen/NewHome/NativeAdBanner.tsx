@@ -66,26 +66,10 @@ const NativeAdBanner = ({loader}: Props) => {
             enteredCurrentEvent={enteredCurrentEvent}
             enteredUpcomingEvent={enteredUpcomingEvent}
           />
-          {/* <NativeAdsView
-            width={DeviceWidth * 0.95}
-            media={false}
-            type="image"
-          /> */}
+         
         </ScrollView>
       </View>
-      {/* <View style={[PredefinedStyles.rowCenter, {marginTop: 15}]}>
-        {[1, 2].map(i => (
-          <View
-            style={[
-              styles.box,
-              {
-                backgroundColor:
-                  currentIndex == i - 1 ? AppColor.RED : '#D9D9D9',
-              },
-            ]}
-          />
-        ))}
-      </View> */}
+   
     </View>
   );
 };

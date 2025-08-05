@@ -86,7 +86,6 @@ const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
         const { options } = descriptors[route.key];
 
 
-        console.log('label .... ', label, ' // ', route.name);
 
 
 

@@ -43,7 +43,7 @@ import ActivityLoader from '../../Component/ActivityLoader';
 import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
-import {translate} from '../Translation/TranslationService';
+import {getCurrentLanguage, translate} from '../Translation/TranslationService';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Workouts = ({navigation}: any) => {
@@ -52,6 +52,8 @@ const Workouts = ({navigation}: any) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [imageLoad, setImageLoad] = useState(true);
   const [currentCategories, setCurrentCategories] = useState<Array<any>>([]);
+  const lang = getCurrentLanguage();
+
   const completeProfileData = useSelector(
     (state: any) => state.completeProfileData,
   );
@@ -196,7 +198,10 @@ const Workouts = ({navigation}: any) => {
       title: translate('upperbody'),
       image: require('../../Icon/Images/NewImage2/uperBody.png'),
 
-      searchCriteria: ['Chest', 'Back', 'Shoulders', 'Arms'],
+      searchCriteria:
+        lang == 'pt'
+          ? ['Peito', 'Costas', 'Ombros', 'Braços']
+          : ['Chest', 'Back', 'Shoulders', 'Arms'],
       searchCriteriaRedux: getUperBodyFilOption,
     },
     {
@@ -338,7 +343,6 @@ const Workouts = ({navigation}: any) => {
         CategoryDetails: mydata,
       });
     } else {
-      console.log('eeeeeee', checkAdsShow);
       navigation.navigate('WorkoutCategories', {
         categoryExercise: bodyexercise,
         CategoryDetails: mydata,
@@ -528,7 +532,11 @@ const Workouts = ({navigation}: any) => {
         navigation.navigate('NewFocusWorkouts', {
           focusExercises: exercises,
           focusedPart: data?.title,
-          searchCriteria: ['Chest', 'Back', 'Shoulders', 'Arms'],
+          // searchCriteria: ['Chest', 'Back', 'Shoulders', 'Arms'],
+          searchCriteria:
+            lang == 'pt'
+              ? ['Peito', 'Costas', 'Ombros', 'Braços']
+              : ['Chest', 'Back', 'Shoulders', 'Arms'],
           searchCriteriaRedux: getUperBodyFilOption,
           CategoryDetails: data,
         });
@@ -536,7 +544,11 @@ const Workouts = ({navigation}: any) => {
         navigation.navigate('NewFocusWorkouts', {
           focusExercises: exercises,
           focusedPart: data?.title,
-          searchCriteria: ['Chest', 'Back', 'Shoulders', 'Arms'],
+          // searchCriteria: ['Chest', 'Back', 'Shoulders', 'Arms'],
+          searchCriteria:
+            lang == 'pt'
+              ? ['Peito', 'Costas', 'Ombros', 'Braços']
+              : ['Chest', 'Back', 'Shoulders', 'Arms'],
           searchCriteriaRedux: getUperBodyFilOption,
           CategoryDetails: data,
         });

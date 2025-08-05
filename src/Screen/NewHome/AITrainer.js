@@ -73,7 +73,7 @@ const AITrainer = ({ navigation }) => {
   const [speechRate, setSpeechRate] = useState(0.5);
   const [speechPitch, setSpeechPitch] = useState(1);
   const getSoundOffOn = useSelector(state => state.getSoundOffOn);
-  const lang = getCurrentLanguage();
+
 
   useEffect(() => {
     Tts.addEventListener('tts-start', _event => setTtsStatus('started'));
@@ -83,6 +83,7 @@ const AITrainer = ({ navigation }) => {
     Tts.setDefaultPitch(speechPitch);
     Tts.getInitStatus().then(initTts);
   }, [getSoundOffOn]);
+    const lang = getCurrentLanguage();
   const initTts = async () => {
     if (lang == 'en') {
       await Tts.setDefaultLanguage('en-IN');

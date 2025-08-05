@@ -107,7 +107,7 @@ const Gender = ({route, navigation}) => {
               color: selectedbutton == 'Male' ? AppColor.RED : AppColor.BLACK,
               marginVertical: 20,
             }}>
-            Male
+           {translate('male')}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -137,7 +137,7 @@ const Gender = ({route, navigation}) => {
               color: selectedbutton == 'Female' ? AppColor.RED : AppColor.BLACK,
               marginVertical: 20,
             }}>
-            Female
+           {translate('female')}
           </Text>
         </TouchableOpacity>
       </View>

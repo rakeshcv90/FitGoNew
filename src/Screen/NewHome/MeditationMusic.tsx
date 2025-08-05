@@ -12,6 +12,7 @@ import {DeviceHeigth} from '../../Component/Config';
 import FitIcon from '../../Component/Utilities/FitIcon';
 import useMusicPlayer from '../NewWorkouts/Exercise/ExerciseUtilities/useMusicPlayer';
 import {navigationRef} from '../../../App';
+import { useNavigation } from '@react-navigation/native';
 // import { OpenAppAds } from '../../Component/BannerAdd';
 
 type MindsetData = {
@@ -63,7 +64,7 @@ const MeditationMusic = ({
   });
 
   // const {openAdClosed} = OpenAppAds();
-
+const navigation = useNavigation();
   useEffect(() => {
     const subscribe = AppState.addEventListener(
       'change',
@@ -82,7 +83,8 @@ const MeditationMusic = ({
     if (backPressed) {
       releaseMusic();
       setPause(false);
-      navigationRef.current?.goBack();
+      // navigationRef.current?.goBack();
+          navigation.goBack();
     }
     setPause(true);
   }, [backPressed]);
@@ -98,7 +100,8 @@ const MeditationMusic = ({
   const onCompletion = () => {
     setPause(false);
     releaseMusic();
-    navigationRef.current?.goBack();
+    // navigationRef.current?.goBack();
+    navigation.goBack();
   };
 
   return (

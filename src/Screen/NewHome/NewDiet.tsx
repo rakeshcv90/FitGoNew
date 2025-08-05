@@ -31,10 +31,16 @@ const NewDiet = () => {
   const getCustomDietData = useSelector(
     (state: any) => state.getCustomDietData,
   );
+      const getDietFilterData = useSelector(
+      (state: any) => state?.getDietFilterData,
+    );
   const refStandard = useRef<any>();
   const mealData = useSelector((state: any) => state.mealData);
+
   const [showSearchButton, setShowSearchButton] = useState(true);
   const [selectedItem, setSelectedItem] = useState(0);
+
+
 
   useEffect(() => {
     setShowSearchButton(true);
@@ -53,9 +59,7 @@ const NewDiet = () => {
   ];
 
   const BottomSheetContent = () => {
-    const getDietFilterData = useSelector(
-      (state: any) => state?.getDietFilterData,
-    );
+
     const dispatch = useDispatch();
     const [selectedItem, setSelectedItem] = useState(getDietFilterData);
     return (

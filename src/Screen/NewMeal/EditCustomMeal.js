@@ -26,11 +26,12 @@ import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 // import {BannerAdd} from '../../Component/BannerAdd';
 // import {bannerAdId} from '../../Component/AdsId';
 import FitText from '../../Component/Utilities/FitText';
-import {localImage} from '../../Component/Image'
+import {localImage} from '../../Component/Image';
 import VersionNumber from 'react-native-version-number';
 import {showMessage} from 'react-native-flash-message';
 import axios from 'axios';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
+import {translate} from '../Translation/TranslationService';
 
 const EditCustomMeal = ({navigation, route}) => {
   const [forLoading, setForLoading] = useState(false);
@@ -86,7 +87,7 @@ const EditCustomMeal = ({navigation, route}) => {
                   borderRadius: 10,
                 }}
                 source={{
-                  uri: item.diet_image??localImage.NOWORKOUT,
+                  uri: item.diet_image ?? localImage.NOWORKOUT,
                 }}
                 resizeMode={'cover'}
               />
@@ -178,7 +179,7 @@ const EditCustomMeal = ({navigation, route}) => {
   };
   const UpdateCustomMealList = async () => {
     const url =
-      'https://fitme.cvinfotechserver.com/adserver/public/api/test_update_custom_diet';
+      'https://fitness.appmmc.com/adserver/public/api/test_update_custom_diet';
 
     setForLoading(true);
     const payload = new FormData();
@@ -198,22 +199,21 @@ const EditCustomMeal = ({navigation, route}) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-   
 
       if (res?.data?.msg == 'diet updated successfully.') {
         showMessage({
-          message: 'Meal updated successfully.',
+          message: translate('mealUpdate'),
           type: 'success',
           animationDuration: 500,
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-     
+
         getUserDetailData();
       } else {
         setForLoading(false);
         showMessage({
-          message: 'Something went wrong please try again!',
+          message: translate('somethingWentWrong'),
           type: 'danger',
           animationDuration: 500,
           floating: true,
@@ -224,7 +224,7 @@ const EditCustomMeal = ({navigation, route}) => {
       setForLoading(false);
       console.log(error);
       showMessage({
-        message: 'Something went wrong pleasr try again',
+        message:translate('somthingwrong'),
         type: 'danger',
         animationDuration: 500,
         floating: true,
@@ -263,14 +263,13 @@ const EditCustomMeal = ({navigation, route}) => {
     } catch (error) {
       console.log('GET-USER-DATA UpdateMeal List', error);
       setForLoading(false);
-   
     }
   };
   return (
     <View style={styles.container}>
       {forLoading ? <ActivityLoader /> : ''}
       <DietPlanHeader
-        header={'Edit meals'}
+        header={translate('editmeal')}
         SearchButton={false}
         shadow
         backPressCheck={true}
@@ -304,8 +303,7 @@ const EditCustomMeal = ({navigation, route}) => {
               UpdateCustomMealList();
             } else {
               showMessage({
-                message:
-                  'Select a meal from the given list to create your personalized diet plan!',
+                message: translate('mealmessage'),
                 type: 'danger',
                 animationDuration: 500,
                 floating: true,
@@ -342,7 +340,7 @@ const EditCustomMeal = ({navigation, route}) => {
             tintColor={AppColor.WHITE}
             style={{width: 20, height: 20, marginHorizontal: 10}}
           />
-          <Text style={styles.button}>{'Add Custom'}</Text>
+          <Text style={styles.button}>{translate('addCustom')}</Text>
 
           <Text style={[styles.button, {marginHorizontal: 5}]}>
             ({selectedItems?.length})

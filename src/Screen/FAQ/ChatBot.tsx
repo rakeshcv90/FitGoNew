@@ -218,7 +218,7 @@ const ChatBot = ({navigation, route}: any) => {
                     fontWeight="600"
                     fontFamily={Fonts.MONTSERRAT_MEDIUM}
                     color={AppColor.RED}
-                    value="< Yes"
+                    value={`< ${translate('yes')}`}
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -231,7 +231,7 @@ const ChatBot = ({navigation, route}: any) => {
                     fontWeight="600"
                     fontFamily={Fonts.MONTSERRAT_MEDIUM}
                     color={AppColor.RED}
-                    value="No >"
+                    value={`${translate('no')} >`}
                   />
                 </TouchableOpacity>
               </View>
@@ -259,7 +259,7 @@ const ChatBot = ({navigation, route}: any) => {
     <View style={{flex: 1, backgroundColor: AppColor.WHITE}}>
       <StatusBar backgroundColor="white" barStyle={'dark-content'} />
       <Wrapper>
-        <NewHeader1 header="Frequently Asked Questions" backButton />
+        <NewHeader1 header={translate('faqTitle')} backButton />
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{

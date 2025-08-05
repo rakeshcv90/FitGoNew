@@ -13,7 +13,9 @@ import {Text} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {localImage} from '../../Component/Image';
 import {useSelector} from 'react-redux';
+import { translate } from '../Translation/TranslationService';
 const LeaderBoardTopComponent = ({data, totalData, listData}) => {
+  console.log('data Details', data, totalData, listData);
   const user1BarHeight = useSharedValue(0);
   const user2BarHeight = useSharedValue(0);
   const user3BarHeight = useSharedValue(0);
@@ -180,21 +182,45 @@ const LeaderBoardTopComponent = ({data, totalData, listData}) => {
   return (
     <View style={styles.container}>
       <View style={styles.animationWrapper}>
-        <BarComponent
-          animation1={animatedStyle1}
-          barColor={AppColor.BAR1COLOR}
-          data={data[1]}
-        />
-        <BarComponent
-          animation1={animatedStyle2}
-          barColor={AppColor.BAR2COLOR}
-          data={data[0]}
-        />
-        <BarComponent
-          animation1={animatedStyle3}
-          barColor={AppColor.BAR3COLOR}
-          data={data[2]}
-        />
+        {data && data.length > 0 ? (
+          <>
+            <BarComponent
+              animation1={animatedStyle1}
+              barColor={AppColor.BAR1COLOR}
+              data={data[1]}
+            />
+            <BarComponent
+              animation1={animatedStyle2}
+              barColor={AppColor.BAR2COLOR}
+              data={data[0]}
+            />
+            <BarComponent
+              animation1={animatedStyle3}
+              barColor={AppColor.BAR3COLOR}
+              data={data[2]}
+            />
+          </>
+        ) : (
+          <View
+            style={{
+              height: DeviceHeigth * 0.4,
+              alignSelf: 'center',
+              justifyContent: 'center', // Start the bar from the bottom
+              marginHorizontal: 10,
+            }}>
+            <Text
+              style={{
+                color: AppColor.BLACK,
+                fontSize: 18,
+                textAlign: 'center',
+                marginTop: 20,
+                lineHeight: 24,
+                fontFamily: Fonts.HELVETICA_BOLD,
+              }}>
+             {translate('eventJoin')}
+            </Text>
+          </View>
+        )}
       </View>
       {listData.map((item, index) => (
         <LeaderBoardList item={item} />

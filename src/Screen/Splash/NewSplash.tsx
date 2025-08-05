@@ -34,7 +34,7 @@ const NewSplash = ({ navigation }: any) => {
 
   const handleLangChange = async (langCode: string) => {
     await setLanguage(langCode);
-    console.log('Language changed to:', langCode);
+
   };
 
   useEffect(() => {

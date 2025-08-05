@@ -41,15 +41,16 @@ import {translate} from '../Translation/TranslationService';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const bordypart = [
   'Chest',
-  'Legs',
+  'Calves',
   'Triceps',
   'Abs',
   'Shoulders',
   'Back',
-  'Calves',
+  'Thighs',
   'Cardio',
   'Forearms',
   'Biceps',
+  // 'Legs',
 ];
 
 const CreateWorkout = ({navigation, route}) => {
@@ -67,7 +68,7 @@ const CreateWorkout = ({navigation, route}) => {
 
   const {getUserID} = useSelector(state => state);
   const [bodyPart, setBodyPart] = useState(
-    completeProfileData?.focusarea[0].bodypart_title,
+    completeProfileData?.focusarea[0]?.bodypart_title,
   );
   const [indexData, setIndexData] = useState(0);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
@@ -81,7 +82,9 @@ const CreateWorkout = ({navigation, route}) => {
       } else if (bordypart[indexData] == 'Quads') {
         return listdata.exercise_bodypart == 'Abs';
       } else if (bordypart[indexData] == 'Calves') {
-        return listdata.exercise_bodypart == 'Legs';
+        return listdata.exercise_bodypart == 'Calves';
+      } else if (bordypart[indexData] == 'Thighs') {
+        return listdata.exercise_bodypart == 'Thighs';
       } else {
         return listdata.exercise_bodypart == bordypart[indexData];
       }
@@ -298,38 +301,50 @@ const CreateWorkout = ({navigation, route}) => {
         icon: {icon: 'auto', position: 'left'},
       });
     } else {
-      setForLoading(true);
-      const payload = new FormData();
-      payload.append('user_id', getUserDataDetails?.id ?? getUserID);
-      for (var i = 0; i < selectedItems.length; i++) {
-        payload.append('exercises[]', selectedItems[i]);
-      }
-      payload.append('workout_name', route?.params?.workoutTitle);
-      // payload.append('user_id', getUserDataDetails?.id) ?? getUserID;
-      // payload.append('id', getUserID != 0 ? getUserID : null);
-      payload.append('image', {
-        name: route?.params?.workoutImg?.fileName,
-        type: route?.params?.workoutImg?.type,
-        uri: route?.params?.workoutImg?.uri,
-      });
-      console.log('List Data', getUserDataDetails?.id);
-      try {
-        const res = await axios(`${NewAppapi.USER_CUSTOM_WORKOUT}`, {
-          data: payload,
-          method: 'post',
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+      // setForLoading(true);
+      const formData = new FormData();
+      formData.append('user_id', getUserDataDetails?.id ?? getUserID);
 
+      for (var i = 0; i < selectedItems.length; i++) {
+        formData.append('exercises[]', selectedItems[i]);
+      }
+      formData.append('workout_name', route?.params?.workoutTitle);
+
+      // const image = route?.params?.workoutImg;
+
+      // if (image?.uri && image?.fileName && image?.type) {
+      //   // formData.append('image', {
+      //   //   uri: image.uri,
+      //   //   type: 'image/jpeg',
+      //   //   name: 'photo.jpg',
+      //   // });
+      //   formData.append('image', {
+      //     uri: image.uri,
+      //     name: image.fileName || `photo_${Date.now()}.jpg`,
+      //     type: image.type || 'image/jpeg',
+      //   });
+      // }
+
+      try {
+        const res = await axios.post(
+          `${NewAppapi.USER_CUSTOM_WORKOUT}`,
+          formData,
+          {
+            headers: {
+                 'Content-Type': 'multipart/form-data',
+              // Accept: 'application/json',
+            },
+          },
+        );
         if (res.data.msg == 'data inserted successfully') {
+          console.log('List Data', res?.data);
           getUserDetailData();
         } else {
           setForLoading(false);
         }
       } catch (error) {
         setForLoading(false);
-        console.log('Error', error);
+        console.log('Upload error:', error?.response || error);
         showMessage({
           message: 'Something went wrong please try again!',
           type: 'danger',

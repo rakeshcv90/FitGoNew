@@ -23,7 +23,7 @@ import {showMessage} from 'react-native-flash-message';
 import {PERMISSIONS, openSettings, request} from 'react-native-permissions';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useIsFocused} from '@react-navigation/native';
-import VersionNumber from 'react-native-version-number';
+
 import {
   setAllExercise,
   setChallengesData,
@@ -40,28 +40,32 @@ import UpcomingEventModal from '../../Component/Utilities/UpcomingEventModal';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
-import { translate} from '../Translation/TranslationService';
+import {getCurrentLanguage, translate} from '../Translation/TranslationService';
+import VersionNumber, {appVersion} from 'react-native-version-number';
+import {API_CALLS} from '../../API/API_CALLS';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const CustomWorkout = ({navigation}) => {
   const avatarRef = React.createRef();
   const dispatch = useDispatch();
+  const lang = getCurrentLanguage();
   // const routeName = route?.params?.routeName;
   const customWorkoutData = useSelector(state => state.customWorkoutData);
 
   const [isCustomWorkout, setIsCustomWorkout] = useState(false);
   const [text, setText] = React.useState('');
   const [getWorkoutAvt, setWorkoutAvt] = useState(null);
-
+const color=['#008080','#FF0000','#000000','#808000',]
   const isFocused = useIsFocused();
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
-  // useEffect(() => {
-  //   if (isFocused) {
-  //     getAllChallangeAndAllExerciseData();
-  //   }
-  // }, [isFocused]);
+  useEffect(() => {
+    if (isFocused) {
+      API_CALLS.getAllExercisesData(getUserDataDetails?.id, lang);
+    }
+  }, [isFocused]);
+
   const askPermissionForLibrary = async permission => {
     const resultLib = await request(permission);
 
@@ -127,7 +131,7 @@ const CustomWorkout = ({navigation}) => {
                 navigation.navigate('CustomWorkoutDetails', {item: item});
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Image
+                {/* <Image
                   style={{
                     width: 70,
                     height: 70,
@@ -141,7 +145,30 @@ const CustomWorkout = ({navigation}) => {
                     uri: item?.image??localImage.NOWORKOUT,
                   }}
                   resizeMode={'cover'}
-                />
+                /> */}
+                <View
+                  style={{
+                    width: 70,
+                    height: 70,
+                    justifyContent: 'center',
+                    // alignSelf: 'center',
+                    borderRadius: 5,
+                    borderWidth: 1,
+                    borderColor: '#D9D9D9',
+                  }}>
+                  <Text
+                
+                    style={{
+                      fontSize: 30,
+                      fontWeight: '600',
+                  
+                      textAlign:'center',
+                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                      color:color[index % color.length],
+                    }}>
+                    {item?.workout_name[0]}
+                  </Text>
+                </View>
                 <View
                   style={{
                     marginHorizontal: 16,
@@ -291,7 +318,7 @@ const CustomWorkout = ({navigation}) => {
               opacity: 0.6,
               fontFamily: Fonts.MONTSERRAT_MEDIUM,
             }}>
-             {translate('onpreference')}
+            {translate('onpreference')}
           </Text>
           <View
             style={{
@@ -350,15 +377,17 @@ const CustomWorkout = ({navigation}) => {
         floating: true,
         icon: {icon: 'auto', position: 'left'},
       });
-    } else if (getWorkoutAvt == null) {
-      showMessage({
-        message: translate('workoutimage'),
-        type: 'danger',
-        animationDuration: 500,
-        floating: true,
-        icon: {icon: 'auto', position: 'left'},
-      });
-    } else {
+    }
+    // else if (getWorkoutAvt == null) {
+    //   showMessage({
+    //     message: translate('workoutimage'),
+    //     type: 'danger',
+    //     animationDuration: 500,
+    //     floating: true,
+    //     icon: {icon: 'auto', position: 'left'},
+    //   });
+    // }
+    else {
       AnalyticsConsole(`Create_Wrk_BUTTON`);
       navigation.navigate('CreateWorkout', {
         workoutTitle: text,
@@ -370,35 +399,6 @@ const CustomWorkout = ({navigation}) => {
     }
   };
 
-  // const getAllChallangeAndAllExerciseData = async () => {
-  //   let responseData = 0;
-  //   if (Object.keys(getUserDataDetails).length > 0) {
-  //     try {
-  //       responseData = await axios.get(
-  //         `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
-  //       );
-  //       dispatch(setChallengesData(responseData.data.challenge_data));
-  //       dispatch(setAllExercise(responseData.data.data));
-  //     } catch (error) {
-  //       console.log('GET-USER-Challange and AllExerciseData DATA', error);
-  //       dispatch(setChallengesData([]));
-  //       dispatch(setAllExercise([]));
-  //     }
-  //   } else {
-  //     try {
-  //       responseData = await axios.get(
-  //         `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}`,
-  //       );
-  //       dispatch(setChallengesData(responseData.data.challenge_data));
-  //       dispatch(setAllExercise(responseData.data.data));
-  //     } catch (error) {
-  //       dispatch(setChallengesData([]));
-  //       dispatch(setAllExercise([]));
-
-  //       console.log('GET-USER-Challange and AllExerciseData DATA', error);
-  //     }
-  //   }
-  // };
   const openDirect = async () => {
     const resultLibrary = await launchImageLibrary({
       mediaType: 'photo',
@@ -416,7 +416,8 @@ const CustomWorkout = ({navigation}) => {
           <View style={[styles.meditionBox, {marginTop: 10}]}>
             <FlatList
               data={customWorkoutData}
-              // contentContainerStyle={{ flex: 1,  }}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{paddingBottom: 100}}
               keyExtractor={(item, index) => index.toString()}
               renderItem={renderItem}
               ListEmptyComponent={emptyComponent}
@@ -438,7 +439,7 @@ const CustomWorkout = ({navigation}) => {
                 style={{width: 20, height: 20}}
                 tintColor={AppColor.WHITE}
               />
-              <Text style={styles.button}>{'Create Workout'}</Text>
+              <Text style={styles.button}>{translate('createworkout')}</Text>
             </TouchableOpacity>
           )}
         </Wrapper>
@@ -467,7 +468,7 @@ const CustomWorkout = ({navigation}) => {
               paddingVertical: 20,
               borderRadius: 10,
             }}>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.imageView}
               onPress={() => {
                 if (Platform.OS == 'ios') {
@@ -494,7 +495,7 @@ const CustomWorkout = ({navigation}) => {
                   width: getWorkoutAvt == null ? 35 : 85,
                 }}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <Text
               style={{
                 top: 8,

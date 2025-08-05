@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {AppColor} from '../../../../Component/Color';
 import FitText from '../../../../Component/Utilities/FitText';
 import {DeviceWidth} from '../../../../Component/Config';
+import { translate } from '../../../Translation/TranslationService';
 
 type RestButtonsProps = {
   seconds: number;
@@ -25,7 +26,7 @@ const RestButtons = ({
 
   const Button = ({name}: ButtonProps) => {
     const onPress = () => {
-      if (name == 'Skip') {
+      if (name == translate('skip')) {
         setRestSet(false);
         reset();
       } else if(!isButtonClicked) {
@@ -36,13 +37,13 @@ const RestButtons = ({
     return (
       <TouchableOpacity
         onPress={onPress}
-        disabled={name != 'Skip' && isButtonClicked}
+        disabled={name != translate('skip') && isButtonClicked}
         style={[
           styles.button,
           {
-            backgroundColor: name != 'Skip' ? AppColor.WHITE : AppColor.RED,
+            backgroundColor: name != translate('skip') ? AppColor.WHITE : AppColor.RED,
             borderColor:
-              name == 'Skip'
+              name == translate('skip')
                 ? AppColor.WHITE
                 : isButtonClicked
                 ? '#979797'
@@ -54,7 +55,7 @@ const RestButtons = ({
           type="normal"
           value={name}
           color={
-            name == 'Skip'
+            name == translate('skip')
               ? AppColor.WHITE
               : isButtonClicked
               ? '#979797'
@@ -74,8 +75,8 @@ const RestButtons = ({
         alignItems: 'center',
         marginVertical: 30,
       }}>
-      <Button name="+5 sec" />
-      <Button name="Skip" />
+      <Button name={`+5 ${translate('sec')}`} />
+      <Button name={translate('skip')} />
     </View>
   );
 };

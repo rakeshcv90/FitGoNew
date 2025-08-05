@@ -62,7 +62,7 @@ export const API_CALLS = {
         version: VersionNumber.appVersion,
         device_id: deviceID,
       };
-      console.log("🚀 Called postLogin with:", { requestBody });
+    
       return new Promise((resolve, reject) =>
         RequestAPI.makeRequest(
           'POST',
@@ -75,8 +75,7 @@ export const API_CALLS = {
             device_id: deviceID,
           },
           ({data, errors, status, message}) => {
-          
-            console.log(deviceID, '  //  ' ,data, ' // ',status,'//',NewAppapi.POST_NEW_LOGIN,' ...Token Data');
+           console.log(data, 'LOGIN');
             if (data && status == 200) {
               noMessage &&
                 showMessage({
@@ -512,6 +511,7 @@ export const API_CALLS = {
           ) {
             reject(UpgradeAppResponse());
           } else if (status == 200) {
+            console.log("Test Datatata")
             dispatch(setChallengesData(data?.challenge_data));
             dispatch(setAllExercise(''));
             dispatch(setAllExercise(data?.data));

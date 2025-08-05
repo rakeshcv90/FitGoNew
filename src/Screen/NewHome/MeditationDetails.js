@@ -25,18 +25,16 @@ import AnimatedLottieView from 'lottie-react-native';
 import axios from 'axios';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import moment from 'moment';
-// import NativeAddTest from '../../Component/NativeAd';
+
 import {setVideoLocation} from '../../Component/ThemeRedux/Actions';
 import RNFetchBlob from 'rn-fetch-blob';
-// import {BannerAdd} from '../../Component/BannerAdd';
-// import {bannerAdId} from '../../Component/AdsId';
+
 import RewardModal from '../../Component/Utilities/RewardModal';
 import UpcomingEventModal from '../../Component/Utilities/UpcomingEventModal';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
-import { translate } from '../Translation/TranslationService';
- 
+import {translate} from '../Translation/TranslationService';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -47,9 +45,7 @@ const MeditationDetails = ({navigation, route}) => {
   const [forLoading, setForLoading] = useState(true);
   const [mindsetExercise, setmindsetExercise] = useState([]);
   const [headerTitle, setHeaderTitle] = useState(route?.params?.item);
-  const [selectedTitle, setSelectedTitle] = useState(
-    route?.params?.item?.workout_mindset_title,
-  );
+
   const [downloaded, setDownloade] = useState(0);
   const avatarRef = React.createRef();
   const allWorkoutData = useSelector(state => state.allWorkoutData);
@@ -79,6 +75,8 @@ const MeditationDetails = ({navigation, route}) => {
   const getCaterogy = async (id, level) => {
     setForLoading(true);
 
+     
+ 
     try {
       const data = await axios(`${NewAppapi.Get_Mindset_Excise}`, {
         method: 'POST',
@@ -91,7 +89,7 @@ const MeditationDetails = ({navigation, route}) => {
           version: VersionNumber.appVersion,
         },
       });
-
+ 
       if (data?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: data?.data?.msg,
@@ -104,11 +102,7 @@ const MeditationDetails = ({navigation, route}) => {
       } else if (data?.data?.status == 'data found') {
         setForLoading(false);
         setmindsetExercise(data.data);
-        // Promise.all(
-        //   data.data.data.map((item, index) =>
-        //     downloadVideos(item, index, data.data.data.length),
-        //   ),
-        // ).finally(() => setmindsetExercise(data.data.data));
+        console.log('mindsetExercise',data?.data);
       } else {
         setForLoading(false);
         setmindsetExercise([]);
@@ -159,7 +153,7 @@ const MeditationDetails = ({navigation, route}) => {
       onPress={() => {
         setHeaderTitle(title);
         getCaterogy(title.id, title.workout_mindset_level);
-        setSelectedTitle(title?.workout_mindset_title);
+        // setSelectedTitle(title?.workout_mindset_title);
       }}>
       <LinearGradient
         start={{x: 0, y: 1}}
@@ -226,7 +220,6 @@ const MeditationDetails = ({navigation, route}) => {
     );
   };
 
-  // const getNativeAdsDisplay = () => {
   //   if (getPurchaseHistory?.plan != null) {
   //     if (
   //       getPurchaseHistory?.plan == 'premium' &&
@@ -291,6 +284,7 @@ const MeditationDetails = ({navigation, route}) => {
       style={{height: 15, width: DeviceWidth, backgroundColor: '#F9F9F9'}}
     />
   );
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -314,7 +308,6 @@ const MeditationDetails = ({navigation, route}) => {
               alignItems: 'center',
             }}>
             {translate('categories')}
-            
           </Text>
           <Text
             style={{
@@ -324,8 +317,7 @@ const MeditationDetails = ({navigation, route}) => {
               lineHeight: 20,
               fontSize: 14,
             }}>
-          
-              {translate('categoriesSubtitle')}
+            {translate('categoriesSubtitle')}
           </Text>
         </View>
         <View style={styles.meditionBox}>
@@ -364,7 +356,7 @@ const MeditationDetails = ({navigation, route}) => {
               fontSize: 18,
               alignItems: 'center',
             }}>
-                     {translate('explore')}
+            {translate('explore')}
           </Text>
           <Text
             style={{
@@ -374,8 +366,7 @@ const MeditationDetails = ({navigation, route}) => {
               lineHeight: 20,
               fontSize: 14,
             }}>
-           
-             {translate('exploreSubtitle')}
+            {translate('exploreSubtitle')}
           </Text>
         </View>
         <View style={[styles.meditionBox, {flex: 1}]}>
@@ -470,9 +461,9 @@ const MeditationDetails = ({navigation, route}) => {
               updateCellsBatchingPeriod={100}
               removeClippedSubviews={true}
             />
-          ) : mindsetExercise.length > 0 ? (
+          ) : mindsetExercise?.data?.length > 0 ? (
             <FlatList
-              data={mindsetExercise}
+              data={mindsetExercise?.data}
               showsVerticalScrollIndicator={false}
               keyExtractor={(item, index) => index.toString()}
               ListEmptyComponent={<EmptyComponent />}
@@ -486,7 +477,7 @@ const MeditationDetails = ({navigation, route}) => {
                       onPress={() => {
                         navigation.navigate('MeditationExerciseDetails', {
                           index: index,
-                          allMeditation: mindsetExercise
+                          allMeditation: mindsetExercise?.data,
                         });
                       }}>
                       <ImageBackground
@@ -537,7 +528,7 @@ const MeditationDetails = ({navigation, route}) => {
                                   'MeditationExerciseDetails',
                                   {
                                     index: index,
-                                    allMeditation: mindsetExercise
+                                    allMeditation: mindsetExercise?.data,
                                   },
                                 );
                               }}>
