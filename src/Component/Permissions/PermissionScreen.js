@@ -15,6 +15,7 @@ import {useNavigation} from '@react-navigation/native';
 import {navigationRef} from '../../../App';
 // import { translate } from 'react-native-redash';
 import { translate } from '../../Screen/Translation/TranslationService';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const PermissionScreen = () => {
   const [permissionState, setPermissionState] = useState({
@@ -195,7 +196,7 @@ const PermissionScreen = () => {
     );
   };
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Wrapper styles={{backgroundColor: AppColor.Background_New}}>
         <View style={styles.cView}>
           <Text style={styles.rTextStyle}>
@@ -231,7 +232,7 @@ const PermissionScreen = () => {
           onPress={handleAllPermissions}
         />
       </Wrapper>
-    </View>
+    </SafeAreaView>
   );
 };
 

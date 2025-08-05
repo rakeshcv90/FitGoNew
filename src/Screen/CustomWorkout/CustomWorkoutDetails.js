@@ -526,7 +526,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                 padding: 5,
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Image
+                {/* <Image
                   // source={{uri: data.workout_image_link}}
                   source={
                     data?.image == ''
@@ -544,7 +544,30 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                     marginHorizontal: -7,
                   }}
                   resizeMode="cover"
-                />
+                /> */}
+
+                <View
+                  style={{
+                    width: 70,
+                    height: 70,
+                    justifyContent: 'center',
+                    // alignSelf: 'center',
+                    borderRadius: 5,
+                    borderWidth: 1,
+                    borderColor: '#D9D9D9',
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: 30,
+                      fontWeight: '600',
+
+                      textAlign: 'center',
+                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                      color: color[1],
+                    }}>
+                    {data?.workout_name[0]}
+                  </Text>
+                </View>
                 <View
                   style={{
                     marginHorizontal: 25,

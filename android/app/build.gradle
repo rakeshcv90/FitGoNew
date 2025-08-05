@@ -86,9 +86,9 @@ android {
     
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.metodo.hq72"
+    namespace "com.anvelopers.loseweightformenapp"
     defaultConfig {
-        applicationId "com.metodo.hq72"
+        applicationId "com.anvelopers.loseweightformenapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 3

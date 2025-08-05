@@ -86,13 +86,13 @@ export const translations = {
     mydetails: 'My Details',
     dailyreminder: 'Daily Reminder',
     allownotification:
-      'Allow Método HQ72 to send notifications for daily updates.',
+      'Allow Method LOSE WEIGHT FOR MEN APP to send notifications for daily updates.',
     notification: 'Notification',
     location: 'Location',
     allowlocation:
-      'Allow Método HQ72 to access your location for better services.',
+      'Allow Method LOSE WEIGHT FOR MEN APP to access your location for better services.',
     allowhealthkit:
-      'Allow Método HQ72 to access health kit data to keep tracking your health data.',
+      'Allow Method LOSE WEIGHT FOR MEN APP to access health kit data to keep tracking your health data.',
     healthkit: 'Health Kit',
     exercises: 'Exercises',
     kcal: 'kcal',
@@ -131,30 +131,30 @@ export const translations = {
     step7Text:
       'Earn as many FitCoins as you can and top the leaderboard to win the amazing prize.',
 
-    faq1Question: 'What are Challenges in the Método HQ72 app?',
-    faq1Answer: `Challenges in the Método HQ72 app are fitness programs designed to keep you motivated. 7‑Day Challenges: These run for 7 days and offer  reward upon completion. They start every Monday. To join, click on the challenge card, subscribe, and follow the workout plan. 21‑Day and 28‑Day Challenges: These longer programs last 21 or 28 days. While they don’t offer cash rewards, they’re ideal for building consistent habits and achieving bigger fitness goals.`,
+    faq1Question: 'What are Challenges in the Método LOSE WEIGHT FOR MEN APP app?',
+    faq1Answer: `Challenges in the Método LOSE WEIGHT FOR MEN APP app are fitness programs designed to keep you motivated. 7‑Day Challenges: These run for 7 days and offer  reward upon completion. They start every Monday. To join, click on the challenge card, subscribe, and follow the workout plan. 21‑Day and 28‑Day Challenges: These longer programs last 21 or 28 days. While they don’t offer cash rewards, they’re ideal for building consistent habits and achieving bigger fitness goals.`,
     faq2Question:
-      'How do I create a custom workout plan in the Método HQ72 app?',
+      'How do I create a custom workout plan in the Método LOSE WEIGHT FOR MEN APP app?',
     faq2Answer:
       'To create a custom workout plan, go to the custom-made page and click on "Create Workout." Enter the workout name and the day, select the exercises you want to include, and click "OK" to save. You can then start your customized workout.',
     faq3Question:
-      'How do I chat with a fitness instructor in the Método HQ72 app?',
+      'How do I chat with a fitness instructor in the Método LOSE WEIGHT FOR MEN APP app?',
     faq3Answer:
       'You can chat with a fitness instructor at any time through the app. Simply go to the dashboard section, select the instructor, and start your conversation.',
-    faq4Question: 'Where can I find meal recipes in the Método HQ72 app?',
+    faq4Question: 'Where can I find meal recipes in the Método LOSE WEIGHT FOR MEN APP app?',
     faq4Answer:
       'To find meal recipes, go to the "Diet" section on the home page. Here, you can browse through various meal recipes to help you stay on track with your nutrition goals.',
     faq5Question:
-      'How do I shop for fitness accessories and equipment in the Método HQ72 app?',
+      'How do I shop for fitness accessories and equipment in the Método LOSE WEIGHT FOR MEN APP app?',
     faq5Answer:
       'To shop for fitness accessories and equipment, click on the "Store" on the homepage. You can search for products like gym accessories, home gym equipment, gym wear, bags, shoes, and bottles. The app will then direct you to the product links for easy purchase.',
-    faq6Question: 'When do challenges in the Método HQ72 app start?',
+    faq6Question: 'When do challenges in the Método LOSE WEIGHT FOR MEN APP app start?',
     faq6Answer:
       'Challenges start every Monday. You can join a challenge by clicking on the challenge card and subscribing before it begins.',
-    faq7Question: 'What is the Weekly Plan in the Método HQ72 app?',
+    faq7Question: 'What is the Weekly Plan in the Método LOSE WEIGHT FOR MEN APP app?',
     faq7Answer:
-      'The Weekly Plan in the Método HQ72 app provides a pre-set schedule of exercises for each day of the week. You follow the plan as outlined without selecting specific workouts.',
-    faq8Question: 'How do I follow the Weekly Plan in the Método HQ72 app?',
+      'The Weekly Plan in the Método LOSE WEIGHT FOR MEN APP app provides a pre-set schedule of exercises for each day of the week. You follow the plan as outlined without selecting specific workouts.',
+    faq8Question: 'How do I follow the Weekly Plan in the Método LOSE WEIGHT FOR MEN APP app?',
     faq8Answer:
       'To follow the Weekly Plan, go to the Plan section and start with the exercise assigned for the current day. The plan provides a structured workout schedule to keep you on track.',
     faq9Question:
@@ -168,49 +168,49 @@ export const translations = {
     faq11Question: 'Is the Weekly Plan suitable for different fitness levels?',
     faq11Answer:
       'Yes, the Weekly Plan is structured to accommodate various fitness levels. It provides a balanced schedule to help you progress while maintaining consistency in your workout routine.',
-    faq12Question: 'How do I edit my profile picture in the Método HQ72 app?',
+    faq12Question: 'How do I edit my profile picture in the Método LOSE WEIGHT FOR MEN APP app?',
     faq12Answer:
       'Go to your profile page, tap the profile icon, and choose an image from your camera or gallery. Click "Upload Image" to update your profile picture.',
     faq13Question: 'How can I set or change my daily workout reminder?',
     faq13Answer:
       'In the profile page, find the daily reminder section. You can set or adjust your reminder for workouts as needed.',
-    faq14Question: 'How do I subscribe to a plan on the Método HQ72 app?',
+    faq14Question: 'How do I subscribe to a plan on the Método LOSE WEIGHT FOR MEN APP app?',
     faq14Answer:
       'Tap the subscription icon on your profile page to choose and subscribe to the Core, Legacy, or Premium plan.',
     faq15Question: 'How can I update my personal details?',
     faq15Answer:
       'Click on the "My Details" icon to edit your full name, email, gender, fitness level, and fitness goals. You can also update details like body shape, flexibility, body tone, and target weight.',
-    faq16Question: 'How do I contact Método HQ72 support?',
+    faq16Question: 'How do I contact Método LOSE WEIGHT FOR MEN APP support?',
     faq16Answer:
       'Use the "Contact Us" option on your profile page to send an email regarding any app-related issues or questions.',
     faq17Question:
       'Where can I find the privacy policy and terms & conditions?',
     faq17Answer:
       'Click the "Privacy Policy" and "Terms & Conditions" icons on your profile page to view the respective documents.',
-    faq18Question: 'How do I rate the Método HQ72 app?',
+    faq18Question: 'How do I rate the Método LOSE WEIGHT FOR MEN APP app?',
     faq18Answer:
       'Tap the "Rate Us" icon on your profile page and give the app a rating by selecting the number of stars.',
     faq19Question: 'How can I delete my account?',
     faq19Answer:
       'To delete your account, go to the profile section and click "Delete Account."',
-    faq20Question: 'How do I log out of the Método HQ72 app?',
+    faq20Question: 'How do I log out of the Método LOSE WEIGHT FOR MEN APP app?',
     faq20Answer:
       'Click the "Logout" option on your profile page to sign out of the app.',
     faq21Question:
-      'How do I make a payment for a subscription on the Método HQ72 app?',
+      'How do I make a payment for a subscription on the Método LOSE WEIGHT FOR MEN APP app?',
     faq21Answer:
       'To subscribe to a plan, go to the subscription page, select the plan you want, and click "Proceed." Enter your payment details for the online transaction to complete the subscription.',
     faq22Question: 'How do I redeem my reward after winning a challenge?',
     faq22Answer:
       'If you win a challenge, you will receive an email notification. Send your  within 48 hours to claim your reward. The reward will be sent to your ID. If you do not send your ID within 48 hours, the reward will not be issued.',
-    faq23Question: 'How do I check my BMI on the Método HQ72 app?',
+    faq23Question: 'How do I check my BMI on the Método LOSE WEIGHT FOR MEN APP app?',
     faq23Answer:
       'To check your BMI, go to the Report page and find the BMI option. Click on the "Verificar" button. Enter your weight and height, and the app will calculate your BMI for you.',
     faq24Question: 'What is the Achievement Calendar and how do I use it?',
     faq24Answer:
       'The Achievement Calendar shows when you have won rewards or completed workouts. You can view your achievements and track your progress over time on this calendar.',
     faq25Question:
-      'How do I select a workout based on body type in the Método HQ72 app?',
+      'How do I select a workout based on body type in the Método LOSE WEIGHT FOR MEN APP app?',
     faq25Answer:
       'On the workout page, you can choose your desired body type by selecting from options like Upper Body, Lower Body, Full Body, or Core. After selecting the body type, you can start the workout tailored to that area.',
     faq26Question: 'How do I choose a workout category?',
@@ -222,14 +222,14 @@ export const translations = {
     faq28Question: 'How do I update my email or contact information?',
     faq28Answer:
       'To update your email or contact information, go to the "My Details" section in your profile. Edit the information and save the changes.',
-    faq29Question: 'Can I use the Método HQ72 app on multiple devices?',
+    faq29Question: 'Can I use the Método LOSE WEIGHT FOR MEN APP app on multiple devices?',
     faq29Answer:
-      'Yes, you can use the Método HQ72 app on multiple devices by logging in with your account details. Your data will sync across devices.',
+      'Yes, you can use the Método LOSE WEIGHT FOR MEN APP app on multiple devices by logging in with your account details. Your data will sync across devices.',
     faq30Question:
       'What should I do if I encounter a technical issue with the app?',
     faq30Answer:
       'If you experience technical issues, please contact support through the "Contact Us" option on your profile page. Provide details of the issue to get assistance.',
-    faq31Question: 'How is my personal data protected in the Método HQ72 app?',
+    faq31Question: 'How is my personal data protected in the Método LOSE WEIGHT FOR MEN APP app?',
     faq31Answer:
       "Your personal data is protected according to the app's privacy policy, which outlines how your information is collected, used, and secured.",
     faq32Question: 'Can I control which data is shared with third parties?',
@@ -311,7 +311,7 @@ export const translations = {
       'Check your email to claim your prize and don’t forget to share your achievement on social media!',
     shareNow: 'Share Now',
     shareWinnerMessage:
-      'I just won the fitness challenge with the Método HQ72 app and earned a voucher! 🎉 You can win too—download the Método HQ72 app now and start earning amazing rewards.\nDownload the App Now:',
+      'I just won the fitness challenge with the Método LOSE WEIGHT FOR MEN APP app and earned a voucher! 🎉 You can win too—download the Método LOSE WEIGHT FOR MEN APP app now and start earning amazing rewards.\nDownload the App Now:',
     workoutHistory: 'Workout History',
     dailyWorkoutTasks: 'Daily Workout Tasks',
     exerciseSuffix: 'exercise',
@@ -530,9 +530,9 @@ export const translations = {
     ExerciseTime: 'Exercise Time',
     ExerciseTime1: 'Its time to Exercise',
     takerest: 'Take a Rest',
-    mute: 'muted',
-    unmuted: 'unmuted',
-    sound: 'Sound',
+    mute: ' muted',
+    unmuted: ' unmuted',
+    sound: 'Sound ',
     music: 'Music',
     screen: 'Screen',
     deleteAccount: 'Your account has been successfully deleted',
@@ -635,13 +635,13 @@ export const translations = {
     mydetails: 'Meus Detalhes',
     dailyreminder: 'Lembrete Diário',
     allownotification:
-      'Permita que o Método HQ72 envie notificações para atualizações diárias.',
+      'Permita que o Método LOSE WEIGHT FOR MEN APP envie notificações para atualizações diárias.',
     notification: 'Notificação',
     location: 'Localização',
     allowlocation:
-      'Permita que o Método HQ72 acesse sua localização para oferecer melhores serviços.',
+      'Permita que o Método LOSE WEIGHT FOR MEN APP acesse sua localização para oferecer melhores serviços.',
     allowhealthkit:
-      'Permita que o Método HQ72 acesse os dados do Health Kit para acompanhar sua saúde.',
+      'Permita que o Método LOSE WEIGHT FOR MEN APP acesse os dados do Health Kit para acompanhar sua saúde.',
     healthkit: 'Health Kit',
     exercises: 'Exercícios',
     kcal: 'kcal', // stays the same in Portuguese
@@ -679,31 +679,31 @@ export const translations = {
     step7Text:
       'Ganhe o máximo de FitCoins e lidere o ranking para ganhar prêmios incríveis.',
 
-    faq1Question: 'O que são os Desafios no app Método HQ72?',
-    faq1Answer: `Os desafios no app Método HQ72 são programas de fitness criados para manter você motivado. Desafios de 7 Dias: Eles duram 7 dias e oferecem uma recompensa de  ao finalizar. Começam toda segunda‑feira. Para participar, toque no cartão do desafio, inscreva‑se e siga o plano de treino. Desafios de 21 e 28 Dias: São programas mais longos que duram 21 ou 28 dias. Embora não ofereçam recompensa em dinheiro, são ideais para criar hábitos consistentes e alcançar objetivos maiores de fitness.`,
+    faq1Question: 'O que são os Desafios no app Método LOSE WEIGHT FOR MEN APP?',
+    faq1Answer: `Os desafios no app Método LOSE WEIGHT FOR MEN APP são programas de fitness criados para manter você motivado. Desafios de 7 Dias: Eles duram 7 dias e oferecem uma recompensa de  ao finalizar. Começam toda segunda‑feira. Para participar, toque no cartão do desafio, inscreva‑se e siga o plano de treino. Desafios de 21 e 28 Dias: São programas mais longos que duram 21 ou 28 dias. Embora não ofereçam recompensa em dinheiro, são ideais para criar hábitos consistentes e alcançar objetivos maiores de fitness.`,
     faq2Question:
-      'Como crio um plano de treino personalizado no app Método HQ72?',
+      'Como crio um plano de treino personalizado no app Método LOSE WEIGHT FOR MEN APP?',
     faq2Answer:
       'Para criar um plano de treino personalizado, vá à página “Personalizado” e toque em "Criar Treino". Insira o nome do treino e o dia, selecione os exercícios que deseja incluir e clique em "OK" para salvar. Em seguida, você pode iniciar seu treino personalizado.',
     faq3Question:
-      'Como converso com um instrutor de fitness no app Método HQ72?',
+      'Como converso com um instrutor de fitness no app Método LOSE WEIGHT FOR MEN APP?',
     faq3Answer:
       'Você pode conversar com um instrutor de fitness a qualquer momento através do app. Basta ir à seção de dashboard, selecionar o instrutor e iniciar sua conversa.',
     faq4Question:
-      'Onde posso encontrar receitas de refeições no app Método HQ72?',
+      'Onde posso encontrar receitas de refeições no app Método LOSE WEIGHT FOR MEN APP?',
     faq4Answer:
       'Para encontrar receitas de refeições, vá à seção “Dieta” na página inicial. Lá, você pode navegar por diversas receitas de refeições para te ajudar a manter seus objetivos nutricionais.',
     faq5Question:
-      'Como compro acessórios e equipamentos de fitness no app Método HQ72?',
+      'Como compro acessórios e equipamentos de fitness no app Método LOSE WEIGHT FOR MEN APP?',
     faq5Answer:
       'Para comprar acessórios e equipamentos de fitness, toque em “Loja” na homepage. Você pode pesquisar produtos como acessórios de academia, equipamentos para treinar em casa, roupas, bolsas, tênis e garrafas. O app vai te direcionar aos links dos produtos para compra fácil.',
-    faq6Question: 'Quando os desafios no app Método HQ72 começam?',
+    faq6Question: 'Quando os desafios no app Método LOSE WEIGHT FOR MEN APP começam?',
     faq6Answer:
       'Os desafios começam toda segunda‑feira. Você pode participar clicando no cartão do desafio e se inscrevendo antes do início.',
-    faq7Question: 'O que é o Plano Semanal no app Método HQ72?',
+    faq7Question: 'O que é o Plano Semanal no app Método LOSE WEIGHT FOR MEN APP?',
     faq7Answer:
-      'O Plano Semanal no app Método HQ72 oferece uma programação pré-definida de exercícios para cada dia da semana. Você segue o plano conforme indicado, sem selecionar treinos específicos.',
-    faq8Question: 'Como sigo o Plano Semanal no app Método HQ72?',
+      'O Plano Semanal no app Método LOSE WEIGHT FOR MEN APP oferece uma programação pré-definida de exercícios para cada dia da semana. Você segue o plano conforme indicado, sem selecionar treinos específicos.',
+    faq8Question: 'Como sigo o Plano Semanal no app Método LOSE WEIGHT FOR MEN APP?',
     faq8Answer:
       'Para seguir o Plano Semanal, vá à seção Plano e comece com o exercício atribuído para o dia atual. O plano oferece uma programação estruturada para te manter no caminho.',
     faq9Question: 'Posso ajustar os dias de treino no Plano Semanal?',
@@ -717,48 +717,48 @@ export const translations = {
       'O Plano Semanal é adequado para diferentes níveis de condicionamento?',
     faq11Answer:
       'Sim, o Plano Semanal é estruturado para acomodar diversos níveis de condicionamento. Ele fornece uma programação equilibrada para te ajudar a progredir mantendo consistência na rotina de treino.',
-    faq12Question: 'Como edito minha foto de perfil no app Método HQ72?',
+    faq12Question: 'Como edito minha foto de perfil no app Método LOSE WEIGHT FOR MEN APP?',
     faq12Answer:
       'Vá à página do seu perfil, toque no ícone de perfil e escolha uma imagem da câmera ou galeria. Clique em "Upload Image" para atualizar sua foto de perfil.',
     faq13Question: 'Como definir ou mudar meu lembrete diário de treino?',
     faq13Answer:
       'Na página do perfil, encontre a seção de lembrete diário. Você pode definir ou ajustar seu lembrete de treino conforme necessário.',
-    faq14Question: 'Como assino um plano no app Método HQ72?',
+    faq14Question: 'Como assino um plano no app Método LOSE WEIGHT FOR MEN APP?',
     faq14Answer:
       'Toque no ícone de assinatura na página do seu perfil para escolher e assinar o plano Essencial, Legada ou Prêmio.',
     faq15Question: 'Como posso atualizar meus dados pessoais?',
     faq15Answer:
       'Toque no ícone "My Details" para editar seu nome completo, e‑mail, gênero, nível de condicionamento e metas de fitness. Você também pode atualizar dados como grupo muscular, flexibilidade, nível de tonicidade e peso alvo.',
-    faq16Question: 'Como entro em contato com o suporte Método HQ72?',
+    faq16Question: 'Como entro em contato com o suporte Método LOSE WEIGHT FOR MEN APP?',
     faq16Answer:
       'Use a opção "Fale Conosco" na página do perfil para enviar um e‑mail sobre qualquer problema ou dúvida relacionada ao app.',
     faq17Question:
       'Onde encontro a política de privacidade e os termos e condições?',
     faq17Answer:
       'Toque nos ícones "Política de Privacidade" e "Termos & Condições" na página do perfil para visualizar os respectivos documentos.',
-    faq18Question: 'Como avalio o app Método HQ72?',
+    faq18Question: 'Como avalio o app Método LOSE WEIGHT FOR MEN APP?',
     faq18Answer:
       'Toque no ícone "Avalie-nos" na página do perfil e dê uma avaliação selecionando o número de estrelas.',
     faq19Question: 'Como posso excluir minha conta?',
     faq19Answer:
       'Para excluir sua conta, vá à seção do perfil e toque em "Deletar Conta".',
-    faq20Question: 'Como faço Sair no app Método HQ72?',
+    faq20Question: 'Como faço Sair no app Método LOSE WEIGHT FOR MEN APP?',
     faq20Answer: 'Toque na opção "Sair" na página do perfil para sair do app.',
     faq21Question:
-      'Como faço o pagamento de uma assinatura no app Método HQ72?',
+      'Como faço o pagamento de uma assinatura no app Método LOSE WEIGHT FOR MEN APP?',
     faq21Answer:
       'Para assinar um plano, vá à página de assinatura, selecione o plano desejado e toque em "Prosseguir". Insira seus dados de pagamento para concluir a transação online.',
     faq22Question: 'Como resgato minha recompensa após vencer um desafio?',
     faq22Answer:
       'Se você vencer um desafio, receberá um e‑mail. Envie seu ID  em até 48 horas para resgatar sua recompensa. O prêmio será enviado ao seu  Se não enviar o ID em 48 horas, a recompensa não será emitida.',
-    faq23Question: 'Como verifico meu IMC no app Método HQ72?',
+    faq23Question: 'Como verifico meu IMC no app Método LOSE WEIGHT FOR MEN APP?',
     faq23Answer:
       'Para verificar seu IMC, vá à página de Relatórios e encontre a opção IMC. Clique em "Verificar", insira seu peso e altura, e o app calculará seu IMC.',
     faq24Question: 'O que é o Calendário de Conquistas e como usá‑lo?',
     faq24Answer:
       'O Calendário de Conquistas mostra quando você ganhou recompensas ou completou treinos. Você pode visualizar suas conquistas e acompanhar seu progresso ao longo do tempo nesse calendário.',
     faq25Question:
-      'Como seleciono um treino por grupo muscular no app Método HQ72?',
+      'Como seleciono um treino por grupo muscular no app Método LOSE WEIGHT FOR MEN APP?',
     faq25Answer:
       'Na página de treino, você pode escolher o grupo muscular desejado, selecionando entre opções como Parte Superior, Parte Inferior, Corpo Inteiro ou Core. Após selecionar o tipo, você pode iniciar o treino direcionado para aquela área.',
     faq26Question: 'Como escolho uma categoria de treino?',
@@ -770,14 +770,14 @@ export const translations = {
     faq28Question: 'Como atualizo meu e‑mail ou informações de contato?',
     faq28Answer:
       'Para atualizar seu e‑mail ou informações de contato, vá à seção "Meus Detalhes" no perfil. Edite as informações e salve as alterações.',
-    faq29Question: 'Posso usar o app Método HQ72 em vários dispositivos?',
+    faq29Question: 'Posso usar o app Método LOSE WEIGHT FOR MEN APP em vários dispositivos?',
     faq29Answer:
-      'Sim, você pode usar o app Método HQ72 em vários dispositivos fazendo login com seus dados. Seus dados serão sincronizados entre os dispositivos.',
+      'Sim, você pode usar o app Método LOSE WEIGHT FOR MEN APP em vários dispositivos fazendo login com seus dados. Seus dados serão sincronizados entre os dispositivos.',
     faq30Question: 'O que devo fazer se encontrar um problema técnico no app?',
     faq30Answer:
       'Se você tiver problemas técnicos, entre em contato com o suporte usando a opção "Fale Conosco" no perfil. Forneça detalhes sobre o problema para receber ajuda.',
     faq31Question:
-      'Como meus dados pessoais são protegidos no app Método HQ72?',
+      'Como meus dados pessoais são protegidos no app Método LOSE WEIGHT FOR MEN APP?',
     faq31Answer:
       'Seus dados pessoais são protegidos conforme a política de privacidade do app, que descreve como suas informações são coletadas, usadas e protegidas.',
     faq32Question:
@@ -863,7 +863,7 @@ export const translations = {
       'Verifique seu e-mail para resgatar seu prêmio e não se esqueça de compartilhar sua conquista nas redes sociais!',
     shareNow: 'Compartilhar agora',
     shareWinnerMessage:
-      'Acabei de vencer o desafio de fitness com o aplicativo Método HQ72 e ganhei um vale-presente! 🎉 Você também pode ganhar—baixe o aplicativo Método HQ72 agora e comece a ganhar prêmios incríveis.\nBaixe o aplicativo agora:',
+      'Acabei de vencer o desafio de fitness com o aplicativo Método LOSE WEIGHT FOR MEN APP e ganhei um vale-presente! 🎉 Você também pode ganhar—baixe o aplicativo Método LOSE WEIGHT FOR MEN APP agora e comece a ganhar prêmios incríveis.\nBaixe o aplicativo agora:',
     workoutHistory: 'Histórico de Treinos',
     dailyWorkoutTasks: 'Tarefas Diárias de Treino',
     exerciseSuffix: 'exercício',

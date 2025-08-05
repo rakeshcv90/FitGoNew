@@ -188,13 +188,15 @@ const NewProfile = ({navigation}) => {
       navigation.navigate('TermaAndCondition', {
         title: 'Privacy Policy',
       });
-    } else if (id == 8) {
-      AnalyticsConsole(`T_n_CBUTTON`);
-      // navigation.navigate('TermaAndCondition', {
-      //   title: 'Terms & Conditions',
-      // });
-      setLanguageModalVisible(true);
-    } else if (id == 9) {
+    } 
+    // else if (id == 8) {
+    //   AnalyticsConsole(`T_n_CBUTTON`);
+    //   // navigation.navigate('TermaAndCondition', {
+    //   //   title: 'Terms & Conditions',
+    //   // });
+    //   setLanguageModalVisible(true);
+    // } 
+    else if (id == 8) {
       AnalyticsConsole(`APP_RATING_BUTTON`);
       setRatingVisibilty(true);
       // if (Platform.OS == 'ios') {
@@ -206,9 +208,9 @@ const NewProfile = ({navigation}) => {
       //     'https://play.google.com/store/apps/details?id=fitme.health.fitness.homeworkouts.equipment&hl=en-IN&pli=1',
       //   );
       // }
-    } else if (id == 10) {
+    } else if (id == 9) {
       setModalVisible(true);
-    } else if (id == 11) {
+    } else if (id == 10) {
       AnalyticsConsole(`LOGOUT_BUTTON`);
       LogOut(dispatch);
     }
@@ -249,18 +251,18 @@ const NewProfile = ({navigation}) => {
       txt: translate('privacypolicy'),
       img: localImage.NPrivacy,
     },
+    // {
+    //   id: 8,
+    //   txt: translate('language'),
+    //   img: localImage.NPolicy,
+    // },
     {
       id: 8,
-      txt: translate('language'),
-      img: localImage.NPolicy,
-    },
-    {
-      id: 9,
       txt: translate('rate'),
       img: localImage.NRate,
     },
     {
-      id: 10,
+      id: 9,
       txt: translate('deleteaccount'),
       img: localImage.NDelete,
     },

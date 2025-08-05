@@ -187,7 +187,7 @@ const NewSplash = ({ navigation }: any) => {
     // </ImageBackground>
 
     <View style={styles.container}>
-      <StatusBar backgroundColor="#0D1117" barStyle="light-content" />
+      <StatusBar translucent barStyle="dark-content" backgroundColor={'#fff'}/>
 
       <Image
         source={localImage.Splashlogo} // Replace with your actual logo
@@ -195,7 +195,7 @@ const NewSplash = ({ navigation }: any) => {
         resizeMode="contain"
       />
 
-      <Text style={styles.title}>Método HQ72</Text>
+      <Text style={styles.title}>lose weight for men app</Text>
 
       <View style={styles.loaderContainer}>
         <LottieView
@@ -212,7 +212,7 @@ const NewSplash = ({ navigation }: any) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0D1117',
+    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: '#000',
     fontFamily: 'BlackOpsOne-Regular.ttf', // Use your custom font if needed
     marginBottom: 20,
   },

@@ -37,7 +37,7 @@ const LanguageSelectorModal = ({ visible, onClose, dispatch }) => {
 
   const handleChange = async (code) => {
     try {
-      console.log('set lang code ', code);
+    
       setSelectedLang(code);
       await setLanguage('');
       await setLanguage(code);
