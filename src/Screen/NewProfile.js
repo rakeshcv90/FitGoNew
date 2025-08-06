@@ -168,7 +168,7 @@ const NewProfile = ({navigation}) => {
   };
   const openMailApp = () => {
     Linking.openURL(
-      'mailto:thefitnessandworkout@gmail.com?subject=Feedback&body=Hello%20there!',
+      'mailto:anvelopers368@gmail.com?subject=Feedback&body=Hello%20there!',
     );
   };
   const HandleButtons = (ids, value) => {

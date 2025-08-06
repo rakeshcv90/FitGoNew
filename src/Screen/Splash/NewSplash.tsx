@@ -46,13 +46,7 @@ const NewSplash = ({ navigation }: any) => {
     loadLanguage();
   }, []);
 
-  // useEffect(() => {
-  //   if (Platform.OS === 'android') {
-  //     AdmobInterstitial.loadAd()
-  //       .then(() => console.log('Ad Loaded'))
-  //       .catch((err) => console.error('Ad Load Failed 123 .....', err));
-  //   }
-  // }, []);
+  
 
   useEffect(() => {
     const time = setTimeout(() => {
@@ -62,7 +56,7 @@ const NewSplash = ({ navigation }: any) => {
   }, []);
 
   useEffect(() => {
-    console.log('loader ', loader);
+    
     if (!loader) loadScreen();
   }, [loader]);
 
@@ -81,9 +75,7 @@ const NewSplash = ({ navigation }: any) => {
         getChallengesData &&
         API_CALLS.getAllExercisesData(getUserDataDetails?.id, lang);
     }
-    // const time = setTimeout(() => {
-    // loadScreen()
-    // }, 10000);
+  
   };
 
   const loadScreen = () => {
@@ -148,43 +140,26 @@ const NewSplash = ({ navigation }: any) => {
     } else {
       console.log("118");
       if (Platform.OS === 'android') {
-        AdmobInterstitial.showAd()
-          .then(() => {
-            console.log('Ad shown and completed');
-            navigation.replace('IntroductionScreen1');
-          })
-          .catch((err) => {
-            console.error('Ad show failed', err);
-            navigation.replace('IntroductionScreen1');
-          });
+           navigation.replace('IntroductionScreen1');
+        // AdmobInterstitial.showAd()
+        //   .then(() => {
+        //     console.log('Ad shown and completed');
+        //     navigation.replace('IntroductionScreen1');
+        //   })
+        //   .catch((err) => {
+        //     console.error('Ad show failed', err);
+        //     navigation.replace('IntroductionScreen1');
+        //   });
       } else {
         navigation.replace('IntroductionScreen1');
       }
     }
     afterAdFunction();
   };
-  //  useSetupAds({ afterAdFunction, setLoader });
+
 
   return (
-    // <ImageBackground
-    //   source={localImage.BGSplash}
-    //   style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-    //   imageStyle={{
-    //     flex: 1,
-    //     justifyContent: 'center',
-    //     alignItems: 'center',
-    //   }}>
-    //   <StatusBar backgroundColor="white" barStyle={'light-content'} />
-    //   <SplashAnimation />
-    //   <View style={{ position: 'absolute', bottom: 10 }}>
-    //     <ActivityIndicator
-    //       animating={loader}
-    //       size={'large'}
-    //       color={AppColor.RED}
-    //     />
-    //     <FitText type="SubHeading" value="Please wait..." />
-    //   </View>
-    // </ImageBackground>
+    
 
     <View style={styles.container}>
       <StatusBar translucent barStyle="dark-content" backgroundColor={'#fff'}/>

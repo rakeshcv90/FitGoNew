@@ -49,7 +49,7 @@ import {
 import {RESULTS} from 'react-native-permissions';
 import {AuthorizationStatus} from '@notifee/react-native';
 import {LogOut} from '../../Component/LogOut';
-import { translate } from '../Translation/TranslationService';
+import {translate} from '../Translation/TranslationService';
 
 const OfferTerms = ({navigation, route}: any) => {
   const dispatch = useDispatch();
@@ -121,9 +121,7 @@ const OfferTerms = ({navigation, route}: any) => {
           />
         </TouchableOpacity>
         <View>
-          <Text style={styles.policyText}>
-            {translate('acceptterm')}
-          </Text>
+          <Text style={styles.policyText}>{translate('acceptterm')}</Text>
         </View>
       </View>
     );
@@ -178,7 +176,8 @@ const OfferTerms = ({navigation, route}: any) => {
       });
     } else {
       storeAgreementApi(getUserDataDetails).then(res => {
-        if (res == 'Account Deleted') { // Account is Deleted from FITME Website Delete Feature, So, Logout from the App
+        if (res == 'Account Deleted') {
+          // Account is Deleted from FITME Website Delete Feature, So, Logout from the App
           LogOut(dispatch);
         } else {
           dispatch(setOfferAgreement(res));
@@ -210,7 +209,6 @@ const OfferTerms = ({navigation, route}: any) => {
         style={{
           backgroundColor: 'white',
           paddingVertical: (DeviceWidth * 0.1) / 2,
-         
         }}>
         {loaded ? null : <ActivityLoader />}
         {screenType ? (
@@ -241,7 +239,11 @@ const OfferTerms = ({navigation, route}: any) => {
               letterSpacing={0.2}
               fontSize={14}
             />
-            <FitText value={translate('appreward')} type="Heading" fontSize={18} />
+            <FitText
+              value={translate('appreward')}
+              type="Heading"
+              fontSize={18}
+            />
           </View>
           <TouchableOpacity
             onPress={() => setOpened(!opened)}
@@ -250,7 +252,7 @@ const OfferTerms = ({navigation, route}: any) => {
               width: DeviceWidth * 0.22,
               marginRight: 10,
             }}>
-            <View
+            {/* <View
               style={{
                 backgroundColor: '#3333330A',
                 padding: 10,
@@ -269,8 +271,8 @@ const OfferTerms = ({navigation, route}: any) => {
                 size={10}
                 color={AppColor.BLACK}
               />
-            </View>
-            {opened && (
+            </View> */}
+            {/* {opened && (
               <View
                 style={{
                   marginRight: 16,
@@ -361,7 +363,7 @@ const OfferTerms = ({navigation, route}: any) => {
                   </BlurView>
                 </Modal>
               </View>
-            )}
+            )} */}
           </TouchableOpacity>
         </View>
       </View>

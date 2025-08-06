@@ -179,7 +179,7 @@ const EditCustomMeal = ({navigation, route}) => {
   };
   const UpdateCustomMealList = async () => {
     const url =
-      'https://fitness.appmmc.com/adserver/public/api/test_update_custom_diet';
+      'https://fitme.eyexvisioncare.com/adserver/public/api/test_update_custom_diet';
 
     setForLoading(true);
     const payload = new FormData();
@@ -224,7 +224,7 @@ const EditCustomMeal = ({navigation, route}) => {
       setForLoading(false);
       console.log(error);
       showMessage({
-        message:translate('somthingwrong'),
+        message: translate('somthingwrong'),
         type: 'danger',
         animationDuration: 500,
         floating: true,

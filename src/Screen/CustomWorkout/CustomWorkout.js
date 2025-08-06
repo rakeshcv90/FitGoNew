@@ -50,13 +50,13 @@ const CustomWorkout = ({navigation}) => {
   const avatarRef = React.createRef();
   const dispatch = useDispatch();
   const lang = getCurrentLanguage();
-  // const routeName = route?.params?.routeName;
+
   const customWorkoutData = useSelector(state => state.customWorkoutData);
 
   const [isCustomWorkout, setIsCustomWorkout] = useState(false);
   const [text, setText] = React.useState('');
   const [getWorkoutAvt, setWorkoutAvt] = useState(null);
-const color=['#008080','#FF0000','#000000','#808000',]
+  const color = ['#008080', '#FF0000', '#000000', '#808000'];
   const isFocused = useIsFocused();
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
@@ -157,14 +157,13 @@ const color=['#008080','#FF0000','#000000','#808000',]
                     borderColor: '#D9D9D9',
                   }}>
                   <Text
-                
                     style={{
                       fontSize: 30,
                       fontWeight: '600',
-                  
-                      textAlign:'center',
+
+                      textAlign: 'center',
                       fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                      color:color[index % color.length],
+                      color: color[index % color.length],
                     }}>
                     {item?.workout_name[0]}
                   </Text>

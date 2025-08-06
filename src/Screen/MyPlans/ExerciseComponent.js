@@ -158,7 +158,6 @@ export const ExerciseComponetWithoutEvents = ({
               />
             </View>
 
-            {/* Exercises Title */}
             <View style={styles.View1}>
               <Text
                 style={[

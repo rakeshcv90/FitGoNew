@@ -312,25 +312,7 @@ const LoadData = ({navigation}) => {
           alignSelf: 'center',
           backgroundColor: '#fff',
         }}>
-        {/* <CircularProgress
-          value={loadData}
-          radius={70}
-          progressValueColor={AppColor.RED}
-          inActiveStrokeColor={AppColor.GRAY2}
-          activeStrokeColor={AppColor.RED}
-          inActiveStrokeOpacity={0.3}
-          maxValue={100}
-          valueSuffix={'%'}
-          titleColor={'black'}
-          titleStyle={{
-            textAlign: 'center',
-            fontSize: 28,
-            fontWeight: '700',
-            lineHeight: 35,
-            fontFamily: 'Poppins',
-            color: 'rgb(0, 0, 0)',
-          }}
-        /> */}
+        
         <CircleProgress
           progress={loadData}
           strokeWidth={7}

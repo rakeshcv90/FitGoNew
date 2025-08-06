@@ -61,7 +61,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const dispatch = useDispatch();
   let isFocuse = useIsFocused();
-
+const color=['#008080','#FF0000','#000000','#808000',]
   useEffect(() => {
     if (isFocuse) {
       getExerciseTrackAPI();

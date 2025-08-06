@@ -31,16 +31,14 @@ const NewDiet = () => {
   const getCustomDietData = useSelector(
     (state: any) => state.getCustomDietData,
   );
-      const getDietFilterData = useSelector(
-      (state: any) => state?.getDietFilterData,
-    );
+  const getDietFilterData = useSelector(
+    (state: any) => state?.getDietFilterData,
+  );
   const refStandard = useRef<any>();
   const mealData = useSelector((state: any) => state.mealData);
 
   const [showSearchButton, setShowSearchButton] = useState(true);
   const [selectedItem, setSelectedItem] = useState(0);
-
-
 
   useEffect(() => {
     setShowSearchButton(true);
@@ -59,7 +57,6 @@ const NewDiet = () => {
   ];
 
   const BottomSheetContent = () => {
-
     const dispatch = useDispatch();
     const [selectedItem, setSelectedItem] = useState(getDietFilterData);
     return (
@@ -258,6 +255,9 @@ const NewDiet = () => {
       </View>
     );
   };
+  const visibleTabs = eatTime.map((item, index) => ({ item, index }));
+const lastVisibleIndex = visibleTabs.length - 1;
+ 
   return (
     <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
       <NewHeader1
@@ -266,16 +266,23 @@ const NewDiet = () => {
         icon={showSearchButton ? true : false}
         onBackPress={() => {
           goBack();
-        }}
+        }}   
         onIconPress={() => {
           AnalyticsConsole('Diet_Item_Click');
           refStandard.current.openSheet();
         }}
         iconSource={require('../../Icon/Images/NewImage2/filter.png')}
       />
+     
       <View style={[PredefinedStyles.rowBetween, styles.tab]}>
-        {eatTime.map((item, index) => {
-          if (index == 3 && getCustomDietData.length <= 0) return;
+        {visibleTabs.map(({item, index}, i) => {
+          const isSelected = selectedItem === index;
+
+          // Determine if this is the last visible index OR the "Your Meal" tab
+          const isLastVisible =
+            i === lastVisibleIndex ||
+            item?.toLowerCase()?.includes('your meal');
+
           return (
             <TouchableOpacity
               key={index}
@@ -285,27 +292,24 @@ const NewDiet = () => {
               activeOpacity={0.8}
               style={{
                 height: 50,
-                // width: '50%',
                 paddingLeft: 10,
                 paddingRight: 10,
-                backgroundColor:
-                  selectedItem == index ? AppColor.RED : '#f0f1f3',
+                backgroundColor: isSelected ? AppColor.RED : '#f0f1f3',
                 justifyContent: 'center',
                 alignItems: 'center',
-                borderTopLeftRadius: index == 0 ? 30 : 0,
-                borderTopRightRadius: index == eatTime.length - 1 ? 30 : 0,
-                borderBottomLeftRadius: index == 0 ? 30 : 0,
-                borderBottomRightRadius: index == eatTime.length - 1 ? 30 : 0,
+
+                // Apply border radius only to the first and last/Your Meal tab
+                borderTopLeftRadius: i === 0 ? 30 : 0,
+                borderBottomLeftRadius: i === 0 ? 30 : 0,
+                borderTopRightRadius: isLastVisible ? 30 : 0,
+                borderBottomRightRadius: isLastVisible ? 30 : 0,
+
                 overflow: 'hidden',
               }}>
               <FitText
                 type="SubHeading"
                 value={item}
-                color={
-                  index == selectedItem
-                    ? AppColor.WHITE
-                    : AppColor.PrimaryTextColor
-                }
+                color={isSelected ? AppColor.WHITE : AppColor.PrimaryTextColor}
                 fontSize={13}
               />
             </TouchableOpacity>
