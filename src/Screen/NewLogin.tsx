@@ -62,10 +62,12 @@ const NewLogin = () => {
         console.log(res?.user_id, lang, 'LOGINwwwww');
         API_CALLS.getUserDataDetails(res?.user_id, lang).then((data: any) => {
           if (data) {
+
             API_CALLS.getSubscriptionDetails(res?.user_id, lang).then(
               (data2: any) => {
                 if (res?.allcompleted) {
                   API_CALLS.getAllWorkouts(res?.user_id, lang);
+                     API_CALLS.getAllExercisesData(res?.user_id, lang);
                   navigate('BottomTab');
                 } else if (res?.status) {
                   navigate('Yourself');

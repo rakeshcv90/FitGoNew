@@ -542,6 +542,8 @@ export const translations = {
     delete: 'Delete',
     reminder: 'Set a Reminder',
     TermaAndCondition: 'Terms & Conditions',
+    day:'DAYS',
+     day1:'DAY'
   },
   hi: {
     intro1title: 'अपना फिटनेस का सफर खुद तय करें!',
@@ -1114,5 +1116,7 @@ export const translations = {
     cardio: 'Cardio',
     month: 'mês',
     TermaAndCondition: 'TermaAndCondição',
+    day:'Dias',
+    day1:'Dia'
   },
 };

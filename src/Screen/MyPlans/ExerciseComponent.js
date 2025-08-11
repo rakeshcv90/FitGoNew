@@ -86,13 +86,13 @@ export const ExerciseComponetWithoutEvents = ({
             </Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Text style={styles.txt2}>
-                {'Time - 1 x ' +
+                {translate('time')+' - 1 x ' +
                   (time > 60
                     ? `${Math.floor(time / 60)} min`
-                    : `${time} sec`)}{' '}
+                    : `${time} ${translate('sec')}`)}{' '}
                 |{' '}
               </Text>
-              <Text style={styles.txt2}>{'Set - ' + item?.exercise_sets}</Text>
+              <Text style={styles.txt2}>{translate('set')+' - ' + item?.exercise_sets}</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -126,7 +126,7 @@ export const ExerciseComponetWithoutEvents = ({
         data={dayObject?.exercises}
         ListHeaderComponent={
           <>
-            {/* Header Info */}
+         
             <View style={styles.View1}>
               <View style={[styles.View2, {justifyContent: 'flex-start'}]}>
                 <Image
@@ -158,7 +158,7 @@ export const ExerciseComponetWithoutEvents = ({
               />
             </View>
 
-            {/* Exercises Title */}
+         
             <View style={styles.View1}>
               <Text
                 style={[

@@ -128,17 +128,9 @@ const LoadData = ({navigation}) => {
       payload.append('id', Id);
       payload.append('gender', mergedObject?.gender);
       payload.append('goal', mergedObject?.goal);
-      // payload.append('weight', mergedObject?.currentWeight);
-      // payload.append('age', mergedObject?.age);
-      // payload.append('targetweight', mergedObject?.targetWeight);
-      // payload.append('experience', mergedObject?.experience);
-      // payload.append('workout_plans', mergedObject?.workout_plans);
-      // payload.append('equipment', mergedObject?.equipment);
+    
       payload.append('version', VersionNumber.appVersion);
-      // if (getTempLogin) {
-      //   payload.append('name', mergedObject?.name);
-      // } else {
-      // }
+   
 
       payload.append('name', getUserDataDetails?.name);
    
@@ -159,96 +151,15 @@ const LoadData = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else {
-        getUserDetailData(Id); //getProfileData(getUserID);
-        // getUserDataDetails?.id != 0 && getUserDetailData(getUserDataDetails?.id); //getProfileData(getUserID);
-        // getUserID != 0
-        //   ? getCustomWorkout(getUserID)
-        //   : customFreeWorkoutDataApi(deviceID);
-        // dispatch(setTempLogin(false));
+        getUserDetailData(Id); 
+      
       }
     } catch (error) {
       console.log('Whole Data Error----->', error.response);
     }
   };
 
-  // const getCustomWorkout = async user_id => {
-  //   try {
-  //     const data = await axios(NewAppapi.Custom_WORKOUT_DATA, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //       data: {
-  //         id: user_id,
-  //         version: VersionNumber.appVersion,
-  //       },
-  //     });
-
-  //     if (data.data.workout) {
-  //       dispatch(setCustomWorkoutData(data?.data));
-  //       setActiveNext(true);
-  //       // currentWorkoutDataApi(data.data?.workout[0]);
-  //     } else if (
-  //       data?.data?.msg == 'Please update the app to the latest version.'
-  //     ) {
-  //       showMessage({
-  //         message: data.data.msg,
-  //         type: 'danger',
-  //         animationDuration: 500,
-  //         floating: true,
-  //         icon: {icon: 'auto', position: 'left'},
-  //       });
-  //     } else {
-  //       dispatch(setCustomWorkoutData([]));
-  //       setActiveNext(true);
-  //     }
-  //   } catch (error) {
-  //     console.log('Custom Workout Error', error);
-  //     dispatch(setCustomWorkoutData([]));
-  //     setActiveNext(true);
-  //   }
-  // };
-
-  // const customFreeWorkoutDataApi = async deviceID => {
-  //   try {
-  //     const payload = new FormData();
-  //     payload.append('deviceid', deviceID);
-  //     payload.append('version', VersionNumber.appVersion);
-
-  //     const res = await axios({
-  //       url: NewAppapi.Free_WORKOUT_DATA,
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //       data: payload,
-  //     });
-
-  //     if (res.data?.workout) {
-  //       setActiveNext(true);
-  //       dispatch(setCustomWorkoutData(res.data));
-
-  //       // currentWorkoutDataApi(res.data?.workout[0]);
-  //     } else if (
-  //       res?.data?.msg == 'Please update the app to the latest version.'
-  //     ) {
-  //       showMessage({
-  //         message: res?.data?.msg,
-  //         floating: true,
-  //         duration: 500,
-  //         type: 'danger',
-  //         icon: {icon: 'auto', position: 'left'},
-  //       });
-  //     } else {
-  //       dispatch(setCustomWorkoutData([]));
-  //       setActiveNext(true);
-  //     }
-  //   } catch (error) {
-  //     console.error(error?.response, 'customWorkoutDataApiError');
-  //     dispatch(setCustomWorkoutData([]));
-  //     setActiveNext(true);
-  //   }
-  // };
+ 
 
   const getUserDetailData = async userId => {
     try {
@@ -312,25 +223,7 @@ const LoadData = ({navigation}) => {
           alignSelf: 'center',
           backgroundColor: '#fff',
         }}>
-        {/* <CircularProgress
-          value={loadData}
-          radius={70}
-          progressValueColor={AppColor.RED}
-          inActiveStrokeColor={AppColor.GRAY2}
-          activeStrokeColor={AppColor.RED}
-          inActiveStrokeOpacity={0.3}
-          maxValue={100}
-          valueSuffix={'%'}
-          titleColor={'black'}
-          titleStyle={{
-            textAlign: 'center',
-            fontSize: 28,
-            fontWeight: '700',
-            lineHeight: 35,
-            fontFamily: 'Poppins',
-            color: 'rgb(0, 0, 0)',
-          }}
-        /> */}
+  
         <CircleProgress
           progress={loadData}
           strokeWidth={7}
@@ -345,7 +238,7 @@ const LoadData = ({navigation}) => {
           />
         </CircleProgress>
       </View>
-      {/* <Text style={styles.text}>49%</Text> */}
+
       <Text style={styles.text1}>{translate('loadheading')}</Text>
       <Text style={styles.text2}>50K+</Text>
       <Text style={styles.text2}>{translate('activeusers')}</Text>
@@ -423,10 +316,7 @@ const LoadData = ({navigation}) => {
         {activeNext && (
           <TouchableOpacity
             onPress={() => {
-              // if (getUserDataDetails?.email) {
-              //   navigation.navigate('OfferTerms');
-              // } else {
-              // }
+         
               navigation.navigate('OfferTerms');
             }}>
             <LinearGradient

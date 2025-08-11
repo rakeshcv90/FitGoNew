@@ -363,7 +363,7 @@ const NewHome = ({navigation}) => {
       );
 
       if (responseData.data?.msg != 'user id is required') {
-        dispatch(setChallengesData(responseData.data.challenge_data));
+        // dispatch(setChallengesData(responseData.data.challenge_data));
         const challenge = responseData?.data?.challenge_data?.filter(
           item => item?.status == 'active',
         );

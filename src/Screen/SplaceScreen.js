@@ -501,7 +501,7 @@ const SplaceScreen = ({navigation, route}) => {
         `${url}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
       );
       if (responseData.data?.msg != 'user id is required') {
-        dispatch(setChallengesData(responseData.data.challenge_data));
+        // dispatch(setChallengesData(responseData.data.challenge_data));
         dispatch(setAllExercise(responseData.data.data));
       }
     } catch (error) {

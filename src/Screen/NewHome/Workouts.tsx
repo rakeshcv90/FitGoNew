@@ -30,7 +30,7 @@ import NewHeader from '../../Component/Headers/NewHeader';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import {showMessage} from 'react-native-flash-message';
 
-import {useIsFocused} from '@react-navigation/native';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 
 import AnimatedLottieView from 'lottie-react-native';
 
@@ -44,6 +44,7 @@ import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import {getCurrentLanguage, translate} from '../Translation/TranslationService';
+import {API_CALLS} from '../../API/API_CALLS';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Workouts = ({navigation}: any) => {
@@ -65,7 +66,7 @@ const Workouts = ({navigation}: any) => {
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
   );
-  // const {showInterstitialAd} = MyInterstitialAd();
+
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
@@ -418,7 +419,7 @@ const Workouts = ({navigation}: any) => {
                     top: 0,
                     textAlign: 'center',
                   }}>
-                  {`${Object.values(item?.days).length}\nDAYS`}
+                  {`${Object.values(item?.days).length}\n${translate('day')}`}
                 </Text>
               </ImageBackground>
               <View
@@ -685,6 +686,58 @@ const Workouts = ({navigation}: any) => {
       }
     }
   };
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     try {
+  //       const responseData = await axios.get(
+  //         `${NewAppapi.GET_CHALLENGES_DATA}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}&lang=${lang}`,
+  //       );
+
+  //       if (
+  //         responseData?.data?.msg ==
+  //         'Please update the app to the latest version.'
+  //       ) {
+
+  //       } else {
+  //       }
+  //     } catch (error) {
+  //       console.log('GET-USER-DATA', error);
+  //     }
+  //   }, [isFocused]),
+  // );
+  useFocusEffect(
+    useCallback(() => {
+      // let isActive = true;
+
+      const fetchData = async () => {
+        try {
+          const responseData = await axios.get(
+            `${NewAppapi.GET_CHALLENGES_DATA}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}&lang=${lang}`,
+          );
+
+          if (
+            responseData?.data?.msg ===
+            'Please update the app to the latest version.'
+          ) {
+            console.log('Prompt user to update the app');
+          } else {
+            console.log('Fetched data:', responseData.data);
+            // handle your normal flow
+            dispatch(setChallengesData(responseData?.data));
+          }
+        } catch (error) {
+          console.log('GET-USER-DATA', error);
+        }
+      };
+
+      fetchData();
+
+      // return () => {
+      //   isActive = false; // cleanup
+      // };
+    }, [lang, isFocused]),
+  );
   return (
     <>
       <View style={styles.container}>
@@ -1032,6 +1085,7 @@ const Workouts = ({navigation}: any) => {
                             initialNumToRender={10}
                             maxToRenderPerBatch={10}
                             updateCellsBatchingPeriod={100}
+                            contentContainerStyle={{paddingBottom: 400}}
                             removeClippedSubviews={true}
                           />
                         </View>

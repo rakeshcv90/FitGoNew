@@ -258,6 +258,10 @@ const NewDiet = () => {
       </View>
     );
   };
+
+
+    const visibleTabs = eatTime.map((item, index) => ({ item, index }));
+const lastVisibleIndex = visibleTabs.length - 1;
   return (
     <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
       <NewHeader1
@@ -273,7 +277,7 @@ const NewDiet = () => {
         }}
         iconSource={require('../../Icon/Images/NewImage2/filter.png')}
       />
-      <View style={[PredefinedStyles.rowBetween, styles.tab]}>
+      {/* <View style={[PredefinedStyles.rowBetween, styles.tab]}>
         {eatTime.map((item, index) => {
           if (index == 3 && getCustomDietData.length <= 0) return;
           return (
@@ -311,8 +315,49 @@ const NewDiet = () => {
             </TouchableOpacity>
           );
         })}
-      </View>
+      </View> */}
+<View style={[PredefinedStyles.rowBetween, styles.tab]}>
+        {visibleTabs.map(({item, index}, i) => {
+          const isSelected = selectedItem === index;
 
+          // Determine if this is the last visible index OR the "Your Meal" tab
+          const isLastVisible =
+            i === lastVisibleIndex ||
+            item?.toLowerCase()?.includes('your meal');
+
+          return (
+            <TouchableOpacity
+              key={index}
+              onPress={() => {
+                setSelectedItem(index);
+              }}
+              activeOpacity={0.8}
+              style={{
+                height: 50,
+                paddingLeft: 10,
+                paddingRight: 10,
+                backgroundColor: isSelected ? AppColor.RED : '#f0f1f3',
+                justifyContent: 'center',
+                alignItems: 'center',
+
+                // Apply border radius only to the first and last/Your Meal tab
+                borderTopLeftRadius: i === 0 ? 30 : 0,
+                borderBottomLeftRadius: i === 0 ? 30 : 0,
+                borderTopRightRadius: isLastVisible ? 30 : 0,
+                borderBottomRightRadius: isLastVisible ? 30 : 0,
+
+                overflow: 'hidden',
+              }}>
+              <FitText
+                type="SubHeading"
+                value={item}
+                color={isSelected ? AppColor.WHITE : AppColor.PrimaryTextColor}
+                fontSize={13}
+              />
+            </TouchableOpacity>
+          );
+        })}
+      </View>
       {selectedItem == 3 ? (
         <CreateMealList />
       ) : (

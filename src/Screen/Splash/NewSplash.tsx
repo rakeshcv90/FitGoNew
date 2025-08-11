@@ -1,23 +1,38 @@
-import { ImageBackground, StatusBar, StyleSheet, View, Image, Text, Platform } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { localImage } from '../../Component/Image';
+import {
+  ImageBackground,
+  StatusBar,
+  StyleSheet,
+  View,
+  Image,
+  Text,
+  Platform,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {localImage} from '../../Component/Image';
 import SplashAnimation from './SplashAnimation';
-import { ActivityIndicator } from 'react-native';
+import {ActivityIndicator} from 'react-native';
 import FitText from '../../Component/Utilities/FitText';
-import { AppColor } from '../../Component/Color';
-import { setupSubscription } from './setupSubscription';
-import { API_CALLS } from '../../API/API_CALLS';
+import {AppColor} from '../../Component/Color';
+import {setupSubscription} from './setupSubscription';
+import {API_CALLS} from '../../API/API_CALLS';
 import useSetupAds from './useSetupAds';
-import { useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import checkAllPermissions from './checkAllPermissions';
 import LottieView from 'lottie-react-native';
+import VersionNumber, {appVersion} from 'react-native-version-number';
 import AdmobInterstitial from '../../Component/NativeCodeAds/AdmobInterstitial';
-import { setLanguage, getCurrentLanguage, loadLanguage } from '../Translation/TranslationService';
+import {
+  setLanguage,
+  getCurrentLanguage,
+  loadLanguage,
+} from '../Translation/TranslationService';
+import axios from 'axios';
+import {NewAppapi} from '../../Component/Config';
+import {setChallengesData} from '../../Component/ThemeRedux/Actions';
 
-const NewSplash = ({ navigation }: any) => {
-
+const NewSplash = ({navigation}: any) => {
   const [loader, setLoader] = useState(true);
-
+  const dispatch = useDispatch();
   const getAllExercise = useSelector((state: any) => state.getAllExercise);
   const getOfferAgreement = useSelector(
     (state: any) => state.getOfferAgreement,
@@ -34,25 +49,16 @@ const NewSplash = ({ navigation }: any) => {
 
   const handleLangChange = async (langCode: string) => {
     await setLanguage(langCode);
-
   };
 
   useEffect(() => {
     const applyLanguage = async () => {
-      console.log('get language', lang)
+      console.log('get language', lang);
       await handleLangChange(lang); // or 'hi', 'en', etc.
     };
     applyLanguage();
     loadLanguage();
   }, []);
-
-  // useEffect(() => {
-  //   if (Platform.OS === 'android') {
-  //     AdmobInterstitial.loadAd()
-  //       .then(() => console.log('Ad Loaded'))
-  //       .catch((err) => console.error('Ad Load Failed 123 .....', err));
-  //   }
-  // }, []);
 
   useEffect(() => {
     const time = setTimeout(() => {
@@ -67,16 +73,16 @@ const NewSplash = ({ navigation }: any) => {
   }, [loader]);
 
   const afterAdFunction = () => {
-  
     setupSubscription();
     API_CALLS.getMajorData(lang);
     if (getUserDataDetails.id != null) {
+         fetchData();
       API_CALLS.postLogin(getUserDataDetails?.name, getUserDataDetails?.email);
       API_CALLS.getUserDataDetails(getUserDataDetails?.id, lang);
       if (getUserDataDetails.gender != null) {
-        API_CALLS.getAllWorkouts(getUserDataDetails?.id, lang)
+        API_CALLS.getAllWorkouts(getUserDataDetails?.id, lang);
       }
-      API_CALLS.pastWinners()
+      API_CALLS.pastWinners();
       getAllExercise &&
         getChallengesData &&
         API_CALLS.getAllExercisesData(getUserDataDetails?.id, lang);
@@ -85,27 +91,48 @@ const NewSplash = ({ navigation }: any) => {
     // loadScreen()
     // }, 10000);
   };
+  const fetchData = async () => {
+    console.log("DddRakesh Testdd", `${NewAppapi.GET_CHALLENGES_DATA}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}&lang=${lang}`)
+    try {
+      const responseData = await axios.get(
+        `${NewAppapi.GET_CHALLENGES_DATA}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}&lang=${lang}`,
+      );
 
+      if (
+        responseData?.data?.msg ===
+        'Please update the app to the latest version.'
+      ) {
+        console.log('Prompt user to update the app');
+      } else {
+        console.log('Fetched data:', responseData.data);
+        // handle your normal flow
+        dispatch(setChallengesData(responseData?.data));
+      }
+    } catch (error) {
+      console.log('GET-USER-DATA', error);
+    }
+  };
   const loadScreen = () => {
     setLoader(true);
+    
     if (showIntro) {
-      console.log("111");
+      console.log('111');
       if (getUserDataDetails?.id) {
-        console.log("112");
+        console.log('112');
         if (getUserDataDetails?.profile_compl_status == 1) {
-          console.log("113");
+          console.log('113');
           if (getOfferAgreement?.term_condition == 'Accepted') {
-            console.log("114");
+            console.log('114');
             checkAllPermissions();
           } else {
-            console.log("115");
+            console.log('115');
             if (Platform.OS === 'android') {
               AdmobInterstitial.showAd()
                 .then(() => {
                   console.log('Ad shown and completed');
                   navigation.replace('OfferTerms');
                 })
-                .catch((err) => {
+                .catch(err => {
                   console.error('Ad show failed', err);
                   navigation.replace('OfferTerms');
                 });
@@ -114,14 +141,14 @@ const NewSplash = ({ navigation }: any) => {
             }
           }
         } else {
-          console.log("116");
+          console.log('116');
           if (Platform.OS === 'android') {
             AdmobInterstitial.showAd()
               .then(() => {
                 console.log('Ad shown and completed');
                 navigation.navigate('Yourself');
               })
-              .catch((err) => {
+              .catch(err => {
                 console.error('Ad show failed', err);
                 navigation.navigate('Yourself');
               });
@@ -130,14 +157,14 @@ const NewSplash = ({ navigation }: any) => {
           }
         }
       } else {
-        console.log("login call from splash")
+        console.log('login call from splash');
         if (Platform.OS === 'android') {
           AdmobInterstitial.showAd()
             .then(() => {
               console.log('Ad shown and completed');
               navigation.replace('LogSignUp');
             })
-            .catch((err) => {
+            .catch(err => {
               console.error('Ad show failed', err);
               navigation.replace('LogSignUp');
             });
@@ -146,17 +173,10 @@ const NewSplash = ({ navigation }: any) => {
         }
       }
     } else {
-      console.log("118");
+      console.log('118');
       if (Platform.OS === 'android') {
-        AdmobInterstitial.showAd()
-          .then(() => {
-            console.log('Ad shown and completed');
-            navigation.replace('IntroductionScreen1');
-          })
-          .catch((err) => {
-            console.error('Ad show failed', err);
-            navigation.replace('IntroductionScreen1');
-          });
+        navigation.replace('IntroductionScreen1');
+       
       } else {
         navigation.replace('IntroductionScreen1');
       }
@@ -166,25 +186,7 @@ const NewSplash = ({ navigation }: any) => {
   //  useSetupAds({ afterAdFunction, setLoader });
 
   return (
-    // <ImageBackground
-    //   source={localImage.BGSplash}
-    //   style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-    //   imageStyle={{
-    //     flex: 1,
-    //     justifyContent: 'center',
-    //     alignItems: 'center',
-    //   }}>
-    //   <StatusBar backgroundColor="white" barStyle={'light-content'} />
-    //   <SplashAnimation />
-    //   <View style={{ position: 'absolute', bottom: 10 }}>
-    //     <ActivityIndicator
-    //       animating={loader}
-    //       size={'large'}
-    //       color={AppColor.RED}
-    //     />
-    //     <FitText type="SubHeading" value="Please wait..." />
-    //   </View>
-    // </ImageBackground>
+
 
     <View style={styles.container}>
       <StatusBar backgroundColor="#0D1117" barStyle="light-content" />

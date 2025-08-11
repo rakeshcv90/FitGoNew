@@ -53,7 +53,7 @@ import { translate } from '../Translation/TranslationService';
 
 const OfferTerms = ({navigation, route}: any) => {
   const dispatch = useDispatch();
-  const [language, setLanguage] = useState('English');
+  const [language, setLanguage] = useState('Portuguese');
   const [opened, setOpened] = useState(false);
   const [checked, setChecked] = useState(false);
   const [content, setContent] = useState('');
@@ -67,7 +67,7 @@ const OfferTerms = ({navigation, route}: any) => {
   const contentWidth = windowWidth;
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   useEffect(() => {
-    setContent(getAgreementContent['term_condition_english']);
+    setContent(getAgreementContent['term_condition_hindi']);
     if (Object.keys(getAgreementContent).length == 0) {
       getUserAllInData();
     }

@@ -29,7 +29,7 @@ const IntroductionScreen1 = ({navigation}) => {
   useEffect(() => {
     const translatedTitle = translate('title');
     const desc = translate('description');
-console.log('converterd text ',translatedTitle, desc);
+
     // setTitle(translatedTitle);
   }, []);
 

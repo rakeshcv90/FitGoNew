@@ -155,6 +155,7 @@ const CreateMealList = () => {
             bottom: DeviceHeigth >= 1024 ? 15 : 10,
             justifyContent: 'center',
             alignItems: 'flex-end',
+            position:'absolute'
           }}>
           <TouchableOpacity
             onPress={() => {
@@ -195,14 +196,6 @@ const CreateMealList = () => {
         </View>
       )}
 
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: 'transparent',
-          justifyContent: 'flex-end',
-        }}>
-        {/* <BannerAdd bannerAdId={bannerAdId} /> */}
-      </View>
     </View>
   );
 };

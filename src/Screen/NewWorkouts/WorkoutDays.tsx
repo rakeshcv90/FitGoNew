@@ -43,7 +43,7 @@ import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 import NewHeader from '../../Component/Headers/NewHeader';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
-import {translate} from '../Translation/TranslationService';
+import {getCurrentLanguage, translate} from '../Translation/TranslationService';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -61,11 +61,42 @@ const WorkoutDays = ({navigation, route}: any) => {
   const [downloaded, setDownloade] = useState(0);
   const avatarRef = React.createRef();
   const [isLoading, setIsLoading] = useState(true);
+  const [dayData, setDaydata] = useState([]);
   const getFitmeMealAdsCount = useSelector(
     (state: any) => state.getFitmeMealAdsCount,
   );
+  const lang = getCurrentLanguage();
 
-  // const {showInterstitialAd} = MyInterstitialAd();
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        setRefresh(true);
+        try {
+          const responseData = await axios.get(
+            `${NewAppapi.GET_CHALLENGEDAY}?challenge_id=${data.id}&lang=${lang}`,
+          );
+
+          if (
+            responseData?.data?.msg ===
+            'Please update the app to the latest version.'
+          ) {
+            console.log('Prompt user to update the app');
+          } else {
+            console.log('Fetched data:', responseData.data);
+            setDaydata(responseData?.data?.data);
+          }
+        } catch (error) {
+          console.log('GET-USER-DATA', error);
+        }
+      };
+
+      fetchData();
+
+      // return () => {
+      //   isActive = false; // cleanup
+      // };
+    }, [lang]),
+  );
 
   let isFocuse = useIsFocused();
   const dispatch = useDispatch();
@@ -235,39 +266,7 @@ const WorkoutDays = ({navigation, route}: any) => {
     return fileName;
   };
   let StoringData: Object = {};
-  const downloadVideos = async (data: any, index: number, len: number) => {
-    const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(
-      data?.exercise_title,
-    )}.mp4`;
-    try {
-      const videoExists = await RNFetchBlob.fs.exists(filePath);
-      if (videoExists) {
-        StoringData[data?.exercise_title] = filePath;
-        setDownloade(100 / (len - index));
-      } else {
-        await RNFetchBlob.config({
-          fileCache: true,
-          // IOSBackgroundTask: true, // Add this for iOS background downloads
-          path: filePath,
-          appendExt: '.mp4',
-        })
-          .fetch('GET', data?.exercise_video, {
-            'Content-Type': 'application/mp4',
-            // key: 'Config.REACT_APP_API_KEY',
-          })
-          .then(res => {
-            StoringData[data?.exercise_title] = res.path();
-            setDownloade(100 / (len - index));
-          })
-          .catch(err => {
-            console.log(err);
-          });
-      }
-    } catch (error) {
-      console.log('ERRRR', error);
-    }
-    dispatch(setVideoLocation(StoringData));
-  };
+
   if (reward == 1) {
     setreward(0);
     navigation.navigate('Exercise', {
@@ -465,7 +464,6 @@ const WorkoutDays = ({navigation, route}: any) => {
             {
               opacity: !selected && item?.total_rest != 0 ? 0.9 : 1,
               width: DeviceWidth * 0.95,
-              // DeviceHeigth < 1280 ? DeviceWidth * 0.85 : DeviceWidth * 0.89,
               height: DeviceHeigth * 0.085,
               marginTop: 6,
             },
@@ -563,7 +561,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                         : DeviceWidth * 0.18,
                     alignItems: 'center',
                     justifyContent: 'center',
-                    // marginLeft: DeviceWidth * 0.12,
+
                     borderRadius: 10,
                     borderWidth: 1,
                     borderColor: '#D9D9D9',
@@ -579,10 +577,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                         DeviceHeigth >= 1024
                           ? DeviceWidth * 0.14
                           : DeviceWidth * 0.16,
-                      // marginLeft: DeviceWidth * 0.12,
-                      // borderRadius: 10,
-                      // borderWidth: 1,
-                      // borderColor: '#D9D9D9',
+
                       opacity: percent ? 0.5 : 1,
                     }}
                     resizeMode="contain"
@@ -632,7 +627,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                             : AppColor.BLACK,
                         marginBottom: 10,
                       },
-                    ]}>{`${translate('day')}-${index}`}</Text>
+                    ]}>{`${translate('day1')}-${index}`}</Text>
                   {item?.total_rest == 0 ? (
                     <Text
                       style={[
@@ -771,9 +766,11 @@ const WorkoutDays = ({navigation, route}: any) => {
               paddingBottom: DeviceHeigth * 0.03,
               alignItems: 'center',
             }}>
+            
             <View style={{top: 10}}>
               {!refresh &&
                 Object.values(data?.days).map((item: any, index: number) => {
+                 
                   return (
                     <Box
                       active={

@@ -28,6 +28,7 @@ const WorkoutsDescription = ({data, open, setOpen, id}: any) => {
   const [ttsInitialized, setTtsInitialized] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const TextSpeech = `${data?.exercise_instructions}`;
+
   const [description, SetDescription] = useState('');
   const [title, setTitle] = useState('');
   const dispatch = useDispatch();
@@ -192,21 +193,7 @@ const WorkoutsDescription = ({data, open, setOpen, id}: any) => {
           flex: 1,
           backgroundColor: AppColor.WHITE,
         }}>
-        {/* {isLoading && (
-          <View style={styles.loader}>
-            <AnimatedLottieView
-              source={require('../../Icon/Images/NewImage2/Adloader.json')}
-              speed={2}
-              autoPlay
-              loop
-              resizeMode="contain"
-              style={{
-                height: DeviceWidth / 1.5,
-                width: DeviceWidth * 0.95,
-              }}
-            />
-          </View>
-        )} */}
+
         <View
           style={{
             flexDirection: 'row',

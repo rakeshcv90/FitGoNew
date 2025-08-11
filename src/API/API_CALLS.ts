@@ -511,8 +511,9 @@ export const API_CALLS = {
           ) {
             reject(UpgradeAppResponse());
           } else if (status == 200) {
-            console.log("Test Datatata")
-            dispatch(setChallengesData(data?.challenge_data));
+            // console.log("Test Datatata",data?.challenge_data)
+
+            // dispatch(setChallengesData(data?.challenge_data));
             dispatch(setAllExercise(''));
             dispatch(setAllExercise(data?.data));
             resolve(status);
