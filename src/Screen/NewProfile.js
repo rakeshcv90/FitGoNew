@@ -116,11 +116,11 @@ const NewProfile = ({navigation}) => {
           ? '1:00 AM'
           : moment(notificationTimer).format('LT'),
     },
-    {
-      id: 2,
-      txt: translate('subscription'),
-      img: localImage.Planning,
-    },
+    // {
+    //   id: 2,
+    //   txt: translate('subscription'),
+    //   img: localImage.Planning,
+    // },
     {
       id: 3,
       txt: translate('mydetails'),
@@ -189,25 +189,10 @@ const NewProfile = ({navigation}) => {
         title: 'Privacy Policy',
       });
     } 
-    // else if (id == 8) {
-    //   AnalyticsConsole(`T_n_CBUTTON`);
-    //   // navigation.navigate('TermaAndCondition', {
-    //   //   title: 'Terms & Conditions',
-    //   // });
-    //   setLanguageModalVisible(true);
-    // } 
+ 
     else if (id == 8) {
       AnalyticsConsole(`APP_RATING_BUTTON`);
       setRatingVisibilty(true);
-      // if (Platform.OS == 'ios') {
-      //   Linking.openURL(
-      //     'https://apps.apple.com/us/app/fitme-health-and-fitness-app/id6470018217',
-      //   );
-      // } else {
-      //   Linking.openURL(
-      //     'https://play.google.com/store/apps/details?id=fitme.health.fitness.homeworkouts.equipment&hl=en-IN&pli=1',
-      //   );
-      // }
     } else if (id == 9) {
       setModalVisible(true);
     } else if (id == 10) {
@@ -605,7 +590,7 @@ const NewProfile = ({navigation}) => {
   const onChange = (value, name) => {
     const isSound =
       name == translate('sound') ? translate('sound') : translate('music');
-    // AnalyticsConsole(`${isSound}_ON_OFF`);
+
     if (!value) {
       showMessage({
         message:

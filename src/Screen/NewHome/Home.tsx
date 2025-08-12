@@ -84,10 +84,8 @@ const Home = () => {
           />
         }>
         {enteredCurrentEvent && <OfferAnimation />}
-        <NativeAdBanner loader={loader} />
-        {/* <BannerAd
-          style={{width: '100%', height: 50}} // Ensure height and width are specified
-        /> */}
+        {/* <NativeAdBanner loader={loader} />
+     */}
         <View style={styles.whiteBox}>
           <Progress myPlans={false} />
         </View>
@@ -140,7 +138,7 @@ const Home = () => {
           </View>
         )}
       </ScrollView>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         activeOpacity={0.7}
         onPress={() => {
           AnalyticsConsole(`AI_TRAINER_BUTTON`);
@@ -153,11 +151,11 @@ const Home = () => {
           type="MaterialCommunityIcons"
           color={AppColor.RED}
         />
-      </TouchableOpacity>
-      <AdEventPopup
+      </TouchableOpacity> */}
+      {/* <AdEventPopup
         modalVisible={modalVisible}
         onClose={() => setModalVisible(false)}
-      />
+      /> */}
     </Wrapper>
   );
 };

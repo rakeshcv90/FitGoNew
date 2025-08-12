@@ -94,7 +94,7 @@ const HomeHeader = ({leaderboardData}: Props) => {
           fontWeight="700"
         />
       </View>
-      { enteredCurrentEvent ? (
+      {/* { enteredCurrentEvent ? (
         <View style={[PredefinedStyles.rowBetween, {width: '50%'}]}>
           <FitIcon {...historyIcon} roundIcon />
           <TouchableOpacity
@@ -152,7 +152,7 @@ const HomeHeader = ({leaderboardData}: Props) => {
             />
           </TouchableOpacity>
         </View>
-      )}
+      )} */}
     </View>
   );
 };

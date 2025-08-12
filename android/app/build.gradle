@@ -101,7 +101,7 @@ android {
     }
      signingConfigs {
          release {
-             storeFile file('Cristian.jks')
+             storeFile file('eye')
              storePassword '123456'
              keyAlias 'key0'
              keyPassword '123456'
