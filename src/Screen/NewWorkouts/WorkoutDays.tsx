@@ -82,7 +82,7 @@ const WorkoutDays = ({navigation, route}: any) => {
           ) {
             console.log('Prompt user to update the app');
           } else {
-            console.log('Fetched data:', responseData.data);
+           
             setDaydata(responseData?.data?.data);
           }
         } catch (error) {

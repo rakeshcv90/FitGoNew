@@ -25,9 +25,10 @@ import VersionNumber from 'react-native-version-number';
 import {getCurrentLanguage, translate} from '../Translation/TranslationService';
 
 const WorkoutsDescription = ({data, open, setOpen, id}: any) => {
+  console.log("WorkoutId",id)
   const [ttsInitialized, setTtsInitialized] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const TextSpeech = `${data?.exercise_instructions}`;
+  
 
   const [description, SetDescription] = useState('');
   const [title, setTitle] = useState('');
@@ -35,6 +36,7 @@ const WorkoutsDescription = ({data, open, setOpen, id}: any) => {
 
   const getSoundOffOn = useSelector((state: any) => state.getSoundOffOn);
   const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
+  const TextSpeech = `${description}`;
   const cleanText = TextSpeech.replace(/<\/?[^>]+(>|$)/g, '');
   const isIOS18 = PLATFORM_IOS && Platform.Version >= 18;
 
@@ -153,7 +155,7 @@ const WorkoutsDescription = ({data, open, setOpen, id}: any) => {
     } else {
       Tts.stop();
     }
-  }, [open, getSoundOffOn]);
+  }, [open, getSoundOffOn,description]);
 
   useEffect(() => {
     if (id !== null && id !== undefined) {

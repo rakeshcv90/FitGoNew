@@ -722,7 +722,7 @@ const Workouts = ({navigation}: any) => {
           ) {
             console.log('Prompt user to update the app');
           } else {
-            console.log('Fetched data:', responseData.data);
+           
             // handle your normal flow
             dispatch(setChallengesData(responseData?.data));
           }

@@ -30,7 +30,10 @@ import {Dispatch, SetStateAction, version} from 'react';
 import {EnteringEventFunction} from '../Screen/Event/EnteringEventFunction';
 import {navigate} from '../Component/Utilities/NavigationUtil';
 import {downloadImages} from '../Screen/Splash/downloadBanner';
-import { translate,getCurrentLanguage } from '../Screen/Translation/TranslationService';
+import {
+  translate,
+  getCurrentLanguage,
+} from '../Screen/Translation/TranslationService';
 
 let deviceID = '';
 DeviceInfo.syncUniqueId().then(uniqueId => {
@@ -54,7 +57,6 @@ const UpgradeAppResponse = () => {
 export const API_CALLS = {
   postLogin: debounce(
     (name: string, email: string, noMessage?: boolean | true) => {
-    
       const requestBody = {
         name,
         email,
@@ -62,7 +64,7 @@ export const API_CALLS = {
         version: VersionNumber.appVersion,
         device_id: deviceID,
       };
-    
+   
       return new Promise((resolve, reject) =>
         RequestAPI.makeRequest(
           'POST',
@@ -75,7 +77,7 @@ export const API_CALLS = {
             device_id: deviceID,
           },
           ({data, errors, status, message}) => {
-           console.log(data, 'LOGIN');
+            console.log(message, 'LOGIN');
             if (data && status == 200) {
               noMessage &&
                 showMessage({
@@ -113,8 +115,9 @@ export const API_CALLS = {
             device_id: deviceID,
           },
           ({data, errors, status, message}) => {
-            console.log("eeeeeeeeeeeee",
-         
+            console.log(
+              'eeeeeeeeeeeee',
+
               data,
             );
             if (data && status == 200) {
@@ -135,7 +138,7 @@ export const API_CALLS = {
     },
     300,
   ),
-  getUserDataDetails: debounce((userID: string,lang:string) => {
+  getUserDataDetails: debounce((userID: string, lang: string) => {
     return new Promise((resolve, reject) =>
       RequestAPI.makeRequest(
         'GET',
@@ -309,6 +312,7 @@ export const API_CALLS = {
             user_id,
             version: VersionNumber.appVersion,
           },
+
           ({data, errors, status, message}) => {
             if (data) {
               setData(data?.data);
@@ -364,6 +368,7 @@ export const API_CALLS = {
             user_id,
           },
           ({data, errors, status, message}) => {
+          
             if (data) {
               setData(data?.code?.toUpperCase());
               resolve('');
@@ -377,7 +382,7 @@ export const API_CALLS = {
     },
     500,
   ),
-  getSubscriptionDetails: debounce((user_id: string, lang:string) => {
+  getSubscriptionDetails: debounce((user_id: string, lang: string) => {
     return new Promise((resolve, reject) =>
       RequestAPI.makeRequest(
         'GET',
@@ -385,15 +390,14 @@ export const API_CALLS = {
         {
           user_id,
           version: VersionNumber.appVersion,
-          lang:lang,
+          lang: lang,
         },
         ({data, errors, status, message}) => {
-      
+        
           if (data?.msg == 'Please update the app to the latest version.') {
-            console.log('subscription data upgrade ',data, ' // ',status);
             reject(UpgradeAppResponse());
+            console.log('SUBSCRIPTION EROROROROR');
           } else if (status == 200) {
-          
             dispatch(setCustomWorkoutData(data?.workout_data));
             dispatch(setOfferAgreement(data?.additional_data));
             dispatch(setUserProfileData(data?.profile));
@@ -409,6 +413,7 @@ export const API_CALLS = {
             resolve(status);
           } else {
             reject(UpgradeAppResponse());
+            console.log('SUBSCRIPTION EROROROROR');
           }
         },
       ),
@@ -447,35 +452,34 @@ export const API_CALLS = {
             }
           } else {
             reject(UpgradeAppResponse());
+            console.log('Create SUBSCRIPTION POLAN');
           }
         },
       ),
     );
   }, 500),
-  getMajorData: debounce((lang:string) => {
+  getMajorData: debounce((lang: string) => {
     return new Promise((resolve, reject) =>
       RequestAPI.makeRequest(
         'GET',
         NewAppapi.GET_ALL_IN_ONE,
         {
           version: VersionNumber.appVersion,
-          lang:lang
+          lang: lang,
         },
         ({data, errors, status, message}) => {
-        
           if (
             data?.msg == 'Please update the app to the latest version.' ||
             data?.msg == 'version is required'
           ) {
             reject(UpgradeAppResponse());
+            console.log('Load More Data1');
           } else if (status == 200) {
             const objects: any = {};
             data?.data?.forEach((item: any) => {
-         
-
               objects[item?.type] = item?.image;
             });
-              
+
             downloadImages(data?.custom_dailog_data[0], dispatch);
             dispatch(setDynamicPopupValues(data?.custom_dailog_data[0]));
 
@@ -487,12 +491,13 @@ export const API_CALLS = {
             resolve(status);
           } else {
             reject(UpgradeAppResponse());
+            console.log('Load More Data2');
           }
         },
       ),
     );
   }, 300),
-  getAllExercisesData: debounce((user_id: string,lang:string) => {
+  getAllExercisesData: debounce((user_id: string, lang: string) => {
     return new Promise((resolve, reject) =>
       RequestAPI.makeRequest(
         'GET',
@@ -500,17 +505,19 @@ export const API_CALLS = {
         {
           user_id,
           version: VersionNumber.appVersion,
-          lang:lang
+          lang: lang,
         },
-      
+
         ({data, errors, status, message}) => {
-      
+          
           if (
             data?.msg == 'user id is required' ||
             data?.msg == 'version is required'
           ) {
             reject(UpgradeAppResponse());
+          
           } else if (status == 200) {
+          
             // console.log("Test Datatata",data?.challenge_data)
 
             // dispatch(setChallengesData(data?.challenge_data));
@@ -518,7 +525,8 @@ export const API_CALLS = {
             dispatch(setAllExercise(data?.data));
             resolve(status);
           } else {
-            reject(UpgradeAppResponse());
+            // reject(UpgradeAppResponse());
+            
           }
         },
       ),
@@ -532,20 +540,21 @@ export const API_CALLS = {
         {
           id,
           version: VersionNumber.appVersion,
-          lang:lang,
+          lang: lang,
         },
         ({data, errors, status, message}) => {
-      
           if (
             data?.msg == 'user id is required' ||
             data?.msg == 'Please update the app to the latest version.'
           ) {
             reject(UpgradeAppResponse());
+            console.log(' all exercidse1');
           } else if (status == 200) {
             dispatch(setAllWorkoutData(data));
             resolve(status);
           } else {
             reject(UpgradeAppResponse());
+            console.log(' all exercidse2');
           }
         },
       ),
@@ -565,11 +574,13 @@ export const API_CALLS = {
             data?.msg == 'Please update the app to the latest version.'
           ) {
             reject(UpgradeAppResponse());
+            console.log('Winner List1');
           } else if (status == 200) {
             dispatch(setPastWinners(data?.data));
             resolve(status);
           } else {
             reject(UpgradeAppResponse());
+            console.log('Winner List2');
           }
         },
       ),
@@ -585,10 +596,11 @@ export const API_CALLS = {
           version: VersionNumber.appVersion,
         },
         ({data, errors, status, message}) => {
-          console.log(data,input);
-          if (data?.msg == 'Please update the app to the latest version.')
+          console.log(data, input);
+          if (data?.msg == 'Please update the app to the latest version.') {
+            console.log('User Details');
             UpgradeAppResponse();
-          else if (data.msg == 'User Updated Successfully') {
+          } else if (data.msg == 'User Updated Successfully') {
             resolve(data.profile);
             showMessage({
               message: 'Details updated successfully.',
@@ -599,6 +611,7 @@ export const API_CALLS = {
           } else {
             console.log(errors, 'rrrr');
             UpgradeAppResponse();
+             console.log('User Details1');
           }
         },
       ),

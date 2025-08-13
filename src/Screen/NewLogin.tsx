@@ -50,16 +50,16 @@ const NewLogin = () => {
     name: '',
   });
   const lang = getCurrentLanguage();
-  console.log(VersionNumber, 'postLogin Testing');
+
   const handleFormSubmit = (values: Values, action?: FormikHelpers<Values>) => {
     setVisible(false);
     API_CALLS.postLogin(values?.name, values?.email).then((res: any) => {
-      console.log(res, 'LOGIN');
-    
-
+  
+  
+    console.log('LOGIN datatatat',res);
       if (res?.status && !res?.email) {
-        console.log(res, 'LOGIN....');
-        console.log(res?.user_id, lang, 'LOGINwwwww');
+  
+       
         API_CALLS.getUserDataDetails(res?.user_id, lang).then((data: any) => {
           if (data) {
 

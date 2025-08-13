@@ -138,9 +138,9 @@ export const AppleHealthKitData = async () => {
           if (callbackError) {
       
           }
-          const totalSteps = results.value;
-          const distance = ((results.value / 20) * 0.01).toFixed(2);
-          const calories = ((results.value / 20) * 1).toFixed(1);
+          const totalSteps = results?.value;
+          const distance = ((results?.value / 20) * 0.01).toFixed(2);
+          const calories = ((results?.value / 20) * 1).toFixed(1);
   
           PedometerNotificationAPI(totalSteps, distance, calories);
         });

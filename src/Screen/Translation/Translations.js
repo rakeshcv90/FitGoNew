@@ -1047,7 +1047,7 @@ export const translations = {
     selectExercise: 'Selecione exercícios para começar.',
     time: 'Tempo',
     sec: 'Seg',
-    set: 'Definir',
+    set: 'Série',
     pleaseCompleteDay: 'Por favor, complete o dia',
     workoutToUnlockDay: 'Treino para desbloquear o dia',
     downloading: 'Baixando',
@@ -1115,7 +1115,7 @@ export const translations = {
     abs: 'Abdômen',
     cardio: 'Cardio',
     month: 'mês',
-    TermaAndCondition: 'TermaAndCondição',
+    TermaAndCondition: 'Termos de Uso',
     day:'Dias',
     day1:'Dia'
   },

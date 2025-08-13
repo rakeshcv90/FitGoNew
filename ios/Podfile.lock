@@ -1929,7 +1929,7 @@ PODS:
   - RNGoogleSignin (13.3.1):
     - GoogleSignIn (~> 7.1)
     - React-Core
-  - RNIap (12.16.4):
+  - RNIap (12.16.2):
     - React-Core
   - RNNotifee (7.9.0):
     - React-Core
@@ -2550,7 +2550,7 @@ SPEC CHECKSUMS:
   RNFBMessaging: 37dd861b8600ec2ae9a06ba42ae4285cb707a731
   RNGestureHandler: 031b82ac2af8ff21bcf081eaf7c61a4a7e537f61
   RNGoogleSignin: 576a84dd0407b912e7a0adf07492de9feb79e5d9
-  RNIap: 65051c94a29a17bd8356bcf16a878821862eecd0
+  RNIap: f94647b3a3dbd5fa08ad7ed847eb588aa5fe95fe
   RNNotifee: 271cfeb505183d2cd1b858c14c3968b6ca30a642
   RNPermissions: 93c083df624e95417684d8ab1002e96535bb9861
   RNReanimated: 98b9b1a0eb6b6440139747386f5926e86ba949b9
@@ -2560,8 +2560,8 @@ SPEC CHECKSUMS:
   RNVectorIcons: 55221459225ae0fe7a5ab6b029378c79f1a82d8f
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   TextToSpeech: 89b239221ec378d213af422d14789a729705360b
-  Yoga: c597d2c0803c51f27569fb69f05eeb76646c0074
+  Yoga: fd4ca32b81c4069b4175ad9460b042e17db94b66
 
-PODFILE CHECKSUM: 5e3e003a06e838a48521f21421ceb4c50a162d28
+PODFILE CHECKSUM: 8d99de6d5cd0000180939e7ccbebdb1001d6e48e
 
-COCOAPODS: 1.16.1
+COCOAPODS: 1.16.2

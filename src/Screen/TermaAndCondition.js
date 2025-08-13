@@ -60,8 +60,8 @@ const TermaAndCondition = ({route}) => {
           source={{
             uri:
               route.params.title === 'Privacy Policy'
-                ? 'https://www.mmcorpo.com.br/privacy-policy-2/'
-                : 'https://www.mmcorpo.com.br/privacy-policy-2/',
+                ? 'https://privacidade.appmmc.com'
+                : 'https://termos.appmmc.com',
           }}
           style={{flex: 1}}
           onLoad={() => setIsLoaded(false)} // Set loading to false when content is loaded
