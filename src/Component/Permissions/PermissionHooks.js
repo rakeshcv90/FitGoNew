@@ -43,68 +43,7 @@ export const useLocation = () => {
   };
   return {askLocationPermission, checkLocationPermission};
 };
-//location apis
-// export const getCurrentLocation = async () => {
-//   return new Promise((resolve, reject) => {
-//     Geolocation.getCurrentPosition(
-//       async position => {
-//         try {
-//           const coordinates = {
-//             lat: position?.coords?.latitude,
-//             lng: position?.coords?.longitude, // 36.17367911141759, -115.15029443045587 United States
-//           };
-//           const apiKeys = await getApiKey();
-//           const country = await getCountryFromCoordinates(
-//             coordinates,
-//             apiKeys?.data[0]?.api_url,
-//             apiKeys?.data[0]?.api_key,
-//           );
-//           resolve(country);
-//         } catch (error) {
-//           reject(error);
-//         }
-//       },
-//       error => {
-//         reject(error);
-//       },
-//     );
-//   });
-// };
-// const getApiKey = async () => {
-//   try {
-//     const response = await axios.get(
-//       `${NewAppapi.GET_APIKEY}?version=${VersionNumber.appVersion}`,
-//     );
-//     return response?.data;
-//   } catch (error) {
-//     console.log('something error-->', error);
-//     return null;
-//   }
-// };
-// const getCountryFromCoordinates = async (coordinates, apiUrl, apikey) => {
-//   try {
-//     const response = await axios.get(apiUrl, {
-//       params: {
-//         latlng: `${coordinates.lat},${coordinates.lng}`,
-//       },
-//       headers: {
-//         'x-rapidapi-key': apikey,
-//       },
-//     });
-//     // Extract country from the response
-//     const addressComponents = response.data.results[0].address_components;
-//     const countryComponent = addressComponents.find(component =>
-//       component.types.includes('country'),
-//     );
-//     const countryLongName = countryComponent
-//       ? countryComponent.long_name
-//       : null;
-//     return countryLongName;
-//   } catch (error) {
-//     console.error('Error fetching country:', error);
-//     return null;
-//   }
-// };
+
 export const storeAgreementApi = async getUserDataDetails => {
   const payload = new FormData();
   payload.append('version', VersionNumber?.appVersion);

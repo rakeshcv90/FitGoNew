@@ -634,9 +634,9 @@ const NewProfile = ({ navigation }) => {
             <View style={[styles.profileView, {}]}>
               <Image
                 source={
-                  getUserDataDetails.image_path == null
+                  getUserDataDetails?.image_path == null
                     ? localImage.avt
-                    : { uri: getUserDataDetails.image_path }
+                    : { uri: getUserDataDetails?.image_path }
                 }
                 style={styles.img}
                 onLoad={() => setIsLoading(false)}
@@ -647,7 +647,7 @@ const NewProfile = ({ navigation }) => {
                 onPress={() => setUpadteScreenVisibilty(true)}
                 activeOpacity={0.5}>
                 <Image
-                  source={localImage.NewPen}
+                  source={localImage?.NewPen}
                   style={{ height: 17, width: 15 }}
                   resizeMode="contain"
                 />

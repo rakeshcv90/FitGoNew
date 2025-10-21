@@ -48,7 +48,7 @@ const getCurrentLocation = () => {
         };
         getApiKey()
           .then(res => {
-            console.log('resss',res)
+       
             getCountryFromCoordinates(coords,res?.data[0]?.api_url, res?.data[0]?.api_key)
               .then(response => {
                 resolve(response);
@@ -99,7 +99,7 @@ const getCountryFromCoordinates = async (Coords, apiUrl,apikey) => {
     const countryComponent = addressComponents.find(component =>
       component.types.includes('country'),
     );
-    console.log(countryComponent)
+  
     const countryLongName = countryComponent
       ? countryComponent.long_name
       : null;

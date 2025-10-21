@@ -14,6 +14,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {localImage} from '../../Component/Image';
 import {useSelector} from 'react-redux';
 const LeaderBoardTopComponent = ({data, totalData, listData}) => {
+
   const user1BarHeight = useSharedValue(0);
   const user2BarHeight = useSharedValue(0);
   const user3BarHeight = useSharedValue(0);
@@ -180,21 +181,26 @@ const LeaderBoardTopComponent = ({data, totalData, listData}) => {
   return (
     <View style={styles.container}>
       <View style={styles.animationWrapper}>
-        <BarComponent
-          animation1={animatedStyle1}
-          barColor={AppColor.BAR1COLOR}
-          data={data[1]}
-        />
+        {data[1]?.length > 0 && (
+          <BarComponent
+            animation1={animatedStyle1}
+            barColor={AppColor.BAR1COLOR}
+            data={data[1]}
+          />
+        )}
+
         <BarComponent
           animation1={animatedStyle2}
           barColor={AppColor.BAR2COLOR}
           data={data[0]}
         />
-        <BarComponent
-          animation1={animatedStyle3}
-          barColor={AppColor.BAR3COLOR}
-          data={data[2]}
-        />
+        {data[2]?.length > 0 && (
+          <BarComponent
+            animation1={animatedStyle3}
+            barColor={AppColor.BAR3COLOR}
+            data={data[2]}
+          />
+        )}
       </View>
       {listData.map((item, index) => (
         <LeaderBoardList item={item} />

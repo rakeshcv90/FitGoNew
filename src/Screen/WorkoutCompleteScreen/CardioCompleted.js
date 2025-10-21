@@ -61,7 +61,7 @@ const CardioCompleted = ({navigation}) => {
           data: payload,
         },
       );
-      console.log('WEEKLY CAL', res.data, payload);
+  
       setCoins(res?.data?.coins);
     getLeaderboardDataAPI()
     } catch (error) {
@@ -79,7 +79,7 @@ const CardioCompleted = ({navigation}) => {
         const myRank = result.data?.data?.findIndex(
           item => item?.id == getUserDataDetails?.id,
         );
-        console.log(result.data?.data[myRank]?.rank)
+   
         setMyRank(result.data?.data[myRank]?.rank);
       }
  

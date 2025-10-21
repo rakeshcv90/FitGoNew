@@ -47,10 +47,10 @@ const WorkoutsDescription = ({ data, open, setOpen, id }: any) => {
 
 
   const getExerciseDescription = async () => {
-    console.log('descrppp ....', id, ' / ', getUserDataDetails?.id, '/', VersionNumber.appVersion);
+
 
     if (id !== null && id !== undefined) {
-      console.log('descrp ....', id, ' / ', getUserDataDetails?.id, '/', VersionNumber.appVersion);
+    
       const res = await axios({
         url: NewAppapi.GET_SINGLE_EXERCISE,
         method: 'GET',
@@ -61,15 +61,14 @@ const WorkoutsDescription = ({ data, open, setOpen, id }: any) => {
           lang: lang,
         },
       });
-      // SetDescription(res.data[0].exercise_instructions);
-      console.log('desc data ... ', res.data, ' // ', res.data.data[0].exercise_instructions);
+   
       if (res.data.data?.length > 0) {
         SetDescription('');
         SetDescription(res.data.data[0].exercise_instructions);
         setTitle(res.data.data[0].exercise_title);
-        console.log('retunr descr ', description);
+      
       } else {
-        console.warn('No data found in response.');
+     
       }
 
     }
@@ -116,7 +115,7 @@ const WorkoutsDescription = ({ data, open, setOpen, id }: any) => {
   }, [open, getSoundOffOn]);
 
   useEffect(() => {
-    console.log('id check ',id, data?.exercise_video);
+
     if (id !== null && id !== undefined) {
       getExerciseDescription();
     }
@@ -181,6 +180,7 @@ const WorkoutsDescription = ({ data, open, setOpen, id }: any) => {
             onPress={() => {
               setOpen(false);
               SetDescription('');
+                Tts.stop();
             }
             }
             style={{

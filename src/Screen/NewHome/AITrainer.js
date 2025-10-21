@@ -120,33 +120,11 @@ const AITrainer = ({ navigation }) => {
         dispatch(setRewardedCount(getRerwardCount + 1));
         handleSend(searchText);
         setSearchText('');
-      // } else {
-      //   Alert.alert(
-      //     'Questions Limit Reached!',
-      //     'Do you want to Continue Asking Questions? Watch Ads',
-      //     [
-      //       {
-      //         text: 'No',
-      //         onPress: () => console.log('Cancel Pressed'),
-      //         style: 'Yes',
-      //       },
-      //       {
-      //         text: 'Yes',
-      //         onPress: async () => {
-      //           dispatch(setRewardedCount(0));
-      //           // await showAd();
-      //         },
-      //       },
-      //     ],
-      //     {
-      //       cancelable: false,
-      //     },
-      //   );
-      // }
+
     }
   };
   const temp = () => {
-    console.log("CELLED")
+  
   }
   const handleSend = async data => {
     const newMessage = {
@@ -154,7 +132,7 @@ const AITrainer = ({ navigation }) => {
       sender: 'user',
     };
     const newMessages = [...senderMessage, newMessage];
-    console.log(newMessages)
+   
     processMessageToChatGPT(newMessages);
   };
   const processMessageToChatGPT = async (chatMessages) => {
@@ -185,7 +163,7 @@ const AITrainer = ({ navigation }) => {
         sender: 'ChatGpt',
       },
     ]);
-    console.log("GPT BEFORE", [systemMessage, ...apiMessages])
+
     const options = {
       method: 'POST',
       url: 'https://open-ai21.p.rapidapi.com/conversationgpt35',
@@ -210,7 +188,7 @@ const AITrainer = ({ navigation }) => {
 
     try {
       const response = await axios.request(options);
-      console.log("AFTER GPT", response.data.result)
+    
       setsenderMessage([
         ...chatMessages,
         {
@@ -236,7 +214,7 @@ const AITrainer = ({ navigation }) => {
       console.error(error);
     }
   };
-  console.log('senderMessage====>', senderMessage)
+  
   const handleBackPress = useCallback(() => {
     Tts.stop();
     return false; // Allow default back behavior when switchButton is false

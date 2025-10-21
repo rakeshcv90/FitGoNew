@@ -24,27 +24,14 @@ import {Ad} from '../../Icon/Ad';
 import { translate } from '../Translation/TranslationService';
 
 const AdEventPopup = ({modalVisible,onClose}) => {
-  console.log('Modal visible');
+ 
   // const [modalVisible, setModalVisible] = useState(false);
   const [loader, setLoader] = useState(false);
 
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
-  // const getPurchaseHistory = useSelector(
-  //   (state: any) => state.getPurchaseHistory,
-  // );
 
-  // const {isAdReady, showAd} = useRewardedAd();
-
-  // useEffect(() => {
-  //   console.log('Has free event:', hasFreeEvent(getPurchaseHistory));
-  //   if (getPurchaseHistory && hasFreeEvent(getPurchaseHistory)) {
-  //     setTimeout(() => {
-  //       setModalVisible(true);
-  //     }, 3000);
-  //   }
-  // }, [getPurchaseHistory]);
 
   const adSubscriptionAPI = () => {
     // showAd(() => {

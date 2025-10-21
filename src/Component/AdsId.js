@@ -30,6 +30,7 @@ export const ADS_IDs = [
   '35c64759de0db5f8', //rakesh phone
   '8d54921a7c6b740f', //rakesh phone'
   '9c105cf5d167e9ca', // Vivo Coordinator
+  'd785ed1dcbac9e30', // Realme
 ];
 export const ADS_IOS = [
   // SOCIAL_IDs
@@ -39,35 +40,35 @@ export const ADS_IOS = [
   '000443.cbdb762d9ae448999b21de3eadaceecf.1118', // iPhone 14 maybe
 ];
 //Live Ads
-export const bannerAdId =
-  Platform.OS == 'android'
-    ? 'ca-app-pub-7924921064490662/8398163879'
-    : 'ca-app-pub-7924921064490662/3145837191';
+// export const bannerAdId =
+//   Platform.OS == 'android'
+//     ? 'ca-app-pub-7924921064490662/8398163879'
+//     : 'ca-app-pub-7924921064490662/3145837191';
 
-export const interstitialAdId =
-  Platform.OS == 'android'
-    ? 'ca-app-pub-7924921064490662/2464639909'
-    : 'ca-app-pub-7924921064490662/9065707273'
-export const rewardedAdId =
-  Platform.OS == 'android'
-    ? 'ca-app-pub-7924921064490662/2702628841'
-    : 'ca-app-pub-7924921064490662/7525394893';
+// export const interstitialAdId =
+//   Platform.OS == 'android'
+//     ? 'ca-app-pub-7924921064490662/2464639909'
+//     : 'ca-app-pub-7924921064490662/9065707273'
+// export const rewardedAdId =
+//   Platform.OS == 'android'
+//     ? 'ca-app-pub-7924921064490662/2702628841'
+//     : 'ca-app-pub-7924921064490662/7525394893';
 
-export const adUnitIDs = {
-  image:
-    Platform.OS === 'ios'
-      ? 'ca-app-pub-7924921064490662/1305029494'
-      : 'ca-app-pub-7924921064490662/5433978208',
+// export const adUnitIDs = {
+//   image:
+//     Platform.OS === 'ios'
+//       ? 'ca-app-pub-7924921064490662/1305029494'
+//       : 'ca-app-pub-7924921064490662/5433978208',
 
-  video:
-    Platform.OS === 'ios'
-      ? 'ca-app-pub-3940256099942544/2521693316'
-      : 'ca-app-pub-7924921064490662/5433978208',
-};
-export const OPENAPP_ID =
-  Platform.OS == 'android'
-    ? 'ca-app-pub-7924921064490662/4617349230'
-    : 'ca-app-pub-7924921064490662/2653530871';
+//   video:
+//     Platform.OS === 'ios'
+//       ? 'ca-app-pub-3940256099942544/2521693316'
+//       : 'ca-app-pub-7924921064490662/5433978208',
+// };
+// export const OPENAPP_ID =
+//   Platform.OS == 'android'
+//     ? 'ca-app-pub-7924921064490662/4617349230'
+//     : 'ca-app-pub-7924921064490662/2653530871';
 
 //For Test Ads
 

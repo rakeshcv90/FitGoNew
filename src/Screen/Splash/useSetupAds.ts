@@ -24,7 +24,7 @@ const useSetupAds = ({afterAdFunction}: Props) => {
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
-  console.log("DSfvdsfsdfs",getUserDataDetails)
+
   // const {initInterstitial} = MyInterstitialAd();
   // const {isAdReady, loadAd, showAd} = useOpenAd();
 

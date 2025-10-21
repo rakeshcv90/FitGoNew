@@ -47,7 +47,7 @@ const QuitModal = ({type,cardAnimation}) => {
         <Text
           style={styles.txt1}
           onPress={() => {
-            console.log('type check ',type);
+           
             if (type) {
               if(type == 'Home'){
               navigation.goBack();

@@ -69,7 +69,7 @@ const NewMonthlyAchievement = ({navigation}) => {
       } else if (res) {
         setIsLoaded(true);
         setApiData(res.data.data);
-        console.log('apicall', res.data);
+       
         const Calories = res?.data?.data?.map(value =>
           parseInt(value?.exercise_calories),
         );

@@ -134,7 +134,7 @@ const WorkoutCompleted = ({navigation, route}) => {
             console.log(err);
           });
       }
-      console.log('Downloding');
+   
     } catch (error) {
       console.log('ERRRR', error);
 
@@ -305,7 +305,7 @@ const WorkoutCompleted = ({navigation, route}) => {
           data: payload,
         },
       );
-      console.log('WEEKLY CAL', res.data, payload);
+    
       setEarnedCoin(res?.data?.coins);
       getEarnedCoins();
     } catch (error) {
@@ -331,7 +331,7 @@ const WorkoutCompleted = ({navigation, route}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else {
-        console.log('coins', response?.data?.responses);
+      
         setCoins(response?.data?.responses);
         getLeaderboardDataAPI();
       }

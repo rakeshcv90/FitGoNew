@@ -92,7 +92,7 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
       });
       setLoader(false);
 
-      console.log('POST DATA', res.data);
+   
       if (res?.data?.msg == 'Referral coin added') {
         setText('Apply Code');
         setCodeStatus('Successfully applied');

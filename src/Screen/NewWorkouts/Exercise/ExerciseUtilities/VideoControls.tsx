@@ -95,7 +95,7 @@ const VideoControls = ({
         changingColorsArray={['#530014', '#F0013B']}
         secondayCircleColor={AppColor.LIGHTGREY2}>
         <TouchableOpacity onPress={() => {
-          console.log('set pause', pause);
+       
           setPause(!pause)
         }
           }>

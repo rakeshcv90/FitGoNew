@@ -181,7 +181,7 @@ const NameUpdateModal = ({
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('PAYLOAD', payload, res.data);
+     
       if (res.data?.msg == 'user not exist') {
         setVisible(false);
         showMessage({

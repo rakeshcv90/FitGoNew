@@ -35,7 +35,7 @@ import {
       setScreen(nextScreen);
       const temp = data?.filter((item: any) => item?.goal_gender == gender);
       setGoalsData(temp);
-      console.log("tempp",temp)
+    
     }, []);
     useEffect(() => {
       const unsubscribe = navigation.addListener('focus', () => {

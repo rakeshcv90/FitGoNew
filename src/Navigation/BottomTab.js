@@ -86,7 +86,7 @@ const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
         const { options } = descriptors[route.key];
 
 
-        console.log('label .... ', label, ' // ', route.name);
+     
 
 
 
@@ -139,7 +139,7 @@ const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
         const Sun = getPurchaseHistory?.currentDay == 0;
         const onPress = () => {
           // AnalyticsConsole(`${route.name}_TAB`);
-          console.log('Tab:', route.name, '| Image Key:', Object.keys(imageSourceMap), '| Source:', imageSource);
+       
 
           if (enteredCurrentEvent && route.key?.includes(translate('myplans')) && Sat) {
             showMessage({
@@ -200,14 +200,14 @@ const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
 
                   // Update Redux counter
                   Dispatch(setFitmeAdsCount(newCount));
-                    console.log('click frequency ... ',clickFrequency, newCount);
+                
 
                   if (newCount % clickFrequency === 0) {
                     // Show ad on every 2nd click
                     setFitmeAdsCount(0);
                     AdmobInterstitial.showAd()
                       .then(() => {
-                        console.log('Ad shown and completed');
+               
                         navigation.navigate(route.name);
                       })
                       .catch((err) => {
@@ -254,14 +254,14 @@ const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
 
                   // Update Redux counter
                   Dispatch(setFitmeAdsCount(newCount));
-                  console.log('click frequency',clickFrequency);
+               
 
                   if (newCount % clickFrequency === 0) {
                     // Show ad on every 2nd click
                     setFitmeAdsCount(0);
                     AdmobInterstitial.showAd()
                       .then(() => {
-                        console.log('Ad shown and completed');
+                     
                         navigation.navigate(route.name);
                       })
                       .catch((err) => {
@@ -383,7 +383,7 @@ const BottomTab = () => {
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('BannerAdEvent', event => {
       if (event.type === 'banner' && event.event === 'refreshed') {
-        console.log('Ad auto-refreshed - adjusting height');
+     
         setAdHeight(prev => (prev === 70 ? 71 : 70)); // Toggle to force re-render
       }
     });

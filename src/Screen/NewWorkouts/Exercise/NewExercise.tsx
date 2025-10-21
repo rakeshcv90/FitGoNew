@@ -55,7 +55,7 @@ const NewExercise = ({navigation, route}: any) => {
   }, []);
 
   return (
-    <View
+    <SafeAreaView
       style={{
         flex: 1,
         backgroundColor: '#F7F7F7',
@@ -144,11 +144,11 @@ const NewExercise = ({navigation, route}: any) => {
                     uri: getStoreVideoLoc[allExercise[number]?.exercise_title],
                   }}
                   onReadyForDisplay={() => {
-                  console.log('on display working');
+                
                     // setPause(true);
                   }}
                   onLoad={() => {
-                    console.log('on loade working');
+                 
                     setPause(true);
                   }}
                   paused={!pause}
@@ -186,7 +186,7 @@ const NewExercise = ({navigation, route}: any) => {
         </ScrollView>
       </Wrapper>
       {/* <BannerAdd bannerAdId={bannerAdId} /> */}
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -813,12 +813,7 @@ const OneDay = ({navigation, route}: any) => {
               getExerciseOutTime != '' &&
               moment().format(format) > getExerciseOutTime
             ) {
-              console.warn(
-                'SHOWINGDF',
-                moment().format(format),
-                getExerciseInTime,
-                getExerciseOutTime,
-              );
+          
               setOverExerciseVisible(true);
             } else postCurrentDayAPI();
           }}

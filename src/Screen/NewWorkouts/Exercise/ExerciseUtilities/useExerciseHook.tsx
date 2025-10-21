@@ -125,13 +125,13 @@ const useExerciseHook = ({
           }
         }, 1000);
       } else {
-        console.log('ELSEASDAS');
+     
         if (seconds == 0 && restStart) reset();
         else {
           if (hasSets) {
             if (currentSet < NUMBER_OF_SETS) {
               if (restSet) {
-                console.log('LESSS');
+             
                 setReset();
               } else {
                 setRestSet(true);
@@ -139,7 +139,7 @@ const useExerciseHook = ({
               }
             } else {
               if (number == EXERCISE_LENGTH) {
-                console.log('DONE');
+               
                 clearTimeout(exerciseTimerRef.current);
                 outNavigation();
               } else {
@@ -188,7 +188,7 @@ const useExerciseHook = ({
     setSeconds(resetTime);
     setCurrentSet(1);
     setSkip(skip + 1);
-    console.log('RESET');
+ 
   };
   const setReset = () => {
     // PauseAudio();
@@ -197,7 +197,7 @@ const useExerciseHook = ({
     clearTimeout(exerciseTimerRef.current);
     setSeconds(resetTime);
     setCurrentSet(currentSet + 1);
-    console.log('RESET SET');
+ 
   };
 
   return {

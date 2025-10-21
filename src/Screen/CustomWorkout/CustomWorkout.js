@@ -370,35 +370,7 @@ const CustomWorkout = ({navigation}) => {
     }
   };
 
-  // const getAllChallangeAndAllExerciseData = async () => {
-  //   let responseData = 0;
-  //   if (Object.keys(getUserDataDetails).length > 0) {
-  //     try {
-  //       responseData = await axios.get(
-  //         `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
-  //       );
-  //       dispatch(setChallengesData(responseData.data.challenge_data));
-  //       dispatch(setAllExercise(responseData.data.data));
-  //     } catch (error) {
-  //       console.log('GET-USER-Challange and AllExerciseData DATA', error);
-  //       dispatch(setChallengesData([]));
-  //       dispatch(setAllExercise([]));
-  //     }
-  //   } else {
-  //     try {
-  //       responseData = await axios.get(
-  //         `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}`,
-  //       );
-  //       dispatch(setChallengesData(responseData.data.challenge_data));
-  //       dispatch(setAllExercise(responseData.data.data));
-  //     } catch (error) {
-  //       dispatch(setChallengesData([]));
-  //       dispatch(setAllExercise([]));
 
-  //       console.log('GET-USER-Challange and AllExerciseData DATA', error);
-  //     }
-  //   }
-  // };
   const openDirect = async () => {
     const resultLibrary = await launchImageLibrary({
       mediaType: 'photo',

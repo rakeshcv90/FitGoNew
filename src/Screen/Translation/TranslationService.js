@@ -6,14 +6,14 @@ let currentLang = 'en'; // fallback default
 
 export const loadLanguage = async () => {
   const savedLang = await AsyncStorage.getItem('app_language');
-  console.log('saved lang',savedLang);
+
   currentLang = savedLang || 'en';
 };
 
 export const setLanguage = async (lang) => {
-  console.log('langa code ',lang);
+ 
   currentLang = lang;
-    console.log('set langa code ',currentLang);
+ 
   await AsyncStorage.setItem('app_language', lang,);
 };
 

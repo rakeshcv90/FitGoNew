@@ -103,7 +103,7 @@ const HomeHeader = ({leaderboardData}: Props) => {
             onPress={() => {
               AnalyticsConsole('HB');
               navigate('WorkoutHistory');
-                            console.log('check navigatesss');
+                            
             }}
             style={[styles.eventContainer, {marginHorizontal: 5}]}>
             <Image
@@ -121,7 +121,7 @@ const HomeHeader = ({leaderboardData}: Props) => {
             onPress={() => {
               AnalyticsConsole('LB');
               navigate('Leaderboard');
-              console.log('check navigate');
+            
             }}
             style={styles.eventContainer}>
             <Image
@@ -136,14 +136,7 @@ const HomeHeader = ({leaderboardData}: Props) => {
         </View>
       ) : (
         <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' ,width: '30%'}}>
-          {/* <FitIcon
-            {...historyIcon}
-            onPress={() => {
-              AnalyticsConsole('HB');
-              navigate('NewHistory');
-            }}
-            roundIcon
-          /> */}
+         
           <TouchableOpacity
             activeOpacity={0.6}
             disabled={(Sat || Sun) == true}

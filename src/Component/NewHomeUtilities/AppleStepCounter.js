@@ -50,7 +50,7 @@ const AppleStepCounter = () => {
    const  subs=new NativeEventEmitter(NativeModules.AppleHealthKit).addListener(
     'healthKit:HeartRate:new',
     async () => {
-      console.log('trieieii')
+      
      getSteps()
     },
   );

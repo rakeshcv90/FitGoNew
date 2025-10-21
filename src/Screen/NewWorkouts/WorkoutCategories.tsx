@@ -187,7 +187,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
       } else {
         newSelectedItems.splice(itemIndex, 1);
       }
-      console.log(newSelectedItems.length)
+    
       setSelectedExercise(newSelectedItems);
       setItemsLength(newSelectedItems.length);
     },
@@ -202,7 +202,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
       if (!visible) {
         setVisible(true);
       } else {
-        console.log(item);
+       
       }
     }
   };

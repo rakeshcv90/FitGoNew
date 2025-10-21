@@ -57,7 +57,7 @@ const NewHistory = () => {
     // setExerciseData(newData);
   }, [historyData]);
 
-    console.log(historyData?.normal_exercises)
+  
   return (
     <Wrapper styles={{}}>
       <NewHeader1 header={translate('workoutHistory')}  backButton {...defaultVal} />

@@ -418,7 +418,7 @@ const CustomMealList = ({navigation, route}) => {
       }
       payload.append('version', VersionNumber?.appVersion);
       payload.append('user_id', getUserDataDetails?.id);
-      // console.log("Payload",payload)
+    
       try {
         const res = await axios(`${url}`, {
           // const res = await axios(`${NewAppapi.CUSTOM_MEAL}`, {

@@ -123,7 +123,7 @@ const Signup = ({navigation}) => {
 
   useEffect(() => {
     DeviceInfo.syncUniqueId().then(uniqueId => {
-      console.log("SIGNUP",uniqueId)
+  
       setDeviceId(uniqueId);
       dispatch(setDeviceID(uniqueId));
     });
@@ -193,7 +193,7 @@ const Signup = ({navigation}) => {
           deviceid: res.user,
         },
       });
-      console.log('mnvjvjhjhvgjghk', data?.data, res.user);
+     
       setForLoading(false);
       if (
         data.data.msg == 'User already exists' &&
@@ -414,7 +414,7 @@ const Signup = ({navigation}) => {
       });
 
       await GoogleSignin.signOut();
-      console.log('helllooo---->', data.data);
+    
       if (
         data.data.msg == 'User already exists' &&
         data.data.profile_compl_status == 0
@@ -989,7 +989,7 @@ const Signup = ({navigation}) => {
         dispatch(setCustomDietData(responseData?.data?.diet_data));
         //navigationRef.navigate('Yourself');
         setVisible(true);
-        console.log('CONSOLE', visible, responseData.data);
+     
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);

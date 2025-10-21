@@ -123,7 +123,7 @@ export const handleError = err => {
 
 export const trueCondition = result => {
   const isObject = typeof result === 'object' && result != null;
-  console.log('result', result);
+ 
   return (
     result === RESULTS.GRANTED ||
     result === RESULTS.LIMITED ||

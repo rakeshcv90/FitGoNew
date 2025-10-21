@@ -893,7 +893,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                           handleSelection(item?.exercise_id);
                           return;
                         } else if (!visible) {
-                          console.log('item data ,... ',item);
+                        
                           setVisible(true);
                           setitem(item);
                         }
@@ -974,7 +974,8 @@ const NewFocusWorkouts = ({route, navigation}) => {
                               setDownloadProgress(5);
                               handleIconPress(item, index);
                             }
-                          }}>
+                          }}
+                          >
                           {startSelection ? (
                             <Icon
                               name={

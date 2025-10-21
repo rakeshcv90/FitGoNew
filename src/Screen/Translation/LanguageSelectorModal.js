@@ -37,7 +37,7 @@ const LanguageSelectorModal = ({ visible, onClose, dispatch }) => {
 
   const handleChange = async (code) => {
     try {
-      console.log('set lang code ', code);
+  
       setSelectedLang(code);
       await setLanguage('');
       await setLanguage(code);
@@ -60,7 +60,7 @@ const LanguageSelectorModal = ({ visible, onClose, dispatch }) => {
             <TouchableOpacity
               key={code}
               onPress={() => {
-                console.log('language change to: ',code);
+              
                 handleChange(code) 
                 }}
               style={styles.option}

@@ -241,7 +241,7 @@ const NewPersonalDetails = ({route, navigation}) => {
 
         setForLoading(false);
       } else {
-        console.log('message-------->', dataItem?.data?.msg);
+      
         showMessage({
           message: dataItem?.data?.msg,
           floating: true,

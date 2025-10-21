@@ -21,7 +21,7 @@ export const setupSubscription = () => {
               console.log('error finding purchase');
             })
             .then(res => {
-                    console.log('Available products:', res);
+                   
               store.dispatch(setInappPurchase(res));
             });
         })
@@ -35,7 +35,7 @@ export const setupSubscription = () => {
               console.log('error finding purchase');
             })
             .then(res => {
-                    console.log('Available products:', res);
+                    
               store.dispatch(setInappPurchase(res));
             });
         });

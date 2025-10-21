@@ -102,7 +102,7 @@ const Meals = ({navigation}) => {
           })
           .then(res => {
             StoringData[data?.diet_title] = res.path();
-            console.log('Image downloaded successfully!', res.path());
+           
           })
           .catch(err => {
             console.log(err);

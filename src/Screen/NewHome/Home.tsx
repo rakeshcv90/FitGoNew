@@ -57,15 +57,17 @@ const Home = () => {
     AppleHealthKitData();
   }, [loader]);
   useEffect(() => {
-    console.log('Has free event:', hasFreeEvent(getPurchaseHistory), getPurchaseHistory);
+ 
     if (getPurchaseHistory && hasFreeEvent(getPurchaseHistory)) {
       setTimeout(() => {
-        console.log('Modal visible');
+     
         setModalVisible(true);
       }, 3000);
     }
   }, [getPurchaseHistory]);
   setDefaultAlarm();
+
+
   return (
     <Wrapper styles={{ backgroundColor: '#f7f7f7' }}>
       <StatusBar backgroundColor={AppColor.WHITE} barStyle={'dark-content'} />

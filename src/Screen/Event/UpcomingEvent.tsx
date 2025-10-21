@@ -57,7 +57,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
   );
-  console.log('getPurchaseHistoryssssss', getPurchaseHistory);
+
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
@@ -68,7 +68,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [pause, setPause] = useState(false);
-console.log(getPurchaseHistory)
+
   const PlanPurchasetoBackendAPI = async () => {
     setLoading(true);
     const data = {

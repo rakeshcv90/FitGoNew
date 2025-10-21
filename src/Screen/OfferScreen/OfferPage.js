@@ -63,7 +63,7 @@ const OfferPage = ({navigation, route}) => {
       getEventEarnedCoins();
     }, []),
   );
-  console.log('hellooo--->', WeekArrayWithEvent[3]);
+ 
   const getEventEarnedCoins = async () => {
     const payload = new FormData();
     payload.append('user_id', getUserDataDetails?.id);
@@ -225,7 +225,7 @@ const OfferPage = ({navigation, route}) => {
             console.log(err);
           });
       }
-      // console.log('Downloding');
+
     } catch (error) {
       console.log('ERRRR', error);
 

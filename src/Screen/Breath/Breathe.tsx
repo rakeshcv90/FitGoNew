@@ -682,7 +682,7 @@ const Breathe = ({navigation, route}) => {
               fontFamily={'Helvetica-Bold'}
               pV={12}
               onPress={() => {
-                console.log('clicked');
+           
                 enteredCurrentEvent ? AddCoinsApi() : goBack();
               }}
             />

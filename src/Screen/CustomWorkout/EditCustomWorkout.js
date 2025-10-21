@@ -206,7 +206,7 @@ const EditCustomWorkout = ({navigation, route}) => {
     } else {
       newSelectedItems.splice(index, 1);
     }
-    console.log(newSelectedItems.length)
+   
     setSelectedItems(newSelectedItems);
   };
   const submitCustomExercise = async () => {

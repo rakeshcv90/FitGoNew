@@ -44,11 +44,11 @@ const checkAllPermissions = () => {
       );
     });
     if (condition) {
-      console.log('211');
+  
       if (Platform.OS === 'android') {
         AdmobInterstitial.showAd()
           .then(() => {
-            console.log('Ad shown and completed');
+      
             navigate('PermissionScreen');
           })
           .catch((err) => {
@@ -60,11 +60,11 @@ const checkAllPermissions = () => {
         navigate('PermissionScreen');
       }
     } else {
-      console.log('212');
+  
       if (Platform.OS === 'android') {
         AdmobInterstitial.showAd()
           .then(() => {
-            console.log('Ad shown and completed');
+         
             resetAndNavigate('BottomTab');
           })
           .catch((err) => {

@@ -71,7 +71,7 @@ const NotificationType = data => {
   }
 };
 messaging().setBackgroundMessageHandler(async remoteMessage => {
-  console.log('BACK', remoteMessage.data);
+  
   NotificationType(remoteMessage.data)
 });
 // notifee.onBackgroundEvent(async ({type, detail}) => {
@@ -244,7 +244,7 @@ const getLeaderboardDataAPI = async () => {
 };
 messaging().getInitialNotification(async remoteMessage => {
   // DisplayNotification(remoteMessage);
-  console.log('Ini', remoteMessage.data);
+
   NotificationType(remoteMessage?.data)
   // navigationRef.current?.navigate(remoteMessage.data?.screen);
   // if (remoteMessage.data?.type == 'delete_notification') {
@@ -263,7 +263,7 @@ export const handleDeepLink = async ({url}) => {
   const referralID = dynamicArray?.filter(
     (item, i) => i == dynamicArray?.length - 1,
   );
-  console.log('REFERALID', referralID);
+
   await AsyncStorage.setItem('referalID', referralID?.toString());
 };
 
@@ -274,8 +274,7 @@ const AppRedux = () => {
     Linking.addEventListener('url', handleDeepLink);
     initialURL();
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-      // console.log('ONM', remoteMessage.data?.screen);
-      // navigationRef.current?.navigate(remoteMessage.data?.screen);
+  
       DisplayNotification(remoteMessage);
     });
     return unsubscribe;

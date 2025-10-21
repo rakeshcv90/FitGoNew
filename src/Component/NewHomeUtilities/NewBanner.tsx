@@ -18,7 +18,7 @@ import {AnalyticsConsole} from '../AnalyticsConsole';
 import {locationPermission} from '../../Screen/Terms&Country/LocationPermission';
 import {showMessage} from 'react-native-flash-message';
 import FadeText from './FadeText';
-import { localImage } from '../Image';
+import {localImage} from '../Image';
 
 type NewBannerProps = {
   userDetails: Object | any;
@@ -111,7 +111,7 @@ const NewBanner = ({
           });
         }
       }
-      console.log('render data ', BArray,' // ',getBanners);
+
       setBannerArray(BArray);
     },
     [enteredCurrentEvent, enteredUpcomingEvent, getBanners],
@@ -132,41 +132,6 @@ const NewBanner = ({
         AnalyticsConsole('UP_BANNER');
         navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
       }
-      // } else {
-      //   locationPermission()
-      //     .then(result => {
-      //       if (result == 'blocked') {
-      //         setLocation(true);
-      //         setLoaded(true);
-      //       } else if (result === 'denied') {
-      //         setLocation(true);
-      //         setLoaded(true);
-      //       } else if (result) {
-      //         //   StoreAgreementApi(result);
-      //       } else if (result == null) {
-      //         // setLocation(true);
-      //         setLoaded(true);
-      //         showMessage({
-      //           message: 'Error while getting your location',
-      //           floating: true,
-      //           duration: 500,
-      //           type: 'danger',
-      //         });
-      //       } else {
-      //         setLoaded(true);
-      //         showMessage({
-      //           message: 'Error while getting your location',
-      //           floating: true,
-      //           duration: 500,
-      //           type: 'danger',
-      //         });
-      //       }
-      //     })
-      //     .catch(err => {
-      //       console.log('location Error', err);
-      //       setLoaded(true);
-      //     });
-      // }
     } else {
       if (
         (userDetails.name?.toUpperCase() == 'GUEST' ||
@@ -284,15 +249,10 @@ const NewBanner = ({
         resizeMode="stretch"
         source={{uri: item.image}}
         onLoad={() => {
-    setLoading(false);
-    console.log('✅ Image loaded successfully:', item.image,' ',item);
-  }}
-  onError={(e) => {
-    console.log('❌ Failed to load image:', item.image, e.nativeEvent);
-  }}
-  onLoadStart={() => {
-    console.log('📡 Image loading started:', item.image);
-  }}
+          setLoading(false);
+        }}
+        onError={e => {}}
+        onLoadStart={() => {}}
         defaultSource={localImage.Refer_banner}
       />
     </TouchableOpacity>

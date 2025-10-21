@@ -267,14 +267,9 @@ export const BMImodal = ({setModalVisible, modalVisible, dispatch}) => {
   const [heightType, setHeightType] = useState('ft');
   const [weightType, setWeightType] = useState('kg');
   let newHeight = height + '.' + heightInch;
-  console.log(newHeight, height);
+
   const HandleSubmitBMI = () => {
-    console.log( weight === '' ||
-    newHeight === '' ||
-    height === '' ||
-    isNaN(weight) ||
-    isNaN(height) ||
-    weight < 10 )
+
     if (
       weight === '' ||
       newHeight === '' ||

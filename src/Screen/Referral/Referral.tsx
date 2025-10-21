@@ -92,7 +92,7 @@ const Referral = () => {
       };
       const result = await Share.open(options);
       if (result.success) {
-        console.log(result);
+    
       }
     } catch (err) {
       console.log(err);
@@ -113,7 +113,7 @@ const Referral = () => {
       };
       const result = await Share.shareSingle(options);
       if (result.success) {
-        console.log(result);
+ 
       }
     } catch (err) {
       console.log(err);

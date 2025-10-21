@@ -93,14 +93,14 @@ const Index = ({ navigation, route }: any) => {
   const ProfileDataAPI = async () => {
     try {
       const lang = getCurrentLanguage();
-      console.log('profile data with lang', lang)
+     
       const res = await axios({
         url: NewAppapi.Get_COMPLETE_PROFILE+"?lang="+lang,
         method: 'get',
       });
-      console.log('profile data ... ', res.data)
+   
       if (res.data) {
-        console.log('profile data ...... ', res.data)
+       
         dispatch(setCompleteProfileData(res.data));
         setTimeout(() => {
           navigation.replace(getTempLogin ? 'Name' : 'Gender', {

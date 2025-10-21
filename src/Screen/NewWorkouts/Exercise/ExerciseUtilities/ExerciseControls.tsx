@@ -286,7 +286,7 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
         },
         lang:'en',
       });
-      console.log(res.data,payload)
+     
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
