@@ -36,7 +36,7 @@ import PastWinnersComponent from './PastWinnersComponent';
 import LeaderBoardProgressComopnent from './LeaderBoardProgressComopnent';
 // import NativeAddTest from '../../Component/NativeAd';
 import FitText from '../../Component/Utilities/FitText';
-import { translate } from '../Translation/TranslationService';
+import {translate} from '../Translation/TranslationService';
 
 type TypeData = {
   name: string;
@@ -384,7 +384,12 @@ const Leaderboard = () => {
                   marginVertical: 20,
                   paddingHorizontal: 10,
                 }}>
-                <FitText type="normal" value={translate('wonVoucher')} color={AppColor.RED} fontWeight='700' />
+                <FitText
+                  type="normal"
+                  value={translate('wonVoucher')}
+                  color={AppColor.RED}
+                  fontWeight="700"
+                />
               </View>
               <View
                 style={{
@@ -466,14 +471,7 @@ const Leaderboard = () => {
       //     WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1]
       //   }`,
       // );
-      {
-        // console.log(
-        //   'gggggggggggg',
-        //   enteredCurrentEvent,
-        //   WeekArrayWithEvent,
-        //   getPurchaseHistory?.currentDay - 2,
-        // );
-      }
+
       if (
         response?.data?.msg == 'Please update the app to the latest version.'
       ) {
@@ -501,9 +499,9 @@ const Leaderboard = () => {
   return (
     <>
       {
-      // loader == true ? (
-      //   <LoadingScreen />
-      // ) : (
+        // loader == true ? (
+        //   <LoadingScreen />
+        // ) : (
         <View style={styles.container}>
           <Wrapper styles={{backgroundColor: AppColor.Background_New}}>
             <NewHeader1
@@ -757,9 +755,13 @@ const Leaderboard = () => {
             </ScrollView>
           </Wrapper>
         </View>
-      // )
+        // )
       }
-      <WinnerModal setVisible={setVisible} visible={visible} mainData={mainData} />
+      <WinnerModal
+        setVisible={setVisible}
+        visible={visible}
+        mainData={mainData}
+      />
     </>
   );
 };

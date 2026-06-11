@@ -48,8 +48,11 @@ const getCurrentLocation = () => {
         };
         getApiKey()
           .then(res => {
-            console.log('resss',res)
-            getCountryFromCoordinates(coords,res?.data[0]?.api_url, res?.data[0]?.api_key)
+            getCountryFromCoordinates(
+              coords,
+              res?.data[0]?.api_url,
+              res?.data[0]?.api_key,
+            )
               .then(response => {
                 resolve(response);
               })
@@ -81,25 +84,22 @@ const getApiKey = async () => {
     return null;
   }
 };
-const getCountryFromCoordinates = async (Coords, apiUrl,apikey) => {
+const getCountryFromCoordinates = async (Coords, apiUrl, apikey) => {
   try {
-    const response = await axios.get(
-      apiUrl,
-      {
-        params: {
-          latlng: `${Coords.lat},${Coords.lng}`,
-        },
-        headers:{
-          'x-rapidapi-key':apikey
-        }
+    const response = await axios.get(apiUrl, {
+      params: {
+        latlng: `${Coords.lat},${Coords.lng}`,
       },
-    );
+      headers: {
+        'x-rapidapi-key': apikey,
+      },
+    });
     // Extract country from the response
     const addressComponents = response.data.results[0].address_components;
     const countryComponent = addressComponents.find(component =>
       component.types.includes('country'),
     );
-    console.log(countryComponent)
+
     const countryLongName = countryComponent
       ? countryComponent.long_name
       : null;

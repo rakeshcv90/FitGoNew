@@ -29,7 +29,7 @@ import OverExerciseModal from '../../Component/Utilities/OverExercise';
 import Wrapper from './Wrapper';
 import AnimatedLottieView from 'lottie-react-native';
 import LoadingScreen from '../../Component/NewHomeUtilities/LoadingScreen';
-import { ReviewApp } from '../../Component/ReviewApp';
+import {ReviewApp} from '../../Component/ReviewApp';
 const format = 'hh:mm:ss';
 
 const WeekArrayWithEvent = Array(5)
@@ -134,7 +134,6 @@ const WorkoutCompleted = ({navigation, route}) => {
             console.log(err);
           });
       }
-      console.log('Downloding');
     } catch (error) {
       console.log('ERRRR', error);
 
@@ -241,7 +240,7 @@ const WorkoutCompleted = ({navigation, route}) => {
           type: 'cardio',
           offerType: false,
           challenge: false,
-          isEventPage: true
+          isEventPage: true,
         });
         // }
       } else {
@@ -256,7 +255,7 @@ const WorkoutCompleted = ({navigation, route}) => {
           type: 'cardio',
           offerType: false,
           challenge: false,
-          isEventPage: true
+          isEventPage: true,
         });
       }
     } catch (error) {
@@ -305,7 +304,7 @@ const WorkoutCompleted = ({navigation, route}) => {
           data: payload,
         },
       );
-      console.log('WEEKLY CAL', res.data, payload);
+
       setEarnedCoin(res?.data?.coins);
       getEarnedCoins();
     } catch (error) {
@@ -331,7 +330,6 @@ const WorkoutCompleted = ({navigation, route}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else {
-        console.log('coins', response?.data?.responses);
         setCoins(response?.data?.responses);
         getLeaderboardDataAPI();
       }
@@ -395,8 +393,8 @@ const WorkoutCompleted = ({navigation, route}) => {
     }
   };
 
-  const onPress = () => navigation.navigate('MyPlans')
-  
+  const onPress = () => navigation.navigate('MyPlans');
+
   return (
     <>
       {!loader ? (

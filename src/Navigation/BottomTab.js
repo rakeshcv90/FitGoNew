@@ -6,35 +6,35 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import Workouts from '../Screen/NewHome/Workouts';
 
 import Trainer from '../Screen/NewHome/Trainer';
-import { View, Text } from 'react-native';
+import {View, Text} from 'react-native';
 // import {BannerAdd, MyInterstitialAd} from '../Component/BannerAdd';
 // import {bannerAdId} from '../Component/AdsId';
-import { DeviceHeigth, DeviceWidth } from '../Component/Config';
-import { useDispatch, useSelector } from 'react-redux';
+import {DeviceHeigth, DeviceWidth} from '../Component/Config';
+import {useDispatch, useSelector} from 'react-redux';
 import moment from 'moment';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { AppColor, Fonts } from '../Component/Color';
+import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
+import {AppColor, Fonts} from '../Component/Color';
 import {
   setFitmeAdsCount,
   setOpenAdsCount,
 } from '../Component/ThemeRedux/Actions';
-import MyPlans, { handleStart } from '../Screen/MyPlans/MyPlans';
+import MyPlans, {handleStart} from '../Screen/MyPlans/MyPlans';
 import GradientButton from '../Component/GradientButton';
 
-import { localImage } from '../Component/Image';
+import {localImage} from '../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
-import { ClipPath, Defs, Path, Polygon, Rect, Svg } from 'react-native-svg';
+import {ClipPath, Defs, Path, Polygon, Rect, Svg} from 'react-native-svg';
 import NewProfile from '../Screen/NewProfile';
-import { AnalyticsConsole } from '../Component/AnalyticsConsole';
+import {AnalyticsConsole} from '../Component/AnalyticsConsole';
 import NewMonthlyAchievement from '../Screen/NewHome/NewMonthlyAchievement';
-import { showMessage } from 'react-native-flash-message';
+import {showMessage} from 'react-native-flash-message';
 import AnimatedLottieView from 'lottie-react-native';
 import NewHome from '../Screen/NewHome/NewHome';
 import BackHandlerModal from './BackHandlerModal';
@@ -42,15 +42,14 @@ import Home from '../Screen/NewHome/Home';
 
 import BannerAds from '../Component/NativeCodeAds/BannerAdView';
 import AdmobInterstitial from '../Component/NativeCodeAds/AdmobInterstitial';
-import { DeviceEventEmitter } from 'react-native';
-import { translate } from '../Screen/Translation/TranslationService';
+import {DeviceEventEmitter} from 'react-native';
+import {translate} from '../Screen/Translation/TranslationService';
 
 const Tabs = createBottomTabNavigator();
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
 
-const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
-
+const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
   // const { showInterstitialAd} = MyInterstitialAd();
   const Dispatch = useDispatch();
   const getFitmeAdsCount = useSelector(state => state.getFitmeAdsCount);
@@ -60,8 +59,6 @@ const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
   const enteredUpcomingEvent = useSelector(
     state => state?.enteredUpcomingEvent,
   );
-
-
 
   // const getPopUpFreuqency = useSelector(state => state?.getPopUpFreuqency);
   function NotificationBadge() {
@@ -83,12 +80,7 @@ const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
     <View style={styles.tabContainer}>
       {state.routes.map((route, index) => {
         const routeKey = route.name;
-        const { options } = descriptors[route.key];
-
-
-        console.log('label .... ', label, ' // ', route.name);
-
-
+        const {options} = descriptors[route.key];
 
         const imageSourceMap = {
           home: localImage.Home,
@@ -126,22 +118,24 @@ const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
         //       ? options.title
         //       : route.name;
 
-
         const isValid =
           getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD');
         const count =
           getPurchaseHistory?.plan == 'noob'
             ? 3
             : getPurchaseHistory?.plan == 'pro'
-              ? 6
-              : 8;
+            ? 6
+            : 8;
         const Sat = getPurchaseHistory?.currentDay == 6;
         const Sun = getPurchaseHistory?.currentDay == 0;
         const onPress = () => {
           // AnalyticsConsole(`${route.name}_TAB`);
-          console.log('Tab:', route.name, '| Image Key:', Object.keys(imageSourceMap), '| Source:', imageSource);
 
-          if (enteredCurrentEvent && route.key?.includes(translate('myplans')) && Sat) {
+          if (
+            enteredCurrentEvent &&
+            route.key?.includes(translate('myplans')) &&
+            Sat
+          ) {
             showMessage({
               message:
                 'Your event has ended. You can resume your weekly plan normally from Monday. If you join another fitness challenge, it will start from the upcoming Monday.',
@@ -189,28 +183,29 @@ const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
                   /* Dispatch(setFitmeAdsCount(0));
                   Dispatch(setOpenAdsCount(0)); */
                 }
-                {/* AdmobInterstitial.showAd().then(() => {
+                {
+                  /* AdmobInterstitial.showAd().then(() => {
                   navigation.navigate(route.name);
-                }) */}
+                }) */
+                }
 
                 if (Platform.OS === 'android') {
                   const newCount = getFitmeAdsCount + 1;
 
-                    const clickFrequency = getPurchaseHistory?.plan === 'premium' ? 4 : 2;
+                  const clickFrequency =
+                    getPurchaseHistory?.plan === 'premium' ? 4 : 2;
 
                   // Update Redux counter
                   Dispatch(setFitmeAdsCount(newCount));
-                    console.log('click frequency ... ',clickFrequency, newCount);
 
                   if (newCount % clickFrequency === 0) {
                     // Show ad on every 2nd click
                     setFitmeAdsCount(0);
                     AdmobInterstitial.showAd()
                       .then(() => {
-                        console.log('Ad shown and completed');
                         navigation.navigate(route.name);
                       })
-                      .catch((err) => {
+                      .catch(err => {
                         console.error('Ad show failed', err);
                         navigation.navigate(route.name); // fallback
                       });
@@ -243,28 +238,28 @@ const CustomTab = ({ state, descriptors, navigation, onIndexChange }) => {
                   /* Dispatch(setFitmeAdsCount(0));
                   Dispatch(setOpenAdsCount(0)); */
                 }
-                {/* AdmobInterstitial.showAd().then(() => {
+                {
+                  /* AdmobInterstitial.showAd().then(() => {
                 navigation.navigate(route.name);
-                }) */}
+                }) */
+                }
 
                 if (Platform.OS === 'android') {
                   const newCount = getFitmeAdsCount + 1;
-                    const clickFrequency = getPurchaseHistory?.plan === 'premium' ? 4 : 2;
-
+                  const clickFrequency =
+                    getPurchaseHistory?.plan === 'premium' ? 4 : 2;
 
                   // Update Redux counter
                   Dispatch(setFitmeAdsCount(newCount));
-                  console.log('click frequency',clickFrequency);
 
                   if (newCount % clickFrequency === 0) {
                     // Show ad on every 2nd click
                     setFitmeAdsCount(0);
                     AdmobInterstitial.showAd()
                       .then(() => {
-                        console.log('Ad shown and completed');
                         navigation.navigate(route.name);
                       })
-                      .catch((err) => {
+                      .catch(err => {
                         console.error('Ad show failed', err);
                         navigation.navigate(route.name); // fallback
                       });
@@ -379,14 +374,15 @@ const BottomTab = () => {
   const [adHeight, setAdHeight] = useState(70);
   const [adKey, setAdKey] = useState(0);
 
-
   useEffect(() => {
-    const subscription = DeviceEventEmitter.addListener('BannerAdEvent', event => {
-      if (event.type === 'banner' && event.event === 'refreshed') {
-        console.log('Ad auto-refreshed - adjusting height');
-        setAdHeight(prev => (prev === 70 ? 71 : 70)); // Toggle to force re-render
-      }
-    });
+    const subscription = DeviceEventEmitter.addListener(
+      'BannerAdEvent',
+      event => {
+        if (event.type === 'banner' && event.event === 'refreshed') {
+          setAdHeight(prev => (prev === 70 ? 71 : 70)); // Toggle to force re-render
+        }
+      },
+    );
 
     return () => subscription.remove();
   }, []);
@@ -402,7 +398,7 @@ const BottomTab = () => {
   return (
     <>
       <Tabs.Navigator
-        initialRouteName='home'
+        initialRouteName="home"
         tabBar={props => <CustomTab {...props} />}
         screenOptions={{
           // activeTintColor: '#D01818',
@@ -426,28 +422,28 @@ const BottomTab = () => {
           },
         }}>
         <Tabs.Screen
-          name='home'
+          name="home"
           component={Home}
-          options={{ tabBarShowLabel: false }}
+          options={{tabBarShowLabel: false}}
         />
         <Tabs.Screen
-          name='myplans'
+          name="myplans"
           component={MyPlans}
           // options={{
           //   tabBarIcon: () => <NotificationBadge />,
           // }}
-          options={{ tabBarShowLabel: false }}
+          options={{tabBarShowLabel: false}}
         />
         <Tabs.Screen
-          name='workout'
+          name="workout"
           component={Workouts}
-          options={{ tabBarShowLabel: true }}
+          options={{tabBarShowLabel: true}}
         />
 
         <Tabs.Screen
-          name='profile'
+          name="profile"
           component={NewProfile}
-          options={{ tabBarShowLabel: false }}
+          options={{tabBarShowLabel: false}}
         />
       </Tabs.Navigator>
       {/* {getPurchaseStatusData()} */}
@@ -458,12 +454,12 @@ const BottomTab = () => {
               ? DeviceHeigth == 667
                 ? -DeviceHeigth * 0.01
                 : DeviceHeigth >= 1024
-                  ? 0
-                  : DeviceHeigth * 0.0
+                ? 0
+                : DeviceHeigth * 0.0
               : 0,
         }}>
         {Platform.OS === 'android' && (
-          <BannerAds style={{ width: '100%', height: adHeight }} />
+          <BannerAds style={{width: '100%', height: adHeight}} />
         )}
       </View>
       {/* <BackHandlerModal /> */}
@@ -478,8 +474,8 @@ const styles = StyleSheet.create({
       DeviceHeigth >= 640
         ? DeviceHeigth * 0.09
         : DeviceHeigth >= 1024
-          ? DeviceHeigth * 0.06
-          : DeviceHeigth * 0.09,
+        ? DeviceHeigth * 0.06
+        : DeviceHeigth * 0.09,
     backgroundColor: 'white',
 
     borderTopWidth: 0.5,
@@ -507,7 +503,7 @@ const styles = StyleSheet.create({
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
     borderBottomColor: 'red', // Change this to the desired color of the triangle
-    transform: [{ rotate: '90deg' }],
+    transform: [{rotate: '90deg'}],
   },
   triangle: {
     width: 0,
@@ -528,16 +524,16 @@ const styles = StyleSheet.create({
       DeviceHeigth <= 667
         ? -12
         : DeviceHeigth <= 844
-          ? -11
-          : DeviceHeigth >= 1024
-            ? -13
-            : -10,
+        ? -11
+        : DeviceHeigth >= 1024
+        ? -13
+        : -10,
     right:
       DeviceHeigth <= 844
         ? 20
         : DeviceHeigth >= 1024
-          ? DeviceHeigth * 0.054
-          : 20,
+        ? DeviceHeigth * 0.054
+        : 20,
     width: 25,
     height: 25,
   },

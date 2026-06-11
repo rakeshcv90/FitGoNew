@@ -21,10 +21,9 @@ import {hasFreeEvent} from '../Event/EnteringEventFunction';
 import {navigate} from '../../Component/Utilities/NavigationUtil';
 import PredefinedStyles from '../../Component/Utilities/PredefineStyles';
 import {Ad} from '../../Icon/Ad';
-import { translate } from '../Translation/TranslationService';
+import {translate} from '../Translation/TranslationService';
 
-const AdEventPopup = ({modalVisible,onClose}) => {
-  console.log('Modal visible');
+const AdEventPopup = ({modalVisible, onClose}) => {
   // const [modalVisible, setModalVisible] = useState(false);
   const [loader, setLoader] = useState(false);
 
@@ -48,103 +47,106 @@ const AdEventPopup = ({modalVisible,onClose}) => {
 
   const adSubscriptionAPI = () => {
     // showAd(() => {
-      setLoader(true);
-      API_CALLS.createSubscriptionPlan({
-        user_id: getUserDataDetails.id,
-        transaction_id: 'free',
-        plan: 'free',
-        platform: Platform.OS,
-        product_id: 'fitme_free',
-        plan_value: 0,
-      }).finally(() => {
-        setLoader(false);
-        onClose()
-      });
+    setLoader(true);
+    API_CALLS.createSubscriptionPlan({
+      user_id: getUserDataDetails.id,
+      transaction_id: 'free',
+      plan: 'free',
+      platform: Platform.OS,
+      product_id: 'fitme_free',
+      plan_value: 0,
+    }).finally(() => {
+      setLoader(false);
+      onClose();
+    });
     // });
   };
 
   return (
     <View style={styles.container}>
-
-    <Modal
-      visible={modalVisible}
-      animationType="slide"
-      transparent={true}
-      onRequestClose={() => onClose()}>
-      <StatusBar backgroundColor={AppColor.WHITE} barStyle={'dark-content'} />
-      <View
-        style={{
-          justifyContent: 'center',
-          flex: 1,
-          backgroundColor: '#00000099',
-        }}>
+      <Modal
+        visible={modalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => onClose()}>
+        <StatusBar backgroundColor={AppColor.WHITE} barStyle={'dark-content'} />
         <View
-          style={[
-            PredefinedStyles.NormalCenter,
-            {
-              backgroundColor: AppColor.WHITE,
-              borderRadius: 20,
-              margin: 20,
-              overflow: 'hidden',
-            },
-          ]}>
+          style={{
+            justifyContent: 'center',
+            flex: 1,
+            backgroundColor: '#00000099',
+          }}>
           <View
-            style={{
-              backgroundColor: '#D3DBFF',
-              width: '100%',
-              paddingTop: 30,
-              alignItems: 'center',
-            }}>
-            <FitIcon
-              name="close"
-              size={25}
-              type="MaterialCommunityIcons"
-              onPress={onClose}
-              containerStyle={{
-                position: 'absolute',
-                top: 10,
-                right: 10,
-                zIndex: 999,
+            style={[
+              PredefinedStyles.NormalCenter,
+              {
+                backgroundColor: AppColor.WHITE,
+                borderRadius: 20,
+                margin: 20,
+                overflow: 'hidden',
+              },
+            ]}>
+            <View
+              style={{
+                backgroundColor: '#D3DBFF',
+                width: '100%',
+                paddingTop: 30,
+                alignItems: 'center',
+              }}>
+              <FitIcon
+                name="close"
+                size={25}
+                type="MaterialCommunityIcons"
+                onPress={onClose}
+                containerStyle={{
+                  position: 'absolute',
+                  top: 10,
+                  right: 10,
+                  zIndex: 999,
+                }}
+              />
+              <FitText
+                type="Heading"
+                value={translate('eventdialogheading')}
+                marginHorizontal={20}
+                w={(DeviceWidth * 2) / 3}
+                color={'#34258D'}
+              />
+              <FitText
+                type="SubHeading"
+                value={translate('eventdialogsub')}
+                marginHorizontal={20}
+                // fontSize={20}
+                // lineHeight={25}
+                textAlign="center"
+                w={'80%'}
+                color={'#34258D'}
+              />
+              <Image
+                source={localImage.AdPopupIMG}
+                style={{width: '100%', height: 100}}
+                resizeMode="contain"
+              />
+            </View>
+            <FitButton
+              onPress={() => navigate('NewSubscription', {upgrade: true})}
+              w={'90%'}
+              textColor={AppColor.WHITE}
+              titleText={translate('purchaseplan')}
+              style={{
+                marginTop: 20,
+                marginBottom: 20,
+                flexDirection: 'row-reverse',
               }}
+              IconLeft={{
+                name: 'tag',
+                size: 15,
+                type: 'FontAwesome5',
+                color: AppColor.WHITE,
+              }}
+              hasIcon
             />
-            <FitText
-              type="Heading"
-              value={translate('eventdialogheading')}
-              marginHorizontal={20}
-              w={(DeviceWidth * 2) / 3}
-              color={'#34258D'}
-            />
-            <FitText
-              type="SubHeading"
-              value={translate('eventdialogsub')}
-              marginHorizontal={20}
-              // fontSize={20}
-              // lineHeight={25}
-              textAlign="center"
-              w={'80%'}
-              color={'#34258D'}
-            />
-            <Image
-              source={localImage.AdPopupIMG}
-              style={{width: '100%', height: 100}}
-              resizeMode="contain"
-            />
-          </View>
-          <FitButton
-            onPress={() => navigate('NewSubscription', {upgrade: true})}
-            w={'90%'}
-            textColor={AppColor.WHITE}
-            titleText={translate('purchaseplan')}
-            style={{marginTop: 20, marginBottom: 20, flexDirection: 'row-reverse'}}
-            IconLeft={{
-              name: 'tag',
-              size: 15,
-              type: 'FontAwesome5',
-              color: AppColor.WHITE,
-            }}
-            hasIcon
-          />
-          {/* <FitButton
+            {/* <FitButton
             onPress={adSubscriptionAPI}
             w={'half'}
             bgColor="#28A745"
@@ -156,9 +158,9 @@ const AdEventPopup = ({modalVisible,onClose}) => {
             IconLComp={<Ad />}
             hasIcon={false}
           /> */}
+          </View>
         </View>
-      </View>
-    </Modal>
+      </Modal>
     </View>
   );
 };

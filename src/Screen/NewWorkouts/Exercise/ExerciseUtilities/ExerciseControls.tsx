@@ -140,7 +140,7 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
     releaseMusic,
     restSet,
     setRestSet,
-    setReset
+    setReset,
   } = useExerciseHook({
     pause,
     setPause,
@@ -163,8 +163,8 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
   // const {openAdClosed} = OpenAppAds();
 
   useEffect(() => {
-    setIsRest(restSet)
-  },[restSet])
+    setIsRest(restSet);
+  }, [restSet]);
 
   const resumeButton = () => {
     setBack(false);
@@ -284,9 +284,9 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-        lang:'en',
+        lang: 'en',
       });
-      console.log(res.data,payload)
+
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,

@@ -16,7 +16,7 @@ import {API_CALLS} from '../../API/API_CALLS';
 import {useSelector} from 'react-redux';
 import {historyData} from '../../API/responseTypes';
 import {ExerciseData} from '../NewWorkouts/Exercise/ExerciseUtilities/useExerciseHook';
-import { translate } from '../Translation/TranslationService';
+import {translate} from '../Translation/TranslationService';
 
 const staticData: historyData = {
   normal_exercises: {
@@ -53,14 +53,16 @@ const NewHistory = () => {
     // const newData = getAllExercise?.filter(
     //   (item: ExerciseData) => item.exercise_id == exerciseID,
     // );
-    // console.log(exerciseID)
     // setExerciseData(newData);
   }, [historyData]);
 
-    console.log(historyData?.normal_exercises)
   return (
     <Wrapper styles={{}}>
-      <NewHeader1 header={translate('workoutHistory')}  backButton {...defaultVal} />
+      <NewHeader1
+        header={translate('workoutHistory')}
+        backButton
+        {...defaultVal}
+      />
       <ScrollView
         contentContainerStyle={{
           flex: 1,
@@ -101,7 +103,8 @@ const NewHistory = () => {
                 <FitText
                   type="normal"
                   value={
-                    historyData?.normal_exercises?.summary.total_exercises + ' '+
+                    historyData?.normal_exercises?.summary.total_exercises +
+                    ' ' +
                     translate('exerciseSuffix')
                   }
                   marginHorizontal={5}
@@ -113,7 +116,8 @@ const NewHistory = () => {
                 <FitText
                   type="normal"
                   value={
-                    historyData?.normal_exercises?.summary.total_calories + ' '+
+                    historyData?.normal_exercises?.summary.total_calories +
+                    ' ' +
                     translate('kcal')
                   }
                   marginHorizontal={5}

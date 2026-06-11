@@ -48,8 +48,8 @@ import OverExerciseModal from '../../Component/Utilities/OverExercise';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import BottomSheet1 from '../../Component/BottomSheet';
-import { CircularProgressBase } from 'react-native-circular-progress-indicator';
-import { translate } from '../Translation/TranslationService';
+import {CircularProgressBase} from 'react-native-circular-progress-indicator';
+import {translate} from '../Translation/TranslationService';
 
 const format = 'hh:mm:ss';
 
@@ -893,7 +893,6 @@ const NewFocusWorkouts = ({route, navigation}) => {
                           handleSelection(item?.exercise_id);
                           return;
                         } else if (!visible) {
-                          console.log('item data ,... ',item);
                           setVisible(true);
                           setitem(item);
                         }
@@ -909,7 +908,8 @@ const NewFocusWorkouts = ({route, navigation}) => {
                           borderColor: '#D9D9D9',
                         }}
                         source={{
-                          uri: item?.exercise_image_link??localImage.NOWORKOUT,
+                          uri:
+                            item?.exercise_image_link ?? localImage.NOWORKOUT,
                         }}
                         resizeMode={'contain'}
                       />

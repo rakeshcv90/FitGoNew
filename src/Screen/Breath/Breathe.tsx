@@ -40,7 +40,7 @@ import ActivityLoader from '../../Component/ActivityLoader';
 import useMusicPlayer from '../NewWorkouts/Exercise/ExerciseUtilities/useMusicPlayer';
 import {resolveImportedAssetOrPath} from '../NewWorkouts/Exercise/ExerciseUtilities/Helpers';
 import {goBack} from '../../Component/Utilities/NavigationUtil';
-import { translate } from '../Translation/TranslationService';
+import {translate} from '../Translation/TranslationService';
 interface CircleProps {
   index: number;
   progress: Animated.SharedValue<number>;
@@ -498,7 +498,9 @@ const Breathe = ({navigation, route}) => {
                       top: `55%`,
                     },
                   ]}>
-                  <Text style={[styles.startup, {}]}>{translate('letstart')}</Text>
+                  <Text style={[styles.startup, {}]}>
+                    {translate('letstart')}
+                  </Text>
                 </Animated.View>
               </View>
             )}
@@ -518,9 +520,7 @@ const Breathe = ({navigation, route}) => {
                 {translate('welcome')}
               </Text>
               <Text style={styles.txt3}>{translate('toSession')}</Text>
-              <Text style={[styles.txt2]}>
-                {translate('guide')}
-              </Text>
+              <Text style={[styles.txt2]}>{translate('guide')}</Text>
             </Animated.View>
           </View>
           <Animated.View
@@ -682,7 +682,6 @@ const Breathe = ({navigation, route}) => {
               fontFamily={'Helvetica-Bold'}
               pV={12}
               onPress={() => {
-                console.log('clicked');
                 enteredCurrentEvent ? AddCoinsApi() : goBack();
               }}
             />

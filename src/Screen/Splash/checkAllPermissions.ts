@@ -44,11 +44,11 @@ const checkAllPermissions = () => {
       );
     });
     if (condition) {
-      console.log('211');
+    
       if (Platform.OS === 'android') {
         AdmobInterstitial.showAd()
           .then(() => {
-            console.log('Ad shown and completed');
+          
             navigate('PermissionScreen');
           })
           .catch((err) => {

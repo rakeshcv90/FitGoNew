@@ -12,7 +12,7 @@ const NewMeditationExercise = ({navigation, route}: any) => {
   const [backPressed, setBackPressed] = useState(false);
 
   return (
-    <View style={[styles.container,{paddingTop: 10}]}>
+    <View style={[styles.container, {paddingTop: 10}]}>
       <Wrapper styles={styles.container}>
         <StatusBar
           barStyle={'light-content'}
@@ -30,7 +30,7 @@ const NewMeditationExercise = ({navigation, route}: any) => {
           }}
           backButton
           onBackPress={() => {
-            setBackPressed(true)
+            setBackPressed(true);
           }}
         />
         <View
@@ -57,7 +57,12 @@ const NewMeditationExercise = ({navigation, route}: any) => {
             color={AppColor.WHITE}
           />
         </View>
-        <MeditationMusic allMeditation={allMeditation} number={number} setNumber={setNumber} backPressed={backPressed} />
+        <MeditationMusic
+          allMeditation={allMeditation}
+          number={number}
+          setNumber={setNumber}
+          backPressed={backPressed}
+        />
       </Wrapper>
     </View>
   );

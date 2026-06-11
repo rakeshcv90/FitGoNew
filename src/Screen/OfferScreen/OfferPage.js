@@ -24,7 +24,7 @@ import Loader from '../../Component/Loader';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import {setVideoLocation} from '../../Component/ThemeRedux/Actions';
 import {useFocusEffect} from '@react-navigation/native';
-import { translate } from '../Translation/TranslationService';
+import {translate} from '../Translation/TranslationService';
 const OfferPage = ({navigation, route}) => {
   const WeekArrayWithEvent = Array(5)
     .fill(0)
@@ -63,7 +63,7 @@ const OfferPage = ({navigation, route}) => {
       getEventEarnedCoins();
     }, []),
   );
-  console.log('hellooo--->', WeekArrayWithEvent[3]);
+
   const getEventEarnedCoins = async () => {
     const payload = new FormData();
     payload.append('user_id', getUserDataDetails?.id);
@@ -251,7 +251,7 @@ const OfferPage = ({navigation, route}) => {
       });
     } else {
       showMessage({
-        message:translate('completedTodayExerciseFirst'),
+        message: translate('completedTodayExerciseFirst'),
         type: 'info',
         animationDuration: 500,
         floating: true,
@@ -310,7 +310,7 @@ const OfferPage = ({navigation, route}) => {
           type: 'cardio',
           offerType: true,
           challenge: false,
-          isEventPage: true
+          isEventPage: true,
         });
         // }
       } else {
@@ -325,7 +325,7 @@ const OfferPage = ({navigation, route}) => {
           type: 'cardio',
           offerType: true,
           challenge: false,
-          isEventPage: true
+          isEventPage: true,
         });
       }
     } catch (error) {
@@ -385,7 +385,9 @@ const OfferPage = ({navigation, route}) => {
               onPress={() => handleStart()}
               withAnimation={!cardioStatus}
               downloaded={downloaded}
-              buttonText={cardioStatus ? translate('completed') : translate('startNow')}
+              buttonText={
+                cardioStatus ? translate('completed') : translate('startNow')
+              }
               showRightArrow={!cardioStatus}
             />
           )}

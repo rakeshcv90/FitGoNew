@@ -16,7 +16,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {AnalyticsConsole} from './AnalyticsConsole';
 import {setBmi} from './ThemeRedux/Actions';
 import {showMessage} from 'react-native-flash-message';
-import { translate } from '../Screen/Translation/TranslationService';
+import {translate} from '../Screen/Translation/TranslationService';
 export const BmiMeter = ({getBmi}) => {
   return (
     <>
@@ -156,7 +156,7 @@ const WeightHeight = ({
               activeOutlineColor="#C8170D"
               value={value}
               onChangeText={txt => {
-                if(txt<4 && txt !=''){
+                if (txt < 4 && txt != '') {
                   setValue('');
                   showMessage({
                     message: translate('heightTooLow'),
@@ -165,7 +165,7 @@ const WeightHeight = ({
                     floating: true,
                     icon: {icon: 'auto', position: 'left'},
                   });
-                }else{
+                } else {
                   setValue(txt);
                 }
               }}
@@ -184,7 +184,7 @@ const WeightHeight = ({
               activeOutlineColor="#C8170D"
               value={heightInch}
               onChangeText={txt => {
-                if (txt > 12 ) {
+                if (txt > 12) {
                   setHeightInch('');
                   showMessage({
                     message: translate('inchLimit'),
@@ -267,14 +267,8 @@ export const BMImodal = ({setModalVisible, modalVisible, dispatch}) => {
   const [heightType, setHeightType] = useState('ft');
   const [weightType, setWeightType] = useState('kg');
   let newHeight = height + '.' + heightInch;
-  console.log(newHeight, height);
+
   const HandleSubmitBMI = () => {
-    console.log( weight === '' ||
-    newHeight === '' ||
-    height === '' ||
-    isNaN(weight) ||
-    isNaN(height) ||
-    weight < 10 )
     if (
       weight === '' ||
       newHeight === '' ||
@@ -290,17 +284,19 @@ export const BMImodal = ({setModalVisible, modalVisible, dispatch}) => {
           onPress: () => {},
         },
       ]);
-    }
-     else {
+    } else {
       AnalyticsConsole(`Submit_BMI_BUTTON`);
       const BMI =
         (weightType == translate('kg') ? weight : weight / 2.2) /
-        (heightType == translate('ft') ? newHeight * 0.3048 : height / 100) ** 2;
+        (heightType == translate('ft') ? newHeight * 0.3048 : height / 100) **
+          2;
       dispatch(
         setBmi({
           Bmi: BMI.toFixed(2),
           userHeight:
-            heightType == translate('ft') ? newHeight + heightType : height + heightType,
+            heightType == translate('ft')
+              ? newHeight + heightType
+              : height + heightType,
           userWeight: weight + weightType,
         }),
       );

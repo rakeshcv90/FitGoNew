@@ -17,7 +17,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {AppColor, Fonts} from '../../Component/Color';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
-import moment, { lang } from 'moment';
+import moment, {lang} from 'moment';
 import VersionNumber from 'react-native-version-number';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
@@ -263,10 +263,9 @@ const MyPlans = ({navigation}: any) => {
           version: VersionNumber.appVersion,
           user_id: getUserDataDetails?.id,
           equipment: getEquipmentExercise == 1 ? 'no' : 'yes',
-          lang:lang,
+          lang: lang,
         },
       });
-      console.log('data event ....', res, getUserDataDetails?.id)
 
       if (res.data?.msg == 'User not exist.') {
         showMessage({
@@ -292,10 +291,14 @@ const MyPlans = ({navigation}: any) => {
     setRefresh(true);
     try {
       const res = await axios({
-        url: NewAppapi.WEEKLY_STATUS + '?user_id=' + getUserDataDetails.id+'&lang='+lang,
+        url:
+          NewAppapi.WEEKLY_STATUS +
+          '?user_id=' +
+          getUserDataDetails.id +
+          '&lang=' +
+          lang,
       });
-    
-      console.log(' data weekly   ',res.data);
+
       if (res?.data?.message != 'data not found') {
         const days = new Set(); // Use a Set to store unique days
         res?.data?.forEach((item: any) => {
@@ -341,7 +344,6 @@ const MyPlans = ({navigation}: any) => {
             // key: 'Config.REACT_APP_API_KEY',
           })
           .then(res => {
-            console.log('path', res.path());
             setButtonClicked(true);
             StoringData[data?.exercise_title] = res.path();
             downloadCounter++;
@@ -417,14 +419,13 @@ const MyPlans = ({navigation}: any) => {
     }
     try {
       // const lang = getCurrentLanguage();
-            console.log('current day ',datas, ' data ',lang);
 
       const res = await axios({
         url: NewAppapi.CURRENT_DAY_EXERCISE,
         method: 'Post',
         data: {user_details: datas, type: 'weekly', lang: lang},
       });
-      console.log('current day .. ',res);
+      console.log('current day .. ', res);
       if (
         res.data?.msg == 'Exercise Status for All Users Inserted Successfully'
       ) {
@@ -1288,8 +1289,7 @@ const MyPlans = ({navigation}: any) => {
           emptyComponent()
         )}
 
-        {
-        enteredCurrentEvent &&
+        {enteredCurrentEvent &&
           coins[WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1]] ==
             null &&
           WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1] ==

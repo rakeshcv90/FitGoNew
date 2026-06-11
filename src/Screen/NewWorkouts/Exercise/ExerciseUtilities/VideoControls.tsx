@@ -3,7 +3,7 @@ import React, {Ref, useCallback, useRef} from 'react';
 import FitIcon from '../../../../Component/Utilities/FitIcon';
 import CircleProgress from '../../../../Component/Utilities/ProgressCircle';
 import {handleExerciseChange} from './Helpers';
-import { AppColor } from '../../../../Component/Color';
+import {AppColor} from '../../../../Component/Color';
 
 type VideoControls = {
   pause: boolean;
@@ -94,11 +94,10 @@ const VideoControls = ({
         strokeWidth={25}
         changingColorsArray={['#530014', '#F0013B']}
         secondayCircleColor={AppColor.LIGHTGREY2}>
-        <TouchableOpacity onPress={() => {
-          console.log('set pause', pause);
-          setPause(!pause)
-        }
-          }>
+        <TouchableOpacity
+          onPress={() => {
+            setPause(!pause);
+          }}>
           <FitIcon
             name={!pause ? 'play' : 'pause'}
             type="MaterialCommunityIcons"

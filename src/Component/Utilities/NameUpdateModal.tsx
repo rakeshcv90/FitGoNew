@@ -181,7 +181,7 @@ const NameUpdateModal = ({
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('PAYLOAD', payload, res.data);
+
       if (res.data?.msg == 'user not exist') {
         setVisible(false);
         showMessage({
@@ -217,7 +217,7 @@ const NameUpdateModal = ({
     }
   };
   return (
-    <Modal transparent visible={openEditModal} animationType='slide'>
+    <Modal transparent visible={openEditModal} animationType="slide">
       <KeyboardAvoidingView
         style={[styles.content]}
         behavior={Platform.OS === 'ios' ? 'position' : 'height'}>

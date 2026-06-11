@@ -11,7 +11,7 @@ import {
   NativeModules,
 } from 'react-native';
 import FitText from '../Component/Utilities/FitText';
-import {navigationRef} from '../../App';
+import {navigationRef} from '../Component/Utilities/NavigationUtil';
 import {DeviceWidth} from '../Component/Config';
 // import NativeAddTest from '../Component/NativeAd';
 import {AppColor, Fonts} from '../Component/Color';

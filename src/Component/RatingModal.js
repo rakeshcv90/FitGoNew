@@ -6,18 +6,15 @@ import {DeviceHeigth, DeviceWidth} from './Config';
 import {localImage} from './Image';
 import Octicons from 'react-native-vector-icons/Octicons';
 import NewButton from './NewButton';
-import {
-  APP_STORE_LINK,
-  PLAY_STORE_LINK,
-} from './ReviewApp';
+import {APP_STORE_LINK, PLAY_STORE_LINK} from './ReviewApp';
 import {Platform} from 'react-native';
 import {Linking} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {setRatingTrack} from './ThemeRedux/Actions';
-const RatingModal = ({getVisibility,setModalVisibilty}) => {
+const RatingModal = ({getVisibility, setModalVisibilty}) => {
   const [rating, setRating] = useState(5);
-  const getRatingStatus=useSelector(state=>state?.getRatingStatus);
-  const [visibiltity,setVisibility]=useState(getRatingStatus)
+  const getRatingStatus = useSelector(state => state?.getRatingStatus);
+  const [visibiltity, setVisibility] = useState(getRatingStatus);
   const dispatch = useDispatch();
   const dataArray = [
     {
@@ -66,22 +63,22 @@ const RatingModal = ({getVisibility,setModalVisibilty}) => {
   };
   const openPlayStoreForRating = () => {
     const storeUrl = Platform.OS == 'ios' ? APP_STORE_LINK : PLAY_STORE_LINK;
-      Linking.openURL(storeUrl)
-        .then(() => {
-          setModalVisibilty?
-          setModalVisibilty(false)
-          :
-          dispatch(setRatingTrack(true));
-          setVisibility(true);
-          console.log('opnend', getRatingStatus,visibiltity);
-        })
-        .catch(err => {
-          console.error('Error opening Play Store:', err);
-        });
+    Linking.openURL(storeUrl)
+      .then(() => {
+        setModalVisibilty
+          ? setModalVisibilty(false)
+          : dispatch(setRatingTrack(true));
+        setVisibility(true);
+      })
+      .catch(err => {
+        console.error('Error opening Play Store:', err);
+      });
   };
   return (
-    <Modal transparent visible={getVisibility?getVisibility:!visibiltity} animationType='slide'
-    >
+    <Modal
+      transparent
+      visible={getVisibility ? getVisibility : !visibiltity}
+      animationType="slide">
       <StatusBar
         barStyle={'dark-content'}
         backgroundColor={AppColor.RATING_COLOR}
@@ -93,7 +90,7 @@ const RatingModal = ({getVisibility,setModalVisibilty}) => {
           size={25}
           style={styles.Icon1}
           onPress={() => {
-           setModalVisibilty? setModalVisibilty(false): setVisibility(true); // if state is true means visibility will be disappeared temp.
+            setModalVisibilty ? setModalVisibilty(false) : setVisibility(true); // if state is true means visibility will be disappeared temp.
           }}
         />
         <Text style={styles.txt1}>
@@ -145,7 +142,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: AppColor.RATING_COLOR,
   },
-  Icon1: {alignSelf: 'flex-end', marginRight: 16, marginTop:Platform.OS=='android'?20:DeviceHeigth*0.06},
+  Icon1: {
+    alignSelf: 'flex-end',
+    marginRight: 16,
+    marginTop: Platform.OS == 'android' ? 20 : DeviceHeigth * 0.06,
+  },
   txt1: {
     fontFamily: Fonts.MONTSERRAT_BOLD,
     fontSize: 20,

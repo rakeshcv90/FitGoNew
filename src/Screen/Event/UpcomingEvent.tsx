@@ -45,7 +45,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {CountryCurrencies} from '../../Component/Utilities/CountryCurrencies';
 import {resolveImportedAssetOrPath} from '../NewWorkouts/Exercise/ExerciseUtilities/Helpers';
 import useMusicPlayer from '../NewWorkouts/Exercise/ExerciseUtilities/useMusicPlayer';
-import { translate } from '../Translation/TranslationService';
+import {translate} from '../Translation/TranslationService';
 
 const UpcomingEvent = ({navigation, route}: any) => {
   const {eventType} = route?.params;
@@ -57,7 +57,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
   );
-  console.log('getPurchaseHistoryssssss', getPurchaseHistory);
+
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
@@ -68,7 +68,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [pause, setPause] = useState(false);
-console.log(getPurchaseHistory)
+
   const PlanPurchasetoBackendAPI = async () => {
     setLoading(true);
     const data = {
@@ -241,7 +241,7 @@ console.log(getPurchaseHistory)
                 getPurchaseHistory?.allow_usage && (
                 <FitText
                   type="Heading"
-                  value={ translate('changePlanTitle')}
+                  value={translate('changePlanTitle')}
                   fontSize={18}
                   lineHeight={24}
                   marginVertical={5}
@@ -309,7 +309,7 @@ console.log(getPurchaseHistory)
       : getPurchaseHistory?.event_start_date_current;
 
   const currency =
-    getOfferAgreement?.location != null  
+    getOfferAgreement?.location != null
       ? CountryCurrencies[getOfferAgreement?.location]
       : '';
 
@@ -324,7 +324,9 @@ console.log(getPurchaseHistory)
         <NewHeader1
           backButton
           header={
-            eventType == 'upcoming' ? translate('upcomingChallenge') : translate('myChallenge')
+            eventType == 'upcoming'
+              ? translate('upcomingChallenge')
+              : translate('myChallenge')
           }
           onBackPress={() => navigation?.navigate('BottomTab')}
         />
@@ -472,7 +474,11 @@ console.log(getPurchaseHistory)
                 </View>
               ) : ( */}
               <View style={{marginLeft: 10}}>
-                <FitText type="Heading" value={translate('winVoucher')} fontSize={18} />
+                <FitText
+                  type="Heading"
+                  value={translate('winVoucher')}
+                  fontSize={18}
+                />
                 <FitText type="normal" value={translate('earnPrize')} />
               </View>
             </LinearGradient>
@@ -508,7 +514,7 @@ console.log(getPurchaseHistory)
               fontFamily={Fonts.MONTSERRAT_MEDIUM}
               fontWeight="600"
             />
-            <View style={{height: 20,}} />
+            <View style={{height: 20}} />
             {getPurchaseHistory?.plan != 'noob' && (
               <FitText
                 type="normal"

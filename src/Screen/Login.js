@@ -52,7 +52,7 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 import {TextInput} from 'react-native-paper';
-import {navigationRef} from '../../App';
+import {navigationRef} from '../Component/Utilities/NavigationUtil';
 import VersionNumber from 'react-native-version-number';
 import {Platform} from 'react-native';
 import {BlurView} from '@react-native-community/blur';
@@ -106,7 +106,6 @@ const Login = ({navigation}) => {
 
   useEffect(() => {
     DeviceInfo.syncUniqueId().then(uniqueId => {
-      console.log("LOGIN",uniqueId)
       dispatch(setDeviceID(uniqueId));
     });
     setAppVersion(VersionNumber.appVersion);
@@ -647,7 +646,7 @@ const Login = ({navigation}) => {
               AuthorizationStatus.DENIED)
         );
       });
-      console.log('coooonnnss', condition);
+
       if (condition) {
         navigation.navigate('PermissionScreen');
       } else {

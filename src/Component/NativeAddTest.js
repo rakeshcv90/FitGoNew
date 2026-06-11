@@ -66,7 +66,6 @@ const NativeAddTest = ({media, type, width = 'auto'}) => {
     setImageData(event.icon);
     setHeadlineData(event.headline.split(':'));
     adLoadedRef.current = true; // Mark ad as loaded
-    console.log('NATIVE LOADED');
   };
 
   const onAdLeftApplication = () => {};
@@ -75,7 +74,6 @@ const NativeAddTest = ({media, type, width = 'auto'}) => {
     if (!adLoadedRef.current && nativeAdRef.current) {
       setLoading(true);
       nativeAdRef.current.loadAd(); // Only load the ad once
-      console.log('NATIVE AD LOADED');
     }
   }, []);
 

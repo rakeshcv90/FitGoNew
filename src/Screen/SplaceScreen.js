@@ -58,10 +58,7 @@ import moment from 'moment';
 //   AdEventType,
 //   TestIds,
 // } from 'react-native-google-mobile-ads';
-import {
-  ADS_IDs,
-  ADS_IOS,
-} from '../Component/AdsId';
+import {ADS_IDs, ADS_IOS} from '../Component/AdsId';
 import {LogOut} from '../Component/LogOut';
 import RNFetchBlob from 'rn-fetch-blob';
 import {EnteringEventFunction} from './Event/EnteringEventFunction';
@@ -85,7 +82,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import { API_CALLS } from '../API/API_CALLS';
+import {API_CALLS} from '../API/API_CALLS';
 
 const products = Platform.select({
   ios: ['fitme_noob', 'fitme_pro', 'fitme_legend'],
@@ -115,7 +112,7 @@ const SplaceScreen = ({navigation, route}) => {
       if (getUserDataDetails && getUserDataDetails.social_id != null) {
         if (ADS_IOS.includes(getUserDataDetails.social_id)) {
           callAds(true);
-        } else { 
+        } else {
           callAds(false);
         }
       } else {
@@ -146,7 +143,7 @@ const SplaceScreen = ({navigation, route}) => {
     //   showOpenAppAd().then(afterAdFunction).catch(afterAdFunction);
     // });
     // afterAdFunction()
-    console.log("Tests")
+
     requestPermissionforNotification(dispatch);
     getUserAllInData();
     getPlanData();
@@ -156,9 +153,7 @@ const SplaceScreen = ({navigation, route}) => {
     dispatch(setFitmeAdsCount(0));
   };
 
-  const afterAdFunction = () => {
-   
-  };
+  const afterAdFunction = () => {};
   const isObject = result => {
     return !!(typeof result === 'object' && result != null);
   };
@@ -360,7 +355,7 @@ const SplaceScreen = ({navigation, route}) => {
       const responseData = await axios.get(
         `${NewAppapi.GET_ALL_IN_ONE}?version=${VersionNumber.appVersion}`,
       );
-console.log("SDFsdfdsfsdfdsfsfdsfds",responseData?.data)
+
       if (
         responseData?.data?.msg ==
         'Please update the app to the latest version.'

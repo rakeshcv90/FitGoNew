@@ -32,7 +32,7 @@ import {
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import BottomSheet1 from '../../Component/BottomSheet';
-import { translate,getCurrentLanguage } from '../Translation/TranslationService';
+import {translate, getCurrentLanguage} from '../Translation/TranslationService';
 
 const CustomMealList = ({navigation, route}) => {
   const [selectedItems, setSelectedItems] = useState([]);
@@ -318,7 +318,7 @@ const CustomMealList = ({navigation, route}) => {
                   borderRadius: 10,
                 }}
                 source={{
-                  uri: item.diet_image??localImage.NOWORKOUT,
+                  uri: item.diet_image ?? localImage.NOWORKOUT,
                 }}
                 resizeMode={'cover'}
               />
@@ -418,7 +418,7 @@ const CustomMealList = ({navigation, route}) => {
       }
       payload.append('version', VersionNumber?.appVersion);
       payload.append('user_id', getUserDataDetails?.id);
-      // console.log("Payload",payload)
+
       try {
         const res = await axios(`${url}`, {
           // const res = await axios(`${NewAppapi.CUSTOM_MEAL}`, {
@@ -499,11 +499,11 @@ const CustomMealList = ({navigation, route}) => {
   };
   return (
     <View style={styles.container}>
-       {forLoading && (
-    <View style={styles.loaderContainer}>
-      <ActivityLoader />
-    </View>
-  )}
+      {forLoading && (
+        <View style={styles.loaderContainer}>
+          <ActivityLoader />
+        </View>
+      )}
       <StatusBar barStyle={'dark-content'} backgroundColor={'white'} />
       <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
         <NewHeader1
@@ -538,8 +538,7 @@ const CustomMealList = ({navigation, route}) => {
                 createMealPlan();
               } else {
                 showMessage({
-                  message:
-                    translate('selectMealReminder'),
+                  message: translate('selectMealReminder'),
                   type: 'danger',
                   animationDuration: 500,
                   floating: true,
@@ -604,12 +603,12 @@ var styles = StyleSheet.create({
     backgroundColor: AppColor.WHITE,
   },
   loaderContainer: {
-  ...StyleSheet.absoluteFillObject,
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: 'rgba(255, 255, 255, 0.5)', // Optional: light overlay
-  zIndex: 9999,
-},
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.5)', // Optional: light overlay
+    zIndex: 9999,
+  },
   listContainer: {
     flex: 1,
     padding: 10,

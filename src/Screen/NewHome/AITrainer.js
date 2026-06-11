@@ -8,37 +8,37 @@ import {
   ScrollView,
   BackHandler,
 } from 'react-native';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { StyleSheet } from 'react-native';
-import { AppColor } from '../../Component/Color';
-import { StatusBar } from 'react-native';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {StyleSheet} from 'react-native';
+import {AppColor} from '../../Component/Color';
+import {StatusBar} from 'react-native';
 import NewHeader from '../../Component/Headers/NewHeader';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { localImage } from '../../Component/Image';
-import { DeviceHeigth, DeviceWidth } from '../../Component/Config';
-import { TextInput } from 'react-native';
-import { TouchableOpacity } from 'react-native';
-import { showMessage } from 'react-native-flash-message';
+import {localImage} from '../../Component/Image';
+import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
+import {TextInput} from 'react-native';
+import {TouchableOpacity} from 'react-native';
+import {showMessage} from 'react-native-flash-message';
 import AnimatedLottieView from 'lottie-react-native';
 import axios from 'axios';
-import { useDispatch, useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   SetAIMessageHistory,
   setRewardedCount,
   setSoundOnOff,
 } from '../../Component/ThemeRedux/Actions';
-import { Alert } from 'react-native';
+import {Alert} from 'react-native';
 // import {BannerAdd, MyRewardedAd} from '../../Component/BannerAdd';
 import moment from 'moment';
 import Tts from 'react-native-tts';
-import { useIsFocused } from '@react-navigation/native';
-import { bannerAdId } from '../../Component/AdsId';
+import {useIsFocused} from '@react-navigation/native';
+import {bannerAdId} from '../../Component/AdsId';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { ArrowLeft } from '../../Component/Utilities/Arrows/Arrow';
+import {ArrowLeft} from '../../Component/Utilities/Arrows/Arrow';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
-import { ReviewApp } from '../../Component/ReviewApp';
-import { translate, getCurrentLanguage } from '../Translation/TranslationService';
+import {ReviewApp} from '../../Component/ReviewApp';
+import {translate, getCurrentLanguage} from '../Translation/TranslationService';
 // import useRewardedAd from '../../Utils/Ads/useRewardedAd';
 // const apiKey = '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';
 // const apiKey = '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';
@@ -47,14 +47,12 @@ const systemMessage = {
   content: `You are a Gym Traineer and you give response to us who are  only related Gym Traineer, how to do Workouts,
    what diet have to take`,
 };
-const AITrainer = ({ navigation }) => {
+const AITrainer = ({navigation}) => {
   const dispatch = useDispatch();
   // const {rewardAdsLoad, showRewardAds} = MyRewardedAd();
   // const {isAdReady, showAd} = useRewardedAd();
   const isFocused = useIsFocused();
-  const [ttsSound, setTtsSound] = useState(
-   translate('initialGreeting'),
-  );
+  const [ttsSound, setTtsSound] = useState(translate('initialGreeting'));
 
   const [searchText, setSearchText] = useState('');
   const flatListRef = useRef(null);
@@ -102,7 +100,7 @@ const AITrainer = ({ navigation }) => {
     }
   };
   useEffect(() => {
-    flatListRef.current.scrollToEnd({ animated: true });
+    flatListRef.current.scrollToEnd({animated: true});
   }, [senderMessage]);
   const sendMessage = async () => {
     if (searchText.trim().length <= 0) {
@@ -112,14 +110,14 @@ const AITrainer = ({ navigation }) => {
         animationDuration: 500,
 
         floating: true,
-        icon: { icon: 'auto', position: 'left' },
+        icon: {icon: 'auto', position: 'left'},
       });
       return false;
     } else {
       // if (getRerwardCount < 5) {
-        dispatch(setRewardedCount(getRerwardCount + 1));
-        handleSend(searchText);
-        setSearchText('');
+      dispatch(setRewardedCount(getRerwardCount + 1));
+      handleSend(searchText);
+      setSearchText('');
       // } else {
       //   Alert.alert(
       //     'Questions Limit Reached!',
@@ -145,19 +143,17 @@ const AITrainer = ({ navigation }) => {
       // }
     }
   };
-  const temp = () => {
-    console.log("CELLED")
-  }
+  const temp = () => {};
   const handleSend = async data => {
     const newMessage = {
       message: data,
       sender: 'user',
     };
     const newMessages = [...senderMessage, newMessage];
-    console.log(newMessages)
+
     processMessageToChatGPT(newMessages);
   };
-  const processMessageToChatGPT = async (chatMessages) => {
+  const processMessageToChatGPT = async chatMessages => {
     let apiMessages = chatMessages.map(messageObject => {
       let role = '';
       if (messageObject.sender == 'ChatGPT') {
@@ -165,7 +161,7 @@ const AITrainer = ({ navigation }) => {
       } else {
         role = 'user';
       }
-      return { role: role, content: messageObject.message };
+      return {role: role, content: messageObject.message};
     });
 
     const apiRequestBody = {
@@ -185,7 +181,7 @@ const AITrainer = ({ navigation }) => {
         sender: 'ChatGpt',
       },
     ]);
-    console.log("GPT BEFORE", [systemMessage, ...apiMessages])
+
     const options = {
       method: 'POST',
       url: 'https://open-ai21.p.rapidapi.com/conversationgpt35',
@@ -210,7 +206,7 @@ const AITrainer = ({ navigation }) => {
 
     try {
       const response = await axios.request(options);
-      console.log("AFTER GPT", response.data.result)
+
       setsenderMessage([
         ...chatMessages,
         {
@@ -231,12 +227,12 @@ const AITrainer = ({ navigation }) => {
       );
       setSearchText('');
       setreward(0);
-      ReviewApp(temp)
+      ReviewApp(temp);
     } catch (error) {
       console.error(error);
     }
   };
-  console.log('senderMessage====>', senderMessage)
+
   const handleBackPress = useCallback(() => {
     Tts.stop();
     return false; // Allow default back behavior when switchButton is false
@@ -252,7 +248,7 @@ const AITrainer = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      <Wrapper styles={{ backgroundColor: AppColor.WHITE }}>
+      <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
         <NewHeader1
           header={translate('aiTrainerTitle')}
           onBackPress={() => {
@@ -266,7 +262,7 @@ const AITrainer = ({ navigation }) => {
         />
         <KeyboardAvoidingView
           behavior={Platform.OS == 'ios' ? 'padding' : undefined}
-          contentContainerStyle={{ flexGrow: 1 }}
+          contentContainerStyle={{flexGrow: 1}}
           style={{
             position: 'absolute',
             bottom: 0,
@@ -277,19 +273,19 @@ const AITrainer = ({ navigation }) => {
                 : DeviceHeigth * 0.12,
           }}>
           <ScrollView
-            style={{ flexGrow: 1, marginVertical: DeviceHeigth * 0.0 }}
+            style={{flexGrow: 1, marginVertical: DeviceHeigth * 0.0}}
             ref={flatListRef}
             onContentSizeChange={() =>
-              flatListRef.current.scrollToEnd({ animated: true })
+              flatListRef.current.scrollToEnd({animated: true})
             }
-            onLayout={() => flatListRef.current.scrollToEnd({ animated: true })}
+            onLayout={() => flatListRef.current.scrollToEnd({animated: true})}
             keyboardDismissMode="interactive"
             keyboardShouldPersistTaps="always"
             showsVerticalScrollIndicator={false}>
             <FlatList
               data={senderMessage}
               keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item, index }) => {
+              renderItem={({item, index}) => {
                 if (item.sender == 'ChatGpt' && item?.message != 'test') {
                   setTtsSound(item.message);
                 }
@@ -461,7 +457,7 @@ const AITrainer = ({ navigation }) => {
                               source={
                                 getUserDataDetails?.image_path == null
                                   ? localImage.User
-                                  : { uri: getUserDataDetails?.image_path }
+                                  : {uri: getUserDataDetails?.image_path}
                               }
                               style={{
                                 width: 30,

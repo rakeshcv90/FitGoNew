@@ -88,7 +88,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
   const [start, setStart] = useState(false);
   const [overExerciseVisible, setOverExerciseVisible] = useState(false);
   const dispatch = useDispatch();
-  const bottomSheetRef=useRef(null)
+  const bottomSheetRef = useRef(null);
   const refStandard = useRef();
   const getEquipmentExercise = useSelector(
     (state: any) => state.getEquipmentExercise,
@@ -187,7 +187,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
       } else {
         newSelectedItems.splice(itemIndex, 1);
       }
-      console.log(newSelectedItems.length)
+
       setSelectedExercise(newSelectedItems);
       setItemsLength(newSelectedItems.length);
     },
@@ -202,7 +202,6 @@ const WorkoutCategories = ({navigation, route}: any) => {
       if (!visible) {
         setVisible(true);
       } else {
-        console.log(item);
       }
     }
   };
@@ -236,7 +235,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
           trackerData: [],
           type: 'focus',
           challenge: false,
-          isEventPage: false
+          isEventPage: false,
         });
       });
     }
@@ -339,7 +338,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
           trackerData: [],
           type: 'focus',
           challenge: false,
-          isEventPage: false
+          isEventPage: false,
         });
       });
     }
@@ -376,7 +375,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
                       alignSelf: 'center',
                     }}
                     source={{
-                      uri: item?.exercise_image_link??localImage.NOWORKOUT,
+                      uri: item?.exercise_image_link ?? localImage.NOWORKOUT,
                     }}
                     resizeMode={'contain'}
                   />
@@ -508,7 +507,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
     dispatch(setEquipmentExercise(adjust));
     setExercise(modifiedExercise);
     setFilteredExercise(modifiedExercise);
-    bottomSheetRef.current?.closeSheet()
+    bottomSheetRef.current?.closeSheet();
   };
   const BottomSheetContent = () => {
     const [adjustSelected, setAdjustSelelcted] = useState(getEquipmentExercise);
@@ -810,7 +809,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
         overExerciseVisible={overExerciseVisible}
       />
       <BottomSheet1 ref={bottomSheetRef}>
-        <BottomSheetContent/>
+        <BottomSheetContent />
       </BottomSheet1>
     </SafeAreaView>
   );

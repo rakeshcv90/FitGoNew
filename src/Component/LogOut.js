@@ -1,7 +1,7 @@
 
 import { setLogout } from './ThemeRedux/Actions';
 import {CommonActions} from '@react-navigation/native';
-import { navigationRef } from '../../App';
+import { navigationRef } from './Utilities/NavigationUtil';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const LogOut = async(dispatch) => {

@@ -11,7 +11,7 @@ import React, {FC, useState} from 'react';
 import {AppColor} from './Color';
 import {DeviceHeigth, DeviceWidth} from './Config';
 import {localImage} from './Image';
-import {navigationRef} from '../../App';
+import {navigationRef} from './Utilities/NavigationUtil';
 import WorkoutDescription from '../Screen/NewWorkouts/WorkoutsDescription';
 import {ActivityIndicator} from 'react-native';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';

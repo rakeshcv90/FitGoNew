@@ -6,7 +6,7 @@ export const Api = 'https://cvinfotech2@gofit.tentoptoday.com/json/';
 // export const NewApi = 'https://fitme.esapplications.in/adserver/public/api/';
 //export const NewApi = 'https://fitme.cvinfotech.in/adserver/public/api/'; //old Server
 export const NewApi = 'https://fitme.cvinfotechserver.com/adserver/public/api/'; //New  Server
-
+// export const NewApi = 'https://revolvfit.it/adserver/public/api/'; //Client Server
 
 export const Appapi = {
   login: 'user_login.php',
@@ -127,16 +127,16 @@ export const NewAppapi = {
   SEND_REFERRAL_API: NewApi + 'add_referral_coin',
   // SEND_REFERRAL_API: NewApi + 'test_add_referral_coin',
   GET_REF_RANK: NewApi + 'user_rank',
-  GET_BREATH_SESSION:NewApi+'get_breathinout_session',
-  GET_PAST_WINNERS:NewApi+'past_winners',
-  GET_HISTORY:NewApi+'test_coin_deduction_rec',
-  SEND_BREATHE_COINS:NewApi+'add_breathinout_coins',
-  GET_CARDIO_STATUS:NewApi+'cardio_status',
-  GET_MUSIC_DETAILS:NewApi+'music_details',
-  POST_NEW_LOGIN:NewApi+'loginnew',
-  POST_UPDATE_EMAIL:NewApi+'update_email',
-  CARDIO_STATUS_WITHOUT_EVENT:NewApi+'withoutevent_cardio_status',
-  GET_ALL_HISTORY:NewApi+'get_exercise_history',
-  GET_BOTH_HISTORY:NewApi+'get_eventwithoutenvent_history',
-  GET_SINGLE_EXERCISE:NewApi+'get_single_exercise',
+  GET_BREATH_SESSION: NewApi + 'get_breathinout_session',
+  GET_PAST_WINNERS: NewApi + 'past_winners',
+  GET_HISTORY: NewApi + 'test_coin_deduction_rec',
+  SEND_BREATHE_COINS: NewApi + 'add_breathinout_coins',
+  GET_CARDIO_STATUS: NewApi + 'cardio_status',
+  GET_MUSIC_DETAILS: NewApi + 'music_details',
+  POST_NEW_LOGIN: NewApi + 'loginnew',
+  POST_UPDATE_EMAIL: NewApi + 'update_email',
+  CARDIO_STATUS_WITHOUT_EVENT: NewApi + 'withoutevent_cardio_status',
+  GET_ALL_HISTORY: NewApi + 'get_exercise_history',
+  GET_BOTH_HISTORY: NewApi + 'get_eventwithoutenvent_history',
+  GET_SINGLE_EXERCISE: NewApi + 'get_single_exercise',
 };

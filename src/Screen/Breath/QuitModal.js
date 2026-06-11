@@ -6,9 +6,9 @@ import NewButton from '../../Component/NewButton';
 import {AppColor} from '../../Component/Color';
 import AnimatedLottieView from 'lottie-react-native';
 import {useNavigation} from '@react-navigation/native';
-import { withSpring } from 'react-native-reanimated';
-import { translate } from '../Translation/TranslationService';
-const QuitModal = ({type,cardAnimation}) => {
+import {withSpring} from 'react-native-reanimated';
+import {translate} from '../Translation/TranslationService';
+const QuitModal = ({type, cardAnimation}) => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
@@ -40,19 +40,22 @@ const QuitModal = ({type,cardAnimation}) => {
           fontFamily={'Helvetica-Bold'}
           mV={10}
           buttonColor={AppColor.BREATHE_CIRCLE_COLOR}
-           onPress={()=>{
-            cardAnimation.value=withSpring(DeviceHeigth,{},()=>cardAnimation.value=-DeviceHeigth)
-           }}
+          onPress={() => {
+            cardAnimation.value = withSpring(
+              DeviceHeigth,
+              {},
+              () => (cardAnimation.value = -DeviceHeigth),
+            );
+          }}
         />
         <Text
           style={styles.txt1}
           onPress={() => {
-            console.log('type check ',type);
             if (type) {
-              if(type == 'Home'){
-              navigation.goBack();
-              }else{
-              navigation.navigate('OfferPage');
+              if (type == 'Home') {
+                navigation.goBack();
+              } else {
+                navigation.navigate('OfferPage');
               }
             } else {
               navigation.navigate('WorkoutCompleted', {type: 'complete'});
@@ -67,9 +70,8 @@ const QuitModal = ({type,cardAnimation}) => {
 const styles = StyleSheet.create({
   container: {
     zIndex: 10,
-    position:'absolute',
-    top:DeviceHeigth/5,
-    
+    position: 'absolute',
+    top: DeviceHeigth / 5,
   },
   contentView: {
     width: DeviceWidth * 0.7,

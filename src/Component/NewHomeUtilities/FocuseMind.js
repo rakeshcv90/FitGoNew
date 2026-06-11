@@ -18,17 +18,16 @@ import {showMessage} from 'react-native-flash-message';
 import AnimatedLottieView from 'lottie-react-native';
 import {AnalyticsConsole} from '../AnalyticsConsole';
 import {localImage} from '../Image';
-import { translate } from '../../Screen/Translation/TranslationService';
+import {translate} from '../../Screen/Translation/TranslationService';
 const FocuseMind = () => {
   const allWorkoutData = useSelector(state => state.allWorkoutData);
   const navigation = useNavigation();
-  // const {showInterstitialAd} = MyInterstitialAd();
+
   const viewMorePress = () => {
     analytics().logEvent('CV_FITME_CLICKED_ON_MEDITATION');
     let checkAdsShow = AddCountFunction();
     if (allWorkoutData?.mindset_workout_data?.length > 0) {
       if (checkAdsShow == true) {
-        // showInterstitialAd();
         navigation.navigate('MeditationDetails', {
           item: allWorkoutData?.mindset_workout_data[0],
         });
@@ -73,7 +72,6 @@ const FocuseMind = () => {
             width: 60,
             height: 60,
             borderRadius: 60,
-           
           }}>
           <Image
             source={
@@ -85,7 +83,6 @@ const FocuseMind = () => {
               width: 60,
               height: 60,
               borderRadius: 60,
-             
             }}
           />
         </View>
@@ -182,7 +179,7 @@ const FocuseMind = () => {
         <View
           style={{
             width: DeviceWidth * 0.95,
-            marginVertical:15,
+            marginVertical: 15,
             flexDirection: 'row',
             alignSelf: 'center',
             justifyContent: 'space-between',
@@ -194,7 +191,7 @@ const FocuseMind = () => {
               fontWeight: '600',
               lineHeight: 30,
               fontSize: 16,
-              marginLeft: 10
+              marginLeft: 10,
             }}>
             {translate('focusmind')}
           </Text>
@@ -210,18 +207,14 @@ const FocuseMind = () => {
                 fontSize: 14,
                 lineHeight: 20,
                 color: AppColor.SecondaryTextColor,
-                textDecorationLine:'underline',
-                marginRight: 10
+                textDecorationLine: 'underline',
+                marginRight: 10,
               }}>
               {translate('viewmore')}
             </Text>
           </TouchableOpacity>
         </View>
-        <View
-          style={[
-            styles.meditionBox,
-            
-          ]}>
+        <View style={[styles.meditionBox]}>
           {allWorkoutData?.mindset_workout_data?.length > 0 ? (
             <FlatList
               data={allWorkoutData?.mindset_workout_data}
@@ -269,7 +262,7 @@ const styles = StyleSheet.create({
     width: DeviceWidth,
 
     alignSelf: 'center',
-    paddingVertical:0,
+    paddingVertical: 0,
   },
   meditionBox: {
     width: '100%',

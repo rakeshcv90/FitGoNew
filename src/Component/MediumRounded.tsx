@@ -11,7 +11,7 @@ import React, {FC} from 'react';
 import {AppColor} from './Color';
 import {DeviceHeigth, DeviceWidth} from './Config';
 import {localImage} from './Image';
-import {navigationRef} from '../../App';
+import {navigationRef} from './Utilities/NavigationUtil';
 
 export type Props = {
   viewAllButton?: boolean;

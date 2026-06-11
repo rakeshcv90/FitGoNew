@@ -206,7 +206,7 @@ const EditCustomWorkout = ({navigation, route}) => {
     } else {
       newSelectedItems.splice(index, 1);
     }
-    console.log(newSelectedItems.length)
+
     setSelectedItems(newSelectedItems);
   };
   const submitCustomExercise = async () => {
@@ -238,7 +238,7 @@ const EditCustomWorkout = ({navigation, route}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-        
+
         getUserDetailData();
       } else {
         setForLoading(false);
@@ -386,7 +386,7 @@ const EditCustomWorkout = ({navigation, route}) => {
                 style={styles.inputText}
               />
             </View>
-           <TopTabBar/>
+            <TopTabBar />
             <View
               style={[
                 styles.meditionBox,

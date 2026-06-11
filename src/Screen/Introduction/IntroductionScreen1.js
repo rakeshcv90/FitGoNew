@@ -20,7 +20,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import AnimatedLottieView from 'lottie-react-native';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import CircleProgress from '../../Component/Utilities/ProgressCircle';
-import { translate } from '../Translation/TranslationService';
+import {translate} from '../Translation/TranslationService';
 
 const IntroductionScreen1 = ({navigation}) => {
   const dispatch = useDispatch();
@@ -29,12 +29,14 @@ const IntroductionScreen1 = ({navigation}) => {
   useEffect(() => {
     const translatedTitle = translate('title');
     const desc = translate('description');
-console.log('converterd text ',translatedTitle, desc);
+
     // setTitle(translatedTitle);
   }, []);
 
-// const [titleText, setTitleText] = useState('Get Fit, Your Way!');
-const [descText, setDescText] = useState('Design your perfect workout routine! Choose from various exercises, customize your plan based on your goals, and enjoy workouts that fit your lifestyle. Achieve your fitness goals on your terms!');
+  // const [titleText, setTitleText] = useState('Get Fit, Your Way!');
+  const [descText, setDescText] = useState(
+    'Design your perfect workout routine! Choose from various exercises, customize your plan based on your goals, and enjoy workouts that fit your lifestyle. Achieve your fitness goals on your terms!',
+  );
 
   return (
     <View style={styles.Container}>
@@ -82,15 +84,15 @@ const [descText, setDescText] = useState('Design your perfect workout routine! C
             />
           </TouchableOpacity> */}
           <TouchableOpacity
-          // style={{
-          //     justifyContent: 'right',
-          //     alignItems: 'right',
-          //     textAlign:'right',
-          //     zIndex: 1,
-          //     overflow: 'hidden',
-          //     width: DeviceWidth * 0.08,
-          //     height: DeviceHeigth * 0.05,
-          //   }}
+            // style={{
+            //     justifyContent: 'right',
+            //     alignItems: 'right',
+            //     textAlign:'right',
+            //     zIndex: 1,
+            //     overflow: 'hidden',
+            //     width: DeviceWidth * 0.08,
+            //     height: DeviceHeigth * 0.05,
+            //   }}
             onPress={() => {
               AnalyticsConsole('SKIP_IS');
               dispatch(setShowIntro(true));
@@ -137,7 +139,6 @@ const [descText, setDescText] = useState('Design your perfect workout routine! C
           }}>
           {/* {hindiLanguage ? 'अपना फिटनेस का सफर खुद तय करें!' : 'Get Fit, Your Way!'} */}
           {translate('intro1title')}
-          {console.log('jasdkjskdjkjs',translate('titleText'))}
         </Text>
 
         <Text
@@ -153,7 +154,7 @@ const [descText, setDescText] = useState('Design your perfect workout routine! C
           {/* {hindiLanguage
             ? `अपनी परफेक्ट वर्कआउट रूटीन डिजाइन करें! विभिन्न एक्सरसाइज में से चुनें, अपने लक्ष्य के अनुसार प्लान कस्टमाइज़ करें, और अपनी लाइफस्टाइल के अनुसार वर्कआउट का आनंद लें। अपने फिटनेस गोल्स को अपने तरीके से हासिल करें!`
             : `Design your perfect workout routine! Choose from various exercises, customize your plan based on your goals, and enjoy workouts that fit your lifestyle. Achieve your fitness goals on your terms!`} */}
-            {translate('intro1description')}
+          {translate('intro1description')}
         </Text>
       </View>
       <View
@@ -193,7 +194,7 @@ const [descText, setDescText] = useState('Design your perfect workout routine! C
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => {
-              AnalyticsConsole("TO_IS2")
+              AnalyticsConsole('TO_IS2');
               navigation.navigate('IntroductionScreen2');
             }}
             style={{

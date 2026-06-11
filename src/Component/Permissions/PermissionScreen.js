@@ -12,9 +12,9 @@ import {
   UIArray,
 } from './PermissionMethods';
 import {useNavigation} from '@react-navigation/native';
-import {navigationRef} from '../../../App';
+import {navigationRef} from '../Utilities/NavigationUtil';
 // import { translate } from 'react-native-redash';
-import { translate } from '../../Screen/Translation/TranslationService';
+import {translate} from '../../Screen/Translation/TranslationService';
 
 const PermissionScreen = () => {
   const [permissionState, setPermissionState] = useState({
@@ -48,10 +48,8 @@ const PermissionScreen = () => {
         permissionState.notification &&
         // permissionState.storage &&
         permissionState.healthkit
-      : permissionState.location &&
-        permissionState.notification 
+      : permissionState.location && permissionState.notification;
     if (readyToNavigate) {
-      console.log("check navigation is working")
       navigation.navigate('BottomTab', {screen: 'Home'});
     }
   }, [permissionState]);
@@ -108,7 +106,6 @@ const PermissionScreen = () => {
             permissionMethods[item.askPermission] ==
               permissionMethods['initHealthKit']
           ) {
-            console.log("requesting for permission  ")
             setPermissionState(prev => ({...prev, healthkit: true}));
           }
           if (alertCondition(result)) {
@@ -129,8 +126,7 @@ const PermissionScreen = () => {
     itemKey,
   }) => {
     const isHealthkitAvailable =
-      permissionState.location &&
-      permissionState.notification 
+      permissionState.location && permissionState.notification;
     return (
       <View>
         <View
@@ -220,8 +216,7 @@ const PermissionScreen = () => {
         </View>
         <NewButton
           title={
-            permissionState.location &&
-            permissionState.notification 
+            permissionState.location && permissionState.notification
               ? 'Continue to app'
               : 'Grant All Permissions'
           }

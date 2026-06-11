@@ -18,13 +18,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import {
-  setAllExercise,
-  setAllWorkoutData,
-  setChallengesData,
-  setCustomWorkoutData,
   setExerciseCount,
   setFitmeMealAdsCount,
-  setWorkoutTimeCal,
 } from '../../Component/ThemeRedux/Actions';
 import NewHeader from '../../Component/Headers/NewHeader';
 import VersionNumber, {appVersion} from 'react-native-version-number';
@@ -38,24 +33,18 @@ import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 // import {MyInterstitialAd} from '../../Component/BannerAdd';
 import moment from 'moment';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
-import FocusArea from '../FocusArea';
-import ActivityLoader from '../../Component/ActivityLoader';
+
 import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
-import { translate } from '../Translation/TranslationService';
+import {translate} from '../Translation/TranslationService';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Workouts = ({navigation}: any) => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [imageLoad, setImageLoad] = useState(true);
+
   const [currentCategories, setCurrentCategories] = useState<Array<any>>([]);
-  const completeProfileData = useSelector(
-    (state: any) => state.completeProfileData,
-  );
-  const allWorkoutData = useSelector((state: any) => state.allWorkoutData);
 
   const getFitmeMealAdsCount = useSelector(
     (state: any) => state.getFitmeMealAdsCount,
@@ -68,10 +57,11 @@ const Workouts = ({navigation}: any) => {
     (state: any) => state.getUserDataDetails,
   );
   const getAllExercise = useSelector((state: any) => state.getAllExercise);
+
   const getChallengesData = useSelector(
     (state: any) => state.getChallengesData,
   );
-  const getExerciseCount = useSelector((state: any) => state.getExerciseCount);
+
   const MaleCategory = [
     {
       id: 230,
@@ -233,7 +223,6 @@ const Workouts = ({navigation}: any) => {
           }}>
           <TouchableOpacity
             onPress={() => {
-              console.log("SSSSSSS",item)
               handleNavigation(item);
             }}
             style={{
@@ -330,7 +319,7 @@ const Workouts = ({navigation}: any) => {
 
     AnalyticsConsole(`${mydata?.title?.split(' ')[0]}_W_CATE`);
     let checkAdsShow = AddCountFunction();
-  
+
     if (checkAdsShow == true) {
       // showInterstitialAd();
       navigation.navigate('WorkoutCategories', {
@@ -338,7 +327,6 @@ const Workouts = ({navigation}: any) => {
         CategoryDetails: mydata,
       });
     } else {
-      console.log("eeeeeee",checkAdsShow)
       navigation.navigate('WorkoutCategories', {
         categoryExercise: bodyexercise,
         CategoryDetails: mydata,
@@ -481,7 +469,7 @@ const Workouts = ({navigation}: any) => {
       </View>
     );
   };
-  
+
   const getbodyPartWorkout = (data: any) => {
     let checkAdsShow = AddCountFunction();
     AnalyticsConsole(`${data?.bodypart_title}_FR_Wrk`);
@@ -891,7 +879,9 @@ const Workouts = ({navigation}: any) => {
 
                                   fontWeight: '500',
                                   fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                                }}>{translate('customtext')}</Text>
+                                }}>
+                                {translate('customtext')}
+                              </Text>
                             </View>
                             <Image
                               source={localImage.NewWorkout}

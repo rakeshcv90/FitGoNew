@@ -18,7 +18,7 @@ import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {setExperience} from '../ThemeRedux/Actions';
-import {navigationRef} from '../../../App';
+import {navigationRef} from '../Utilities/NavigationUtil';
 import {ArrowLeft} from '../Utilities/Arrows/Arrow';
 
 type Props = {

@@ -16,7 +16,7 @@ import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {useDispatch, useSelector} from 'react-redux';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {setExperience} from '../ThemeRedux/Actions';
-import {navigationRef} from '../../../App';
+import {navigationRef} from '../Utilities/NavigationUtil';
 import {extractFont} from 'react-native-svg/lib/typescript/lib/extract/extractText';
 import FitCoins from '../Utilities/FitCoins';
 import {AnalyticsConsole} from '../AnalyticsConsole';

@@ -11,7 +11,7 @@ import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import FitText from '../../Component/Utilities/FitText';
 import {QuestionsArray, QuestionsArrayType} from './QuestionsArray';
 import {AppColor, Fonts, PLATFORM_IOS} from '../../Component/Color';
-import {navigationRef} from '../../../App';
+import {navigationRef} from '../../Component/Utilities/NavigationUtil';
 import FitIcon from '../../Component/Utilities/FitIcon';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import {DeviceHeigth} from '../../Component/Config';

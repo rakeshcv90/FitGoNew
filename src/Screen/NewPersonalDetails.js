@@ -241,7 +241,6 @@ const NewPersonalDetails = ({route, navigation}) => {
 
         setForLoading(false);
       } else {
-        console.log('message-------->', dataItem?.data?.msg);
         showMessage({
           message: dataItem?.data?.msg,
           floating: true,
@@ -550,7 +549,12 @@ const NewPersonalDetails = ({route, navigation}) => {
                     {getUserDataDetails.workout_plans == 'AppCreated' &&
                       values.experience == 'Experienced' && (
                         <FitDropdown
-                          data={[...goalsData,...goalsData,...goalsData,...goalsData,]}
+                          data={[
+                            ...goalsData,
+                            ...goalsData,
+                            ...goalsData,
+                            ...goalsData,
+                          ]}
                           // listContainerHeight={DeviceHeigth*0.25}
                           onChange={item => {
                             setFieldValue('goal', item.goal_title);

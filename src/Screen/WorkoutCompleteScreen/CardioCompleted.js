@@ -9,14 +9,14 @@ import {localImage} from '../../Component/Image';
 import axios from 'axios';
 import {useSelector} from 'react-redux';
 import moment from 'moment';
-import { NewAppapi } from '../../Component/Config';
+import {NewAppapi} from '../../Component/Config';
 import VersionNumber from 'react-native-version-number';
 
 const CardioCompleted = ({navigation}) => {
   const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
   const getPurchaseHistory = useSelector(state => state?.getPurchaseHistory);
-  const [rank,setMyRank]=useState(1)
-  const [coins,setCoins]=useState(0)
+  const [rank, setMyRank] = useState(1);
+  const [coins, setCoins] = useState(0);
   const WeekArrayWithEvent = Array(5)
     .fill(0)
     .map(
@@ -61,12 +61,12 @@ const CardioCompleted = ({navigation}) => {
           data: payload,
         },
       );
-      console.log('WEEKLY CAL', res.data, payload);
+
       setCoins(res?.data?.coins);
-    getLeaderboardDataAPI()
+      getLeaderboardDataAPI();
     } catch (error) {
       console.log('ERRRRRR', error);
-      getLeaderboardDataAPI
+      getLeaderboardDataAPI;
     }
   };
   const getLeaderboardDataAPI = async () => {
@@ -79,18 +79,20 @@ const CardioCompleted = ({navigation}) => {
         const myRank = result.data?.data?.findIndex(
           item => item?.id == getUserDataDetails?.id,
         );
-        console.log(result.data?.data[myRank]?.rank)
+
         setMyRank(result.data?.data[myRank]?.rank);
       }
- 
     } catch (error) {
       console.log(error);
- 
     }
   };
   return (
     <View style={styles.container}>
-      <StatusBar barStyle={'dark-content'} backgroundColor={AppColor.GRAY} translucent={false}/>
+      <StatusBar
+        barStyle={'dark-content'}
+        backgroundColor={AppColor.GRAY}
+        translucent={false}
+      />
       <Wrapper>
         <Text style={styles.headerText}>Cardio Completed</Text>
         <View
@@ -129,7 +131,7 @@ const CardioCompleted = ({navigation}) => {
           title={
             'Congratulations! You’ve completed your workout and earned more FitCoins. Keep working out regularly to win the fitness challenge.'
           }
-          handleComplete={()=>navigation.navigate("OfferPage")}
+          handleComplete={() => navigation.navigate('OfferPage')}
         />
       </Wrapper>
     </View>

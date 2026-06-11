@@ -46,7 +46,7 @@ import {
 } from '../Component/ThemeRedux/Actions';
 import LinearGradient from 'react-native-linear-gradient';
 import {TextInput} from 'react-native-paper';
-import {navigationRef} from '../../App';
+import {navigationRef} from '../Component/Utilities/NavigationUtil';
 import DeviceInfo from 'react-native-device-info';
 import VersionNumber from 'react-native-version-number';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
@@ -123,7 +123,6 @@ const Signup = ({navigation}) => {
 
   useEffect(() => {
     DeviceInfo.syncUniqueId().then(uniqueId => {
-      console.log("SIGNUP",uniqueId)
       setDeviceId(uniqueId);
       dispatch(setDeviceID(uniqueId));
     });
@@ -149,7 +148,7 @@ const Signup = ({navigation}) => {
       }
     }
   };
-  
+
   const onApplePress = async () => {
     analytics().logEvent('CV_FITME_APPLE_SIGNUP');
     await appleAuth
@@ -193,7 +192,7 @@ const Signup = ({navigation}) => {
           deviceid: res.user,
         },
       });
-      console.log('mnvjvjhjhvgjghk', data?.data, res.user);
+
       setForLoading(false);
       if (
         data.data.msg == 'User already exists' &&
@@ -414,7 +413,7 @@ const Signup = ({navigation}) => {
       });
 
       await GoogleSignin.signOut();
-      console.log('helllooo---->', data.data);
+
       if (
         data.data.msg == 'User already exists' &&
         data.data.profile_compl_status == 0
@@ -547,7 +546,7 @@ const Signup = ({navigation}) => {
       await GoogleSignin.signOut();
     }
   };
-  
+
   const ModalView = () => {
     const [forLoading, setForLoading] = useState(false);
     const t1 = useRef();
@@ -989,7 +988,6 @@ const Signup = ({navigation}) => {
         dispatch(setCustomDietData(responseData?.data?.diet_data));
         //navigationRef.navigate('Yourself');
         setVisible(true);
-        console.log('CONSOLE', visible, responseData.data);
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);

@@ -1,21 +1,32 @@
-import { ImageBackground, StatusBar, StyleSheet, View, Image, Text, Platform } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { localImage } from '../../Component/Image';
+import {
+  ImageBackground,
+  StatusBar,
+  StyleSheet,
+  View,
+  Image,
+  Text,
+  Platform,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {localImage} from '../../Component/Image';
 import SplashAnimation from './SplashAnimation';
-import { ActivityIndicator } from 'react-native';
+import {ActivityIndicator} from 'react-native';
 import FitText from '../../Component/Utilities/FitText';
-import { AppColor } from '../../Component/Color';
-import { setupSubscription } from './setupSubscription';
-import { API_CALLS } from '../../API/API_CALLS';
+import {AppColor} from '../../Component/Color';
+import {setupSubscription} from './setupSubscription';
+import {API_CALLS} from '../../API/API_CALLS';
 import useSetupAds from './useSetupAds';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 import checkAllPermissions from './checkAllPermissions';
 import LottieView from 'lottie-react-native';
 import AdmobInterstitial from '../../Component/NativeCodeAds/AdmobInterstitial';
-import { setLanguage, getCurrentLanguage, loadLanguage } from '../Translation/TranslationService';
+import {
+  setLanguage,
+  getCurrentLanguage,
+  loadLanguage,
+} from '../Translation/TranslationService';
 
-const NewSplash = ({ navigation }: any) => {
-
+const NewSplash = ({navigation}: any) => {
   const [loader, setLoader] = useState(true);
 
   const getAllExercise = useSelector((state: any) => state.getAllExercise);
@@ -34,12 +45,10 @@ const NewSplash = ({ navigation }: any) => {
 
   const handleLangChange = async (langCode: string) => {
     await setLanguage(langCode);
-    console.log('Language changed to:', langCode);
   };
 
   useEffect(() => {
     const applyLanguage = async () => {
-      console.log('get language', lang)
       await handleLangChange(lang); // or 'hi', 'en', etc.
     };
     applyLanguage();
@@ -50,7 +59,7 @@ const NewSplash = ({ navigation }: any) => {
     if (Platform.OS === 'android') {
       AdmobInterstitial.loadAd()
         .then(() => console.log('Ad Loaded'))
-        .catch((err) => console.error('Ad Load Failed 123 .....', err));
+        .catch(err => console.error('Ad Load Failed 123 .....', err));
     }
   }, []);
 
@@ -62,21 +71,19 @@ const NewSplash = ({ navigation }: any) => {
   }, []);
 
   useEffect(() => {
-    console.log('loader ', loader);
     if (!loader) loadScreen();
   }, [loader]);
 
   const afterAdFunction = () => {
-    console.log("SDfdsfdsfdsf .... ", getUserDataDetails, lang)
     setupSubscription();
     API_CALLS.getMajorData(lang);
     if (getUserDataDetails.id != null) {
       API_CALLS.postLogin(getUserDataDetails?.name, getUserDataDetails?.email);
       API_CALLS.getUserDataDetails(getUserDataDetails?.id, lang);
       if (getUserDataDetails.gender != null) {
-        API_CALLS.getAllWorkouts(getUserDataDetails?.id, lang)
+        API_CALLS.getAllWorkouts(getUserDataDetails?.id, lang);
       }
-      API_CALLS.pastWinners()
+      API_CALLS.pastWinners();
       getAllExercise &&
         getChallengesData &&
         API_CALLS.getAllExercisesData(getUserDataDetails?.id, lang);
@@ -89,23 +96,23 @@ const NewSplash = ({ navigation }: any) => {
   const loadScreen = () => {
     setLoader(true);
     if (showIntro) {
-      console.log("111");
+      console.log('111');
       if (getUserDataDetails?.id) {
-        console.log("112");
+        console.log('112');
         if (getUserDataDetails?.profile_compl_status == 1) {
-          console.log("113");
+          console.log('113');
           if (getOfferAgreement?.term_condition == 'Accepted') {
-            console.log("114");
+            console.log('114');
             checkAllPermissions();
           } else {
-            console.log("115");
+            console.log('115');
             if (Platform.OS === 'android') {
               AdmobInterstitial.showAd()
                 .then(() => {
                   console.log('Ad shown and completed');
                   navigation.replace('OfferTerms');
                 })
-                .catch((err) => {
+                .catch(err => {
                   console.error('Ad show failed', err);
                   navigation.replace('OfferTerms');
                 });
@@ -114,14 +121,14 @@ const NewSplash = ({ navigation }: any) => {
             }
           }
         } else {
-          console.log("116");
+          console.log('116');
           if (Platform.OS === 'android') {
             AdmobInterstitial.showAd()
               .then(() => {
                 console.log('Ad shown and completed');
                 navigation.navigate('Yourself');
               })
-              .catch((err) => {
+              .catch(err => {
                 console.error('Ad show failed', err);
                 navigation.navigate('Yourself');
               });
@@ -130,14 +137,14 @@ const NewSplash = ({ navigation }: any) => {
           }
         }
       } else {
-        console.log("login call from splash")
+        console.log('login call from splash');
         if (Platform.OS === 'android') {
           AdmobInterstitial.showAd()
             .then(() => {
               console.log('Ad shown and completed');
               navigation.replace('LogSignUp');
             })
-            .catch((err) => {
+            .catch(err => {
               console.error('Ad show failed', err);
               navigation.replace('LogSignUp');
             });
@@ -146,14 +153,14 @@ const NewSplash = ({ navigation }: any) => {
         }
       }
     } else {
-      console.log("118");
+      console.log('118');
       if (Platform.OS === 'android') {
         AdmobInterstitial.showAd()
           .then(() => {
             console.log('Ad shown and completed');
             navigation.replace('IntroductionScreen1');
           })
-          .catch((err) => {
+          .catch(err => {
             console.error('Ad show failed', err);
             navigation.replace('IntroductionScreen1');
           });
@@ -168,7 +175,7 @@ const NewSplash = ({ navigation }: any) => {
   return (
     <ImageBackground
       source={localImage.BGSplash}
-      style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+      style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
       imageStyle={{
         flex: 1,
         justifyContent: 'center',
@@ -176,7 +183,7 @@ const NewSplash = ({ navigation }: any) => {
       }}>
       <StatusBar backgroundColor="white" barStyle={'light-content'} />
       <SplashAnimation />
-      <View style={{ position: 'absolute', bottom: 10 }}>
+      <View style={{position: 'absolute', bottom: 10}}>
         <ActivityIndicator
           animating={loader}
           size={'large'}

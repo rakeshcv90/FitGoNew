@@ -38,7 +38,7 @@ import {
 import {showMessage} from 'react-native-flash-message';
 import FitText from '../../Component/Utilities/FitText';
 import CircleProgress from '../../Component/Utilities/ProgressCircle';
-import { translate } from '../Translation/TranslationService'
+import {translate} from '../Translation/TranslationService';
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
@@ -141,7 +141,7 @@ const LoadData = ({navigation}) => {
       // }
 
       payload.append('name', getUserDataDetails?.name);
-      console.log('PAYLOASD', payload);
+
       const data = await axios(`${NewAppapi.Post_COMPLETE_PROFILE}`, {
         method: 'POST',
         headers: {
@@ -149,7 +149,7 @@ const LoadData = ({navigation}) => {
         },
         data: payload,
       });
-      console.log('payload------>', payload);
+
       if (data?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: data?.data?.msg,
@@ -268,7 +268,6 @@ const LoadData = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else {
-        console.log('WORKINGGGG', responseData.data);
         dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
         dispatch(setOfferAgreement(responseData?.data?.additional_data));
         dispatch(setUserProfileData(responseData?.data?.profile));

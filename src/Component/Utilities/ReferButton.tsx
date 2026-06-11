@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
-import { navigationRef } from '../../../App';
+import { navigationRef } from './NavigationUtil';
 import FitText from './FitText';
 import { AppColor } from '../Color';
 import AnimatedLottieView from 'lottie-react-native';

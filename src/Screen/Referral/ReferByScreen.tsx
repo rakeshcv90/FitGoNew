@@ -17,7 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import NewButton from '../../Component/NewButton';
 import {RequestAPI} from '../../Component/Utilities/RequestAPI';
 import ActivityLoader from '../../Component/ActivityLoader';
-import {navigationRef} from '../../../App';
+import {navigationRef} from '../../Component/Utilities/NavigationUtil';
 import {showMessage} from 'react-native-flash-message';
 import {localImage} from '../../Component/Image';
 import {Image} from 'react-native';
@@ -92,7 +92,6 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
       });
       setLoader(false);
 
-      console.log('POST DATA', res.data);
       if (res?.data?.msg == 'Referral coin added') {
         setText('Apply Code');
         setCodeStatus('Successfully applied');

@@ -48,6 +48,7 @@ const MeditationDetails = ({navigation, route}) => {
   const [selectedTitle, setSelectedTitle] = useState(
     route?.params?.item?.workout_mindset_title,
   );
+
   const [downloaded, setDownloade] = useState(0);
   const avatarRef = React.createRef();
   const allWorkoutData = useSelector(state => state.allWorkoutData);
@@ -102,6 +103,7 @@ const MeditationDetails = ({navigation, route}) => {
       } else if (data?.data?.status == 'data found') {
         setForLoading(false);
         setmindsetExercise(data.data);
+
         // Promise.all(
         //   data.data.data.map((item, index) =>
         //     downloadVideos(item, index, data.data.data.length),
@@ -465,9 +467,9 @@ const MeditationDetails = ({navigation, route}) => {
               updateCellsBatchingPeriod={100}
               removeClippedSubviews={true}
             />
-          ) : mindsetExercise.length > 0 ? (
+          ) : mindsetExercise?.data?.length > 0 ? (
             <FlatList
-              data={mindsetExercise}
+              data={mindsetExercise?.data}
               showsVerticalScrollIndicator={false}
               keyExtractor={(item, index) => index.toString()}
               ListEmptyComponent={<EmptyComponent />}
@@ -481,7 +483,7 @@ const MeditationDetails = ({navigation, route}) => {
                       onPress={() => {
                         navigation.navigate('MeditationExerciseDetails', {
                           index: index,
-                          allMeditation: mindsetExercise
+                          allMeditation: mindsetExercise?.data,
                         });
                       }}>
                       <ImageBackground
@@ -532,7 +534,7 @@ const MeditationDetails = ({navigation, route}) => {
                                   'MeditationExerciseDetails',
                                   {
                                     index: index,
-                                    allMeditation: mindsetExercise
+                                    allMeditation: mindsetExercise?.data,
                                   },
                                 );
                               }}>

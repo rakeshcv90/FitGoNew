@@ -10,7 +10,7 @@ import {AuthorizationStatus} from '@notifee/react-native';
 import {Alert} from 'react-native';
 import {PLATFORM_IOS} from '../Color';
 import {showMessage} from 'react-native-flash-message';
-import { translate } from '../../Screen/Translation/TranslationService'
+import {translate} from '../../Screen/Translation/TranslationService';
 // item Array
 export const UIArray = [
   // {
@@ -40,8 +40,7 @@ export const UIArray = [
   PLATFORM_IOS && {
     img: localImage.health_permission,
     text1: translate('healthkit'),
-    text2:
-      translate('allowhealthkit'),
+    text2: translate('allowhealthkit'),
     key: 'healthkit',
     checkPermission: 'checkHealthikitPermission', // You can handle HealthKit permission separately
     askPermission: 'initHealthKit',
@@ -68,7 +67,7 @@ export const permissionMethods = {
   checkHealthikitPermission,
 };
 
-// else condition to show alert 
+// else condition to show alert
 // creating it as asynchrounous to stop the  execution while it is resolved
 export const showAlert = () => {
   return new Promise(resolve => {
@@ -123,7 +122,7 @@ export const handleError = err => {
 
 export const trueCondition = result => {
   const isObject = typeof result === 'object' && result != null;
-  console.log('result', result);
+
   return (
     result === RESULTS.GRANTED ||
     result === RESULTS.LIMITED ||

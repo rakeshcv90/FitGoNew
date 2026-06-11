@@ -17,7 +17,7 @@ import Login from './Login';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
-import {navigationRef} from '../../App';
+import {navigationRef} from '../Component/Utilities/NavigationUtil';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 const Tab = createMaterialTopTabNavigator();
 const LogSignUp = ({navigation}) => {

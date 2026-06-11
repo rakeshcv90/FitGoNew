@@ -35,9 +35,8 @@ const useMusicPlayer = ({song, restStart, pause, getSoundOffOn}: Props) => {
   }, []);
 
   const setupMusic = async () => {
-    console.log('INITIALIZNG', song);
     const isInitialized = await MusicPlayer?.setupPlayer(song);
-    console.log('Initiailedddd', isInitialized);
+
     if (isInitialized) {
       setInitialized(true);
       getDuration();
@@ -46,36 +45,31 @@ const useMusicPlayer = ({song, restStart, pause, getSoundOffOn}: Props) => {
 
   const getDuration = async () => {
     const time = await MusicPlayer?.getMusicDuration();
-    console.log('time', time);
+
     setDuration(time);
   };
 
   const seekTo = (position: number) => {
     MusicPlayer.seekTo(position * 1000);
-    console.log('DURATION SEEK', position);
+
     getDuration();
   };
 
   const playMusic = () => {
-    console.log('PLAYING', duration);
     MusicPlayer?.play(duration <= 30);
   };
 
   const pauseMusic = () => {
-    console.log('PAUSED', pause);
     MusicPlayer?.pause();
   };
 
   const stopMusic = () => {
-    console.log('STOP');
     MusicPlayer?.stopMusic();
   };
   const stopMusicandReset = () => {
-    console.log('STOPandRESET');
     MusicPlayer?.stopMusicandReset();
   };
   const releaseMusic = () => {
-    console.log('RELEASE');
     setInitialized(false);
     setDuration(0);
     MusicPlayer?.releaseMediaPlayer();

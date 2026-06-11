@@ -178,8 +178,8 @@ export const LoginStack = () => {
         component={CardioCompleted}
         options={{detachPreviousScreen: true}}
       />
-      <Stack.Screen name='PermissionScreen' component={PermissionScreen}/>
-      <Stack.Screen name='NewHistory' component={NewHistory}/>
+      <Stack.Screen name="PermissionScreen" component={PermissionScreen} />
+      <Stack.Screen name="NewHistory" component={NewHistory} />
     </Stack.Navigator>
   );
 };

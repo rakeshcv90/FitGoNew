@@ -1,19 +1,15 @@
 // components/LanguageSelectorModal.js
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
+import {View, Text, Modal, TouchableOpacity, StyleSheet} from 'react-native';
 import {
-  View,
-  Text,
-  Modal,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
-import { setLanguage, getCurrentLanguage } from '../Translation/TranslationService';
+  setLanguage,
+  getCurrentLanguage,
+} from '../Translation/TranslationService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { resetAndNavigate } from '../../Component/Utilities/NavigationUtil';
-import { CommonActions } from '@react-navigation/native';
+import {resetAndNavigate} from '../../Component/Utilities/NavigationUtil';
+import {CommonActions} from '@react-navigation/native';
 
-
-const LanguageSelectorModal = ({ visible, onClose, dispatch }) => {
+const LanguageSelectorModal = ({visible, onClose, dispatch}) => {
   const [selectedLang, setSelectedLang] = useState('en');
 
   useEffect(() => {
@@ -25,8 +21,8 @@ const LanguageSelectorModal = ({ visible, onClose, dispatch }) => {
   }, []);
 
   const languages = [
-    { label: 'English', code: 'en' },
-    { label: 'Português', code: 'pt' },
+    {label: 'English', code: 'en'},
+    {label: 'Português', code: 'pt'},
   ];
 
   //   const handleChange = async (code) => {
@@ -35,15 +31,13 @@ const LanguageSelectorModal = ({ visible, onClose, dispatch }) => {
   //     onClose(); // or Alert.alert('Restart required');
   //   };
 
-  const handleChange = async (code) => {
+  const handleChange = async code => {
     try {
-      console.log('set lang code ', code);
       setSelectedLang(code);
       await setLanguage('');
       await setLanguage(code);
       setTimeout(() => {
         resetAndNavigate('SplaceScreen');
-
       }, 1000);
       onClose();
     } catch (error) {
@@ -56,15 +50,13 @@ const LanguageSelectorModal = ({ visible, onClose, dispatch }) => {
       <View style={styles.overlay}>
         <View style={styles.modal}>
           <Text style={styles.title}>Language</Text>
-          {languages.map(({ label, code }) => (
+          {languages.map(({label, code}) => (
             <TouchableOpacity
               key={code}
               onPress={() => {
-                console.log('language change to: ',code);
-                handleChange(code) 
-                }}
-              style={styles.option}
-            >
+                handleChange(code);
+              }}
+              style={styles.option}>
               <Text style={styles.text}>{label}</Text>
               <View
                 style={[
@@ -72,8 +64,7 @@ const LanguageSelectorModal = ({ visible, onClose, dispatch }) => {
                   {
                     borderColor: code === selectedLang ? 'red' : 'gray',
                   },
-                ]}
-              >
+                ]}>
                 {code === selectedLang && <View style={styles.innerRadio} />}
               </View>
             </TouchableOpacity>

@@ -1,4 +1,3 @@
-
 import {
   View,
   Text,
@@ -102,7 +101,6 @@ const Meals = ({navigation}) => {
           })
           .then(res => {
             StoringData[data?.diet_title] = res.path();
-            console.log('Image downloaded successfully!', res.path());
           })
           .catch(err => {
             console.log(err);
@@ -311,7 +309,9 @@ const Meals = ({navigation}) => {
             alignItems: 'center',
             paddingBottom:
               Platform.OS == 'android'
-                ? DeviceHeigth<=846?DeviceHeigth * 0.45:DeviceHeigth * 0.4
+                ? DeviceHeigth <= 846
+                  ? DeviceHeigth * 0.45
+                  : DeviceHeigth * 0.4
                 : DeviceHeigth * 0.45,
           }}>
           <FlatList
@@ -389,9 +389,9 @@ const Meals = ({navigation}) => {
         </View>
       </View>
       {/* {bannerAdsDisplay()} */}
-          <View style={{marginBottom: DeviceHeigth <= 808 ? -1 : -10}}>
-            {/* <BannerAdd bannerAdId={bannerAdId} /> */}
-          </View>
+      <View style={{marginBottom: DeviceHeigth <= 808 ? -1 : -10}}>
+        {/* <BannerAdd bannerAdId={bannerAdId} /> */}
+      </View>
     </>
   );
 };

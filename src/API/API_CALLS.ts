@@ -34,7 +34,7 @@ import { translate,getCurrentLanguage } from '../Screen/Translation/TranslationS
 
 let deviceID = '';
 DeviceInfo.syncUniqueId().then(uniqueId => {
-  //   console.log('DEIVEID', uniqueId);
+
   deviceID = uniqueId;
 });
 
@@ -62,7 +62,7 @@ export const API_CALLS = {
         version: VersionNumber.appVersion,
         device_id: deviceID,
       };
-      console.log("🚀 Called postLogin with:", { requestBody });
+      
       return new Promise((resolve, reject) =>
         RequestAPI.makeRequest(
           'POST',
@@ -76,7 +76,6 @@ export const API_CALLS = {
           },
           ({data, errors, status, message}) => {
           
-            console.log(deviceID, '  //  ' ,data, ' // ',status,'//',NewAppapi.POST_NEW_LOGIN,' ...Token Data');
             if (data && status == 200) {
               noMessage &&
                 showMessage({
@@ -114,10 +113,7 @@ export const API_CALLS = {
             device_id: deviceID,
           },
           ({data, errors, status, message}) => {
-            console.log("eeeeeeeeeeeee",
-         
-              data,
-            );
+     
             if (data && status == 200) {
               noMessage &&
                 showMessage({
@@ -143,7 +139,7 @@ export const API_CALLS = {
         `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userID}&lang=${lang}`,
         {},
         ({data, errors, status, message}) => {
-          // console.log(data, 'USER DETAILS');
+          
           if (data?.msg != 'Please update the app to the latest version.') {
             // showMessage({
             //   message: data?.message,
@@ -215,21 +211,10 @@ export const API_CALLS = {
           },
           ({data, errors, status, message}) => {
             if (data?.status) {
-              // console.log('DATA', data?.data?.normal_exercises, user_id);
-              // showMessage({
-              //   message: data?.message,
-              //   type: 'success',
-              //   animationDuration: 500,
-              //   floating: true,
-              // });
+          
               setData(data?.data);
             } else {
-              // showMessage({
-              //   message: 'Something went wrong Try Again OR Upgrade your App',
-              //   type: 'danger',
-              //   animationDuration: 500,
-              //   floating: true,
-              // });
+          
               reject('Something went wrong Try Again');
             }
           },
@@ -389,12 +374,12 @@ export const API_CALLS = {
           lang:lang,
         },
         ({data, errors, status, message}) => {
-          console.log('subscription data .... ',data, ' // ',status);
+          
           if (data?.msg == 'Please update the app to the latest version.') {
-            console.log('subscription data upgrade ',data, ' // ',status);
+        
             reject(UpgradeAppResponse());
           } else if (status == 200) {
-            console.log('subscription data working  ',data, ' // ',status);
+          
             dispatch(setCustomWorkoutData(data?.workout_data));
             dispatch(setOfferAgreement(data?.additional_data));
             dispatch(setUserProfileData(data?.profile));
@@ -422,7 +407,7 @@ export const API_CALLS = {
         NewAppapi.EVENT_SUBSCRIPTION_POST,
         data,
         ({data, errors, status, message}) => {
-          console.log(data, status);
+      
           if (status != 200) {
             if (
               data?.message == 'Event created successfully' ||
@@ -463,20 +448,21 @@ export const API_CALLS = {
           lang:lang
         },
         ({data, errors, status, message}) => {
-          console.log('all in data... ',data, ' // ',VersionNumber.appVersion);
+     
           if (
-            data?.msg == 'Please update the app to the latest version.' ||
-            data?.msg == 'version is required'
+            data?.msg == 'Please update the app to the latest version.' 
+            // ||
+            // data?.msg == 'version is required'
           ) {
             reject(UpgradeAppResponse());
           } else if (status == 200) {
             const objects: any = {};
             data?.data?.forEach((item: any) => {
-            console.log('all in data images... ',item);
+           
 
               objects[item?.type] = item?.image;
             });
-              console.log('all in check ... ',data, objects);
+             
             downloadImages(data?.custom_dailog_data[0], dispatch);
             dispatch(setDynamicPopupValues(data?.custom_dailog_data[0]));
 
@@ -505,7 +491,7 @@ export const API_CALLS = {
         },
       
         ({data, errors, status, message}) => {
-       console.log('all users with condition .... ',data, ' // ',status, '// ',message)
+     
           if (
             data?.msg == 'user id is required' ||
             data?.msg == 'version is required'
@@ -514,6 +500,7 @@ export const API_CALLS = {
           } else if (status == 200) {
             dispatch(setChallengesData(data?.challenge_data));
             dispatch(setAllExercise(data?.data));
+            console.log("Xcvcccccccccc",data?.data)
             resolve(status);
           } else {
             reject(UpgradeAppResponse());
@@ -533,13 +520,14 @@ export const API_CALLS = {
           lang:lang,
         },
         ({data, errors, status, message}) => {
-         console.log('workout data .....', data , ' // ',status, '// ', id, ' ///', lang);
+       
           if (
             data?.msg == 'user id is required' ||
             data?.msg == 'Please update the app to the latest version.'
           ) {
             reject(UpgradeAppResponse());
           } else if (status == 200) {
+    
             dispatch(setAllWorkoutData(data));
             resolve(status);
           } else {
@@ -583,7 +571,7 @@ export const API_CALLS = {
           version: VersionNumber.appVersion,
         },
         ({data, errors, status, message}) => {
-          console.log(data,input);
+        
           if (data?.msg == 'Please update the app to the latest version.')
             UpgradeAppResponse();
           else if (data.msg == 'User Updated Successfully') {

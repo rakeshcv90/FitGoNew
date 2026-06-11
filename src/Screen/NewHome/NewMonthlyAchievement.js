@@ -31,7 +31,7 @@ import {
 import {useFocusEffect} from '@react-navigation/native';
 import {red} from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
-import { translate } from '../Translation/TranslationService';
+import {translate} from '../Translation/TranslationService';
 const NewMonthlyAchievement = ({navigation}) => {
   const [getDate, setDate] = useState(moment().format('YYYY-MM-DD'));
   const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
@@ -55,7 +55,7 @@ const NewMonthlyAchievement = ({navigation}) => {
         method: 'POST',
         headers: {'Content-Type': 'multipart/form-data'},
         data: payload,
-        lang:'en',
+        lang: 'en',
       });
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
@@ -69,7 +69,7 @@ const NewMonthlyAchievement = ({navigation}) => {
       } else if (res) {
         setIsLoaded(true);
         setApiData(res.data.data);
-        console.log('apicall', res.data);
+
         const Calories = res?.data?.data?.map(value =>
           parseInt(value?.exercise_calories),
         );
@@ -165,7 +165,9 @@ const NewMonthlyAchievement = ({navigation}) => {
                   paddingHorizontal: 10,
                   alignItems: 'center',
                 }}>
-                <Text style={styles.txt4}>{translate('weight')}: {getBmi?.userWeight}</Text>
+                <Text style={styles.txt4}>
+                  {translate('weight')}: {getBmi?.userWeight}
+                </Text>
                 <View
                   style={{
                     height: 20,
@@ -175,7 +177,9 @@ const NewMonthlyAchievement = ({navigation}) => {
                     marginHorizontal: 10,
                   }}
                 />
-                <Text style={styles.txt4}>{translate('height')}: {getBmi?.userHeight}</Text>
+                <Text style={styles.txt4}>
+                  {translate('height')}: {getBmi?.userHeight}
+                </Text>
               </View>
               <View style={{marginTop: 20}}>
                 <BmiMeter getBmi={getBmi?.Bmi} />
@@ -200,7 +204,7 @@ const NewMonthlyAchievement = ({navigation}) => {
                   color: AppColor.BLACK,
                   fontSize: 16,
                 }}>
-                 {translate('bmiUnit')}
+                {translate('bmiUnit')}
               </Text>
               <Text
                 style={{
@@ -249,11 +253,11 @@ const NewMonthlyAchievement = ({navigation}) => {
                 [moment().format('YYYY-MM-DD')]: {
                   marked: true,
                   startingDay: true,
-                  selected:true,
-                  color:AppColor.GRAAY6,
+                  selected: true,
+                  color: AppColor.GRAAY6,
                   endingDay: true,
                   textColor: AppColor.WHITE,
-                  selectedDotColor:AppColor.RED
+                  selectedDotColor: AppColor.RED,
                 },
               }}
               style={[

@@ -138,29 +138,26 @@ const NewExercise = ({navigation, route}: any) => {
                 },
                 ShadowStyle,
               ]}>
-              
-                <Video
-                  source={{
-                    uri: getStoreVideoLoc[allExercise[number]?.exercise_title],
-                  }}
-                  onReadyForDisplay={() => {
-                  console.log('on display working');
-                    // setPause(true);
-                  }}
-                  onLoad={() => {
-                    console.log('on loade working');
-                    setPause(true);
-                  }}
-                  paused={!pause}
-                  repeat={true}
-                  resizeMode="contain"
-                  style={{
-                    width: DeviceWidth,
-                    height: DeviceHeigth * 0.4,
-                    alignSelf: 'center',
-                    top: 30,
-                  }}
-                />
+              <Video
+                source={{
+                  uri: getStoreVideoLoc[allExercise[number]?.exercise_title],
+                }}
+                onReadyForDisplay={() => {
+                  // setPause(true);
+                }}
+                onLoad={() => {
+                  setPause(true);
+                }}
+                paused={!pause}
+                repeat={true}
+                resizeMode="contain"
+                style={{
+                  width: DeviceWidth,
+                  height: DeviceHeigth * 0.4,
+                  alignSelf: 'center',
+                  top: 30,
+                }}
+              />
             </View>
           </View>
           <ExerciseControls

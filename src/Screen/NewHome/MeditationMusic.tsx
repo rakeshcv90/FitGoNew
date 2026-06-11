@@ -11,7 +11,7 @@ import {AppColor} from '../../Component/Color';
 import {DeviceHeigth} from '../../Component/Config';
 import FitIcon from '../../Component/Utilities/FitIcon';
 import useMusicPlayer from '../NewWorkouts/Exercise/ExerciseUtilities/useMusicPlayer';
-import {navigationRef} from '../../../App';
+import {navigationRef} from '../../Component/Utilities/NavigationUtil';
 // import { OpenAppAds } from '../../Component/BannerAdd';
 
 type MindsetData = {

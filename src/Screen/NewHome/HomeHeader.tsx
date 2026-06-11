@@ -11,7 +11,7 @@ import FitIcon, {FitIconTypes} from '../../Component/Utilities/FitIcon';
 import FitText from '../../Component/Utilities/FitText';
 import moment from 'moment';
 import {DeviceWidth} from '../../Component/Config';
-import { translate } from '../Translation/TranslationService';
+import {translate} from '../Translation/TranslationService';
 
 type Props = {
   leaderboardData: Array<{
@@ -94,7 +94,7 @@ const HomeHeader = ({leaderboardData}: Props) => {
           fontWeight="700"
         />
       </View>
-      { enteredCurrentEvent ? (
+      {enteredCurrentEvent ? (
         <View style={[PredefinedStyles.rowBetween, {width: '50%'}]}>
           <FitIcon {...historyIcon} roundIcon />
           <TouchableOpacity
@@ -103,7 +103,6 @@ const HomeHeader = ({leaderboardData}: Props) => {
             onPress={() => {
               AnalyticsConsole('HB');
               navigate('WorkoutHistory');
-                            console.log('check navigatesss');
             }}
             style={[styles.eventContainer, {marginHorizontal: 5}]}>
             <Image
@@ -121,7 +120,6 @@ const HomeHeader = ({leaderboardData}: Props) => {
             onPress={() => {
               AnalyticsConsole('LB');
               navigate('Leaderboard');
-              console.log('check navigate');
             }}
             style={styles.eventContainer}>
             <Image
@@ -135,7 +133,13 @@ const HomeHeader = ({leaderboardData}: Props) => {
           </TouchableOpacity>
         </View>
       ) : (
-        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' ,width: '30%'}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            width: '30%',
+          }}>
           {/* <FitIcon
             {...historyIcon}
             onPress={() => {

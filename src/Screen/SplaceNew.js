@@ -9,8 +9,8 @@ import {
   StatusBar,
 } from 'react-native';
 import {useSelector} from 'react-redux';
-import { AppColor } from '../Component/Color';
-import { CommonActions } from '@react-navigation/native';
+import {AppColor} from '../Component/Color';
+import {CommonActions} from '@react-navigation/native';
 
 export default function SplaceNew({navigation}) {
   const showIntro = useSelector(state => state.showIntro);

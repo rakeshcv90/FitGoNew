@@ -53,12 +53,12 @@ const NotificationType = data => {
   const screenName = findKeyInObject(data, 'screen');
   const Params = findKeyInObject(data, 'params');
 
-  if(screenName != null){
+  if (screenName != null) {
     // if(Params != null){
     //   navigationRef.current.navigate(screenName)
     // }
-    
-    navigationRef.current.navigate(screenName)
+
+    navigationRef.current.navigate(screenName);
   }
   if (data?.type == 'delete_notification') {
     DeleteWeeklyDataAPIStart();
@@ -71,8 +71,7 @@ const NotificationType = data => {
   }
 };
 messaging().setBackgroundMessageHandler(async remoteMessage => {
-  console.log('BACK', remoteMessage.data);
-  NotificationType(remoteMessage.data)
+  NotificationType(remoteMessage.data);
 });
 // notifee.onBackgroundEvent(async ({type, detail}) => {
 //   TriggerButtons(detail, type);
@@ -82,7 +81,7 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
 // });
 const TriggerButtons = async (detail, type) => {
   const {notification, pressAction} = detail;
-  NotificationType(notification?.data)
+  NotificationType(notification?.data);
   // navigationRef.current?.navigate(notification.data?.screen);
 
   // if (notification.data?.type == 'delete_notification') {
@@ -106,7 +105,7 @@ const TriggerButtons = async (detail, type) => {
     // Add 5 minutes to the current time
     currentTime.setMinutes(currentTime.getMinutes() + 5);
     AlarmNotification(currentTime);
-  } 
+  }
 };
 
 // notifee.setNotificationCategories([
@@ -206,7 +205,7 @@ const DisplayNotification = async Notification => {
   } catch (error) {
     console.log('notifee Error', error);
   }
-  NotificationType(Notification?.data)
+  NotificationType(Notification?.data);
   // if (Notification.data?.type == 'delete_notification') {
   //   DeleteWeeklyDataAPIStart();
   // } else if (Notification.data?.type == 'event_saturday') {
@@ -225,9 +224,8 @@ const getLeaderboardDataAPI = async () => {
     const result = await axios({
       url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${VersionNumber.appVersion}`,
     });
-    store.dispatch(setStreakStatus([]))
+    store.dispatch(setStreakStatus([]));
     if (result.data) {
-
       const myRank = result.data?.data?.findIndex(
         item => item?.id == getUserDataDetails?.id,
       );
@@ -244,8 +242,8 @@ const getLeaderboardDataAPI = async () => {
 };
 messaging().getInitialNotification(async remoteMessage => {
   // DisplayNotification(remoteMessage);
-  console.log('Ini', remoteMessage.data);
-  NotificationType(remoteMessage?.data)
+
+  NotificationType(remoteMessage?.data);
   // navigationRef.current?.navigate(remoteMessage.data?.screen);
   // if (remoteMessage.data?.type == 'delete_notification') {
   //   DeleteWeeklyDataAPIStart();
@@ -263,7 +261,7 @@ export const handleDeepLink = async ({url}) => {
   const referralID = dynamicArray?.filter(
     (item, i) => i == dynamicArray?.length - 1,
   );
-  console.log('REFERALID', referralID);
+
   await AsyncStorage.setItem('referalID', referralID?.toString());
 };
 
@@ -351,7 +349,7 @@ const AppRedux = () => {
 // AdManager.subscribe('imageAd', 'onAdPreloadClicked', () => {});
 
 try {
-AppRegistry.registerComponent(appName, () => AppRedux);
+  AppRegistry.registerComponent(appName, () => AppRedux);
 } catch (error) {
   console.error('App registration failed:', e);
 }
