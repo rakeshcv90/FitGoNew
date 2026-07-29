@@ -1,7 +1,8 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {AppColor} from '../../../../Component/Color';
-import FitText from '../../../../Component/Utilities/FitText';
+import {StyleSheet, Text, TouchableOpacity, View, Platform} from 'react-native';
+import React, {useState} from 'react';
+import LinearGradient from 'react-native-linear-gradient';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {Fonts} from '../../../../Component/Color';
 import {DeviceWidth} from '../../../../Component/Config';
 
 type RestButtonsProps = {
@@ -11,71 +12,65 @@ type RestButtonsProps = {
   reset: Function;
 };
 
-type ButtonProps = {
-  name: string;
-};
-
 const RestButtons = ({
   setRestSet,
   setSeconds,
   reset,
   seconds,
 }: RestButtonsProps) => {
-  const [isButtonClicked, setisButtonClicked] = useState(false);
+  const [isButtonClicked, setIsButtonClicked] = useState(false);
 
-  const Button = ({name}: ButtonProps) => {
-    const onPress = () => {
-      if (name == 'Skip') {
-        setRestSet(false);
-        reset();
-      } else if(!isButtonClicked) {
-        setisButtonClicked(true);
-        setSeconds(seconds + 5);
-      }
-    };
-    return (
-      <TouchableOpacity
-        onPress={onPress}
-        disabled={name != 'Skip' && isButtonClicked}
-        style={[
-          styles.button,
-          {
-            backgroundColor: name != 'Skip' ? AppColor.WHITE : AppColor.RED,
-            borderColor:
-              name == 'Skip'
-                ? AppColor.WHITE
-                : isButtonClicked
-                ? '#979797'
-                : AppColor.RED,
-            marginRight: 10,
-          },
-        ]}>
-        <FitText
-          type="normal"
-          value={name}
-          color={
-            name == 'Skip'
-              ? AppColor.WHITE
-              : isButtonClicked
-              ? '#979797'
-              : AppColor.RED
-          }
-          fontWeight="700"
-        />
-      </TouchableOpacity>
-    );
+  const handleAddFive = () => {
+    if (!isButtonClicked) {
+      setIsButtonClicked(true);
+      setSeconds(seconds + 5);
+    }
+  };
+
+  const handleSkip = () => {
+    setRestSet(false);
+    reset();
   };
 
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginVertical: 30,
-      }}>
-      <Button name="+5 sec" />
-      <Button name="Skip" />
+    <View style={styles.container}>
+      {/* +5 sec Button */}
+      <TouchableOpacity
+        activeOpacity={0.8}
+        disabled={isButtonClicked}
+        onPress={handleAddFive}
+        style={[
+          styles.outlineBtn,
+          isButtonClicked && styles.outlineBtnDisabled,
+        ]}>
+        <Icon
+          name="plus-circle-outline"
+          size={16}
+          color={isButtonClicked ? '#9CA3AF' : '#E11D48'}
+        />
+        <Text
+          style={[
+            styles.outlineBtnText,
+            isButtonClicked && styles.outlineBtnTextDisabled,
+          ]}>
+          +5 sec
+        </Text>
+      </TouchableOpacity>
+
+      {/* Skip Button */}
+      <TouchableOpacity
+        activeOpacity={0.88}
+        onPress={handleSkip}
+        style={styles.skipTouch}>
+        <LinearGradient
+          colors={['#FF2A54', '#E11D48']}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          style={styles.skipGradient}>
+          <Icon name="skip-next" size={16} color="#FFFFFF" />
+          <Text style={styles.skipText}>Skip</Text>
+        </LinearGradient>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -83,12 +78,67 @@ const RestButtons = ({
 export default RestButtons;
 
 const styles = StyleSheet.create({
-  button: {
-    borderRadius: 10,
-    borderWidth: 1,
-    padding: 10,
-    width: DeviceWidth * 0.25,
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
+    gap: 14,
+    marginVertical: 18,
+  },
+  outlineBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 44,
+    paddingHorizontal: 20,
+    borderRadius: 22,
+    backgroundColor: '#FFF1F2',
+    borderWidth: 1.5,
+    borderColor: '#FECDD3',
+    gap: 6,
+    minWidth: DeviceWidth * 0.28,
+  },
+  outlineBtnDisabled: {
+    backgroundColor: '#F9FAFB',
+    borderColor: '#E5E7EB',
+    opacity: 0.6,
+  },
+  outlineBtnText: {
+    color: '#E11D48',
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  outlineBtnTextDisabled: {
+    color: '#9CA3AF',
+  },
+  skipTouch: {
+    minWidth: DeviceWidth * 0.28,
+  },
+  skipGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 44,
+    paddingHorizontal: 22,
+    borderRadius: 22,
+    gap: 6,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#FF2A54',
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.25,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  },
+  skipText: {
+    color: '#FFFFFF',
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontSize: 14,
+    fontWeight: '700',
   },
 });
-

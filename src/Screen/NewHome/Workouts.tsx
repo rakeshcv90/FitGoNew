@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import {
   View,
   Text,
@@ -5,59 +6,281 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  RefreshControl,
   FlatList,
   Platform,
   ImageBackground,
+  StatusBar,
 } from 'react-native';
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {AppColor, Fonts} from '../../Component/Color';
 import {localImage} from '../../Component/Image';
-import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
+import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import LinearGradient from 'react-native-linear-gradient';
 import {useDispatch, useSelector} from 'react-redux';
-import axios from 'axios';
-import {
-  setExerciseCount,
-  setFitmeMealAdsCount,
-} from '../../Component/ThemeRedux/Actions';
-import NewHeader from '../../Component/Headers/NewHeader';
-import VersionNumber, {appVersion} from 'react-native-version-number';
-import {showMessage} from 'react-native-flash-message';
-
+import {setExerciseCount} from '../../Component/ThemeRedux/Actions';
 import {useIsFocused} from '@react-navigation/native';
-
 import AnimatedLottieView from 'lottie-react-native';
-
-import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
-// import {MyInterstitialAd} from '../../Component/BannerAdd';
-import moment from 'moment';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
-
 import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import {translate} from '../Translation/TranslationService';
+import AnimatedReanimated, {
+  FadeInDown,
+  FadeInRight,
+  FadeInUp,
+  Layout,
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from 'react-native-reanimated';
+import FitIcon from '../../Component/Utilities/FitIcon';
 
-const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
+const FocusCardPillItem = ({item, idx, onPress}: any) => {
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{scale: scale.value}],
+    };
+  });
+
+  const handlePressIn = () => {
+    scale.value = withSpring(0.94, {damping: 12, stiffness: 220});
+  };
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1.0, {damping: 14, stiffness: 180});
+  };
+
+  return (
+    <AnimatedReanimated.View
+      entering={FadeInRight.delay(idx * 80)
+        .duration(350)
+        .springify()}>
+      <TouchableOpacity
+        activeOpacity={0.9}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        onPress={onPress}>
+        <AnimatedReanimated.View style={[animatedStyle]}>
+          <LinearGradient
+            colors={item.gradient}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 1}}
+            style={[styles.focusPillCardGradient, {shadowColor: item.accent}]}>
+            <View style={styles.focusPillIconBox}>
+              <Image
+                source={item.image}
+                defaultSource={localImage.NOWORKOUT}
+                style={styles.focusPillImg}
+                resizeMode="contain"
+              />
+            </View>
+
+            <View style={styles.focusPillTextContainer}>
+              <Text numberOfLines={1} style={styles.focusPillTitleTextWhite}>
+                {item.title}
+              </Text>
+              <Text numberOfLines={2} style={styles.focusPillSubTextWhite}>
+                {item.subTitle}
+              </Text>
+            </View>
+
+            <View style={styles.focusPillArrowBadgeWhite}>
+              <FitIcon
+                name="arrow-forward"
+                type="Ionicons"
+                size={13}
+                color="#FFFFFF"
+              />
+            </View>
+          </LinearGradient>
+        </AnimatedReanimated.View>
+      </TouchableOpacity>
+    </AnimatedReanimated.View>
+  );
+};
+
+const CustomWorkoutBanner = ({navigation}: any) => {
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{scale: scale.value}],
+    };
+  });
+
+  const handlePressIn = () => {
+    scale.value = withSpring(0.96, {damping: 12, stiffness: 220});
+  };
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1.0, {damping: 14, stiffness: 180});
+  };
+
+  const handlePress = () => {
+    AnalyticsConsole(`CustomWrk_FR_WRK`);
+    AddCountFunction();
+    navigation.navigate('CustomWorkout', {routeName: 'Beginner'});
+  };
+
+  return (
+    <AnimatedReanimated.View
+      entering={FadeInDown.delay(200).duration(400).springify()}
+      style={styles.sectionWrapper}>
+      <View style={styles.sectionHeaderRow}>
+        <Text style={styles.sectionTitleText}>{translate('customade')}</Text>
+      </View>
+
+      <TouchableOpacity
+        activeOpacity={0.92}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        onPress={handlePress}>
+        <AnimatedReanimated.View style={[animatedStyle]}>
+          <LinearGradient
+            colors={['#667EEA', '#764BA2']}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 1}}
+            style={styles.customWorkoutCard}>
+            {/* Ambient Lighting Overlay Circle */}
+            <View style={styles.ambientGlowCircle} />
+
+            <View style={styles.customWorkoutContent}>
+              <View style={styles.customSparkTag}>
+                <FitIcon
+                  name="sparkles"
+                  type="Ionicons"
+                  size={12}
+                  color="#F59E0B"
+                />
+                <Text style={styles.customSparkText}>TAILORED PLAN</Text>
+              </View>
+
+              <Text style={styles.customWorkoutTitle}>
+                {translate('yourworkout')}
+              </Text>
+              <Text style={styles.customWorkoutSub}>
+                {translate('customtext')}
+              </Text>
+
+              <View style={styles.customWorkoutPillBtn}>
+                <Text style={styles.customWorkoutPillBtnText}>
+                  Build Custom Plan
+                </Text>
+                <FitIcon
+                  name="arrow-forward"
+                  type="Ionicons"
+                  size={14}
+                  color="#667EEA"
+                />
+              </View>
+            </View>
+
+            <View style={styles.customWorkoutImgCircle}>
+              <Image
+                source={localImage.NewWorkout}
+                style={styles.customWorkoutImg}
+                resizeMode="contain"
+              />
+            </View>
+          </LinearGradient>
+        </AnimatedReanimated.View>
+      </TouchableOpacity>
+    </AnimatedReanimated.View>
+  );
+};
+
+const CATEGORY_PALETTES = [
+  {bg: '#EEF2FF', accent: '#667EEA', gradientEnd: '#C7D2FE'},
+  {bg: '#FFF1F2', accent: '#FF6B6B', gradientEnd: '#FECDD3'},
+  {bg: '#ECFDF5', accent: '#10B981', gradientEnd: '#A7F3D0'},
+  {bg: '#FEF3C7', accent: '#F59E0B', gradientEnd: '#FDE68A'},
+  {bg: '#ECFEFF', accent: '#06B6D4', gradientEnd: '#A5F3FC'},
+  {bg: '#F3E8FF', accent: '#8B5CF6', gradientEnd: '#DDD6FE'},
+  {bg: '#FFF7ED', accent: '#EA580C', gradientEnd: '#FED7AA'},
+  {bg: '#FDF2F8', accent: '#EC4899', gradientEnd: '#FBCFE8'},
+];
+
+const CategorySquareCard = ({item, index, onPress}: any) => {
+  const palette = CATEGORY_PALETTES[index % CATEGORY_PALETTES.length];
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{scale: scale.value}],
+  }));
+
+  const handlePressIn = () => {
+    scale.value = withSpring(0.95, {damping: 12, stiffness: 200});
+  };
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1.0, {damping: 14, stiffness: 180});
+  };
+
+  return (
+    <AnimatedReanimated.View
+      style={styles.categorySquareWrapper}
+      entering={FadeInUp.delay(Math.min(index * 50, 400))
+        .duration(300)
+        .springify()}>
+      <TouchableOpacity
+        activeOpacity={0.88}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        onPress={onPress}>
+        <AnimatedReanimated.View
+          style={[
+            styles.categorySquareCard,
+            {backgroundColor: palette.bg, shadowColor: palette.accent},
+            animatedStyle,
+          ]}>
+          <View
+            style={[
+              styles.categorySquareIconBox,
+              {borderColor: palette.accent + '20'},
+            ]}>
+            <Image
+              source={item?.image}
+              defaultSource={localImage.NOWORKOUT}
+              style={styles.categorySquareImg}
+              resizeMode="contain"
+            />
+          </View>
+
+          <Text numberOfLines={1} style={styles.categorySquareTitle}>
+            {item.title}
+          </Text>
+
+          <View
+            style={[
+              styles.categorySquareArrow,
+              {backgroundColor: palette.accent + '15'},
+            ]}>
+            <FitIcon
+              name="chevron-forward"
+              type="Ionicons"
+              size={14}
+              color={palette.accent}
+            />
+          </View>
+        </AnimatedReanimated.View>
+      </TouchableOpacity>
+    </AnimatedReanimated.View>
+  );
+};
+
 const Workouts = ({navigation}: any) => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
 
   const [currentCategories, setCurrentCategories] = useState<Array<any>>([]);
 
-  const getFitmeMealAdsCount = useSelector(
-    (state: any) => state.getFitmeMealAdsCount,
-  );
-  const getPurchaseHistory = useSelector(
-    (state: any) => state.getPurchaseHistory,
-  );
-  // const {showInterstitialAd} = MyInterstitialAd();
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
   const getAllExercise = useSelector((state: any) => state.getAllExercise);
-
   const getChallengesData = useSelector(
     (state: any) => state.getChallengesData,
   );
@@ -175,130 +398,66 @@ const Workouts = ({navigation}: any) => {
   useEffect(() => {
     if (isFocused) {
       setCurrentCategories(
-        getUserDataDetails?.gender == 'Female' ? FemaleCategory : MaleCategory,
+        getUserDataDetails?.gender === 'Female' ? FemaleCategory : MaleCategory,
       );
     }
   }, [isFocused]);
-  const [refresh, setRefresh] = useState(false);
+
   const focuseArea = [
     {
       id: 238,
       title: translate('upperbody'),
+      subTitle: 'Chest, Arms & Shoulders',
       image: require('../../Icon/Images/NewImage2/uperBody.png'),
-
+      gradient: ['#667EEA', '#764BA2'],
+      bg: '#EEF2FF',
+      accent: '#667EEA',
       searchCriteria: ['Chest', 'Back', 'Shoulders', 'Arms'],
       searchCriteriaRedux: getUperBodyFilOption,
     },
     {
       id: 239,
       title: translate('lowerbody'),
+      subTitle: 'Legs, Quads & Glutes',
       image: require('../../Icon/Images/NewImage2/lowerBody.png'),
+      gradient: ['#FF6B6B', '#FF8E53'],
+      bg: '#FFF1F2',
+      accent: '#FF6B6B',
       searchCriteria: ['Legs', 'Quads', 'Calves'],
       searchCriteriaRedux: getLowerBodyFilOpt,
     },
     {
       id: 240,
       title: translate('stretch'),
+      subTitle: 'Full Body Mobility',
       image: require('../../Icon/Images/NewImage2/fullBody.png'),
-
+      gradient: ['#10B981', '#059669'],
+      bg: '#ECFDF5',
+      accent: '#10B981',
       searchCriteria: [],
       searchCriteriaRedux: [],
     },
     {
       id: 241,
       title: translate('core'),
+      subTitle: 'Abs & Cardio Burn',
       image: require('../../Icon/Images/NewImage2/core.png'),
-
+      gradient: ['#F59E0B', '#D97706'],
+      bg: '#FEF3C7',
+      accent: '#F59E0B',
       searchCriteria: ['Abs', 'Cardio'],
       searchCriteriaRedux: getCoreFiltOpt,
     },
   ];
 
-  const renderItem = useMemo(() => {
-    return ({item, index}: any) => (
-      <>
-        <View
-          style={{
-            marginHorizontal: 5,
-          }}>
-          <TouchableOpacity
-            onPress={() => {
-              handleNavigation(item);
-            }}
-            style={{
-              //width: DeviceWidth * 0.6,
-              //height: DeviceHeigth * 0.1,
-              borderRadius: 50,
-              borderWidth: 1,
-              borderColor: '#D9D9D9',
-              marginVertical: DeviceHeigth * 0.01,
-              alignItems: 'center',
-              alignSelf: 'center',
-              backgroundColor: AppColor.WHITE,
-              flexDirection: 'row',
-              padding: 5,
-
-              marginLeft: index == 0 ? DeviceWidth * 0.04 : 0,
-              marginRight:
-                index == currentCategories.slice(0, 4)?.length - 1 ||
-                index == currentCategories.slice(4)?.length - 1
-                  ? DeviceWidth * 0.04
-                  : 5,
-              shadowColor: 'grey',
-              ...Platform.select({
-                ios: {
-                  //shadowColor: '#000000',
-                  shadowOffset: {width: 0, height: 2},
-                  shadowOpacity: 0.2,
-                  shadowRadius: 4,
-                },
-                android: {
-                  elevation: 3,
-                },
-              }),
-            }}>
-            <Image
-              source={item?.image}
-              defaultSource={localImage.NOWORKOUT}
-              style={{
-                width: 30,
-                height: 30,
-
-                justifyContent: 'center',
-                alignSelf: 'center',
-                borderRadius: 16,
-              }}
-              resizeMode="contain"
-            />
-            <Text
-              style={{
-                marginHorizontal: 10,
-                fontSize: 15,
-                fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                fontWeight: '500',
-                lineHeight: 25,
-                color: '#434343',
-                textAlign: 'center',
-                textTransform: 'capitalize',
-              }}>
-              {item.title}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </>
-    );
-  }, []);
   const shuffleArray = (array: Array<any>) => {
     let currentIndex = array.length,
       randomIndex;
 
-    // While there remain elements to shuffle...
     while (currentIndex !== 0) {
-      // Pick a remaining element...
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex--;
 
-      // And swap it with the current element.
       [array[currentIndex], array[randomIndex]] = [
         array[randomIndex],
         array[currentIndex],
@@ -307,6 +466,7 @@ const Workouts = ({navigation}: any) => {
 
     return array;
   };
+
   const getFilterCategory = (categories: string, exerciseBodyPart: string) => {
     return categories.split('/').includes(exerciseBodyPart);
   };
@@ -318,189 +478,156 @@ const Workouts = ({navigation}: any) => {
     bodyexercise = shuffleArray(bodyexercise);
 
     AnalyticsConsole(`${mydata?.title?.split(' ')[0]}_W_CATE`);
-    let checkAdsShow = AddCountFunction();
+    AddCountFunction();
 
-    if (checkAdsShow == true) {
-      // showInterstitialAd();
-      navigation.navigate('WorkoutCategories', {
-        categoryExercise: bodyexercise,
-        CategoryDetails: mydata,
-      });
-    } else {
-      navigation.navigate('WorkoutCategories', {
-        categoryExercise: bodyexercise,
-        CategoryDetails: mydata,
-      });
-    }
+    navigation.navigate('WorkoutCategories', {
+      categoryExercise: bodyexercise,
+      CategoryDetails: mydata,
+    });
   };
-  const renderItem1 = useMemo(() => {
-    return ({item}: any) => (
-      <>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => {
-            AnalyticsConsole(`D_Wrk_DAYS_FR_Wrk`);
-            let checkAdsShow = AddCountFunction();
-            if (checkAdsShow == true) {
-              // showInterstitialAd();
-              navigation.navigate('WorkoutDays', {
-                data: item,
-                challenge: true,
-              });
-            } else {
-              navigation.navigate('WorkoutDays', {
-                data: item,
-                challenge: true,
-              });
-            }
-          }}
-          style={{
-            width: DeviceWidth * 0.9,
-            height: DeviceHeigth * 0.35,
-            marginVertical: DeviceHeigth * 0.015,
-            alignItems: 'center',
-          }}>
-          <ImageBackground
-            source={{uri: item?.workout_image_link}}
-            style={{
-              width: DeviceWidth * 0.9,
-              height: DeviceHeigth * 0.35,
-              borderRadius: 20,
-              overflow: 'hidden',
-            }}
-            resizeMode="cover">
-            <LinearGradient
-              start={{x: 1, y: 0}}
-              end={{x: 0, y: 1}}
-              colors={['transparent', 'transparent', '#194ED5', '#003B94']}
-              style={{
-                width: DeviceWidth * 0.95,
-                height: DeviceHeigth * 0.45,
-                borderRadius: 20,
-                opacity: 0.9,
-              }}>
-              <ImageBackground
-                source={localImage.CalenderNew}
-                tintColor={'#f0013b'}
-                style={{
-                  width: 60,
-                  height: 110,
-                  alignSelf: 'flex-end',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  zIndex: 1,
-                  marginRight: DeviceWidth * 0.07,
-                  top: -10,
-                }}
-                resizeMode="contain">
-                <Text
-                  style={{
-                    color: AppColor.WHITE,
-                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                    fontWeight: '700',
-                    fontSize: 14,
-                    top: 0,
-                    textAlign: 'center',
-                  }}>
-                  {`${Object.values(item?.days).length}\nDAYS`}
-                </Text>
-              </ImageBackground>
-              <View
-                style={{
-                  marginTop:
-                    DeviceHeigth >= 930
-                      ? DeviceHeigth * 0.14
-                      : DeviceHeigth >= 812
-                      ? DeviceHeigth * 0.1
-                      : DeviceHeigth * 0.07,
-                  marginHorizontal: 10,
-                  zIndex: 1,
-                }}>
-                <Text
-                  style={{
-                    fontFamily: Fonts.MONTSERRAT_BOLD,
-                    lineHeight: 40,
-                    fontWeight: '700',
-                    fontSize: 32,
-                    color: AppColor.WHITE,
-                  }}>
-                  {item?.title}
-                </Text>
-              </View>
-              <View style={{marginHorizontal: 10, zIndex: 1}}>
-                <Text
-                  style={{
-                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                    lineHeight: 40,
-                    fontWeight: '600',
-                    fontSize: 18,
-                    color: AppColor.WHITE,
-                  }}>
-                  {item?.sub_title}
-                </Text>
-              </View>
-            </LinearGradient>
-          </ImageBackground>
-        </TouchableOpacity>
-      </>
+
+  const renderItem = useMemo(() => {
+    return ({item, index}: any) => (
+      <CategorySquareCard
+        item={item}
+        index={index}
+        onPress={() => handleNavigation(item)}
+      />
     );
   }, []);
+
+  const renderItem1 = useMemo(() => {
+    return ({item, index}: any) => {
+      const daysCount = Object.values(item?.days || {}).length;
+      return (
+        <AnimatedReanimated.View
+          entering={FadeInUp.delay(Math.min(index * 100, 500))
+            .duration(400)
+            .springify()}>
+          <TouchableOpacity
+            activeOpacity={0.92}
+            onPress={() => {
+              AnalyticsConsole(`D_Wrk_DAYS_FR_Wrk`);
+              AddCountFunction();
+              navigation.navigate('WorkoutDays', {
+                data: item,
+                challenge: true,
+              });
+            }}
+            style={styles.challengeCardWrapper}>
+            <ImageBackground
+              source={{uri: item?.workout_image_link}}
+              style={styles.challengeCardImgBg}
+              resizeMode="cover">
+              <LinearGradient
+                start={{x: 0, y: 0}}
+                end={{x: 0, y: 1}}
+                colors={['rgba(15, 23, 42, 0.25)', 'rgba(15, 23, 42, 0.92)']}
+                style={styles.challengeCardGradientOverlay}>
+                {/* Top Badge Row */}
+                <View style={styles.challengeTopRow}>
+                  <View style={styles.challengeLevelTag}>
+                    <FitIcon
+                      name="fire"
+                      type="MaterialCommunityIcons"
+                      size={13}
+                      color="#FF5E00"
+                    />
+                    <Text style={styles.challengeLevelText}>CHALLENGE</Text>
+                  </View>
+
+                  <LinearGradient
+                    colors={['#FF9500', '#FF5E00']}
+                    start={{x: 0, y: 0}}
+                    end={{x: 1, y: 0}}
+                    style={styles.daysRibbonBadge}>
+                    <FitIcon
+                      name="calendar-clock"
+                      type="MaterialCommunityIcons"
+                      size={13}
+                      color="#FFFFFF"
+                    />
+                    <Text style={styles.daysRibbonText}>{daysCount} DAYS</Text>
+                  </LinearGradient>
+                </View>
+
+                {/* Bottom Content & Play Circle */}
+                <View style={styles.challengeBottomRow}>
+                  <View style={{flex: 1, marginRight: 12}}>
+                    <Text numberOfLines={1} style={styles.challengeTitleText}>
+                      {item?.title}
+                    </Text>
+                    <Text
+                      numberOfLines={1}
+                      style={styles.challengeSubTitleText}>
+                      {item?.sub_title}
+                    </Text>
+                  </View>
+
+                  <View style={styles.playCircleBtn}>
+                    <FitIcon
+                      name="play"
+                      type="Ionicons"
+                      size={18}
+                      color="#667EEA"
+                    />
+                  </View>
+                </View>
+              </LinearGradient>
+            </ImageBackground>
+          </TouchableOpacity>
+        </AnimatedReanimated.View>
+      );
+    };
+  }, []);
+
   const emptyComponent = () => {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          alignSelf: 'center',
-        }}>
+      <View style={styles.emptyStateContainer}>
         <AnimatedLottieView
           source={require('../../Icon/Images/NewImage/NoData.json')}
-          speed={2}
+          speed={1.5}
           autoPlay
           loop
           resizeMode="contain"
           style={{
-            width: DeviceWidth * 0.3,
-            height: DeviceHeigth * 0.15,
-            alignSelf: 'center',
+            width: DeviceWidth * 0.35,
+            height: DeviceHeigth * 0.14,
           }}
         />
+        <Text style={styles.emptyStateText}>No workouts available</Text>
       </View>
     );
   };
 
   const getbodyPartWorkout = (data: any) => {
-    let checkAdsShow = AddCountFunction();
+    AddCountFunction();
     AnalyticsConsole(`${data?.bodypart_title}_FR_Wrk`);
 
-    if (data?.title == translate('upperbody')) {
-      let Ccount = 0;
-      let Bcount = 0;
-      let Acount = 0;
-      let Scount = 0;
+    if (data?.title === translate('upperbody')) {
+      let Ccount = 0,
+        Bcount = 0,
+        Acount = 0,
+        Scount = 0;
       let exercises = getAllExercise?.filter((item: any) => {
-        if (item?.exercise_bodypart == 'Shoulders') {
+        if (item?.exercise_bodypart === 'Shoulders') {
           Scount++;
           return true;
-        } else if (item?.exercise_bodypart == 'Triceps') {
+        } else if (
+          item?.exercise_bodypart === 'Triceps' ||
+          item?.exercise_bodypart === 'Forearms' ||
+          item?.exercise_bodypart === 'Biceps'
+        ) {
           Acount++;
           return true;
-        } else if (item?.exercise_bodypart == 'Forearms') {
-          Acount++;
-          return true;
-        } else if (item?.exercise_bodypart == 'Chest') {
+        } else if (item?.exercise_bodypart === 'Chest') {
           Ccount++;
           return true;
-        } else if (item?.exercise_bodypart == 'Back') {
+        } else if (item?.exercise_bodypart === 'Back') {
           Bcount++;
           return true;
-        } else if (item?.exercise_bodypart == 'Biceps') {
-          Acount++;
-          return true;
-        } else {
-          return false;
         }
+        return false;
       });
       dispatch(
         setExerciseCount({
@@ -510,44 +637,30 @@ const Workouts = ({navigation}: any) => {
           exCount4: Acount,
         }),
       );
-      if (checkAdsShow == true) {
-        // showInterstitialAd();
-
-        navigation.navigate('NewFocusWorkouts', {
-          focusExercises: exercises,
-          focusedPart: data?.title,
-          searchCriteria: ['Chest', 'Back', 'Shoulders', 'Arms'],
-          searchCriteriaRedux: getUperBodyFilOption,
-          CategoryDetails: data,
-        });
-      } else {
-        navigation.navigate('NewFocusWorkouts', {
-          focusExercises: exercises,
-          focusedPart: data?.title,
-          searchCriteria: ['Chest', 'Back', 'Shoulders', 'Arms'],
-          searchCriteriaRedux: getUperBodyFilOption,
-          CategoryDetails: data,
-        });
-      }
-    } else if (data?.title == translate('lowerbody')) {
-      let Lcount = 0;
-      let Qcount = 0;
-      let Ccount = 0;
+      navigation.navigate('NewFocusWorkouts', {
+        focusExercises: exercises,
+        focusedPart: data?.title,
+        searchCriteria: ['Chest', 'Back', 'Shoulders', 'Arms'],
+        searchCriteriaRedux: getUperBodyFilOption,
+        CategoryDetails: data,
+      });
+    } else if (data?.title === translate('lowerbody')) {
+      let Lcount = 0,
+        Qcount = 0,
+        Ccount = 0;
       let exercises = getAllExercise?.filter((item: any) => {
-        if (item?.exercise_bodypart == 'Legs') {
+        if (item?.exercise_bodypart === 'Legs') {
           Lcount++;
           return true;
-        } else if (item?.exercise_bodypart == 'Quads') {
+        } else if (item?.exercise_bodypart === 'Quads') {
           Qcount++;
           return true;
-        } else if (item?.exercise_bodypart == 'Calves') {
+        } else if (item?.exercise_bodypart === 'Calves') {
           Ccount++;
           return true;
-        } else {
-          return false;
         }
+        return false;
       });
-
       dispatch(
         setExerciseCount({
           exCount1: Lcount,
@@ -555,37 +668,25 @@ const Workouts = ({navigation}: any) => {
           exCount3: Ccount,
         }),
       );
-      if (checkAdsShow == true) {
-        // showInterstitialAd();
-        navigation.navigate('NewFocusWorkouts', {
-          focusExercises: exercises,
-          focusedPart: data?.title,
-          searchCriteria: ['Legs', 'Quads', 'Calves'],
-          searchCriteriaRedux: getLowerBodyFilOpt,
-          CategoryDetails: data,
-        });
-      } else {
-        navigation.navigate('NewFocusWorkouts', {
-          focusExercises: exercises,
-          focusedPart: data?.title,
-          searchCriteria: ['Legs', 'Quads', 'Calves'],
-          searchCriteriaRedux: getLowerBodyFilOpt,
-          CategoryDetails: data,
-        });
-      }
-    } else if (data?.title == translate('core')) {
-      let Acount = 0;
-      let Ccount = 0;
+      navigation.navigate('NewFocusWorkouts', {
+        focusExercises: exercises,
+        focusedPart: data?.title,
+        searchCriteria: ['Legs', 'Quads', 'Calves'],
+        searchCriteriaRedux: getLowerBodyFilOpt,
+        CategoryDetails: data,
+      });
+    } else if (data?.title === translate('core')) {
+      let Acount = 0,
+        Ccount = 0;
       let exercises = getAllExercise?.filter((item: any) => {
-        if (item?.exercise_bodypart == 'Abs') {
+        if (item?.exercise_bodypart === 'Abs') {
           Acount++;
           return true;
-        } else if (item?.exercise_bodypart == 'Cardio') {
+        } else if (item?.exercise_bodypart === 'Cardio') {
           Ccount++;
           return true;
-        } else {
-          return false;
         }
+        return false;
       });
       dispatch(
         setExerciseCount({
@@ -593,456 +694,489 @@ const Workouts = ({navigation}: any) => {
           exCount2: Ccount,
         }),
       );
-      if (checkAdsShow == true) {
-        // showInterstitialAd();
-        navigation.navigate('NewFocusWorkouts', {
-          focusExercises: exercises,
-          focusedPart: data?.title,
-          searchCriteria: ['Abs', 'Cardio'],
-          searchCriteriaRedux: getCoreFiltOpt,
-          CategoryDetails: data,
-        });
-      } else {
-        navigation.navigate('NewFocusWorkouts', {
-          focusExercises: exercises,
-          focusedPart: data?.title,
-          searchCriteria: ['Abs', 'Cardio'],
-          searchCriteriaRedux: getCoreFiltOpt,
-          CategoryDetails: data,
-        });
-      }
+      navigation.navigate('NewFocusWorkouts', {
+        focusExercises: exercises,
+        focusedPart: data?.title,
+        searchCriteria: ['Abs', 'Cardio'],
+        searchCriteriaRedux: getCoreFiltOpt,
+        CategoryDetails: data,
+      });
     } else {
       const stretchEx = getAllExercise.filter((item: any) =>
         item?.exercise_title?.toLowerCase()?.includes('stretch'),
       );
-      if (checkAdsShow == true) {
-        // showInterstitialAd();
-        navigation.navigate('NewFocusWorkouts', {
-          focusExercises: stretchEx,
-          focusedPart: data?.title,
-          searchCriteria: [],
-          searchCriteriaRedux: [],
-          CategoryDetails: data,
-        });
-      } else {
-        navigation.navigate('NewFocusWorkouts', {
-          focusExercises: stretchEx,
-          focusedPart: data?.title,
-          searchCriteria: [],
-          searchCriteriaRedux: [],
-          CategoryDetails: data,
-        });
-      }
+      navigation.navigate('NewFocusWorkouts', {
+        focusExercises: stretchEx,
+        focusedPart: data?.title,
+        searchCriteria: [],
+        searchCriteriaRedux: [],
+        CategoryDetails: data,
+      });
     }
   };
-  const checkMealAddCount = () => {
-    if (getPurchaseHistory.length > 0) {
-      if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-      ) {
-        dispatch(setFitmeMealAdsCount(0));
-        return false;
-      } else {
-        if (getFitmeMealAdsCount < 3) {
-          dispatch(setFitmeMealAdsCount(getFitmeMealAdsCount + 1));
-          return false;
-        } else {
-          dispatch(setFitmeMealAdsCount(0));
-          return true;
-        }
-      }
-    } else {
-      if (getFitmeMealAdsCount < 3) {
-        dispatch(setFitmeMealAdsCount(getFitmeMealAdsCount + 1));
-        return false;
-      } else {
-        dispatch(setFitmeMealAdsCount(0));
-        return true;
-      }
-    }
-  };
+
   return (
-    <>
-      <View style={styles.container}>
-        <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
-          <NewHeader1 header={''} />
-          <FlatList
-            data={[1, 2, 3, 4]}
-            showsVerticalScrollIndicator={false}
-            renderItem={({item, index}: any) => {
-              return (
-                <View
-                  style={{
-                    width: '100%',
-                    //backgroundColor:'red'
-                  }}>
-                  {index == 0 && (
-                    <>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          width: '92%',
-                          alignSelf: 'center',
+    <Wrapper styles={{backgroundColor: '#F8FAFC'}}>
+      <StatusBar backgroundColor="#F8FAFC" barStyle="dark-content" />
 
-                          justifyContent: 'space-between',
-                        }}>
-                        <Text
-                          style={{
-                            color: AppColor.HEADERTEXTCOLOR,
-                            fontFamily: Fonts.MONTSERRAT_BOLD,
-                            fontWeight: '600',
-                            lineHeight: 30,
-                            fontSize: 18,
-                            alignItems: 'center',
-                            justifyContent: 'flex-start',
-                          }}>
-                          {translate('bodytype')}
-                        </Text>
-                      </View>
-                      <View style={[styles.meditionBox]}>
-                        <FlatList
-                          data={focuseArea}
-                          horizontal
-                          showsHorizontalScrollIndicator={false}
-                          keyExtractor={(item: any, index: number) =>
-                            index.toString()
-                          }
-                          renderItem={({item, index}: any) => {
-                            return (
-                              <>
-                                <TouchableOpacity
-                                  activeOpacity={0.5}
-                                  onPress={() => {
-                                    getbodyPartWorkout(item);
-                                  }}
-                                  style={{
-                                    paddingBottom: 10,
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    alignSelf: 'center',
-                                    marginLeft:
-                                      index == 0 ? DeviceWidth * 0.06 : 10,
-                                    marginRight:
-                                      index == focuseArea?.length - 1
-                                        ? DeviceWidth * 0.06
-                                        : 10,
-                                  }}>
-                                  <View
-                                    style={{
-                                      width: 80,
-                                      height: 80,
-                                      borderRadius: 40,
-                                      backgroundColor: '#FFFFFF',
-                                      borderColor: '#fff',
-                                      borderWidth: 1,
-                                      marginVertical: DeviceHeigth * 0.015,
-                                      alignItems: 'center',
-                                      justifyContent: 'center',
-                                      alignSelf: 'center',
-                                      padding: 7,
-                                      shadowColor: 'grey',
-                                      ...Platform.select({
-                                        ios: {
-                                          //shadowColor: '#000000',
-                                          shadowOffset: {width: 0, height: 2},
-                                          shadowOpacity: 0.2,
-                                          shadowRadius: 4,
-                                        },
-                                        android: {
-                                          elevation: 3,
-                                        },
-                                      }),
-                                    }}>
-                                    <Image
-                                      source={item.image}
-                                      // onLoad={() => setImageLoad(false)}
-                                      defaultSource={localImage.NOWORKOUT}
-                                      style={{
-                                        width: '100%',
-                                        height: '100%',
-                                        justifyContent: 'center',
-                                        borderRadius: 40,
-                                        alignSelf: 'center',
-                                      }}
-                                      resizeMode="contain"
-                                    />
-                                  </View>
+      {/* Screen Header */}
+      <NewHeader1 header={translate('workouts') || 'Workouts'} />
 
-                                  <Text
-                                    style={{
-                                      color: '#434343',
-                                      fontSize: 15,
-                                      fontWeight: '500',
-                                      lineHeight: 25,
-                                      top: -8,
-                                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                                    }}>
-                                    {item.title}
-                                  </Text>
-                                </TouchableOpacity>
-                              </>
-                            );
-                          }}
-                          initialNumToRender={10}
-                          maxToRenderPerBatch={10}
-                          updateCellsBatchingPeriod={100}
-                          removeClippedSubviews={true}
-                        />
-                      </View>
-                    </>
-                  )}
-                  {index == 1 && (
-                    <>
-                      <View
-                        style={{
-                          width: '92%',
-                          alignSelf: 'center',
-                          // marginVertical: DeviceHeigth * 0.02,
-                        }}>
-                        <Text
-                          style={{
-                            color: AppColor.HEADERTEXTCOLOR,
-                            fontFamily: Fonts.MONTSERRAT_BOLD,
-                            fontWeight: '600',
-                            lineHeight: 30,
-                            fontSize: 18,
-                            alignItems: 'center',
-                            justifyContent: 'flex-start',
-                          }}>
-                          {translate('customade')}
-                        </Text>
-                      </View>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{paddingBottom: 40}}>
+        {/* Section 1: Focus Area (Body Type) 2x2 Premium Grid */}
+        <AnimatedReanimated.View
+          entering={FadeInDown.delay(100).duration(400).springify()}
+          style={styles.sectionWrapper}>
+          <View style={styles.sectionHeaderRow}>
+            <Text style={styles.sectionTitleText}>{translate('bodytype')}</Text>
+          </View>
 
-                      <LinearGradient
-                        start={{x: 1, y: 0}}
-                        end={{x: 0, y: 1}}
-                        colors={['#379CBE', '#81CAF1', '#81CAF1']}
-                        style={{
-                          width: '92%',
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.focusPillScroll}>
+            {focuseArea.map((item, idx) => (
+              <FocusCardPillItem
+                key={idx}
+                item={item}
+                idx={idx}
+                onPress={() => getbodyPartWorkout(item)}
+              />
+            ))}
+          </ScrollView>
+        </AnimatedReanimated.View>
 
-                          borderRadius: 20,
-                          marginVertical: 15,
-                          paddingVertical: 15,
-                          justifyContent: 'center',
-                          alignSelf: 'center',
-                        }}>
-                        <TouchableOpacity
-                          activeOpacity={0.8}
-                          onPress={() => {
-                            AnalyticsConsole(`CustomWrk_FR_WRK`);
-                            let checkAdsShow = AddCountFunction();
-                            if (checkAdsShow == true) {
-                              // showInterstitialAd();
-                              navigation.navigate('CustomWorkout', {
-                                routeName: 'Beginner',
-                              });
-                            } else {
-                              navigation.navigate('CustomWorkout', {
-                                routeName: 'Beginner',
-                              });
-                            }
-                          }}
-                          style={
-                            {
-                              //  backgroundColor: AppColor.WHITE,
-                            }
-                          }>
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              alignItems: 'center',
-                              justifyContent: 'space-between',
-                            }}>
-                            <View
-                              style={{
-                                marginHorizontal:
-                                  Platform.OS == 'android'
-                                    ? DeviceWidth * 0.03
-                                    : DeviceHeigth >= 1024
-                                    ? DeviceWidth * 0.03
-                                    : DeviceWidth * 0.02,
-                              }}>
-                              <Text
-                                style={{
-                                  fontSize: 20,
-                                  color: AppColor.WHITE,
-                                  lineHeight: 30,
-                                  fontWeight: '600',
-                                  fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                                }}>
-                                {translate('yourworkout')}
-                              </Text>
-                              <Text
-                                style={{
-                                  fontSize: 14,
-                                  color: AppColor.WHITE,
+        {/* Section 2: Custom Made Workout Banner */}
+        <CustomWorkoutBanner navigation={navigation} />
 
-                                  fontWeight: '500',
-                                  fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                                }}>
-                                {translate('customtext')}
-                              </Text>
-                            </View>
-                            <Image
-                              source={localImage.NewWorkout}
-                              style={{
-                                width: DeviceWidth * 0.3,
-                                height: 70,
-                                //backgroundColor: 'red',
-                              }}
-                              resizeMode="contain"
-                            />
-                          </View>
-                        </TouchableOpacity>
-                      </LinearGradient>
-                    </>
-                  )}
-                  {index == 2 && (
-                    <>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          width: '92%',
-                          alignSelf: 'center',
-                          marginVertical: DeviceHeigth * 0.0,
-                          justifyContent: 'space-between',
-                        }}>
-                        <Text
-                          style={{
-                            color: AppColor.HEADERTEXTCOLOR,
-                            fontFamily: Fonts.MONTSERRAT_BOLD,
-                            fontWeight: '600',
-                            lineHeight: 30,
-                            fontSize: 18,
-                            alignItems: 'center',
-                            justifyContent: 'flex-start',
-                          }}>
-                          {translate('workoutcategories')}
-                        </Text>
-                      </View>
-                      {currentCategories?.length > 0 ? (
-                        <>
-                          <View
-                            style={[styles.meditionBox, {marginVertical: 5}]}>
-                            <FlatList
-                              data={currentCategories.slice(0, 4)}
-                              horizontal
-                              showsHorizontalScrollIndicator={false}
-                              keyExtractor={(item: any, index: number) =>
-                                index.toString()
-                              }
-                              renderItem={renderItem}
-                              ListEmptyComponent={emptyComponent}
-                              initialNumToRender={10}
-                              maxToRenderPerBatch={10}
-                              updateCellsBatchingPeriod={100}
-                              removeClippedSubviews={true}
-                            />
-                          </View>
-                          <View
-                            style={[
-                              styles.meditionBox,
-                              {alignItems: 'center', top: -10},
-                            ]}>
-                            <FlatList
-                              data={currentCategories.slice(4)}
-                              horizontal
-                              showsHorizontalScrollIndicator={false}
-                              keyExtractor={(item: any, index: number) =>
-                                index.toString()
-                              }
-                              renderItem={renderItem}
-                              ListEmptyComponent={emptyComponent}
-                              initialNumToRender={10}
-                              maxToRenderPerBatch={10}
-                              updateCellsBatchingPeriod={100}
-                              removeClippedSubviews={true}
-                            />
-                          </View>
-                        </>
-                      ) : (
-                        emptyComponent()
-                      )}
-                    </>
-                  )}
-                  {index == 3 && (
-                    <>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          width: '92%',
-                          alignSelf: 'center',
-                          marginVertical: DeviceHeigth * 0.02,
-                          justifyContent: 'space-between',
-                        }}>
-                        <Text
-                          style={{
-                            color: AppColor.HEADERTEXTCOLOR,
-                            fontFamily: Fonts.MONTSERRAT_BOLD,
-                            fontWeight: '600',
-                            lineHeight: 30,
-                            fontSize: 18,
-                            alignItems: 'center',
-                            justifyContent: 'flex-start',
-                          }}>
-                          {translate('workoutchallenge')}
-                        </Text>
-                      </View>
-                      {getChallengesData?.length > 0 ? (
-                        <View
-                          style={[
-                            styles.meditionBox,
-                            {
-                              marginVertical: -DeviceHeigth * 0.015,
-                              alignItems: 'center',
-                            },
-                          ]}>
-                          <FlatList
-                            data={getChallengesData}
-                            showsHorizontalScrollIndicator={false}
-                            keyExtractor={(item: any, index: number) =>
-                              index.toString()
-                            }
-                            renderItem={renderItem1}
-                            ListEmptyComponent={emptyComponent}
-                            initialNumToRender={10}
-                            maxToRenderPerBatch={10}
-                            updateCellsBatchingPeriod={100}
-                            removeClippedSubviews={true}
-                          />
-                        </View>
-                      ) : (
-                        emptyComponent()
-                      )}
-                    </>
-                  )}
-                </View>
-              );
-            }}
-          />
-        </Wrapper>
-      </View>
-    </>
+        {/* Section 3: Workout Categories */}
+        <AnimatedReanimated.View
+          entering={FadeInDown.delay(300).duration(400).springify()}
+          style={styles.sectionWrapper}>
+          <View style={styles.sectionHeaderRow}>
+            <Text style={styles.sectionTitleText}>
+              {translate('workoutcategories')}
+            </Text>
+          </View>
+
+          {currentCategories.length > 0 ? (
+            <FlatList
+              data={currentCategories}
+              numColumns={2}
+              scrollEnabled={false}
+              keyExtractor={(_, index) => index.toString()}
+              renderItem={renderItem}
+              contentContainerStyle={{paddingHorizontal: 12, gap: 12}}
+              columnWrapperStyle={{gap: 12}}
+            />
+          ) : (
+            emptyComponent()
+          )}
+        </AnimatedReanimated.View>
+
+        {/* Section 4: Workout Challenges */}
+        <AnimatedReanimated.View
+          entering={FadeInDown.delay(400).duration(400).springify()}
+          style={styles.sectionWrapper}>
+          <View style={styles.sectionHeaderRow}>
+            <Text style={styles.sectionTitleText}>
+              {translate('workoutchallenge')}
+            </Text>
+          </View>
+
+          {getChallengesData?.length > 0 ? (
+            <FlatList
+              data={getChallengesData}
+              showsVerticalScrollIndicator={false}
+              keyExtractor={(_, index) => index.toString()}
+              renderItem={renderItem1}
+              contentContainerStyle={{gap: 14, paddingHorizontal: 16}}
+            />
+          ) : (
+            emptyComponent()
+          )}
+        </AnimatedReanimated.View>
+      </ScrollView>
+    </Wrapper>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: AppColor.WHITE,
-  },
-  category: {
-    fontFamily: 'Poppins',
-    fontSize: 16,
-    fontWeight: '700',
-    color: AppColor.BoldText,
-    lineHeight: 25,
-  },
-  meditionBox: {
-    backgroundColor: 'white',
+export default Workouts;
 
-    //top: DeviceHeigth * 0.015,
+const styles = StyleSheet.create({
+  heroGreetingCard: {
+    marginHorizontal: 16,
+    marginTop: 6,
+    marginBottom: 4,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
+    padding: 14,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    shadowColor: '#0F172A',
+    shadowOffset: {width: 0, height: 3},
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  heroGreetingTitle: {
+    fontSize: 15,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '800',
+    color: '#0F172A',
+  },
+  heroGreetingSub: {
+    fontSize: 11.5,
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    color: '#64748B',
+    marginTop: 2,
+  },
+  heroBadgeBox: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    backgroundColor: '#EEF2FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  sectionWrapper: {
+    marginTop: 12,
+  },
+  sectionHeaderRow: {
+    paddingHorizontal: 20,
+    marginBottom: 8,
+  },
+  sectionTitleText: {
+    fontSize: 17,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '800',
+    color: '#0F172A',
+  },
+
+  // Focus Area Horizontal Gradient Floating Card Pills
+  focusPillScroll: {
+    paddingHorizontal: 16,
+    gap: 12,
+  },
+  focusPillCardGradient: {
+    width: DeviceWidth * 0.64,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 20,
+    padding: 12,
+    paddingHorizontal: 14,
+    shadowOffset: {width: 0, height: 6},
+    shadowOpacity: 0.28,
+    shadowRadius: 10,
+    elevation: 6,
+  },
+  focusPillIconBox: {
+    width: 46,
+    height: 46,
+    borderRadius: 15,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 5,
+    shadowColor: '#0F172A',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  focusPillImg: {
+    width: '100%',
+    height: '100%',
+  },
+  focusPillTextContainer: {
+    flex: 1,
+    marginHorizontal: 10,
+  },
+  focusPillTitleTextWhite: {
+    fontSize: 15,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    color: '#FFFFFF',
+    fontWeight: '800',
+  },
+  focusPillSubTextWhite: {
+    fontSize: 11,
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    color: 'rgba(255, 255, 255, 0.85)',
+    marginTop: 2,
+  },
+  focusPillArrowBadgeWhite: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: 'rgba(255, 255, 255, 0.22)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+  },
+
+  // Custom Workout Card (Ultra-Premium Hero Banner)
+  customWorkoutCard: {
+    marginHorizontal: 16,
+    borderRadius: 22,
+    padding: 18,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    shadowColor: '#667EEA',
+    shadowOffset: {width: 0, height: 8},
+    shadowOpacity: 0.32,
+    shadowRadius: 16,
+    elevation: 8,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  ambientGlowCircle: {
+    position: 'absolute',
+    right: -30,
+    top: -30,
+    width: 140,
+    height: 140,
+    borderRadius: 70,
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+  },
+  customWorkoutImgCircle: {
+    width: 78,
+    height: 78,
+    borderRadius: 39,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 7,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.35)',
+    shadowColor: '#FFFFFF',
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  customWorkoutContent: {
+    flex: 1,
+    marginRight: 8,
+  },
+  customSparkTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 8,
+    alignSelf: 'flex-start',
+    gap: 4,
+    marginBottom: 6,
+  },
+  customSparkText: {
+    fontSize: 9.5,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    color: '#FFFFFF',
+    fontWeight: '800',
+    letterSpacing: 0.5,
+  },
+  customWorkoutTitle: {
+    fontSize: 17,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  customWorkoutSub: {
+    fontSize: 11.5,
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    color: '#E0E7FF',
+    marginTop: 2,
+    lineHeight: 16,
+  },
+  customWorkoutPillBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 10,
+    alignSelf: 'flex-start',
+    marginTop: 10,
+    gap: 5,
+    shadowColor: '#0F172A',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  customWorkoutPillBtnText: {
+    fontSize: 11,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    color: '#667EEA',
+    fontWeight: '800',
+  },
+  customWorkoutImg: {
+    width: 72,
+    height: 72,
+  },
+
+  // Categories Grid
+  categoriesGrid: {
+    marginVertical: 2,
+  },
+  categorySquareWrapper: {
+    flex: 1,
+  },
+  categorySquareCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 14,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    shadowOffset: {width: 0, height: 3},
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  categorySquareIconBox: {
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 6,
+    borderWidth: 1,
+  },
+  categorySquareImg: {
+    width: '100%',
+    height: '100%',
+  },
+  categorySquareTitle: {
+    fontSize: 12.5,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    color: '#1E293B',
+    fontWeight: '700',
+    flex: 1,
+    marginHorizontal: 8,
+  },
+  categorySquareArrow: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  // Challenge Cards (Compact Height)
+  challengeCardWrapper: {
+    borderRadius: 18,
+    overflow: 'hidden',
+    shadowColor: '#0F172A',
+    shadowOffset: {width: 0, height: 5},
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    elevation: 4,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+  },
+  challengeCardImgBg: {
+    width: '100%',
+    height: DeviceHeigth * 0.21,
+  },
+  challengeCardGradientOverlay: {
+    flex: 1,
+    justifyContent: 'space-between',
+    padding: 14,
+  },
+  challengeTopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  challengeLevelTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(15, 23, 42, 0.65)',
+    paddingHorizontal: 9,
+    paddingVertical: 4,
+    borderRadius: 8,
+    gap: 4,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.15)',
+  },
+  challengeLevelText: {
+    fontSize: 9.5,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    color: '#FFFFFF',
+    fontWeight: '800',
+    letterSpacing: 0.5,
+  },
+  daysRibbonBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
+    gap: 4,
+    shadowColor: '#FF5E00',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  daysRibbonText: {
+    fontSize: 11,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    color: '#FFFFFF',
+    fontWeight: '800',
+  },
+  challengeBottomRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
+  },
+  challengeTitleText: {
+    fontSize: 19,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  challengeSubTitleText: {
+    fontSize: 12,
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    color: '#E2E8F0',
+    marginTop: 1,
+  },
+  playCircleBtn: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingLeft: 2,
+    shadowColor: '#0F172A',
+    shadowOffset: {width: 0, height: 3},
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+
+  emptyStateContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 20,
+  },
+  emptyStateText: {
+    fontSize: 12,
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    color: '#64748B',
+    marginTop: 4,
   },
 });
-
-export default Workouts;

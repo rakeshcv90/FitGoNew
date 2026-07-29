@@ -49,15 +49,130 @@ const Tabs = createBottomTabNavigator();
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
 
-const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
+const AnimatedTabItem = ({
+  route,
+  isFocused,
+  onPress,
+  imageSource,
+  label,
+  enteredCurrentEvent,
+  NotificationBadge,
+}: any) => {
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    if (isFocused) {
+      Animated.sequence([
+        Animated.timing(scaleAnim, {
+          toValue: 1.2,
+          duration: 140,
+          useNativeDriver: true,
+        }),
+        Animated.spring(scaleAnim, {
+          toValue: 1,
+          friction: 4,
+          tension: 160,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    } else {
+      scaleAnim.setValue(1);
+    }
+  }, [isFocused]);
+
+  return (
+    <>
+      {isFocused ? (
+        <TouchableOpacity
+          key={route.key}
+          onPress={onPress}
+          style={[
+            styles.tabButton,
+            {
+              marginVertical: 10,
+              marginBottom: 10,
+              paddingHorizontal: 5,
+            },
+          ]}>
+          <Animated.View style={{transform: [{scale: scaleAnim}]}}>
+            <Image
+              source={imageSource}
+              tintColor={'#1671A8'}
+              resizeMode="contain"
+              style={{
+                width: 30,
+                height: 30,
+              }}
+            />
+          </Animated.View>
+
+          <Text
+            style={{
+              color: '#1671A8',
+              fontFamily: Fonts.HELVETICA_BOLD,
+              fontSize: 12,
+              lineHeight: 14.63,
+              fontWeight: '600',
+              marginTop: 5,
+              textAlign: 'center',
+            }}>
+            {label == translate('myplans') ? translate('myplans') : label}
+          </Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          key={route.key}
+          onPress={onPress}
+          style={[
+            styles.tabButton,
+            {
+              marginVertical: 10,
+              paddingHorizontal: 4,
+            },
+          ]}>
+          <Image
+            source={imageSource}
+            resizeMode="contain"
+            style={{
+              width: 30,
+              height: 30,
+            }}
+          />
+          {enteredCurrentEvent && label == translate('myplans') && (
+            <NotificationBadge />
+          )}
+          <Text
+            style={{
+              color: '#121212B2',
+              opacity: 0.7,
+              fontSize: 12,
+              lineHeight: 14.63,
+              fontWeight: '500',
+              fontFamily: Fonts.HELVETICA_REGULAR,
+              marginTop: 5,
+              textAlign: 'center',
+            }}>
+            {label == translate('myplans') ? translate('myplans') : label}
+          </Text>
+        </TouchableOpacity>
+      )}
+    </>
+  );
+};
+
+const CustomTab = ({state, descriptors, navigation, onIndexChange}: any) => {
   // const { showInterstitialAd} = MyInterstitialAd();
   const Dispatch = useDispatch();
-  const getFitmeAdsCount = useSelector(state => state.getFitmeAdsCount);
-  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
-  const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
-  const getOpenAdsCount = useSelector(state => state.getOpenAdsCount);
+  const getFitmeAdsCount = useSelector((state: any) => state.getFitmeAdsCount);
+  const getPurchaseHistory = useSelector(
+    (state: any) => state.getPurchaseHistory,
+  );
+  const enteredCurrentEvent = useSelector(
+    (state: any) => state?.enteredCurrentEvent,
+  );
+  const getOpenAdsCount = useSelector((state: any) => state.getOpenAdsCount);
   const enteredUpcomingEvent = useSelector(
-    state => state?.enteredUpcomingEvent,
+    (state: any) => state?.enteredUpcomingEvent,
   );
 
   // const getPopUpFreuqency = useSelector(state => state?.getPopUpFreuqency);
@@ -78,45 +193,38 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
 
   return (
     <View style={styles.tabContainer}>
-      {state.routes.map((route, index) => {
+      {state.routes.map((route: any, index: number) => {
         const routeKey = route.name;
         const {options} = descriptors[route.key];
 
-        const imageSourceMap = {
+        const imageSourceMap: any = {
           home: localImage.Home,
           myplans: localImage.MyPlans,
           workout: localImage.Workout,
           profile: localImage.Profile,
         };
 
-        const focusedImageSourceMap = {
+        const focusedImageSourceMap: any = {
           home: localImage.HomeRed,
           myplans: localImage.MyPlansRed,
           workout: localImage.WorkoutRed,
           profile: localImage.ProfileRed,
         };
 
-        const labelMap = {
+        const labelMap: any = {
           home: translate('home'),
           myplans: translate('myplans'),
           workout: translate('workout'),
           profile: translate('profile'),
         };
 
+        const isFocused = state.index === index;
+
         const imageSource = isFocused
           ? focusedImageSourceMap[routeKey]
           : imageSourceMap[routeKey];
 
-        const isFocused = state.index === index;
-
         const label = labelMap[routeKey] || routeKey;
-
-        //  const label =
-        //   options.tabBarLabel !== undefined
-        //     ? options.tabBarLabel
-        //     : options.title !== undefined
-        //       ? options.title
-        //       : route.name;
 
         const isValid =
           getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD');
@@ -164,31 +272,6 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
             });
             if (!isFocused && !event.defaultPrevented) {
               if (getPurchaseHistory.plan != null) {
-                // if (getPurchaseHistory?.plan == 'premium' && isValid) {
-                //   navigation.navigate(route.name);
-                //   Dispatch(setFitmeAdsCount(0));
-                //   Dispatch(setOpenAdsCount(0));
-                // } else {
-                {
-                  /* if (getFitmeAdsCount < count) {
-                  Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-                  Dispatch(setOpenAdsCount(getOpenAdsCount + 1));
-                  navigation.navigate(route.name);
-                } else { */
-                }
-                {
-                  /* showInterstitialAd(); */
-                }
-                {
-                  /* Dispatch(setFitmeAdsCount(0));
-                  Dispatch(setOpenAdsCount(0)); */
-                }
-                {
-                  /* AdmobInterstitial.showAd().then(() => {
-                  navigation.navigate(route.name);
-                }) */
-                }
-
                 if (Platform.OS === 'android') {
                   const newCount = getFitmeAdsCount + 1;
 
@@ -199,8 +282,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                   Dispatch(setFitmeAdsCount(newCount));
 
                   if (newCount % clickFrequency === 0) {
-                    // Show ad on every 2nd click
-                    setFitmeAdsCount(0);
+                    Dispatch(setFitmeAdsCount(0));
                     AdmobInterstitial.showAd()
                       .then(() => {
                         navigation.navigate(route.name);
@@ -209,41 +291,13 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                         console.error('Ad show failed', err);
                         navigation.navigate(route.name); // fallback
                       });
-
-                    // Reset or keep counting
-                    // Dispatch(setFitmeAdsCount(0)); // optional reset
                   } else {
-                    // Direct navigation without ad
                     navigation.navigate(route.name);
                   }
                 } else {
                   navigation.navigate(route.name); // direct navigation for iOS
-                }
-
-                {
-                  /* } */
                 }
               } else {
-                {
-                  /* if (getFitmeAdsCount < 2) {
-                  Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-                  Dispatch(setOpenAdsCount(getOpenAdsCount + 1));
-                  navigation.navigate(route.name);
-                } else { */
-                }
-                {
-                  /* showInterstitialAd(); */
-                }
-                {
-                  /* Dispatch(setFitmeAdsCount(0));
-                  Dispatch(setOpenAdsCount(0)); */
-                }
-                {
-                  /* AdmobInterstitial.showAd().then(() => {
-                navigation.navigate(route.name);
-                }) */
-                }
-
                 if (Platform.OS === 'android') {
                   const newCount = getFitmeAdsCount + 1;
                   const clickFrequency =
@@ -253,8 +307,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                   Dispatch(setFitmeAdsCount(newCount));
 
                   if (newCount % clickFrequency === 0) {
-                    // Show ad on every 2nd click
-                    setFitmeAdsCount(0);
+                    Dispatch(setFitmeAdsCount(0));
                     AdmobInterstitial.showAd()
                       .then(() => {
                         navigation.navigate(route.name);
@@ -263,18 +316,11 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                         console.error('Ad show failed', err);
                         navigation.navigate(route.name); // fallback
                       });
-
-                    // Reset or keep counting
-                    // Dispatch(setFitmeAdsCount(0)); // optional reset
                   } else {
-                    // Direct navigation without ad
                     navigation.navigate(route.name);
                   }
                 } else {
                   navigation.navigate(route.name); // direct navigation for iOS
-                }
-                {
-                  /* } */
                 }
               }
             }
@@ -282,87 +328,16 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
         };
 
         return (
-          <>
-            {isFocused ? (
-              <TouchableOpacity
-                key={route.key}
-                onPress={onPress}
-                style={[
-                  styles.tabButton,
-                  {
-                    marginVertical: 10,
-                    marginBottom: 10,
-                    paddingHorizontal: 5,
-                  },
-                ]}>
-                <View
-                  style={
-                    {
-                      // padding: 5,
-                    }
-                  }>
-                  <Image
-                    source={imageSource}
-                    tintColor={'#1671A8'}
-                    resizeMode="contain"
-                    style={{
-                      width: 30,
-                      height: 30,
-                    }}
-                  />
-                </View>
-
-                <Text
-                  style={{
-                    color: '#1671A8',
-                    fontFamily: Fonts.HELVETICA_BOLD,
-                    fontSize: 12,
-                    lineHeight: 14.63,
-                    fontWeight: '600',
-                    marginTop: 5,
-                    textAlign: 'center',
-                  }}>
-                  {label == translate('myplans') ? translate('myplans') : label}
-                </Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                key={route.key}
-                onPress={onPress}
-                style={[
-                  styles.tabButton,
-                  {
-                    marginVertical: 10,
-                    paddingHorizontal: 4,
-                  },
-                ]}>
-                <Image
-                  source={imageSource}
-                  resizeMode="contain"
-                  style={{
-                    width: 30,
-                    height: 30,
-                  }}
-                />
-                {enteredCurrentEvent && label == translate('myplans') && (
-                  <NotificationBadge />
-                )}
-                <Text
-                  style={{
-                    color: '#121212B2',
-                    opacity: 0.7,
-                    fontSize: 12,
-                    lineHeight: 14.63,
-                    fontWeight: '500',
-                    fontFamily: Fonts.HELVETICA_REGULAR,
-                    marginTop: 5,
-                    textAlign: 'center',
-                  }}>
-                  {label == translate('myplans') ? translate('myplans') : label}
-                </Text>
-              </TouchableOpacity>
-            )}
-          </>
+          <AnimatedTabItem
+            key={route.key}
+            route={route}
+            isFocused={isFocused}
+            onPress={onPress}
+            imageSource={imageSource}
+            label={label}
+            enteredCurrentEvent={enteredCurrentEvent}
+            NotificationBadge={NotificationBadge}
+          />
         );
       })}
     </View>
@@ -370,7 +345,9 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
 };
 
 const BottomTab = () => {
-  const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
+  const enteredCurrentEvent = useSelector(
+    (state: any) => state?.enteredCurrentEvent,
+  );
   const [adHeight, setAdHeight] = useState(70);
   const [adKey, setAdKey] = useState(0);
 
@@ -387,24 +364,13 @@ const BottomTab = () => {
     return () => subscription.remove();
   }, []);
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setAdKey(prev => prev + 1); // Force re-render
-  //   }, 60000);
-
-  //   return () => clearInterval(interval);
-  // }, []);
-
   return (
     <>
       <Tabs.Navigator
         initialRouteName="home"
         tabBar={props => <CustomTab {...props} />}
         screenOptions={{
-          // activeTintColor: '#D01818',
-          // inactiveTintColor: '#3D3D3D',
           headerShown: false,
-          // activeBackgroundColor: '#EED9D6',
 
           tabBarStyle: {
             position: 'absolute',
@@ -429,9 +395,6 @@ const BottomTab = () => {
         <Tabs.Screen
           name="myplans"
           component={MyPlans}
-          // options={{
-          //   tabBarIcon: () => <NotificationBadge />,
-          // }}
           options={{tabBarShowLabel: false}}
         />
         <Tabs.Screen
@@ -449,14 +412,7 @@ const BottomTab = () => {
       {/* {getPurchaseStatusData()} */}
       <View
         style={{
-          marginTop:
-            Platform.OS == 'ios'
-              ? DeviceHeigth == 667
-                ? -DeviceHeigth * 0.01
-                : DeviceHeigth >= 1024
-                ? 0
-                : DeviceHeigth * 0.0
-              : 0,
+          marginTop: -DeviceHeigth * 0.005,
         }}>
         {Platform.OS === 'android' && (
           <BannerAds style={{width: '100%', height: adHeight}} />
@@ -485,7 +441,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    justifyContent: 'center',
     alignSelf: 'center',
   },
   nextButton: {
@@ -502,7 +457,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 30,
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
-    borderBottomColor: 'red', // Change this to the desired color of the triangle
+    borderBottomColor: 'red',
     transform: [{rotate: '90deg'}],
   },
   triangle: {
@@ -513,7 +468,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 40,
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
-    borderBottomColor: 'white', // Should match background color
+    borderBottomColor: 'white',
     position: 'absolute',
     top: -40,
     left: 0,

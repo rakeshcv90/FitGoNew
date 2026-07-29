@@ -6,29 +6,27 @@ import {
   Platform,
   RefreshControl,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {AppColor, Fonts, PLATFORM_IOS} from '../../Component/Color';
+import React, {useEffect, useState} from 'react';
+import {AppColor, Fonts} from '../../Component/Color';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {useDispatch, useSelector} from 'react-redux';
 import {localImage} from '../../Component/Image';
 import axios from 'axios';
 import VersionNumber from 'react-native-version-number';
 import AnimatedLottieView from 'lottie-react-native';
-import LoadingScreen from '../../Component/NewHomeUtilities/LoadingScreen';
-import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
+
 import {RequestAPI} from '../../Component/Utilities/RequestAPI';
 import {useNavigation} from '@react-navigation/native';
 import Icons from 'react-native-vector-icons/AntDesign';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import moment from 'moment';
 import {showMessage} from 'react-native-flash-message';
-import Share, {ShareOptions, ShareSingleOptions} from 'react-native-share';
+import Share, {ShareOptions} from 'react-native-share';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import LeaderBoardTopComponent from './LeaderBoardTopComponent';
@@ -625,6 +623,12 @@ const Leaderboard = () => {
                 pastWinners={pastWinners}
                 navigation={navigation}
               />
+
+              {console.log(
+                'Xcvvcxvcxvcxvxcvcxvx22222',
+                enteredCurrentEvent,
+                enteredUpcomingEvent,
+              )}
               {enteredCurrentEvent ? (
                 (Sat || Sun) != true ? (
                   <LeaderBoardProgressComopnent

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 import {
   View,
   Text,
@@ -30,9 +31,13 @@ import {
 } from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
-// import {BannerAdd} from '../../Component/BannerAdd';
-// import {bannerAdId} from '../../Component/AdsId';
-// import NativeAddTest from '../../Component/NativeAd';
+import FitIcon from '../../Component/Utilities/FitIcon';
+import AnimatedReanimated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  FadeInDown,
+} from 'react-native-reanimated';
 import moment from 'moment';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import RewardModal from '../../Component/Utilities/RewardModal';
@@ -40,14 +45,13 @@ import UpcomingEventModal from '../../Component/Utilities/UpcomingEventModal';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
-import { translate} from '../Translation/TranslationService';
+import {translate} from '../Translation/TranslationService';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const CustomWorkout = ({navigation}) => {
   const avatarRef = React.createRef();
   const dispatch = useDispatch();
-  // const routeName = route?.params?.routeName;
   const customWorkoutData = useSelector(state => state.customWorkoutData);
 
   const [isCustomWorkout, setIsCustomWorkout] = useState(false);
@@ -57,11 +61,7 @@ const CustomWorkout = ({navigation}) => {
   const isFocused = useIsFocused();
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
-  // useEffect(() => {
-  //   if (isFocused) {
-  //     getAllChallangeAndAllExerciseData();
-  //   }
-  // }, [isFocused]);
+
   const askPermissionForLibrary = async permission => {
     const resultLib = await request(permission);
 
@@ -74,22 +74,20 @@ const CustomWorkout = ({navigation}) => {
           maxHeight: 200,
         });
         setWorkoutAvt(resultLibrary.assets[0]);
-
-        if (resultLibrary) {
-          // setModalImageUploaded(true);
-        }
       } catch (error) {
-        console.log('LibimageError', error);
+        console.log('image Error--', error);
       }
-    } else if (resultLib == 'blocked') {
+    } else if (resultLib == 'blocked' || resultLib == 'denied') {
       Alert.alert(
-        'Permission Required',
-        'To use the photo library ,Please enable library access in settings',
+        'Storage permission needed',
+        'Storage permission is mandatory for access your photos',
         [
           {
-            text: 'cancel',
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
             style: 'cancel',
           },
+
           {
             text: 'Open settings',
             onPress: openSettings,
@@ -107,95 +105,142 @@ const CustomWorkout = ({navigation}) => {
       });
     }
   };
+
+  const CustomWorkoutCard = ({item, index, onPress}: any) => {
+    const scale = useSharedValue(1);
+
+    const animatedStyle = useAnimatedStyle(() => ({
+      transform: [{scale: scale.value}],
+    }));
+
+    const onPressIn = () => {
+      scale.value = withSpring(0.95, {damping: 14, stiffness: 280});
+    };
+
+    const onPressOut = () => {
+      scale.value = withSpring(1, {damping: 14, stiffness: 280});
+    };
+
+    const totalExerciseCount = item?.total_exercises || 0;
+    const estimatedMinutes = Math.max(5, totalExerciseCount * 2);
+
+    return (
+      <AnimatedReanimated.View
+        entering={FadeInDown.delay((index % 6) * 70)
+          .duration(380)
+          .springify()}
+        style={[animatedStyle]}>
+        <TouchableOpacity
+          activeOpacity={0.92}
+          onPressIn={onPressIn}
+          onPressOut={onPressOut}
+          onPress={onPress}
+          style={styles.attractiveCardContainer}>
+          {/* Left Dual Rose Gradient Accent Bar */}
+          <LinearGradient
+            colors={['#FF2A54', '#E11D48']}
+            style={styles.attractiveCardAccentBar}
+          />
+
+          <View style={styles.cardContentMainRow}>
+            {/* Cover Image Wrapper with Floating Badge */}
+            <View style={styles.coverImageRingWrapper}>
+              <Image
+                style={styles.coverImageStyle}
+                source={{
+                  uri: item?.image ?? localImage.NOWORKOUT,
+                }}
+                resizeMode={'cover'}
+              />
+              <LinearGradient
+                colors={['#FF3366', '#E11D48']}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 0}}
+                style={styles.imageFlameBadge}>
+                <FitIcon
+                  type="MaterialCommunityIcons"
+                  name="fire"
+                  size={10}
+                  color="#FFFFFF"
+                />
+                <Text style={styles.imageFlameBadgeText}>Fit</Text>
+              </LinearGradient>
+            </View>
+
+            {/* Workout Details Column */}
+            <View style={styles.workoutInfoColumn}>
+              <Text numberOfLines={1} style={styles.workoutTitleText}>
+                {item?.workout_name}
+              </Text>
+
+              {/* Badges Row */}
+              <View style={styles.cardBadgesRow}>
+                <View style={styles.exerciseCountPill}>
+                  <FitIcon
+                    type="MaterialCommunityIcons"
+                    name="dumbbell"
+                    size={11}
+                    color="#E11D48"
+                  />
+                  <Text style={styles.exerciseCountPillText}>
+                    {totalExerciseCount} Exercises
+                  </Text>
+                </View>
+
+                <View style={styles.estimatedTimePill}>
+                  <FitIcon
+                    type="AntDesign"
+                    name="clockcircle"
+                    size={10}
+                    color="#7C3AED"
+                  />
+                  <Text style={styles.estimatedTimePillText}>
+                    ~{estimatedMinutes} Min
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+
+          {/* Right Action Start / Next Pill Button */}
+          <LinearGradient
+            colors={['#FF2A54', '#E11D48']}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 1}}
+            style={styles.actionStartPillBtn}>
+            <Text style={styles.actionStartPillText}>Start</Text>
+            <FitIcon
+              type="MaterialCommunityIcons"
+              name="chevron-right"
+              size={18}
+              color="#FFFFFF"
+            />
+          </LinearGradient>
+        </TouchableOpacity>
+      </AnimatedReanimated.View>
+    );
+  };
+
   const renderItem = useMemo(
     () =>
       ({index, item}) => {
         return (
           <>
-            <TouchableOpacity
-              style={{
-                width: '98%',
-                marginVertical: 10,
-                // paddingHorizontal: 20,
-                flexDirection: 'row',
-                alignItems: 'center',
-                alignSelf: 'center',
-                justifyContent: 'space-between',
-              }}
+            <CustomWorkoutCard
+              item={item}
+              index={index}
               onPress={() => {
                 AnalyticsConsole(`OPEN_Custom_Wrk`);
                 navigation.navigate('CustomWorkoutDetails', {item: item});
-              }}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Image
-                  style={{
-                    width: 70,
-                    height: 70,
-                    justifyContent: 'center',
-                    alignSelf: 'center',
-                    borderRadius: 5,
-                    borderWidth: 1,
-                    borderColor: '#D9D9D9',
-                  }}
-                  source={{
-                    uri: item?.image??localImage.NOWORKOUT,
-                  }}
-                  resizeMode={'cover'}
-                />
-                <View
-                  style={{
-                    marginHorizontal: 16,
-                    width: DeviceWidth * 0.48,
-                  }}>
-                  <Text
-                    numberOfLines={1}
-                    style={{
-                      fontSize: 16,
-                      fontWeight: '600',
-                      lineHeight: 24,
-                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                      color: '#1E1E1E',
-                    }}>
-                    {item?.workout_name}
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontWeight: '400',
-                      lineHeight: 24,
-                      opacity: 0.7,
-                      fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                      color: '#1E1E1E',
-                    }}>
-                    {item?.total_exercises}
-                    {' Exercises'}
-                  </Text>
-                </View>
-              </View>
-              <Image
-                source={localImage.Next}
-                resizeMode="contain"
-                style={{width: 30, height: 30, right: -3}}
-              />
-            </TouchableOpacity>
-
-            {index !== customWorkoutData.length - 1 && (
-              <View
-                style={{
-                  width: '100%',
-                  height: 1,
-
-                  alignItems: 'center',
-                  backgroundColor: '#33333314',
-                }}
-              />
-            )}
+              }}
+            />
             {getAdsDisplay(index, item)}
           </>
         );
       },
     [customWorkoutData],
   );
+
   const getAdsDisplay = (index, item) => {
     const noOrNoobPlan =
       getPurchaseHistory?.plan == null || getPurchaseHistory?.plan == 'noob';
@@ -207,35 +252,20 @@ const CustomWorkout = ({navigation}) => {
       }
     }
   };
+
   const getNativeAdsDisplay = () => {
     if (getPurchaseHistory?.plan != null) {
-      return (
-        <View
-          style={{
-            alignSelf: 'center',
-            alignItems: 'center',
-          }}>
-          {/* <NativeAddTest type="image" media={false} /> */}
-        </View>
-      );
+      return <View style={{alignSelf: 'center', alignItems: 'center'}} />;
     } else {
-      return (
-        <View
-          style={{
-            alignSelf: 'center',
-            alignItems: 'center',
-          }}>
-          {/* <NativeAddTest type="image" media={false} /> */}
-        </View>
-      );
+      return <View style={{alignSelf: 'center', alignItems: 'center'}} />;
     }
   };
+
   const emptyComponent = () => {
     return (
       <View
         style={{
           flex: 1,
-
           alignItems: 'center',
         }}>
         <Image
@@ -244,7 +274,6 @@ const CustomWorkout = ({navigation}) => {
           style={{
             width: DeviceWidth * 0.7,
             height: DeviceHeigth * 0.3,
-
             marginTop: DeviceHeigth * 0.1,
           }}
         />
@@ -291,42 +320,72 @@ const CustomWorkout = ({navigation}) => {
               opacity: 0.6,
               fontFamily: Fonts.MONTSERRAT_MEDIUM,
             }}>
-             {translate('onpreference')}
+            {translate('onpreference')}
           </Text>
-          <View
+          <TouchableOpacity
+            activeOpacity={0.88}
+            onPress={() => {
+              setIsCustomWorkout(!isCustomWorkout);
+            }}
             style={{
-              width: 180,
-              height: 40,
-              borderRadius: 30,
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginBottom: 100,
-              top: DeviceHeigth * 0.05,
-              backgroundColor: '#f0013b',
-              //  Platform.OS == 'android' ? -40 : DeviceHeigth >= 1024 ? 30 : -40,
+              marginTop: DeviceHeigth * 0.04,
+              marginBottom: 80,
+              borderRadius: 24,
+              ...Platform.select({
+                ios: {
+                  shadowColor: '#FF2A54',
+                  shadowOffset: {width: 0, height: 6},
+                  shadowOpacity: 0.35,
+                  shadowRadius: 10,
+                },
+                android: {
+                  elevation: 8,
+                },
+              }),
             }}>
-            <TouchableOpacity
+            <LinearGradient
+              colors={['#FF2A54', '#E11D48']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
               style={{
-                width: 180,
-                height: 40,
-
-                borderRadius: 30,
-                justifyContent: 'center',
-                alignItems: 'center',
+                height: 48,
+                paddingHorizontal: 22,
+                borderRadius: 24,
                 flexDirection: 'row',
-              }}
-              activeOpacity={0.5}
-              onPress={() => {
-                setIsCustomWorkout(!isCustomWorkout);
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+                borderWidth: 1.5,
+                borderColor: 'rgba(255, 255, 255, 0.4)',
               }}>
-              <Image
-                source={localImage.Plus}
-                style={{width: 20, height: 20}}
-                tintColor={AppColor.WHITE}
-              />
-              <Text style={styles.button}>{translate('createworkout')}</Text>
-            </TouchableOpacity>
-          </View>
+              <View
+                style={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 14,
+                  backgroundColor: '#FFFFFF',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <FitIcon
+                  type="MaterialCommunityIcons"
+                  name="plus"
+                  size={18}
+                  color="#E11D48"
+                />
+              </View>
+              <Text
+                style={{
+                  color: '#FFFFFF',
+                  fontSize: 14,
+                  fontFamily: Fonts.MONTSERRAT_BOLD,
+                  fontWeight: '700',
+                  letterSpacing: 0.3,
+                }}>
+                {translate('createworkout')}
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -338,7 +397,6 @@ const CustomWorkout = ({navigation}) => {
         message: translate('workoutname'),
         type: 'danger',
         animationDuration: 500,
-
         floating: true,
         icon: {icon: 'auto', position: 'left'},
       });
@@ -370,81 +428,55 @@ const CustomWorkout = ({navigation}) => {
     }
   };
 
-  // const getAllChallangeAndAllExerciseData = async () => {
-  //   let responseData = 0;
-  //   if (Object.keys(getUserDataDetails).length > 0) {
-  //     try {
-  //       responseData = await axios.get(
-  //         `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
-  //       );
-  //       dispatch(setChallengesData(responseData.data.challenge_data));
-  //       dispatch(setAllExercise(responseData.data.data));
-  //     } catch (error) {
-  //       console.log('GET-USER-Challange and AllExerciseData DATA', error);
-  //       dispatch(setChallengesData([]));
-  //       dispatch(setAllExercise([]));
-  //     }
-  //   } else {
-  //     try {
-  //       responseData = await axios.get(
-  //         `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}`,
-  //       );
-  //       dispatch(setChallengesData(responseData.data.challenge_data));
-  //       dispatch(setAllExercise(responseData.data.data));
-  //     } catch (error) {
-  //       dispatch(setChallengesData([]));
-  //       dispatch(setAllExercise([]));
-
-  //       console.log('GET-USER-Challange and AllExerciseData DATA', error);
-  //     }
-  //   }
-  // };
-  const openDirect = async () => {
-    const resultLibrary = await launchImageLibrary({
-      mediaType: 'photo',
-      quality: 0.5,
-      maxWidth: 300,
-      maxHeight: 200,
-    });
-    setWorkoutAvt(resultLibrary.assets[0]);
-  };
   return (
-    <>
-      <View style={styles.container}>
-        <Wrapper>
-          <NewHeader1 header={translate('customade')} backButton />
-          <View style={[styles.meditionBox, {marginTop: 10}]}>
-            <FlatList
-              data={customWorkoutData}
-              // contentContainerStyle={{ flex: 1,  }}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={renderItem}
-              ListEmptyComponent={emptyComponent}
-              initialNumToRender={10}
-              maxToRenderPerBatch={10}
-              updateCellsBatchingPeriod={100}
-              removeClippedSubviews={true}
-            />
-          </View>
-          {customWorkoutData?.length > 0 && (
-            <TouchableOpacity
-              style={styles.buttonStyle}
-              activeOpacity={0.5}
-              onPress={() => {
-                setIsCustomWorkout(true);
-              }}>
-              <Image
-                source={localImage.Plus}
-                style={{width: 20, height: 20}}
-                tintColor={AppColor.WHITE}
-              />
-              <Text style={styles.button}>{'Create Workout'}</Text>
-            </TouchableOpacity>
-          )}
-        </Wrapper>
-      </View>
+    <View style={styles.container}>
+      <Wrapper>
+        <NewHeader1 header={translate('customade')} backButton />
+        <View style={[styles.meditionBox, {marginTop: 10}]}>
+          <FlatList
+            data={customWorkoutData}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{paddingVertical: 10, paddingBottom: 100}}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={renderItem}
+            ListEmptyComponent={emptyComponent}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            updateCellsBatchingPeriod={100}
+            removeClippedSubviews={true}
+          />
+        </View>
+        {customWorkoutData?.length > 0 && (
+          <TouchableOpacity
+            activeOpacity={0.88}
+            onPress={() => {
+              setIsCustomWorkout(true);
+            }}
+            style={styles.floatingCreateWorkoutBtn}>
+            <LinearGradient
+              colors={['#FF2A54', '#E11D48']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              style={styles.floatingCreateWorkoutGradient}>
+              <View style={styles.floatingBtnIconCircle}>
+                <FitIcon
+                  type="MaterialCommunityIcons"
+                  name="plus"
+                  size={18}
+                  color="#E11D48"
+                />
+              </View>
+              <Text style={styles.floatingBtnText}>
+                {translate('createworkout')}
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        )}
+      </Wrapper>
+
+      {/* Create Workout Modal */}
       <Modal
-        animationType="slide"
+        animationType="fade"
         visible={isCustomWorkout}
         transparent={true}
         onRequestClose={() => {
@@ -454,27 +486,124 @@ const CustomWorkout = ({navigation}) => {
           style={{
             flex: 1,
             justifyContent: 'center',
-            backgroundColor: 'rgba(0,0,0,.5)',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.65)',
+            paddingHorizontal: 20,
           }}
-          activeOpacity={1}>
-          <View
+          activeOpacity={1}
+          onPress={() => setIsCustomWorkout(false)}>
+          <TouchableOpacity
+            activeOpacity={1}
             style={{
-              width: DeviceWidth * 0.9,
-              alignSelf: 'center',
-
-              backgroundColor: AppColor.WHITE,
-              paddingHorizontal: 10,
-              paddingVertical: 20,
-              borderRadius: 10,
+              width: DeviceWidth * 0.88,
+              backgroundColor: '#FFFFFF',
+              paddingHorizontal: 20,
+              paddingVertical: 22,
+              borderRadius: 24,
+              ...Platform.select({
+                ios: {
+                  shadowColor: '#000',
+                  shadowOffset: {width: 0, height: 10},
+                  shadowOpacity: 0.15,
+                  shadowRadius: 20,
+                },
+                android: {
+                  elevation: 10,
+                },
+              }),
             }}>
+            {/* Modal Header Bar */}
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginBottom: 16,
+              }}>
+              <View
+                style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
+                <LinearGradient
+                  colors={['#FF2A54', '#E11D48']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: 18,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <FitIcon
+                    type="MaterialCommunityIcons"
+                    name="dumbbell"
+                    size={18}
+                    color="#FFFFFF"
+                  />
+                </LinearGradient>
+                <Text
+                  style={{
+                    color: '#111827',
+                    fontFamily: Fonts.MONTSERRAT_BOLD,
+                    fontSize: 17,
+                    fontWeight: '700',
+                  }}>
+                  {translate('enterworkoutname')}
+                </Text>
+              </View>
+
+              <TouchableOpacity
+                onPress={() => setIsCustomWorkout(false)}
+                style={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 14,
+                  backgroundColor: '#F3F4F6',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <FitIcon
+                  type="MaterialCommunityIcons"
+                  name="close"
+                  size={16}
+                  color="#6B7280"
+                />
+              </TouchableOpacity>
+            </View>
+
+            {/* Avatar / Cover Image Upload Area */}
             <TouchableOpacity
-              style={styles.imageView}
-              onPress={() => {
-                if (Platform.OS == 'ios') {
+              activeOpacity={0.88}
+              style={{
+                alignSelf: 'center',
+                width: 90,
+                height: 90,
+                borderRadius: 45,
+                backgroundColor: '#FFF1F2',
+                borderWidth: 2,
+                borderColor: '#FECDD3',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginVertical: 12,
+                position: 'relative',
+              }}
+              onPress={async () => {
+                if (Platform.OS === 'ios') {
                   askPermissionForLibrary(PERMISSIONS.IOS.PHOTO_LIBRARY);
                 } else {
                   if (Platform.Version >= 33) {
-                    openDirect();
+                    try {
+                      const resultLibrary = await launchImageLibrary({
+                        mediaType: 'photo',
+                        quality: 0.5,
+                        maxWidth: 300,
+                        maxHeight: 200,
+                      });
+                      if (resultLibrary?.assets?.[0]) {
+                        setWorkoutAvt(resultLibrary.assets[0]);
+                      }
+                    } catch (error) {
+                      console.log('image Error--', error);
+                    }
                   } else {
                     askPermissionForLibrary(
                       PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
@@ -490,161 +619,346 @@ const CustomWorkout = ({navigation}) => {
                 }
                 resizeMode={getWorkoutAvt == null ? 'contain' : 'cover'}
                 style={{
-                  height: getWorkoutAvt == null ? 35 : 85,
-                  width: getWorkoutAvt == null ? 35 : 85,
+                  height: getWorkoutAvt == null ? 36 : 86,
+                  width: getWorkoutAvt == null ? 36 : 86,
+                  borderRadius: getWorkoutAvt == null ? 0 : 43,
                 }}
               />
+              <View
+                style={{
+                  position: 'absolute',
+                  bottom: -2,
+                  right: -2,
+                  width: 28,
+                  height: 28,
+                  borderRadius: 14,
+                  backgroundColor: AppColor.RED,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderWidth: 2,
+                  borderColor: '#FFFFFF',
+                }}>
+                <FitIcon
+                  type="MaterialCommunityIcons"
+                  name="camera-plus-outline"
+                  size={14}
+                  color="#FFFFFF"
+                />
+              </View>
             </TouchableOpacity>
-            <Text
-              style={{
-                top: 8,
-                color: '#202020',
-                fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                fontSize: 16,
-                lineHeight: 24,
-                fontWeight: '700',
-              }}>
-              {translate('enterworkoutname')}
-            </Text>
+
+            {/* Workout Title Input */}
             <TextInput
               value={text}
-              activeOutlineColor="red"
-              underlineColor="#20202099"
-              activeUnderlineColor="#20202099"
-              outlineStyle={{borderRadius: 15}}
+              mode="outlined"
+              activeOutlineColor={AppColor.RED}
+              outlineColor="#E5E7EB"
               placeholder="Eg: Monday, chest day"
-              isFocused={true}
+              placeholderTextColor="#9CA3AF"
               style={{
-                marginVertical: 10,
-                backgroundColor: '#fff',
-                paddingHorizontal: -5,
+                marginVertical: 12,
+                backgroundColor: '#FFFFFF',
+                fontSize: 14,
+              }}
+              theme={{
+                roundness: 14,
+                colors: {primary: AppColor.RED},
               }}
               onChangeText={text => setText(text)}
             />
+
+            {/* Action Buttons Row */}
             <View
               style={{
                 flexDirection: 'row',
-                alignSelf: 'flex-end',
                 alignItems: 'center',
+                justifyContent: 'flex-end',
+                marginTop: 14,
+                gap: 10,
               }}>
               <TouchableOpacity
+                activeOpacity={0.8}
                 onPress={() => {
                   setIsCustomWorkout(false);
+                }}
+                style={{
+                  paddingHorizontal: 18,
+                  paddingVertical: 10,
+                  borderRadius: 16,
+                  backgroundColor: '#F3F4F6',
                 }}>
                 <Text
                   style={{
-                    marginHorizontal: 20,
-                    color: '#393939',
-                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                    fontSize: 16,
-                    lineHeight: 30,
-                    fontWeight: '600',
+                    color: '#4B5563',
+                    fontFamily: Fonts.MONTSERRAT_BOLD,
+                    fontSize: 13.5,
+                    fontWeight: '700',
                   }}>
                   {translate('cancel')}
                 </Text>
               </TouchableOpacity>
+
               <TouchableOpacity
+                activeOpacity={0.88}
                 onPress={() => {
                   createWorkout();
                 }}>
-                <Text
+                <LinearGradient
+                  colors={['#FF2A54', '#E11D48']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
                   style={{
-                    marginHorizontal: 10,
-                    color: '#f0013b',
-                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                    fontSize: 16,
-                    lineHeight: 30,
-                    fontWeight: '600',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingHorizontal: 22,
+                    paddingVertical: 10,
+                    borderRadius: 16,
+                    gap: 6,
                   }}>
-                  OK
-                </Text>
+                  <FitIcon
+                    type="MaterialCommunityIcons"
+                    name="check"
+                    size={16}
+                    color="#FFFFFF"
+                  />
+                  <Text
+                    style={{
+                      color: '#FFFFFF',
+                      fontFamily: Fonts.MONTSERRAT_BOLD,
+                      fontSize: 13.5,
+                      fontWeight: '700',
+                    }}>
+                    OK
+                  </Text>
+                </LinearGradient>
               </TouchableOpacity>
             </View>
-          </View>
+          </TouchableOpacity>
         </TouchableOpacity>
       </Modal>
-      {/* <BannerAdd bannerAdId={bannerAdId} /> */}
-    </>
+    </View>
   );
 };
+
+export default CustomWorkout;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FDFDFD',
   },
-
   meditionBox: {
-    backgroundColor: 'white',
-    width: '96%',
+    backgroundColor: 'transparent',
+    width: '100%',
     flex: 1,
     alignSelf: 'center',
   },
-  buttonStyle: {
-    // width: 180,
-    height: 40,
-    paddingHorizontal: 8,
-    borderRadius: 7,
-    justifyContent: 'center',
+  attractiveCardContainer: {
+    width: '96%',
+    alignSelf: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 22,
+    padding: 12,
+    marginVertical: 7,
     flexDirection: 'row',
-    position: 'absolute',
     alignItems: 'center',
-    bottom: DeviceHeigth * 0.015,
-    right: 10,
-    backgroundColor: '#f0013b',
+    justifyContent: 'space-between',
+    position: 'relative',
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#F3F4F6',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 6},
+        shadowOpacity: 0.06,
+        shadowRadius: 12,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
   },
-  button: {
-    fontSize: 15,
-    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-    textAlign: 'center',
-    marginHorizontal: 10,
-    color: AppColor.WHITE,
-    fontWeight: '600',
-    backgroundColor: 'transparent',
-    //lineHeight: 25,
+  attractiveCardAccentBar: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: 4.5,
   },
-  modalContainer: {
+  cardContentMainRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    gap: 14,
+    paddingLeft: 4,
+  },
+  coverImageRingWrapper: {
+    width: 72,
+    height: 72,
+    borderRadius: 20,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    ...Platform.select({
+      ios: {
+        shadowColor: AppColor.RED,
+        shadowOffset: {width: 0, height: 3},
+        shadowOpacity: 0.15,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  },
+  coverImageStyle: {
+    width: 66,
+    height: 66,
+    borderRadius: 17,
+  },
+  imageFlameBadge: {
+    position: 'absolute',
+    bottom: -4,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 6,
+    paddingVertical: 1,
+    borderRadius: 8,
+    gap: 2,
+    borderWidth: 1,
+    borderColor: '#FFFFFF',
+  },
+  imageFlameBadgeText: {
+    fontSize: 9,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  workoutInfoColumn: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: 'rgba(0,0,0,.5)',
   },
-  modalContent: {
-    padding: 20,
-    borderRadius: 8,
-    width: DeviceWidth * 0.5,
-
-    alignSelf: 'flex-end',
-    position: 'absolute',
-    top: DeviceHeigth / 8,
+  workoutTitleText: {
+    fontSize: 16.5,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    color: '#111827',
+    marginBottom: 6,
   },
-  loader: {
-    position: 'absolute',
+  cardBadgesRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  exerciseCountPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF1F2',
+    paddingHorizontal: 9,
+    paddingVertical: 4,
+    borderRadius: 10,
+    gap: 4,
+    borderWidth: 1,
+    borderColor: '#FECDD3',
+  },
+  exerciseCountPillText: {
+    fontSize: 11.5,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    color: '#E11D48',
+  },
+  estimatedTimePill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F5F3FF',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 10,
+    gap: 3,
+    borderWidth: 1,
+    borderColor: '#DDD6FE',
+  },
+  estimatedTimePillText: {
+    fontSize: 11.5,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    color: '#7C3AED',
+  },
+  actionStartPillBtn: {
+    height: 36,
+    paddingHorizontal: 12,
+    borderRadius: 18,
+    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'center',
-
-    backgroundColor: AppColor.GRAY,
-    zIndex: 1,
-    // height: 80,
-    // width: 90,
-    height: DeviceHeigth >= 1024 ? 120 : 70,
-    width: DeviceHeigth >= 1024 ? DeviceWidth * 0.18 : DeviceWidth * 0.19,
-    left: -8,
-    borderRadius: 10,
+    gap: 2,
+    marginLeft: 6,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#FF2A54',
+        shadowOffset: {width: 0, height: 3},
+        shadowOpacity: 0.35,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 6,
+      },
+    }),
   },
-  imageView: {
-    // backgroundColor: AppColor.GRAY1,
-    height: 95,
-    width: 95,
-    borderRadius: 10,
-    overflow: 'hidden',
+  actionStartPillText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+  },
+  floatingCreateWorkoutBtn: {
+    position: 'absolute',
+    bottom: DeviceHeigth * 0.02,
+    right: 16,
+    borderRadius: 25,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#FF2A54',
+        shadowOffset: {width: 0, height: 6},
+        shadowOpacity: 0.38,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 9,
+      },
+    }),
+  },
+  floatingCreateWorkoutGradient: {
+    height: 48,
+    paddingHorizontal: 18,
+    borderRadius: 24,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+  },
+  floatingBtnIconCircle: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
-    borderColor: '#33333333',
-    borderStyle: 'dotted',
-
-    borderWidth: 2,
   },
-  headerstyle: {
-    fontWeight: '600',
-    fontSize: 19,
+  floatingBtnText: {
+    color: '#FFFFFF',
+    fontSize: 13.5,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    letterSpacing: 0.3,
   },
 });
-export default CustomWorkout;

@@ -1,235 +1,369 @@
-import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
-import React from 'react';
+import {
+  FlatList,
+  Image,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, {useState} from 'react';
+import LinearGradient from 'react-native-linear-gradient';
+import AnimatedReanimated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  FadeInDown,
+  Layout,
+} from 'react-native-reanimated';
 import {useSelector} from 'react-redux';
-import {AppColor, Fonts} from '../../Component/Color';
-import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
-import FitText from '../../Component/Utilities/FitText';
-import {Image} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {localImage} from '../../Component/Image';
-import {useIsFocused, useNavigation} from '@react-navigation/native';
-// import {BannerAdd} from '../../Component/BannerAdd';
-// import {bannerAdId} from '../../Component/AdsId';
-import Icons from 'react-native-vector-icons/FontAwesome5';
+import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
+import {AppColor, Fonts} from '../../Component/Color';
+import PredefinedStyles from '../../Component/Utilities/PredefineStyles';
+import FitIcon from '../../Component/Utilities/FitIcon';
+
+const RecipeCard = ({item, index, onCardPress}) => {
+  const scale = useSharedValue(1);
+  const [isLiked, setIsLiked] = useState(false);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{scale: scale.value}],
+  }));
+
+  const onPressIn = () => {
+    scale.value = withSpring(0.94, {damping: 14, stiffness: 280});
+  };
+
+  const onPressOut = () => {
+    scale.value = withSpring(1, {damping: 14, stiffness: 280});
+  };
+
+  const imageSource =
+    item?.diet_image == null ? localImage.Noimage : {uri: item.diet_image};
+
+  return (
+    <AnimatedReanimated.View
+      entering={FadeInDown.delay((index % 6) * 70)
+        .duration(380)
+        .springify()}
+      layout={Layout.springify()}
+      style={[styles.cardContainer, animatedStyle]}>
+      <TouchableOpacity
+        activeOpacity={0.92}
+        onPressIn={onPressIn}
+        onPressOut={onPressOut}
+        onPress={() => onCardPress(item)}
+        style={styles.cardInnerTouchable}>
+        {/* Heart Favorite Badge */}
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => setIsLiked(!isLiked)}
+          style={styles.favoriteBadge}>
+          <FitIcon
+            type="MaterialCommunityIcons"
+            name={isLiked ? 'heart' : 'heart-outline'}
+            size={16}
+            color={isLiked ? AppColor.RED : '#9CA3AF'}
+          />
+        </TouchableOpacity>
+
+        {/* Food Image Ring with Floating Calorie Badge */}
+        <View style={styles.imageRingWrapper}>
+          <Image
+            source={imageSource}
+            defaultSource={localImage?.NOWORKOUT}
+            style={styles.foodImage}
+            resizeMode="cover"
+          />
+          <LinearGradient
+            colors={['#FF3366', '#E11D48']}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
+            style={styles.floatingCaloriePill}>
+            <FitIcon
+              type="MaterialCommunityIcons"
+              name="fire"
+              size={10}
+              color="#FFFFFF"
+            />
+            <Text style={styles.floatingCalorieText}>
+              {item?.diet_calories}
+            </Text>
+          </LinearGradient>
+        </View>
+
+        {/* Recipe Title */}
+        <Text style={styles.recipeTitle} numberOfLines={2}>
+          {item?.diet_title}
+        </Text>
+
+        {/* Metrics Row */}
+        <View style={styles.metricsRow}>
+          <View style={styles.timePill}>
+            <FitIcon
+              type="AntDesign"
+              name="clockcircle"
+              size={10}
+              color="#7C3AED"
+            />
+            <Text style={styles.timeText}>{item?.diet_time}</Text>
+          </View>
+
+          <View style={styles.servingsPill}>
+            <FitIcon
+              type="MaterialCommunityIcons"
+              name="silverware-fork-knife"
+              size={10}
+              color="#059669"
+            />
+            <Text style={styles.servingsText}>Custom</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    </AnimatedReanimated.View>
+  );
+};
+
 const CreateMealList = () => {
   const navigation = useNavigation();
   const getCustomDietData = useSelector(state => state.getCustomDietData);
   const mealData = useSelector(state => state.mealData);
+
+  const onCardPress = item => {
+    navigation.navigate('MealDetails', {item: item});
+  };
+
   return (
     <View style={styles.container}>
-      <View
-        style={{
-          flex: 9,
-
-          alignSelf: 'center',
-          // alignItems: 'center',
-          justifyContent: 'center',
-          marginVertical: DeviceHeigth * 0.02,
-        }}>
-        <FlatList
-          data={getCustomDietData}
-          numColumns={2}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{paddingBottom: 20}}
-          renderItem={({item, index}) => {
-            return (
-              <TouchableOpacity
-                style={styles.listItem2}
-                onPress={() => {
-                  navigation.navigate('MealDetails', {item: item});
-                }}>
-                <View
-                  style={{
-                    height: 100,
-                    width: 100,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: 10,
-                  }}>
-                  <Image
-                    source={
-                      item.diet_image == null
-                        ? localImage.Noimage
-                        : {
-                            uri: item.diet_image,
-                          }
-                    }
-                    defaultSource={localImage?.NOWORKOUT}
-                    style={{
-                      height: 90,
-                      width: 90,
-                      borderRadius: 200 / 2,
-
-                      alignSelf: 'center',
-                    }}
-                    resizeMode="cover"></Image>
-                </View>
-                <View
-                  style={{
-                    marginVertical: 10,
-                    alignSelf: 'center',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: 120,
-                  }}>
-                  <FitText
-                    type="SubHeading"
-                    value={item?.diet_title}
-                    fontWeight="700"
-                    fontSize={14}
-                    lineHeight={24}
-                    color={AppColor.LITELTEXTCOLOR}
-                    numberOfLines={1}
-                    fontFamily={Fonts.MONTSERRAT_REGULAR}
-                  />
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    alignSelf: 'center',
-                    justifyContent: 'space-between',
-                  }}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      alignSelf: 'center',
-                      // justifyContent: 'space-between',
-                    }}>
-                    <Image
-                      source={localImage.Step1}
-                      style={{width: 20, height: 20, marginHorizontal: 5}}
-                      resizeMode="contain"
-                      tintColor={AppColor.RED}
-                    />
-                    <Text
-                      style={{
-                        fontFamily: 'Montserrat-SemiBold',
-                        fontSize: 13,
-                        fontWeight: '500',
-                        color: AppColor.BLACK,
-                        marginHorizontal: 2,
-                        opacity: 0.7,
-                      }}>
-                      {item?.diet_calories} kcal
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      width: 2,
-                      height: 20,
-                      backgroundColor: '#333333',
-                      opacity: 0.6,
-                      marginHorizontal: 5,
-                    }}
-                  />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      alignSelf: 'center',
-                      justifyContent: 'space-between',
-                    }}>
-                    <Image
-                      source={localImage.Watch}
-                      style={{width: 15, height: 15}}
-                      resizeMode="contain"
-                      tintColor={AppColor.RED}
-                    />
-                    <Text
-                      style={{
-                        fontFamily: 'Montserrat-SemiBold',
-                        fontSize: 13,
-                        fontWeight: '500',
-                        color: AppColor.BLACK,
-                        marginHorizontal: 2,
-                        opacity: 0.7,
-                      }}>
-                      {item?.diet_time}
-                    </Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            );
-          }}
-        />
-        {getCustomDietData?.length > 0 && (
-          <View
-            style={{
-              width: DeviceWidth,
-              height: 50,
-              bottom: DeviceHeigth >= 1024 ? 15 : 10,
-              justifyContent: 'center',
-              alignItems: 'flex-end',
-            }}>
-            <TouchableOpacity
-              onPress={() => {
-                const allMealList = [
-                  ...mealData?.breakfast,
-                  ...mealData?.lunch,
-                  ...mealData?.dinner,
-                ];
-                navigation.navigate('EditCustomMeal', {
-                  totalMealData: allMealList,
-                });
-              }}
-              style={{
-                width: 50,
-                height: 50,
-                borderRadius: 100 / 2,
-                backgroundColor: 'red',
-
-                right: 5,
-                justifyContent: 'center',
-                alignItems: 'center',
-
-                shadowColor: 'rgba(0, 0, 0, 1)',
-                ...Platform.select({
-                  ios: {
-                    shadowColor: '#000000',
-                    shadowOffset: {width: 0, height: 2},
-                    shadowOpacity: 0.3,
-                    shadowRadius: 4,
-                  },
-                  android: {
-                    elevation: 10,
-                  },
-                }),
-              }}>
-              <Icons name={'edit'} size={20} color={AppColor.WHITE} />
-            </TouchableOpacity>
-          </View>
+      <FlatList
+        data={getCustomDietData}
+        numColumns={2}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{paddingBottom: 90, paddingHorizontal: 10}}
+        renderItem={({item, index}) => (
+          <RecipeCard item={item} index={index} onCardPress={onCardPress} />
         )}
-      </View>
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: 'transparent',
-          justifyContent: 'flex-end',
-        }}>
-        {/* <BannerAdd bannerAdId={bannerAdId} /> */}
-      </View>
+      />
+
+      {getCustomDietData?.length > 0 && (
+        <TouchableOpacity
+          activeOpacity={0.88}
+          onPress={() => {
+            const allMealList = [
+              ...mealData?.breakfast,
+              ...mealData?.lunch,
+              ...mealData?.dinner,
+            ];
+            navigation.navigate('EditCustomMeal', {
+              totalMealData: allMealList,
+            });
+          }}
+          style={styles.floatingEditButton}>
+          <LinearGradient
+            colors={['#FF2A54', '#E11D48']}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 1}}
+            style={styles.floatingCircleFab}>
+            <FitIcon
+              type="MaterialCommunityIcons"
+              name="pencil"
+              size={22}
+              color={AppColor.WHITE}
+            />
+          </LinearGradient>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
-var styles = StyleSheet.create({
+
+export default CreateMealList;
+
+const styles = StyleSheet.create({
   container: {
     flex: 1,
-
     backgroundColor: AppColor.WHITE,
+    alignItems: 'center',
   },
-
-  listItem2: {
-    width: DeviceWidth * 0.45,
+  cardContainer: {
+    width: (DeviceWidth - 44) / 2,
     marginHorizontal: 5,
-    marginVertical: 5,
-    borderRadius: 10,
-    alignSelf: 'center',
+    marginVertical: 8,
+    borderRadius: 20,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#F3F4F6',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.06,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  },
+  cardInnerTouchable: {
+    padding: 8,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    height: 155,
+    position: 'relative',
+  },
+  favoriteBadge: {
+    position: 'absolute',
+    top: 5,
+    right: 5,
+    zIndex: 10,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F9F9F9',
-    marginBottom: 5,
-    padding: 15,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 1},
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  imageRingWrapper: {
+    width: 68,
+    height: 68,
+    borderRadius: 34,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    ...Platform.select({
+      ios: {
+        shadowColor: AppColor.RED,
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.14,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  foodImage: {
+    width: 62,
+    height: 62,
+    borderRadius: 31,
+  },
+  floatingCaloriePill: {
+    position: 'absolute',
+    bottom: -5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 5,
+    paddingVertical: 1,
+    borderRadius: 8,
+    gap: 2,
+    borderWidth: 1,
+    borderColor: '#FFFFFF',
+    ...Platform.select({
+      ios: {
+        shadowColor: AppColor.RED,
+        shadowOffset: {width: 0, height: 1},
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  floatingCalorieText: {
+    fontSize: 9,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  recipeTitle: {
+    fontSize: 12,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    color: '#1F2937',
+    textAlign: 'center',
+    marginVertical: 1,
+    height: 28,
+    lineHeight: 14,
+  },
+  metricsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    gap: 4,
+  },
+  timePill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F5F3FF',
+    paddingHorizontal: 6,
+    paddingVertical: 3,
+    borderRadius: 8,
+    gap: 3,
+  },
+  timeText: {
+    fontSize: 10.5,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    color: '#6D28D9',
+  },
+  servingsPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ECFDF5',
+    paddingHorizontal: 6,
+    paddingVertical: 3,
+    borderRadius: 8,
+    gap: 3,
+  },
+  servingsText: {
+    fontSize: 10.5,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    color: '#059669',
+  },
+  floatingEditButton: {
+    position: 'absolute',
+    bottom: DeviceHeigth >= 1024 ? 20 : 24,
+    right: 20,
+    borderRadius: 26,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#FF2A54',
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.35,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 8,
+      },
+    }),
+  },
+  floatingCircleFab: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.4)',
   },
 });
-export default CreateMealList;

@@ -801,7 +801,7 @@ const MyPlans = ({navigation}: any) => {
         <View
           style={{
             flex: 1,
-            backgroundColor: `rgba(0,0,0,0.5)`,
+            backgroundColor: `rgba(17, 24, 39, 0.45)`,
             alignItems: 'center',
             justifyContent: 'flex-end',
           }}>
@@ -809,150 +809,126 @@ const MyPlans = ({navigation}: any) => {
             style={{
               width: '100%',
               alignSelf: 'flex-end',
-              //height: 500,
-              borderTopLeftRadius: 20,
-              borderTopRightRadius: 20,
-              backgroundColor: 'white',
-              paddingVertical: 10,
-              paddingHorizontal: 20,
-              paddingTop: 20,
+              borderTopLeftRadius: 28,
+              borderTopRightRadius: 28,
+              backgroundColor: '#FFFFFF',
+              paddingVertical: 20,
+              paddingHorizontal: 22,
             }}>
             <Text
               style={{
-                fontFamily: Fonts.HELVETICA_BOLD,
-                fontSize: 14,
-                lineHeight: 20,
-                color: AppColor.PrimaryTextColor,
+                fontFamily: Fonts.MONTSERRAT_BOLD,
+                fontSize: 18,
+                fontWeight: '700',
+                color: '#111827',
                 textAlign: 'center',
+                marginBottom: 6,
               }}>
               Adjust Your Workout Plan
             </Text>
             <Text
               style={{
-                fontFamily: Fonts.HELVETICA_REGULAR,
-                fontSize: 14,
-                lineHeight: 24,
-                color: AppColor.SecondaryTextColor,
-                marginVertical: 10,
+                fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                fontSize: 13,
+                lineHeight: 20,
+                color: '#6B7280',
+                textAlign: 'center',
+                marginBottom: 18,
               }}>
               {getEquipmentExercise == 1
-                ? `Would you like to switch to workouts with equipment or continue with the workouts without equipment?`
-                : `Would you like to switch to without equipment workouts?`}
+                ? `Would you like to switch to workouts with equipment or continue without equipment?`
+                : `Would you like to switch to workouts without equipment?`}
             </Text>
+
             <TouchableOpacity
-              // onPress={() => {
-              //   dispatch(setEquipmentExercise(0));
-              // }}
-              activeOpacity={1}
+              activeOpacity={0.9}
               style={{
                 width: '100%',
-                height: 60,
-                backgroundColor: '#F9F9F9',
-                marginVertical: 10,
-                borderRadius: 6,
+                height: 56,
+                backgroundColor: getEquipmentExercise == 0 ? '#FFF1F2' : '#F9FAFB',
+                marginVertical: 6,
+                borderRadius: 16,
                 flexDirection: 'row',
                 alignItems: 'center',
-                paddingHorizontal: 20,
+                paddingHorizontal: 18,
                 justifyContent: 'space-between',
-                borderWidth: 1,
-                borderColor:
-                  getEquipmentExercise == 0 ? AppColor.WHITE : AppColor.RED,
+                borderWidth: 1.5,
+                borderColor: getEquipmentExercise == 0 ? '#FF2A54' : '#E5E7EB',
               }}>
               <Text
                 style={{
-                  fontFamily: Fonts.HELVETICA_REGULAR,
-                  fontSize: 16,
-                  lineHeight: 24,
-                  color:
-                    getEquipmentExercise == 0
-                      ? AppColor.SecondaryTextColor
-                      : AppColor.RED,
+                  fontFamily: Fonts.MONTSERRAT_BOLD,
+                  fontSize: 15,
+                  fontWeight: '700',
+                  color: getEquipmentExercise == 0 ? '#FF2A54' : '#374151',
                 }}>
                 With Equipment
               </Text>
               <Image
                 source={localImage.Workout}
-                style={{width: 30, height: 30}}
-                tintColor={
-                  getEquipmentExercise == 0
-                    ? AppColor.SecondaryTextColor
-                    : AppColor.RED
-                }
+                style={{width: 26, height: 26}}
+                tintColor={getEquipmentExercise == 0 ? '#FF2A54' : '#6B7280'}
               />
             </TouchableOpacity>
+
             <TouchableOpacity
-              // onPress={() => {
-              //   dispatch(setEquipmentExercise(1));
-              // }}
-              activeOpacity={1}
+              activeOpacity={0.9}
               style={{
                 width: '100%',
-                height: 60,
-                backgroundColor: '#F9F9F9',
-                marginVertical: 10,
-                borderRadius: 6,
+                height: 56,
+                backgroundColor: getEquipmentExercise == 1 ? '#FFF1F2' : '#F9FAFB',
+                marginVertical: 6,
+                borderRadius: 16,
                 flexDirection: 'row',
                 alignItems: 'center',
-                paddingHorizontal: 20,
+                paddingHorizontal: 18,
                 justifyContent: 'space-between',
-                borderWidth: 1,
-                borderColor:
-                  getEquipmentExercise == 1 ? AppColor.WHITE : AppColor.RED,
+                borderWidth: 1.5,
+                borderColor: getEquipmentExercise == 1 ? '#FF2A54' : '#E5E7EB',
               }}>
               <Text
                 style={{
-                  fontFamily: Fonts.HELVETICA_REGULAR,
-                  fontSize: 16,
-                  lineHeight: 24,
-                  color:
-                    getEquipmentExercise == 1
-                      ? AppColor.SecondaryTextColor
-                      : AppColor.RED,
+                  fontFamily: Fonts.MONTSERRAT_BOLD,
+                  fontSize: 15,
+                  fontWeight: '700',
+                  color: getEquipmentExercise == 1 ? '#FF2A54' : '#374151',
                 }}>
                 Without Equipment
               </Text>
               <Image
                 source={require('../../Icon/Images/NewHome/WithoutEquipment.png')}
-                style={{width: 30, height: 30}}
-                tintColor={
-                  getEquipmentExercise == 1
-                    ? AppColor.SecondaryTextColor
-                    : AppColor.RED
-                }
+                style={{width: 26, height: 26}}
+                tintColor={getEquipmentExercise == 1 ? '#FF2A54' : '#6B7280'}
               />
             </TouchableOpacity>
+
             <View
               style={{
                 width: '100%',
-                marginVertical: 10,
-                borderRadius: 6,
+                marginTop: 18,
+                marginBottom: 6,
                 flexDirection: 'row',
                 alignItems: 'center',
-
                 justifyContent: 'space-between',
+                gap: 12,
               }}>
               <TouchableOpacity
-                onPress={() => {
-                  setVisible1(false);
-                }}
+                onPress={() => setVisible1(false)}
                 activeOpacity={0.7}
                 style={{
-                  width: '48%',
-                  height: 50,
-                  backgroundColor: AppColor.WHITE,
-                  marginVertical: 10,
-                  borderRadius: 6,
-                  borderWidth: 1,
+                  flex: 1,
+                  height: 48,
+                  backgroundColor: '#F3F4F6',
+                  borderRadius: 24,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  borderColor: AppColor.SecondaryTextColor,
                 }}>
                 <Text
                   style={{
-                    fontWeight: '500',
-                    fontSize: 16,
-                    lineHeight: 18,
-                    color: AppColor.SecondaryTextColor,
+                    fontFamily: Fonts.MONTSERRAT_BOLD,
+                    fontWeight: '700',
+                    fontSize: 14,
+                    color: '#4B5563',
                   }}>
                   Close
                 </Text>
@@ -969,27 +945,33 @@ const MyPlans = ({navigation}: any) => {
                     setVisible2(true);
                   }
                 }}
-                activeOpacity={0.7}
+                activeOpacity={0.88}
                 style={{
-                  width: '48%',
-                  height: 50,
-                  backgroundColor: AppColor.RED,
-                  marginVertical: 10,
-                  borderRadius: 6,
-                  borderWidth: 1,
-                  borderColor: AppColor.RED,
-                  justifyContent: 'center',
-                  alignItems: 'center',
+                  flex: 1,
+                  height: 48,
+                  borderRadius: 24,
+                  overflow: 'hidden',
                 }}>
-                <Text
+                <LinearGradient
+                  colors={['#FF2A54', '#E11D48']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
                   style={{
-                    fontWeight: '500',
-                    fontSize: 16,
-                    lineHeight: 18,
-                    color: AppColor.WHITE,
+                    width: '100%',
+                    height: '100%',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                   }}>
-                  Continue
-                </Text>
+                  <Text
+                    style={{
+                      fontFamily: Fonts.MONTSERRAT_BOLD,
+                      fontWeight: '700',
+                      fontSize: 14,
+                      color: '#FFFFFF',
+                    }}>
+                    Continue
+                  </Text>
+                </LinearGradient>
               </TouchableOpacity>
             </View>
           </View>
@@ -1011,13 +993,12 @@ const MyPlans = ({navigation}: any) => {
     return (
       <Modal
         animationType="slide"
-        // transparent={true}
         statusBarTranslucent
         visible={visible2}>
         <View
           style={{
             flex: 1,
-            backgroundColor: AppColor.WHITE,
+            backgroundColor: '#F5F5F7',
             justifyContent: 'center',
             alignItems: 'center',
           }}>
@@ -1038,12 +1019,13 @@ const MyPlans = ({navigation}: any) => {
                 />
                 <Text
                   style={{
-                    fontFamily: Fonts.HELVETICA_BOLD,
-                    fontSize: 16,
-                    lineHeight: 20,
-                    color: AppColor.PrimaryTextColor,
+                    fontFamily: Fonts.MONTSERRAT_BOLD,
+                    fontSize: 18,
+                    fontWeight: '700',
+                    color: '#111827',
+                    marginTop: 12,
                   }}>
-                  Please wait we are preparing your plan
+                  Preparing Your Plan
                 </Text>
                 <View
                   style={{
@@ -1054,22 +1036,14 @@ const MyPlans = ({navigation}: any) => {
                   }}>
                   <Text
                     style={{
-                      fontFamily: Fonts.HELVETICA_BOLD,
+                      fontFamily: Fonts.MONTSERRAT_MEDIUM,
                       fontSize: 14,
                       lineHeight: 20,
-                      color: AppColor.SecondaryTextColor,
-                      marginTop: 20,
+                      color: '#6B7280',
+                      marginTop: 10,
+                      textAlign: 'center',
                     }}>
-                    Just a moment! We're preparing the perfect
-                  </Text>
-                  <Text
-                    style={{
-                      fontFamily: Fonts.HELVETICA_BOLD,
-                      fontSize: 14,
-                      lineHeight: 20,
-                      color: AppColor.SecondaryTextColor,
-                    }}>
-                    workout plan for you.
+                    Just a moment! We're tailoring the perfect workout plan for you.
                   </Text>
                 </View>
               </View>
@@ -1091,22 +1065,22 @@ const MyPlans = ({navigation}: any) => {
                 />
                 <Text
                   style={{
-                    fontFamily: Fonts.HELVETICA_BOLD,
-                    fontSize: 16,
-                    lineHeight: 20,
-                    color: AppColor.PrimaryTextColor,
+                    fontFamily: Fonts.MONTSERRAT_BOLD,
+                    fontSize: 20,
+                    fontWeight: '700',
+                    color: '#111827',
+                    marginTop: 10,
                   }}>
                   Congratulations!
                 </Text>
                 <Text
                   style={{
-                    fontFamily: Fonts.HELVETICA_BOLD,
+                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
                     fontSize: 14,
-                    lineHeight: 20,
-                    color: AppColor.SecondaryTextColor,
-                    marginTop: 20,
+                    color: '#6B7280',
+                    marginTop: 8,
                   }}>
-                  Your perfect workout plan is ready.
+                  Your custom workout plan is ready.
                 </Text>
                 <TouchableOpacity
                   onPress={() => {
@@ -1114,23 +1088,34 @@ const MyPlans = ({navigation}: any) => {
                     setLoadScreen(false);
                     setPrepared(prev => !prev);
                   }}
+                  activeOpacity={0.88}
                   style={{
-                    width: 200,
+                    width: 220,
                     height: 50,
-                    backgroundColor: 'red',
-                    marginTop: 50,
-                    borderRadius: 6,
-                    justifyContent: 'center',
-                    alignItems: 'center',
+                    borderRadius: 25,
+                    overflow: 'hidden',
+                    marginTop: 36,
                   }}>
-                  <Text
+                  <LinearGradient
+                    colors={['#FF2A54', '#E11D48']}
+                    start={{x: 0, y: 0}}
+                    end={{x: 1, y: 0}}
                     style={{
-                      color: AppColor.WHITE,
-                      fontWeight: '500',
-                      lineHeight: 18,
+                      width: '100%',
+                      height: '100%',
+                      justifyContent: 'center',
+                      alignItems: 'center',
                     }}>
-                    Continue Workout
-                  </Text>
+                    <Text
+                      style={{
+                        color: '#FFFFFF',
+                        fontFamily: Fonts.MONTSERRAT_BOLD,
+                        fontWeight: '700',
+                        fontSize: 15,
+                      }}>
+                      Continue Workout
+                    </Text>
+                  </LinearGradient>
                 </TouchableOpacity>
               </View>
             </>
@@ -1143,14 +1128,11 @@ const MyPlans = ({navigation}: any) => {
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: '#f7f7f7',
+        backgroundColor: '#F5F5F7',
       }}>
-      <StatusBar barStyle={'dark-content'} backgroundColor={'#f7f7f7'} />
+      <StatusBar barStyle={'dark-content'} backgroundColor={'#F5F5F7'} />
 
-      <View
-        style={{
-          flex: 1,
-        }}>
+      <View style={{flex: 1}}>
         {loader ? (
           <View
             style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
@@ -1171,17 +1153,32 @@ const MyPlans = ({navigation}: any) => {
             <>
               <View
                 style={{
-                  width: DeviceWidth * 0.95,
+                  width: DeviceWidth * 0.92,
                   alignItems: 'center',
                   alignSelf: 'center',
-                  marginVertical: DeviceWidth * 0.05,
-                  borderRadius: 10,
-                  backgroundColor: AppColor.WHITE,
+                  marginVertical: 12,
+                  borderRadius: 22,
+                  backgroundColor: '#FFFFFF',
+                  paddingVertical: 14,
+                  paddingHorizontal: 16,
+                  borderWidth: 1,
+                  borderColor: '#F3F4F6',
+                  ...Platform.select({
+                    ios: {
+                      shadowColor: '#000',
+                      shadowOffset: {width: 0, height: 4},
+                      shadowOpacity: 0.05,
+                      shadowRadius: 10,
+                    },
+                    android: {
+                      elevation: 3,
+                    },
+                  }),
                 }}>
                 <View
                   style={[
                     PredefinedStyles.rowBetween,
-                    {width: '90%', marginTop: 10},
+                    {width: '100%', marginBottom: 10},
                   ]}>
                   <FitText
                     type="SubHeading"
@@ -1190,28 +1187,28 @@ const MyPlans = ({navigation}: any) => {
                   />
                   <View style={[PredefinedStyles.rowBetween]}>
                     <TouchableOpacity
-                      activeOpacity={0.6}
+                      activeOpacity={0.7}
                       disabled={(Sat || Sun) == true}
                       onPress={() => {
                         AnalyticsConsole('HB');
                         navigate('WorkoutHistory');
                       }}
-                      style={[styles.eventContainer, {marginHorizontal: 10}]}>
+                      style={[styles.eventContainer, {marginHorizontal: 6}]}>
                       <Image
                         source={localImage.FitCoin}
-                        style={{height: 20, width: 20}}
+                        style={{height: 18, width: 18}}
                         resizeMode="contain"
                       />
                       <Text
                         style={[
                           styles.cointxt,
-                          {color: AppColor.PrimaryTextColor},
+                          {color: '#111827'},
                         ]}>
                         {fitCoins <= 0 ? 0 : fitCoins ?? 0}
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      activeOpacity={0.6}
+                      activeOpacity={0.7}
                       disabled={(Sat || Sun) == true}
                       onPress={() => {
                         AnalyticsConsole('LB');
@@ -1220,13 +1217,13 @@ const MyPlans = ({navigation}: any) => {
                       style={styles.eventContainer}>
                       <Image
                         source={require('../NewHome/LeaderboardIMG.png')}
-                        style={{height: 20, width: 20}}
+                        style={{height: 18, width: 18}}
                         resizeMode="contain"
                       />
                       <Text
                         style={[
                           styles.cointxt,
-                          {color: AppColor.PrimaryTextColor},
+                          {color: '#111827'},
                         ]}>
                         {`#${myRank ?? 0} `}
                       </Text>
@@ -1258,13 +1255,27 @@ const MyPlans = ({navigation}: any) => {
             <>
               <View
                 style={{
-                  width: DeviceWidth * 0.95,
+                  width: DeviceWidth * 0.92,
                   alignItems: 'center',
                   alignSelf: 'center',
-                  marginVertical: DeviceWidth * 0.05,
-                  borderRadius: 10,
-                  backgroundColor: AppColor.WHITE,
-                  paddingTop: 10,
+                  marginVertical: 12,
+                  borderRadius: 22,
+                  backgroundColor: '#FFFFFF',
+                  paddingVertical: 14,
+                  paddingHorizontal: 16,
+                  borderWidth: 1,
+                  borderColor: '#F3F4F6',
+                  ...Platform.select({
+                    ios: {
+                      shadowColor: '#000',
+                      shadowOffset: {width: 0, height: 4},
+                      shadowOpacity: 0.05,
+                      shadowRadius: 10,
+                    },
+                    android: {
+                      elevation: 3,
+                    },
+                  }),
                 }}>
                 <FitText
                   type="SubHeading"
@@ -1295,48 +1306,47 @@ const MyPlans = ({navigation}: any) => {
           WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1] ==
             WeekArrayWithEvent[selectedDay] && (
             <TouchableOpacity
-              activeOpacity={1}
+              activeOpacity={0.88}
               onPress={() => {
                 setVisible1(true);
               }}
               style={{
-                //
-                width: 120,
-                height: 56,
-                backgroundColor: '#F7F7F7',
+                width: 124,
+                height: 48,
+                backgroundColor: '#FFFFFF',
                 flexDirection: 'row',
                 position: 'absolute',
-
-                bottom: 20,
-                right: 10,
-                borderRadius: 16,
+                bottom: 24,
+                right: 16,
+                borderRadius: 24,
                 justifyContent: 'center',
                 alignItems: 'center',
-                shadowColor: 'rgba(0, 0, 0, 1)',
+                borderWidth: 1.5,
+                borderColor: '#FECDD3',
                 ...Platform.select({
                   ios: {
-                    shadowColor: 'rgba(0, 0, 0, 1)',
-                    shadowOffset: {width: 0, height: 2},
-                    shadowOpacity: 0.3,
-                    shadowRadius: 3,
+                    shadowColor: '#FF2A54',
+                    shadowOffset: {width: 0, height: 4},
+                    shadowOpacity: 0.2,
+                    shadowRadius: 8,
                   },
                   android: {
-                    elevation: 4,
+                    elevation: 5,
                   },
                 }),
               }}>
               <Icons
                 name="refresh"
-                size={20}
-                style={{marginHorizontal: 10}}
-                color={AppColor.RED}
+                size={16}
+                style={{marginRight: 6}}
+                color="#FF2A54"
               />
               <Text
                 style={{
-                  fontFamily: Fonts.HELVETICA_BOLD,
+                  fontFamily: Fonts.MONTSERRAT_BOLD,
                   fontSize: 14,
-                  lineHeight: 20,
-                  color: AppColor.RED,
+                  fontWeight: '700',
+                  color: '#FF2A54',
                 }}>
                 Adjust
               </Text>

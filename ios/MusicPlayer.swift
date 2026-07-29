@@ -12,13 +12,41 @@ import React
 class MusicPlayer: NSObject {
   private var audioPlayer: AVPlayer?
   private var isInitialized: Bool = false
+  private var statusObservation: NSKeyValueObservation?
+  private var setupResolver: RCTPromiseResolveBlock?
+  private var setupRejecter: RCTPromiseRejectBlock?
+
+  @objc static func requiresMainQueueSetup() -> Bool {
+    return true
+  }
 
   @objc(setupPlayer:resolver:rejecter:)
   func setupPlayer(audioSource: String, resolver: @escaping RCTPromiseResolveBlock, rejecter: @escaping RCTPromiseRejectBlock) {
+    // Configure audio session for playback (overrides silent switch)
+    do {
+      try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
+      try AVAudioSession.sharedInstance().setActive(true)
+    } catch {
+      print("MusicPlayer: Failed to set audio session category: \(error)")
+    }
+
+    // Clean up any previous player and observer
+    cleanupObservation()
+    if audioPlayer != nil {
+      audioPlayer?.pause()
+      audioPlayer = nil
+      isInitialized = false
+    }
+
+    self.setupResolver = resolver
+    self.setupRejecter = rejecter
+
     // Check if the audioSource is a valid URL
     if let audioURL = URL(string: audioSource), audioURL.scheme?.hasPrefix("http") == true {
       // Remote URL case
-      audioPlayer = AVPlayer(url: audioURL)
+      let asset = AVURLAsset(url: audioURL)
+      let playerItem = AVPlayerItem(asset: asset)
+      audioPlayer = AVPlayer(playerItem: playerItem)
     } else {
       // Local file case
       guard let localFileURL = Bundle.main.url(forResource: audioSource, withExtension: nil) else {
@@ -28,15 +56,44 @@ class MusicPlayer: NSObject {
       audioPlayer = AVPlayer(url: localFileURL)
     }
     
-    audioPlayer?.automaticallyWaitsToMinimizeStalling = false
-    isInitialized = true
+    // Allow iOS to buffer the remote stream before playing
+    audioPlayer?.automaticallyWaitsToMinimizeStalling = true
+    
     // Pause the player immediately after setting it up
     audioPlayer?.pause()
-    resolver(isInitialized)
+
+    if let currentItem = audioPlayer?.currentItem {
+        statusObservation = currentItem.observe(\.status, options: [.new, .initial]) { [weak self] (item, _) in
+            // Dispatch to main thread — RCT promise callbacks must be on main
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                if item.status == .readyToPlay {
+                    self.isInitialized = true
+                    print("MusicPlayer: readyToPlay — resolving setup promise")
+                    self.setupResolver?(true)
+                    self.cleanupObservation()
+                } else if item.status == .failed {
+                    print("MusicPlayer: failed to load — \(item.error?.localizedDescription ?? "unknown error")")
+                    self.setupRejecter?("Error", "Failed to load audio: \(item.error?.localizedDescription ?? "unknown")", nil)
+                    self.cleanupObservation()
+                }
+            }
+        }
+    } else {
+        rejecter("Error", "Could not create currentItem", nil)
+    }
+  }
+
+  private func cleanupObservation() {
+      self.statusObservation?.invalidate()
+      self.statusObservation = nil
+      self.setupResolver = nil
+      self.setupRejecter = nil
   }
 
   @objc(play:)
   func play(loop: Bool = false) {
+    print("MusicPlayer: play() called, loop=\(loop), player=\(audioPlayer != nil)")
     audioPlayer?.play()
     if loop {
       NotificationCenter.default.addObserver(self, selector: #selector(restartMusic), name: .AVPlayerItemDidPlayToEndTime, object: audioPlayer?.currentItem)
@@ -90,7 +147,11 @@ class MusicPlayer: NSObject {
     func getCurrentPosition(resolver: @escaping RCTPromiseResolveBlock, rejecter: @escaping RCTPromiseRejectBlock) {
       if let currentItem = audioPlayer?.currentItem {
         let currentTime = CMTimeGetSeconds(currentItem.currentTime())
-        resolver(Int(currentTime))
+        if currentTime.isFinite {
+          resolver(Int(currentTime))
+        } else {
+          resolver(0)
+        }
       } else {
         resolver(0)
       }
@@ -111,6 +172,9 @@ class MusicPlayer: NSObject {
   
   @objc(releaseMediaPlayer)
   func releaseMediaPlayer() {
+    NotificationCenter.default.removeObserver(self)
+    cleanupObservation()
+    audioPlayer?.pause()
     audioPlayer = nil
     isInitialized = false
   }

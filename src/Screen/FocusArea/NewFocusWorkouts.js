@@ -12,6 +12,15 @@ import {
   BackHandler,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
+import LinearGradient from 'react-native-linear-gradient';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withSequence,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 import {AppColor, Fonts} from '../../Component/Color';
 import {useSelector, useDispatch} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
@@ -53,6 +62,118 @@ import {translate} from '../Translation/TranslationService';
 
 const format = 'hh:mm:ss';
 
+const AnimatedCard = ({index = 0, style, onPress, children}) => {
+  const opacity = useSharedValue(0);
+  const translateY = useSharedValue(16);
+  const scale = useSharedValue(1);
+
+  useEffect(() => {
+    const delay = Math.min(index, 6) * 55;
+    opacity.value = withDelay(delay, withTiming(1, {duration: 320}));
+    translateY.value = withDelay(delay, withTiming(0, {duration: 320}));
+  }, []);
+
+  const enterStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{translateY: translateY.value}],
+  }));
+  const pressStyle = useAnimatedStyle(() => ({
+    transform: [{scale: scale.value}],
+  }));
+
+  return (
+    <Animated.View style={enterStyle}>
+      <Animated.View style={pressStyle}>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          style={style}
+          onPressIn={() => {
+            scale.value = withTiming(0.97, {duration: 100});
+          }}
+          onPressOut={() => {
+            scale.value = withSpring(1, {damping: 14, stiffness: 220});
+          }}
+          onPress={onPress}>
+          {children}
+        </TouchableOpacity>
+      </Animated.View>
+    </Animated.View>
+  );
+};
+
+const FilterSelectCard = ({item, isSelected, onPress}) => {
+  const scale = useSharedValue(1);
+  const badgeScale = useSharedValue(1);
+  const imageScale = useSharedValue(1);
+
+  useEffect(() => {
+    if (isSelected) {
+      scale.value = withSpring(1.03, {damping: 12, stiffness: 240});
+      imageScale.value = withSpring(1.08, {damping: 12, stiffness: 240});
+      badgeScale.value = withSequence(
+        withTiming(1.3, {duration: 100}),
+        withSpring(1, {damping: 10, stiffness: 260}),
+      );
+    } else {
+      scale.value = withSpring(1, {damping: 12, stiffness: 240});
+      imageScale.value = withSpring(1, {damping: 12, stiffness: 240});
+    }
+  }, [isSelected]);
+
+  const cardStyle = useAnimatedStyle(() => ({
+    transform: [{scale: scale.value}],
+  }));
+  const badgeStyle = useAnimatedStyle(() => ({
+    transform: [{scale: badgeScale.value}],
+  }));
+  const imageStyle = useAnimatedStyle(() => ({
+    transform: [{scale: imageScale.value}],
+  }));
+
+  return (
+    <TouchableOpacity activeOpacity={0.88} onPress={onPress} style={{flex: 1}}>
+      <Animated.View style={[styles.filterCard, cardStyle]}>
+        {isSelected ? (
+          <LinearGradient
+            colors={['#FF2A54', '#E11D48']}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 1}}
+            style={styles.filterCardInner}>
+            <Animated.View style={[styles.filterCardBadge, badgeStyle]}>
+              <Icon name="check-bold" size={12} color="#E11D48" />
+            </Animated.View>
+            <Animated.View style={[styles.filterCardImageCircle, imageStyle]}>
+              <Image
+                source={item.ima}
+                defaultSource={localImage?.NOWORKOUT}
+                style={styles.filterCardImage}
+                resizeMode="contain"
+              />
+            </Animated.View>
+            <Text style={styles.filterCardTitleActive} numberOfLines={1}>
+              {item.title}
+            </Text>
+          </LinearGradient>
+        ) : (
+          <View style={styles.filterCardInactive}>
+            <Animated.View style={[styles.filterCardImageCircle, imageStyle]}>
+              <Image
+                source={item.ima}
+                defaultSource={localImage?.NOWORKOUT}
+                style={styles.filterCardImage}
+                resizeMode="contain"
+              />
+            </Animated.View>
+            <Text style={styles.filterCardTitleInactive} numberOfLines={1}>
+              {item.title}
+            </Text>
+          </View>
+        )}
+      </Animated.View>
+    </TouchableOpacity>
+  );
+};
+
 const NewFocusWorkouts = ({route, navigation}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const getUperBodyFilOption = useSelector(
@@ -77,6 +198,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [searchQuery, setSearchQuery] = useState();
   const [searchFilterList, setSearchFilterList] = useState([]);
+  const [searchFocused, setSearchFocused] = useState(false);
   const [start, setStart] = useState(false);
   const [overExerciseVisible, setOverExerciseVisible] = useState(false);
   const [selectedExerciseIds, setSelectedExerciseIds] = useState(new Set());
@@ -215,7 +337,9 @@ const NewFocusWorkouts = ({route, navigation}) => {
       const filteredList = exercises.filter(exercise =>
         exerciseCat(exercise?.exercise_equipment),
       );
-      dispatch(setEquipmentExercise(adjust));
+      if (getEquipmentExercise !== adjust) {
+        dispatch(setEquipmentExercise(adjust));
+      }
       setFilterList(filteredList); // Update the filter list with the filtered results
     } else {
       // Handle 'Arms' replacement logic
@@ -243,7 +367,9 @@ const NewFocusWorkouts = ({route, navigation}) => {
           modifiedFilter.includes(exercise.exercise_bodypart) &&
           exerciseCat(exercise?.exercise_equipment),
       );
-      dispatch(setEquipmentExercise(adjust));
+      if (getEquipmentExercise !== adjust) {
+        dispatch(setEquipmentExercise(adjust));
+      }
       setFilterList(filteredList); // Update the filter list with the filtered results
     }
 
@@ -385,274 +511,104 @@ const NewFocusWorkouts = ({route, navigation}) => {
       },
     ];
     const isFullBody = route?.params?.focusedPart == 'Full Body';
-    const checkFullHeight = isFullBody ? DeviceHeigth * 0.15 : 0;
+    const bodyPartData =
+      route?.params?.focusedPart == 'Upper Body'
+        ? uperBody
+        : route?.params?.focusedPart == 'Lower Body'
+        ? lowerBody
+        : route?.params?.focusedPart == 'Core'
+        ? core
+        : [];
 
     return (
-      <View style={styles.listContainer}>
-        <Icon
-          name="close"
-          size={27}
-          color={AppColor.BLACK}
-          onPress={() => bottomSheetRef.current?.closeSheet()}
-          style={styles.closeStyle}
-        />
-        <Text
-          style={{
-            fontSize: 16,
-            fontWeight: '600',
-            lineHeight: 24,
-            fontFamily: Fonts.MONTSERRAT_BOLD,
-            color: '#1E1E1E',
-            marginLeft: DeviceWidth * 0.06,
-            textAlign: 'center',
-          }}>
-          {isFullBody ? translate('adjust') : translate('filter')}
-        </Text>
-        <View
-          style={{
-            width: DeviceWidth,
-            height: 1,
-            backgroundColor: '#1E1E1E',
-            opacity: 0.2,
-            marginVertical: 16,
-            alignSelf: 'center',
-          }}
-        />
-        {isFullBody && (
-          <Text
-            style={{
-              fontSize: 16,
-              fontWeight: '600',
-              lineHeight: 24,
-              fontFamily: Fonts.MONTSERRAT_BOLD,
-              color: '#1E1E1E',
+      <View style={styles.sheetMainContainer}>
+        <View style={styles.sheetHeaderRow}>
+          <View style={{width: 32}} />
+          <Text style={styles.sheetFilterTitle}>
+            {isFullBody ? translate('adjust') : translate('filter')}
+          </Text>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => bottomSheetRef.current?.closeSheet()}
+            style={styles.sheetCloseBtn}>
+            <Icon name="close" size={20} color="#374151" />
+          </TouchableOpacity>
+        </View>
 
-              width: DeviceWidth * 0.9,
-              alignSelf: 'center',
-            }}>
+        <View style={styles.sheetHeaderDivider} />
+
+        {isFullBody && (
+          <Text style={styles.sheetCategoryHeading}>
             {route?.params?.focusedPart}
           </Text>
         )}
-        <View
-          style={{
-            //height: DeviceHeigth * 0.35,
-            marginTop: 20,
-            justifyContent: 'center',
-            width: DeviceWidth * 0.9,
-            alignSelf: 'center',
-            alignItems: 'center',
-            flex: 1,
-          }}>
-          <FlatList
-            data={
-              route?.params?.focusedPart == 'Upper Body'
-                ? uperBody
-                : route?.params?.focusedPart == 'Lower Body'
-                ? lowerBody
-                : route?.params?.focusedPart == 'Core'
-                ? core
-                : []
-            }
-            numColumns={2}
-            scrollEnabled={false}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({item, index}) => {
-              return (
-                <>
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => {
-                      handleFilterChange(item?.title);
-                    }}
-                    style={{
-                      // marginHorizontal: 10,
-                      marginEnd: 20,
-                      width: DeviceWidth / 2.4,
-                      //height: 124,
-                      justifyContent: 'space-between',
-                      marginBottom: 20,
-                      alignSelf: 'center',
-                      backgroundColor: '#F9F9F9',
-                      flexDirection: 'row',
-                      borderRadius: 10,
-                      borderWidth: 1.5,
-                      borderColor: filterCritera.includes(item.title)
-                        ? AppColor.RED
-                        : AppColor.LIGHTGREY2,
-                    }}>
-                    <View
-                      style={{
-                        width: 25,
-                        height: 25,
-                        top: 15,
-                        left: 10,
-                      }}
-                    />
-                    <View
-                      style={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
-                      <Image
-                        source={item.ima}
-                        // onLoad={() => setImageLoad(false)}
-                        defaultSource={localImage?.NOWORKOUT}
-                        style={{
-                          width: 50,
-                          height: 60,
-                          justifyContent: 'center',
-                          alignSelf: 'center',
-                        }}
-                        resizeMode="contain"
-                      />
-                      <Text
-                        style={{
-                          color: 'black',
-                          fontSize: 15,
-                          fontWeight: '600',
-                          lineHeight: 20,
-                          marginVertical: 5,
-                          textAlign: 'center',
-                          fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                        }}>
-                        {item.title}
-                      </Text>
-                    </View>
-                    <Icon
-                      name={
-                        filterCritera.includes(item.title)
-                          ? 'check-circle'
-                          : 'checkbox-blank-circle-outline'
-                      }
-                      size={25}
-                      color={
-                        filterCritera.includes(item.title)
-                          ? AppColor.RED
-                          : AppColor.GRAY1
-                      }
-                      style={{marginTop: 8}}
-                    />
-                    <View />
-                  </TouchableOpacity>
-                </>
-              );
-            }}
-          />
-        </View>
-        {isFullBody && (
-          <View
-            style={{
-              width: DeviceWidth,
-              height: 1,
-              backgroundColor: '#1E1E1E',
-              opacity: 0.2,
-              marginVertical: 10,
-              alignSelf: 'center',
-            }}
-          />
-        )}
-        <View style={{width: DeviceWidth * 0.9, alignSelf: 'center'}}>
-          {!isFullBody && (
-            <Text
-              style={{
-                color: AppColor.BLACK,
-                fontFamily: Fonts.HELVETICA_BOLD,
-                fontSize: 16,
-                marginBottom: 16,
-              }}>
-              {translate('adjust')}
+
+        {bodyPartData.length > 0 && (
+          <>
+            <Text style={styles.sheetCategoryHeading}>
+              {translate('filter')}
             </Text>
-          )}
+            <View style={styles.filterCardsGrid}>
+              {bodyPartData.map((item, index) => (
+                <View key={index} style={styles.filterCardWrap}>
+                  <FilterSelectCard
+                    item={item}
+                    isSelected={filterCritera.includes(item.title)}
+                    onPress={() => handleFilterChange(item.title)}
+                  />
+                </View>
+              ))}
+            </View>
+            <View style={styles.sheetHeaderDivider} />
+          </>
+        )}
+
+        {!isFullBody && (
+          <Text style={styles.sheetCategoryHeading}>{translate('adjust')}</Text>
+        )}
+        <View style={styles.sheetCardsRow}>
+          {adjustArray.map((item, index) => (
+            <View key={index} style={{flex: 1}}>
+              <FilterSelectCard
+                item={{title: item.text, ima: item.image}}
+                isSelected={adjustSelected == index}
+                onPress={() => setAdjustSelelcted(index)}
+              />
+            </View>
+          ))}
+        </View>
+
+        <View style={styles.sheetHeaderDivider} />
+
+        <View style={styles.sheetFooterRow}>
           <TouchableOpacity
-            activeOpacity={1}
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: 15,
-            }}
-            onPress={() => setAdjustSelelcted(prev => (prev == 0 ? 1 : 0))}>
-            {adjustArray.map((item, index) => (
-              <View
-                style={{
-                  width: DeviceWidth / 2.3,
-                  backgroundColor: '#F9F9F9',
-                  borderRadius: 10,
-                  borderWidth: 1.5,
-                  borderColor:
-                    adjustSelected == index ? AppColor.RED : '#F9F9F9',
-                }}>
-                <Image
-                  source={item.image}
-                  style={{
-                    width: 35,
-                    height: 35,
-                    alignSelf: 'center',
-                    marginTop: 12,
-                  }}
-                  tintColor={
-                    adjustSelected == index
-                      ? AppColor.RED
-                      : AppColor.SecondaryTextColor
-                  }
-                />
-                <Text
-                  style={{
-                    textAlign: 'center',
-                    color: AppColor.BLACK,
-                    fontFamily: Fonts.HELVETICA_BOLD,
-                    marginBottom: 12,
-                    marginTop: 4,
-                  }}>
-                  {item.text}
-                </Text>
-                <Icon
-                  style={{position: 'absolute', right: 12, top: 10}}
-                  name={
-                    adjustSelected == index
-                      ? 'check-circle'
-                      : 'checkbox-blank-circle-outline'
-                  }
-                  size={25}
-                  color={
-                    adjustSelected == index
-                      ? AppColor.RED
-                      : AppColor.SecondaryTextColor
-                  }
-                />
-              </View>
-            ))}
+            activeOpacity={0.7}
+            onPress={() => setFilterCriteria([])}
+            style={styles.clearAllButton}>
+            <Text style={styles.clearAllButtonText}>
+              {translate('clearAll')}
+            </Text>
           </TouchableOpacity>
+
           <TouchableOpacity
-            style={{
-              width: 150,
-              height: 50,
-              backgroundColor: AppColor.RED,
-              borderRadius: 6,
-              alignSelf: 'flex-end',
-              justifyContent: 'center',
-              alignItems: 'center',
-              opacity: !isFilterChanged ? 0.6 : 1,
-            }}
-            disabled={!isFilterChanged ? true : false}
+            activeOpacity={0.88}
+            disabled={!isFilterChanged}
             onPress={() => {
               filterExercises(exerciseData, filterCritera, adjustSelected);
               handleFilterVisibilty();
             }}>
-            <Text
-              style={{
-                color: '#FFFFFF',
-                fontSize: 14,
-                fontWeight: '500',
-                lineHeight: 20,
-
-                textAlign: 'center',
-                fontFamily: Fonts.MONTSERRAT_MEDIUM,
-              }}>
-              {translate('showResult')}
-            </Text>
+            <LinearGradient
+              colors={[AppColor.RED, '#E11D48']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              style={[
+                styles.showResultGradientBtn,
+                !isFilterChanged && {opacity: 0.5},
+              ]}>
+              <Text style={styles.showResultBtnText}>
+                {translate('showResult')}
+              </Text>
+            </LinearGradient>
           </TouchableOpacity>
         </View>
       </View>
@@ -739,34 +695,46 @@ const NewFocusWorkouts = ({route, navigation}) => {
     ) {
       setOverExerciseVisible(true);
     } else {
-      setStart(true);
-      downloadVideos(item, index, 1).finally(() => {
+      // Trigger background download asynchronously without blocking navigation
+      downloadVideos(item, index, 1);
+
+      // Navigate INSTANTLY (0ms delay)
+      navigation.navigate('Exercise', {
+        allExercise: [item],
+        currentExercise: item,
+        data: CategoryDetails,
+        day: -11,
+        exerciseNumber: 0,
+        trackerData: [],
+        type: 'bodypart',
+        challenge: false,
+        isEventPage: false,
+      });
+
+      // Reset state in background after navigation starts
+      setTimeout(() => {
         setStart(false);
         setDownloade(0);
         setDownloadProgress(0);
         setSelectedIndex(-1);
-        navigation.navigate('Exercise', {
-          allExercise: [item],
-          currentExercise: item,
-          data: CategoryDetails,
-          day: -11,
-          exerciseNumber: 0,
-          trackerData: [],
-          type: 'bodypart',
-          challenge: false,
-          isEventPage: false,
-        });
-      });
+      }, 100);
     }
   };
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
-      () => true,
+      () => {
+        if (startSelection) {
+          setStartSelection(false);
+          setSelectedExerciseIds(new Set());
+          return true;
+        }
+        return false;
+      },
     );
     return () => backHandler.remove();
-  }, []);
+  }, [startSelection]);
   const EmptyComponent = () => {
     return (
       <View
@@ -807,71 +775,90 @@ const NewFocusWorkouts = ({route, navigation}) => {
           styles={{
             backgroundColor: '#FDFDFD',
           }}>
-          <NewHeader1
-            header={
-              startSelection
-                ? `${selectedExerciseIds?.size} Selected`
-                : route?.params?.focusedPart
-            }
-            iconSource={require('../../Icon/Images/NewImage2/filter.png')}
-            workoutCat={startSelection}
-            onBackPress={() => {
-              if (startSelection) {
-                setStartSelection(false);
-                setSelectedExerciseIds(new Set());
-                return;
-              }
-              if (downloaded > 0) {
-                showMessage({
-                  message:
-                    'Please wait, downloading in progress. Do not press back.',
-                  type: 'info',
-                  animationDuration: 500,
-                  floating: true,
-                  icon: {icon: 'auto', position: 'left'},
-                });
-              } else {
-                navigation?.goBack();
-              }
-            }}
-            onIconPress={() => {
-              AnalyticsConsole('O_BS_FW');
-              bottomSheetRef.current?.openSheet();
-            }}
-            icon={!startSelection}
-            backButton
-          />
-          <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
           <View
-            style={{
-              width: '90%',
-              height: 50,
-              alignSelf: 'center',
-              backgroundColor: '#F3F5F5',
-              borderRadius: 6,
-              flexDirection: 'row',
-              alignItems: 'center',
-              paddingLeft: 10,
-              // top:
-              //   DeviceHeigth <= 626 ? -DeviceWidth * 0.01 : -DeviceWidth * 0.05,
-            }}>
-            <Icons name="magnify" size={20} color={'#33333380'} />
-            <TextInput
-              placeholder="Search Exercise"
-              placeholderTextColor="#33333380"
-              value={searchQuery}
-              onChangeText={text => {
-                setSearchQuery(text);
-                updateFilteredCategories(text);
+            // colors={['#FFF1F4', '#FDFDFD']}
+            // start={{x: 0.5, y: 0}}
+            // end={{x: 0.5, y: 1}}
+            style={styles.headerGradient}>
+            <NewHeader1
+              header={
+                startSelection
+                  ? `${selectedExerciseIds?.size} Selected`
+                  : route?.params?.focusedPart
+              }
+              iconSource={require('../../Icon/Images/NewImage2/filter.png')}
+              workoutCat={startSelection}
+              onBackPress={() => {
+                if (startSelection) {
+                  setStartSelection(false);
+                  setSelectedExerciseIds(new Set());
+                  return;
+                }
+                if (downloaded > 0) {
+                  showMessage({
+                    message:
+                      'Please wait, downloading in progress. Do not press back.',
+                    type: 'info',
+                    animationDuration: 500,
+                    floating: true,
+                    icon: {icon: 'auto', position: 'left'},
+                  });
+                } else {
+                  navigation?.goBack();
+                }
               }}
-              style={styles.inputText}
+              onIconPress={() => {
+                AnalyticsConsole('O_BS_FW');
+                bottomSheetRef.current?.openSheet();
+              }}
+              icon={!startSelection}
+              backButton
             />
+            <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
+            <View
+              style={[
+                styles.searchBar,
+                searchFocused && styles.searchBarFocused,
+              ]}>
+              <Icons
+                name="magnify"
+                size={18}
+                color={searchFocused ? AppColor.RED : '#9CA3AF'}
+              />
+              <TextInput
+                placeholder="Search Exercise"
+                placeholderTextColor="#9CA3AF"
+                value={searchQuery}
+                onFocus={() => setSearchFocused(true)}
+                onBlur={() => setSearchFocused(false)}
+                onChangeText={text => {
+                  setSearchQuery(text);
+                  updateFilteredCategories(text);
+                }}
+                style={styles.inputText}
+              />
+              {!!searchQuery && (
+                <TouchableOpacity
+                  hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+                  onPress={() => setSearchQuery('')}>
+                  <Icon name="close-circle" size={18} color="#9CA3AF" />
+                </TouchableOpacity>
+              )}
+            </View>
           </View>
+
+          <Text style={styles.resultCountText}>
+            {(!!searchQuery ? searchFilterList : filterList)?.length ?? 0}{' '}
+            {translate('exercises')}
+          </Text>
 
           <View style={styles.contentContainer}>
             <FlatList
               data={!!searchQuery ? searchFilterList : filterList}
-              contentContainerStyle={{paddingBottom: DeviceHeigth * 0.1}}
+              contentContainerStyle={{
+                paddingTop: 8,
+                paddingBottom: DeviceHeigth * 0.1,
+              }}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
               keyExtractor={item => item?.exercise_id.toString()}
@@ -880,14 +867,9 @@ const NewFocusWorkouts = ({route, navigation}) => {
                 const time = parseInt(item?.exercise_rest.split(' ')[0]);
                 return (
                   <>
-                    <TouchableOpacity
-                      style={{
-                        width: '100%',
-                        marginVertical: 10,
-                        paddingHorizontal: 20,
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                      }}
+                    <AnimatedCard
+                      index={index}
+                      style={styles.card}
                       onPress={() => {
                         if (startSelection) {
                           handleSelection(item?.exercise_id);
@@ -897,68 +879,64 @@ const NewFocusWorkouts = ({route, navigation}) => {
                           setitem(item);
                         }
                       }}>
+                      <LinearGradient
+                        colors={['#FF2A54', '#E11D48']}
+                        style={styles.cardAccent}
+                      />
                       <Image
-                        style={{
-                          width: 75,
-                          height: 75,
-                          justifyContent: 'center',
-                          alignSelf: 'center',
-                          borderRadius: 5,
-                          borderWidth: 1,
-                          borderColor: '#D9D9D9',
-                        }}
+                        style={styles.cardImage}
                         source={{
                           uri:
                             item?.exercise_image_link ?? localImage.NOWORKOUT,
                         }}
                         resizeMode={'contain'}
                       />
-                      <View
-                        style={{
-                          marginHorizontal: 16,
-                          width:
-                            DeviceHeigth >= 1024
-                              ? DeviceWidth * 0.7
-                              : DeviceWidth * 0.48,
-                        }}>
-                        <Text
-                          numberOfLines={1}
-                          style={{
-                            fontSize: 16,
-                            fontWeight: '600',
-                            lineHeight: 24,
-                            fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                            color: '#1E1E1E',
-                          }}>
+                      <View style={styles.cardTextWrap}>
+                        <Text numberOfLines={1} style={styles.cardTitle}>
                           {item?.exercise_title}
                         </Text>
-                        <View
-                          style={{flexDirection: 'row', alignItems: 'center'}}>
-                          <Text style={styles.txt2}>
-                            {'Time - ' +
-                              '1 x ' +
-                              (time > 60
-                                ? Math.floor(time / 60) + ' min'
-                                : time + ' sec')}{' '}
-                            |{' '}
-                          </Text>
-                          <Text style={styles.txt2}>
-                            {'Set - ' + item?.exercise_sets}
-                          </Text>
+                        <View style={styles.cardMetaRow}>
+                          <View style={[styles.metaBadge, styles.timeBadge]}>
+                            <Icon
+                              name="clock-outline"
+                              size={12}
+                              color="#7C3AED"
+                            />
+                            <Text
+                              style={[
+                                styles.metaBadgeText,
+                                {color: '#7C3AED'},
+                              ]}>
+                              {'1 x ' +
+                                (time > 60
+                                  ? Math.floor(time / 60) + ' min'
+                                  : time + ' sec')}
+                            </Text>
+                          </View>
+                          <View style={[styles.metaBadge, styles.setBadge]}>
+                            <Icon name="repeat" size={12} color="#059669" />
+                            <Text
+                              style={[
+                                styles.metaBadgeText,
+                                {color: '#059669'},
+                              ]}>
+                              {'Set ' + item?.exercise_sets}
+                            </Text>
+                          </View>
                         </View>
                       </View>
                       {selectedIndex == index && downloadProgress <= 5 ? (
-                        <ActivityIndicator
-                          color={AppColor.NEW_DARK_RED}
-                          animating={
-                            selectedIndex == index && downloadProgress <= 5
-                          }
-                          size={30}
-                          style={{right: -15, padding: 2}}
-                        />
+                        <View style={styles.actionWrap}>
+                          <ActivityIndicator
+                            color="#E11D48"
+                            animating
+                            size={22}
+                          />
+                        </View>
                       ) : (
                         <TouchableOpacity
-                          style={{right: -15, padding: 2}}
+                          style={styles.actionWrap}
+                          hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
                           disabled={selectedIndex == index}
                           onPress={() => {
                             if (startSelection) {
@@ -976,96 +954,133 @@ const NewFocusWorkouts = ({route, navigation}) => {
                             }
                           }}>
                           {startSelection ? (
-                            <Icon
-                              name={
-                                selectedExerciseIds.has(item?.exercise_id)
-                                  ? 'check-circle'
-                                  : 'checkbox-blank-circle-outline'
-                              }
-                              size={25}
-                              color={
-                                selectedExerciseIds.has(item?.exercise_id)
-                                  ? AppColor.RED
-                                  : AppColor.GRAY1
-                              }
-                              style={{marginTop: 8}}
-                            />
-                          ) : (
+                            <View
+                              style={[
+                                styles.checkboxChip,
+                                selectedExerciseIds.has(item?.exercise_id) &&
+                                  styles.checkboxChipActive,
+                              ]}>
+                              <Icon
+                                name={
+                                  selectedExerciseIds.has(item?.exercise_id)
+                                    ? 'check-circle'
+                                    : 'checkbox-blank-circle-outline'
+                                }
+                                size={22}
+                                color={
+                                  selectedExerciseIds.has(item?.exercise_id)
+                                    ? '#E11D48'
+                                    : '#9CA3AF'
+                                }
+                              />
+                            </View>
+                          ) : selectedIndex == index ? (
                             <CircularProgressBase
-                              value={
-                                selectedIndex == index ? downloadProgress : 0
-                              }
-                              radius={16}
-                              activeStrokeColor={AppColor.RED}
-                              inActiveStrokeColor={AppColor.GRAY1}
+                              value={downloadProgress}
+                              radius={18}
+                              activeStrokeColor="#E11D48"
+                              inActiveStrokeColor="#FFD9E0"
                               activeStrokeWidth={3}
                               inActiveStrokeWidth={3}
                               maxValue={100}>
                               <Image
                                 source={localImage.ExercisePlay}
-                                tintColor={selectedIndex != index && '#565656'}
+                                tintColor="#E11D48"
                                 resizeMode="contain"
                                 style={{
-                                  width: 12,
-                                  height: 12,
-                                  alignSelf: 'center',
+                                  width: 14,
+                                  height: 14,
+                                  marginLeft: 2,
                                 }}
                               />
                             </CircularProgressBase>
+                          ) : (
+                            <LinearGradient
+                              colors={['#FF2A54', '#E11D48']}
+                              start={{x: 0, y: 0}}
+                              end={{x: 1, y: 1}}
+                              style={styles.playCircle}>
+                              <Image
+                                source={localImage.ExercisePlay}
+                                tintColor="#FFFFFF"
+                                resizeMode="contain"
+                                style={{
+                                  width: 14,
+                                  height: 14,
+                                  marginLeft: 2,
+                                }}
+                              />
+                            </LinearGradient>
                           )}
                         </TouchableOpacity>
                       )}
-                    </TouchableOpacity>
-                    {index !== filterList.length - 1 && (
-                      <View
-                        style={{
-                          width: '100%',
-                          height: 1,
-                          alignItems: 'center',
-                          backgroundColor: '#33333314',
-                        }}
-                      />
-                    )}
+                    </AnimatedCard>
                     {getAdsDisplay(index, item)}
                   </>
                 );
               }}
-              initialNumToRender={10}
-              maxToRenderPerBatch={10}
-              updateCellsBatchingPeriod={100}
-              // removeClippedSubviews={true}
+              initialNumToRender={8}
+              maxToRenderPerBatch={8}
+              windowSize={5}
+              updateCellsBatchingPeriod={50}
+              removeClippedSubviews={Platform.OS === 'android'}
             />
           </View>
           {!!searchQuery && searchFilterList?.length <= 0 ? null : (
-            <NewButton
-              position={'absolute'}
-              bottom={10}
-              title={
-                selectedExerciseIds.size < 1
-                  ? 'Select Exercises'
-                  : 'Start Workout'
-              }
-              fontSize={20}
-              withAnimation={downloaded > 0}
-              download={downloaded}
-              onPress={() => {
-                if (!startSelection) {
-                  setStartSelection(true);
-                  return;
-                }
-                if (selectedExerciseIds.size >= 1) {
-                  Start();
-                } else {
-                  showMessage({
-                    message: 'Please select exercises to start.',
-                    type: 'info',
-                    animationDuration: 500,
-                    floating: true,
-                    icon: {icon: 'auto', position: 'left'},
-                  });
-                }
-              }}
-            />
+            <View style={styles.ctaWrap}>
+              <LinearGradient
+                colors={['#FF2A54', '#E11D48']}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 0}}
+                style={styles.ctaGradient}>
+                <View style={styles.ctaIconCircle}>
+                  <Icon
+                    name={
+                      selectedExerciseIds.size < 1
+                        ? 'format-list-checks'
+                        : 'play'
+                    }
+                    size={16}
+                    color="#E11D48"
+                  />
+                </View>
+                <View style={{flex: 1}}>
+                  <NewButton
+                    ButtonWidth={'100%'}
+                    buttonColor="transparent"
+                    pH={0}
+                    pV={0}
+                    bR={20}
+                    fontFamily={Fonts.MONTSERRAT_BOLD}
+                    title={
+                      selectedExerciseIds.size < 1
+                        ? 'Select Exercises'
+                        : 'Start Workout'
+                    }
+                    fontSize={15}
+                    withAnimation={downloaded > 0}
+                    download={downloaded}
+                    onPress={() => {
+                      if (!startSelection) {
+                        setStartSelection(true);
+                        return;
+                      }
+                      if (selectedExerciseIds.size >= 1) {
+                        Start();
+                      } else {
+                        showMessage({
+                          message: 'Please select exercises to start.',
+                          type: 'info',
+                          animationDuration: 500,
+                          floating: true,
+                          icon: {icon: 'auto', position: 'left'},
+                        });
+                      }
+                    }}
+                  />
+                </View>
+              </LinearGradient>
+            </View>
           )}
 
           {/* <BottomSheet /> */}
@@ -1111,21 +1126,200 @@ const styles = StyleSheet.create({
     left: 0,
     borderRadius: 5,
   },
-  listContainer: {
-    flex: 1,
-    padding: 10,
-    borderRadius: 20,
+  sheetMainContainer: {
+    width: DeviceWidth,
+    paddingHorizontal: 20,
+    paddingTop: 14,
+    paddingBottom: 18,
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+  },
+  sheetHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingBottom: 10,
+  },
+  sheetFilterTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    color: '#1F2937',
+  },
+  sheetCloseBtn: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#F3F4F6',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  sheetHeaderDivider: {
+    width: '100%',
+    height: 1,
+    backgroundColor: '#F3F4F6',
+    marginVertical: 10,
+  },
+  sheetCategoryHeading: {
+    fontSize: 14,
+    fontWeight: '700',
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    color: '#1F2937',
+    marginBottom: 10,
+  },
+  filterCardsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  sheetCardsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 10,
+    width: '100%',
+  },
+  filterCardWrap: {
+    width: '47%',
+    marginBottom: 10,
+  },
+  filterCard: {
+    width: '100%',
+    height: 84,
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
+  filterCardInner: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 8,
+    position: 'relative',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.2,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  },
+  filterCardInactive: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 8,
+    borderWidth: 1.5,
+    backgroundColor: '#F9FAFB',
+    borderColor: '#E5E7EB',
+  },
+  filterCardBadge: {
+    position: 'absolute',
+    top: 6,
+    right: 6,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  filterCardImageCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 4,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  filterCardImage: {
+    width: 24,
+    height: 24,
+  },
+  filterCardTitleActive: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+  },
+  filterCardTitleInactive: {
+    fontSize: 12,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    color: '#374151',
+  },
+  sheetFooterRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingTop: 4,
+  },
+  clearAllButton: {
+    paddingHorizontal: 8,
+    paddingVertical: 10,
+  },
+  clearAllButtonText: {
+    fontSize: 14,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    color: '#E11D48',
+    textDecorationLine: 'underline',
+  },
+  showResultGradientBtn: {
+    paddingHorizontal: 24,
+    height: 48,
+    borderRadius: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: AppColor.RED,
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.3,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  },
+  showResultBtnText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '700',
+    textAlign: 'center',
+    fontFamily: Fonts.MONTSERRAT_BOLD,
   },
   inputText: {
-    paddingLeft: 15,
-    paddingRight: 15,
-    width: '90%',
+    flex: 1,
     height: 50,
-    fontSize: 12,
-    lineHeight: 18,
-    fontWeight: '600',
+    marginLeft: 10,
+    fontSize: 14,
+    fontWeight: '500',
     fontFamily: 'Montserrat',
-    color: '#000',
+    color: '#1E1E1E',
   },
   buttonText: {
     fontSize: 14,
@@ -1135,16 +1329,44 @@ const styles = StyleSheet.create({
     zIndex: 1,
     color: AppColor.WHITE,
   },
-  inputText: {
-    paddingLeft: 15,
-    paddingRight: 15,
-    width: '90%',
-    height: 50,
+  headerGradient: {
+    paddingBottom: 16,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
+  },
+  searchBar: {
+    width: '92%',
+    height: 52,
+    alignSelf: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    borderWidth: 1.5,
+    borderColor: 'transparent',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.06,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  searchBarFocused: {
+    borderColor: AppColor.RED,
+  },
+  resultCountText: {
+    marginTop: 14,
+    marginBottom: 4,
+    marginLeft: 20,
     fontSize: 12,
-    lineHeight: 18,
-    fontWeight: '600',
-    fontFamily: 'Montserrat',
-    color: '#000',
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    color: '#9CA3AF',
   },
   shadow: {
     marginBottom: 10,
@@ -1190,19 +1412,155 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  txt2: {
-    fontSize: 14,
-    fontWeight: '400',
-    lineHeight: 30,
-    // opacity: 0.7,
-    fontFamily: Fonts.MONTSERRAT_MEDIUM,
-    color: '#1E1E1E',
+  card: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 22,
+    marginHorizontal: 16,
+    marginBottom: 10,
+    paddingVertical: 10,
+    paddingLeft: 20,
+    paddingRight: 14,
+    borderWidth: 1,
+    borderColor: '#F3F4F6',
+    overflow: 'hidden',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.06,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
-  closeStyle: {
-    right: 8,
-    marginTop: 6,
+  cardAccent: {
     position: 'absolute',
-    zIndex: 1,
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: 4.5,
+  },
+  cardImage: {
+    width: 58,
+    height: 58,
+    borderRadius: 12,
+    backgroundColor: '#F3F4F6',
+  },
+  cardTextWrap: {
+    flex: 1,
+    marginHorizontal: 12,
+  },
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    lineHeight: 19,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    color: '#111827',
+  },
+  cardMetaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    marginTop: 5,
+  },
+  metaBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 9,
+    marginRight: 6,
+    marginTop: 2,
+    borderWidth: 1,
+  },
+  timeBadge: {
+    backgroundColor: '#F5F3FF',
+    borderColor: '#DDD6FE',
+  },
+  setBadge: {
+    backgroundColor: '#D1FAE5',
+    borderColor: '#A7F3D0',
+  },
+  metaBadgeText: {
+    fontSize: 11,
+    fontWeight: '700',
+    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+    marginLeft: 4,
+  },
+  actionWrap: {
+    width: 38,
+    height: 38,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  playCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#FF2A54',
+        shadowOffset: {width: 0, height: 3},
+        shadowOpacity: 0.35,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 6,
+      },
+    }),
+  },
+  checkboxChip: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F3F4F6',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+  },
+  checkboxChipActive: {
+    backgroundColor: '#FFF1F2',
+    borderColor: '#FECDD3',
+  },
+  ctaWrap: {
+    position: 'absolute',
+    bottom: 16,
+    width: '100%',
+    alignItems: 'center',
+  },
+  ctaGradient: {
+    width: DeviceWidth * 0.9,
+    height: 52,
+    borderRadius: 26,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 18,
+    gap: 10,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+    shadowColor: '#FF2A54',
+    shadowOffset: {width: 0, height: 8},
+    shadowOpacity: 0.35,
+    shadowRadius: 14,
+    elevation: 6,
+  },
+  ctaIconCircle: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 export default NewFocusWorkouts;

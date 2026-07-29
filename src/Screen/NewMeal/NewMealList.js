@@ -15,7 +15,7 @@ const NewMealList = ({navigation, route}) => {
   // const {showInterstitialAd} = MyInterstitialAd();
   const getDietFilterData = useSelector(state => state?.getDietFilterData);
   const mealData = useSelector(state => state.mealData);
-  const [filterMealList, setFilterMealList] = useState(route?.params?.data)
+  const [filterMealList, setFilterMealList] = useState(route?.params?.data);
   const checkMealAddCount = item => {
     let checkAdsShow = AddCountFunction();
 
@@ -111,9 +111,8 @@ const NewMealList = ({navigation, route}) => {
               opacity: 0.6,
               fontFamily: Fonts.MONTSERRAT_MEDIUM,
             }}>
-           Check back later for healthier options!
+            Check back later for healthier options!
           </Text>
-         
         </View>
       </View>
     );
@@ -121,22 +120,23 @@ const NewMealList = ({navigation, route}) => {
   return (
     <View style={styles.container}>
       {filterMealList?.length > 0 && (
-      <View
-        style={{
-          width: '95%',
-          alignSelf: 'center',
-          marginVertical: DeviceHeigth * 0.02,
-        }}>
-        <FitText
-          type="Heading"
-          value={'Top Recipes'}
-          fontWeight="700"
-          fontSize={16}
-          lineHeight={24}
-          color={AppColor.LITELTEXTCOLOR}
-          fontFamily={Fonts.MONTSERRAT_REGULAR}
-        />
-      </View>)}
+        <View
+          style={{
+            width: '95%',
+            alignSelf: 'center',
+            marginVertical: DeviceHeigth * 0.02,
+          }}>
+          <FitText
+            type="Heading"
+            value={'Top Recipes'}
+            fontWeight="700"
+            fontSize={16}
+            lineHeight={24}
+            color={AppColor.LITELTEXTCOLOR}
+            fontFamily={Fonts.MONTSERRAT_REGULAR}
+          />
+        </View>
+      )}
       <View
         style={{
           flex: 9,
@@ -240,7 +240,7 @@ const NewMealList = ({navigation, route}) => {
                       width: 2,
                       height: 20,
                       backgroundColor: '#333333',
-                      opacity:0.6,
+                      opacity: 0.6,
                       marginHorizontal: 5,
                     }}
                   />

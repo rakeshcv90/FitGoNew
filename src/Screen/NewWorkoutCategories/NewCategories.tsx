@@ -1,5 +1,6 @@
-import {SafeAreaView, StyleSheet, Text, TextInput, View} from 'react-native';
+import {Platform, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
+import LinearGradient from 'react-native-linear-gradient';
 import {AppColor, Fonts, PLATFORM_IOS} from '../../Component/Color';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
@@ -28,6 +29,7 @@ const NewCategories = ({navigation, route}: any) => {
   const [switchButton, setSwitchButton] = useState(false);
   const [selectedExIDs, setSeletedExIDs] = useState<number[]>([]);
   const [progressPercent, setProgressPercent] = useState(0);
+  const [searchFocused, setSearchFocused] = useState(false);
 
   const dispatch = useDispatch();
   const getEquipmentExercise = useSelector(
@@ -140,20 +142,38 @@ const NewCategories = ({navigation, route}: any) => {
           iconSource={require('../../Icon/Images/NewImage2/filter.png')}
         />
         <View style={styles.container}>
-          <View style={styles.inputTextContainer}>
+          <View
+            style={[
+              styles.inputTextContainer,
+              searchFocused && styles.inputTextContainerFocused,
+            ]}>
             <FitIcon
-              type="FontAwesome5"
-              name="search"
+              type="MaterialCommunityIcons"
+              name="magnify"
               size={18}
-              color={'#333333E5'}
+              color={searchFocused ? AppColor.RED : '#9CA3AF'}
             />
             <TextInput
               placeholder="Search Exercise"
-              placeholderTextColor="#33333380"
+              placeholderTextColor="#9CA3AF"
               value={searchValue}
+              onFocus={() => setSearchFocused(true)}
+              onBlur={() => setSearchFocused(false)}
               onChangeText={searchFunction}
               style={styles.inputText}
             />
+            {!!searchValue && (
+              <TouchableOpacity
+                hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+                onPress={() => searchFunction('')}>
+                <FitIcon
+                  type="MaterialCommunityIcons"
+                  name="close-circle"
+                  size={18}
+                  color="#9CA3AF"
+                />
+              </TouchableOpacity>
+            )}
           </View>
           <CategoriesList
             exerciseData={filteredExercise}
@@ -165,28 +185,52 @@ const NewCategories = ({navigation, route}: any) => {
             setProgressPercent={setProgressPercent}
           />
 
-          <NewButton
-            bottom={10}
-            title={
-              progressPercent > 0
-                ? `Downloading`
-                : switchButton
-                ? `Start Workout`
-                : 'Select Exercises'
-            }
-            fontSize={20}
-            disabled={switchButton && selectedExIDs.length == 0}
-            buttonColor={
-              switchButton
-                ? selectedExIDs.length == 0
-                  ? AppColor.GRAY1
-                  : AppColor.RED
-                : AppColor.RED
-            }
-            onPress={onPress}
-            withAnimation={switchButton && progressPercent > 0}
-            download={progressPercent}
-          />
+          <View style={styles.ctaWrap}>
+            <LinearGradient
+              colors={
+                switchButton && selectedExIDs.length === 0
+                  ? ['#D1D5DB', '#9CA3AF']
+                  : ['#FF2A54', '#E11D48']
+              }
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              style={styles.ctaGradient}>
+              <View style={styles.ctaIconCircle}>
+                <FitIcon
+                  type="MaterialCommunityIcons"
+                  name={
+                    !switchButton || selectedExIDs.length < 1
+                      ? 'format-list-checks'
+                      : 'play'
+                  }
+                  size={16}
+                  color="#E11D48"
+                />
+              </View>
+              <View style={{flex: 1}}>
+                <NewButton
+                  ButtonWidth={'100%'}
+                  buttonColor="transparent"
+                  pH={0}
+                  pV={0}
+                  bR={20}
+                  fontFamily={Fonts.MONTSERRAT_BOLD}
+                  title={
+                    progressPercent > 0
+                      ? `Downloading`
+                      : switchButton
+                      ? `Start Workout`
+                      : 'Select Exercises'
+                  }
+                  fontSize={15}
+                  disabled={switchButton && selectedExIDs.length == 0}
+                  onPress={onPress}
+                  withAnimation={switchButton && progressPercent > 0}
+                  download={progressPercent}
+                />
+              </View>
+            </LinearGradient>
+          </View>
         </View>
       </Wrapper>
       <BottomSheet1 ref={bottomSheetRef}>
@@ -199,7 +243,6 @@ const NewCategories = ({navigation, route}: any) => {
     </SafeAreaView>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -237,34 +280,72 @@ const styles = StyleSheet.create({
     color: AppColor.WHITE,
   },
   inputTextContainer: {
-    width: '90%',
-    height: 50,
+    width: '92%',
+    height: 52,
     alignSelf: 'center',
-    backgroundColor: '#F3F5F5',
-    borderRadius: 6,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: 10,
+    paddingHorizontal: 16,
     marginVertical: (DeviceWidth * 0.1) / 8,
-    justifyContent: 'center',
+    borderWidth: 1.5,
+    borderColor: 'transparent',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.06,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  inputTextContainerFocused: {
+    borderColor: AppColor.RED,
   },
   inputText: {
-    paddingLeft: 15,
-    paddingRight: 15,
-    width: '90%',
-    height: 50,
-    fontSize: 12,
-    lineHeight: 18,
-    fontWeight: '600',
-    fontFamily: 'Montserrat',
-    color: '#000',
-  },
-  listContainer: {
     flex: 1,
-    padding: 10,
-    borderRadius: 20,
+    height: 50,
+    marginLeft: 10,
+    fontSize: 14,
+    fontWeight: '500',
+    fontFamily: 'Montserrat',
+    color: '#1E1E1E',
+  },
+  ctaWrap: {
+    position: 'absolute',
+    bottom: 16,
+    width: '100%',
+    alignItems: 'center',
+  },
+  ctaGradient: {
+    width: DeviceWidth * 0.9,
+    height: 52,
+    borderRadius: 26,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 18,
+    gap: 10,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+    shadowColor: '#FF2A54',
+    shadowOffset: {width: 0, height: 8},
+    shadowOpacity: 0.35,
+    shadowRadius: 14,
+    elevation: 6,
+  },
+  ctaIconCircle: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
-
 
 export default NewCategories;

@@ -1,5 +1,13 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {FC, useState} from 'react';
+import {Image, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {FC, useEffect, useState} from 'react';
+import LinearGradient from 'react-native-linear-gradient';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSequence,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 import {DeviceWidth} from '../../Component/Config';
 import {AppColor, Fonts} from '../../Component/Color';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
@@ -24,6 +32,91 @@ type Props = {
   filterExercises: (value: number) => void
 };
 
+const AdjustCard = ({
+  item,
+  isSelected,
+  onPress,
+}: {
+  item: {image: any; text: string};
+  isSelected: boolean;
+  onPress: () => void;
+}) => {
+  const scale = useSharedValue(1);
+  const badgeScale = useSharedValue(1);
+  const imageScale = useSharedValue(1);
+
+  useEffect(() => {
+    if (isSelected) {
+      scale.value = withSpring(1.03, {damping: 12, stiffness: 240});
+      imageScale.value = withSpring(1.08, {damping: 12, stiffness: 240});
+      badgeScale.value = withSequence(
+        withTiming(1.3, {duration: 100}),
+        withSpring(1, {damping: 10, stiffness: 260}),
+      );
+    } else {
+      scale.value = withSpring(1, {damping: 12, stiffness: 240});
+      imageScale.value = withSpring(1, {damping: 12, stiffness: 240});
+    }
+  }, [isSelected]);
+
+  const cardStyle = useAnimatedStyle(() => ({
+    transform: [{scale: scale.value}],
+  }));
+  const badgeStyle = useAnimatedStyle(() => ({
+    transform: [{scale: badgeScale.value}],
+  }));
+  const imageStyle = useAnimatedStyle(() => ({
+    transform: [{scale: imageScale.value}],
+  }));
+
+  return (
+    <TouchableOpacity activeOpacity={0.88} onPress={onPress} style={{flex: 1}}>
+      <Animated.View style={[styles.filterCard, cardStyle]}>
+        {isSelected ? (
+          <LinearGradient
+            colors={['#FF2A54', '#E11D48']}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 1}}
+            style={styles.filterCardInner}>
+            <Animated.View style={[styles.filterCardBadge, badgeStyle]}>
+              <FitIcon
+                type="MaterialCommunityIcons"
+                name="check-bold"
+                size={12}
+                color="#E11D48"
+              />
+            </Animated.View>
+            <Animated.View style={[styles.filterCardImageCircle, imageStyle]}>
+              <Image
+                source={item.image}
+                style={styles.filterCardImage}
+                resizeMode="contain"
+              />
+            </Animated.View>
+            <Text style={styles.filterCardTitleActive} numberOfLines={1}>
+              {item.text}
+            </Text>
+          </LinearGradient>
+        ) : (
+          <View style={styles.filterCardInactive}>
+            <Animated.View style={[styles.filterCardImageCircle, imageStyle]}>
+              <Image
+                source={item.image}
+                tintColor={AppColor.SecondaryTextColor}
+                style={styles.filterCardImage}
+                resizeMode="contain"
+              />
+            </Animated.View>
+            <Text style={styles.filterCardTitleInactive} numberOfLines={1}>
+              {item.text}
+            </Text>
+          </View>
+        )}
+      </Animated.View>
+    </TouchableOpacity>
+  );
+};
+
 const BottomSheetContent: FC<Props> = ({
   bottomSheetRef,
   getEquipmentExercise,
@@ -32,141 +125,62 @@ const BottomSheetContent: FC<Props> = ({
   const [adjustSelected, setAdjustSelelcted] = useState(getEquipmentExercise);
   const isFilterChanged = adjustSelected !== getEquipmentExercise; // extra condition for adjust change detection
   return (
-    <View style={styles.listContainer}>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          width: DeviceWidth * 0.9,
-          alignSelf: 'center',
-          alignItems: 'center',
-          // top: -10,
-        }}>
-        <View />
-        <Text
-          style={{
-            fontSize: 16,
-            fontWeight: '600',
-            lineHeight: 24,
-            fontFamily: Fonts.MONTSERRAT_BOLD,
-            color: '#1E1E1E',
-            marginLeft: DeviceWidth * 0.06,
-          }}>
+    <View style={styles.sheetMainContainer}>
+      <View style={styles.sheetHeaderRow}>
+        <View style={{width: 32}} />
+        <Text style={styles.sheetFilterTitle}>
           {translate('adjustTitle')}
         </Text>
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => {
             AnalyticsConsole('CL_BS_FW');
-            // handleFilterVisibilty();
             bottomSheetRef.current?.closeSheet();
-          }}>
+          }}
+          style={styles.sheetCloseBtn}>
           <FitIcon
             type="MaterialCommunityIcons"
             name={'close'}
-            size={24}
-            color={AppColor.BLACK}
+            size={20}
+            color="#374151"
           />
         </TouchableOpacity>
       </View>
-      <View
-        style={{
-          width: DeviceWidth,
-          height: 1,
-          backgroundColor: '#1E1E1E',
-          opacity: 0.2,
-          marginVertical: 16,
-          alignSelf: 'center',
-        }}
-      />
-      <View style={{width: DeviceWidth * 0.9, alignSelf: 'center'}}>
+
+      <View style={styles.sheetHeaderDivider} />
+
+      <View style={styles.sheetCardsRow}>
+        {adjustArray.map((item, index) => (
+          <AdjustCard
+            key={index}
+            item={item}
+            isSelected={adjustSelected == index}
+            onPress={() => setAdjustSelelcted(index)}
+          />
+        ))}
+      </View>
+
+      <View style={styles.sheetHeaderDivider} />
+
+      <View style={styles.sheetFooterRow}>
         <TouchableOpacity
-          activeOpacity={1}
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: 15,
-          }}
-          onPress={() => setAdjustSelelcted(prev => (prev == 0 ? 1 : 0))}>
-          {adjustArray.map((item, index) => (
-            <View
-              style={{
-                width: DeviceWidth / 2.3,
-                backgroundColor: '#F9F9F9',
-                borderRadius: 10,
-                borderWidth: 1.5,
-                borderColor: adjustSelected == index ? AppColor.RED : '#F9F9F9',
-              }}>
-              <FitIcon
-                type="MaterialCommunityIcons"
-                style={{position: 'absolute', right: 12, top: 5}}
-                name={
-                  adjustSelected == index
-                    ? 'check-circle'
-                    : 'checkbox-blank-circle-outline'
-                }
-                size={25}
-                color={
-                  adjustSelected == index
-                    ? AppColor.RED
-                    : AppColor.SecondaryTextColor
-                }
-              />
-              <Image
-                source={item.image}
-                style={{
-                  width: 35,
-                  height: 35,
-                  alignSelf: 'center',
-                  marginTop: 12,
-                }}
-                tintColor={
-                  adjustSelected == index
-                    ? AppColor.RED
-                    : AppColor.SecondaryTextColor
-                }
-              />
-              <Text
-                style={{
-                  textAlign: 'center',
-                  color: AppColor.BLACK,
-                  fontFamily: Fonts.HELVETICA_BOLD,
-                  marginBottom: 12,
-                  marginTop: 4,
-                }}>
-                {item.text}
-              </Text>
-            </View>
-          ))}
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            width: 150,
-            height: 50,
-            backgroundColor: AppColor.RED,
-            borderRadius: 6,
-            alignSelf: 'flex-end',
-            justifyContent: 'center',
-            alignItems: 'center',
-            opacity: !isFilterChanged ? 0.6 : 1,
-          }}
-          disabled={!isFilterChanged ? true : false}
+          activeOpacity={0.88}
+          disabled={!isFilterChanged}
           onPress={() => {
             filterExercises(adjustSelected);
           }}>
-          <Text
-            style={{
-              color: '#FFFFFF',
-              fontSize: 14,
-              fontWeight: '500',
-              lineHeight: 20,
-
-              textAlign: 'center',
-              fontFamily: Fonts.MONTSERRAT_MEDIUM,
-            }}>
-            {translate('showResult')}
-          </Text>
+          <LinearGradient
+            colors={[AppColor.RED, '#E11D48']}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
+            style={[
+              styles.showResultGradientBtn,
+              !isFilterChanged && {opacity: 0.5},
+            ]}>
+            <Text style={styles.showResultBtnText}>
+              {translate('showResult')}
+            </Text>
+          </LinearGradient>
         </TouchableOpacity>
       </View>
     </View>
@@ -176,9 +190,163 @@ const BottomSheetContent: FC<Props> = ({
 export default BottomSheetContent;
 
 const styles = StyleSheet.create({
-  listContainer: {
-    flex: 1,
-    padding: 10,
-    borderRadius: 20,
+  sheetMainContainer: {
+    width: DeviceWidth,
+    paddingHorizontal: 20,
+    paddingTop: 14,
+    paddingBottom: 18,
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+  },
+  sheetHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingBottom: 10,
+  },
+  sheetFilterTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    color: '#1F2937',
+  },
+  sheetCloseBtn: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#F3F4F6',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  sheetHeaderDivider: {
+    width: '100%',
+    height: 1,
+    backgroundColor: '#F3F4F6',
+    marginVertical: 10,
+  },
+  sheetCardsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 10,
+    width: '100%',
+  },
+  filterCard: {
+    width: '100%',
+    height: 84,
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
+  filterCardInner: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 8,
+    position: 'relative',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.2,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  },
+  filterCardInactive: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 8,
+    borderWidth: 1.5,
+    backgroundColor: '#F9FAFB',
+    borderColor: '#E5E7EB',
+  },
+  filterCardBadge: {
+    position: 'absolute',
+    top: 6,
+    right: 6,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  filterCardImageCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 4,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  filterCardImage: {
+    width: 24,
+    height: 24,
+  },
+  filterCardTitleActive: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+  },
+  filterCardTitleInactive: {
+    fontSize: 12,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    color: '#374151',
+  },
+  sheetFooterRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    width: '100%',
+    paddingTop: 4,
+  },
+  showResultGradientBtn: {
+    paddingHorizontal: 24,
+    height: 48,
+    borderRadius: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: AppColor.RED,
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.3,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  },
+  showResultBtnText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '700',
+    textAlign: 'center',
+    fontFamily: Fonts.MONTSERRAT_BOLD,
   },
 });

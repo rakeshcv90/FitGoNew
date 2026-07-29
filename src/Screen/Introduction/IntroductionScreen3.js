@@ -1,16 +1,8 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  StatusBar,
-  Image,
-} from 'react-native';
+import {View, Text, StyleSheet, StatusBar, Platform} from 'react-native';
 import React from 'react';
 
 import {AppColor, Fonts} from '../../Component/Color';
-import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
-import FitIcon from '../../Component/Utilities/FitIcon';
+import {DeviceHeigth} from '../../Component/Config';
 import {localImage} from '../../Component/Image';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -21,154 +13,90 @@ import AnimatedLottieView from 'lottie-react-native';
 import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
 import CircleProgress from '../../Component/Utilities/ProgressCircle';
 import { translate } from '../Translation/TranslationService';
+import {FadeSlideIn, FloatingImage, IntroGlow} from './IntroAnimations';
+import {NavButton, SkipButton, StepIndicator} from './IntroControls';
+import {navButtonRadius, navButtonSize, scale} from './responsive';
 
 const IntroductionScreen3 = ({navigation}) => {
   const dispatch = useDispatch();
   const hindiLanguage = useSelector(state => state.hindiLanguage);
   return (
-    <View style={styles.Container}>
+    <View style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={AppColor.WHITE} />
-      <View
-        style={{
-          width: '100%',
-          height: '50%',
-          backgroundColor: AppColor.WHITE,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <View
+
+      {/* Skip Button (hidden on last screen) */}
+      <FadeSlideIn delay={100} distance={-10} style={styles.skipRow}>
+        {/* <TouchableOpacity
           style={{
-            height: 30,
-            width: '95%',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
+            justifyContent: 'center',
             alignItems: 'center',
 
             zIndex: 1,
-            top: Platform.OS == 'ios' && DeviceHeigth <= 1024 ? 15 : -5,
+            overflow: 'hidden',
+            width: DeviceWidth * 0.08,
+            height: DeviceHeigth * 0.05,
+          }}
+          onPress={() => {
+            AnalyticsConsole(`LAN_C_TO_${hindiLanguage ? 'H' : 'E'}`);
+            dispatch(setHindiLanuage(!hindiLanguage));
           }}>
-          {/* <TouchableOpacity
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
+          <Image
+            source={localImage.TranslateIntro}
+            resizeMode="contain"
+            style={{height: 30, width: 30}}
+          />
+        </TouchableOpacity> */}
+        <SkipButton
+          visible={false}
+          label=""
+          onPress={() => {
+            AnalyticsConsole('SKIP_IS');
+            dispatch(setShowIntro(true));
+            navigation.navigate('LogSignUp');
+          }}
+        />
+      </FadeSlideIn>
 
-              zIndex: 1,
-              overflow: 'hidden',
-              width: DeviceWidth * 0.08,
-              height: DeviceHeigth * 0.05,
-            }}
-            onPress={() => {
-              AnalyticsConsole(`LAN_C_TO_${hindiLanguage ? 'H' : 'E'}`);
-              dispatch(setHindiLanuage(!hindiLanguage));
-            }}>
-            <Image
-              source={localImage.TranslateIntro}
-              resizeMode="contain"
-              style={{height: 30, width: 30}}
-            />
-          </TouchableOpacity> */}
-          <TouchableOpacity
-          disabled={true}
-            onPress={() => {
-              AnalyticsConsole('SKIP_IS');
-              dispatch(setShowIntro(true));
-              navigation.navigate('LogSignUp');
-            }}>
-            {/* <Text
-              style={{
-                textDecorationLine: 'underline',
-                color: AppColor.WHITE,
-                textAlign: 'center',
-                fontWeight: '600',
-                lineHeight: 20,
-                fontSize: 14,
-              }}>
-              Skip
-            </Text> */}
-          </TouchableOpacity>
+      {/* Hero Image */}
+      <View style={styles.imageSection}>
+        <View style={styles.imageContainer}>
+          <IntroGlow />
+          <FloatingImage
+            source={localImage.Intro3}
+            style={styles.heroImage}
+          />
         </View>
-        <Image
-          source={localImage.Intro3}
-          resizeMode="contain"
-          style={{
-            width: '80%',
-            height: '80%',
-            // top: DeviceHeigth * 0.04,
-          }}></Image>
-      </View>
-      <View
-        style={{
-          width: '100%',
-          height: '40%',
-          backgroundColor: '#fff',
-          paddingLeft: 20,
-          paddingRight: 20,
-          paddingTop: 30,
-        }}>
-        <Text
-          style={{
-            fontFamily: Fonts.MONTSERRAT_BOLD,
-            fontSize: 25,
-            lineHeight: 33,
-            fontWeight: '700',
-            color: AppColor.RED,
-          }}>
-          {/* {hindiLanguage ? 'सुकून की साँस लें!' : 'Breathe In, Stress Out!'} */}
-          {translate('intro3title')}
-        </Text>
-
-        <Text
-          style={{
-            fontFamily: Fonts.MONTSERRAT_REGULAR,
-            fontSize: 16,
-            lineHeight: 25,
-            fontWeight: '500',
-            color: '#333333CC',
-            opacity: 0.8,
-            marginTop: 16,
-          }}>
-          {/* {hindiLanguage
-            ? `शांति पाएं इस हलचल भरी दुनिया में हमारी शांतिदायक ब्रीदिंग एक्सरसाइज और माइंडफुल मेडिटेशन सेशन के साथ। तनाव कम करें, मूड बेहतर करें और हमारे गाइडेड सेशन्स के साथ अपनी फोकस क्षमता बढ़ाएं। एक गहरी साँस लें और एक शांत, स्वस्थ जीवन का आनंद उठाएं!`
-            : `Find your peace amidst the chaos with calming breathing exercises and mindful meditation sessions. Reduce stress, boost your mood, and enhance your focus with our guided sessions. Take a deep breath and unlock a calmer, healthier you!`} */}
-            {translate('intro3description')}
-        </Text>
       </View>
 
-      <View
-        style={{
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          height: '10%',
-          backgroundColor: '#fff',
-          paddingRight: 20,
-          paddingLeft: 20,
-          flexDirection: 'row',
-        }}>
-        <TouchableOpacity
-          activeOpacity={0.7}
+      {/* Content Area */}
+      <View style={styles.contentArea}>
+        <FadeSlideIn delay={250}>
+          <Text style={styles.titleText}>
+            {/* {hindiLanguage ? 'सुकून की साँस लें!' : 'Breathe In, Stress Out!'} */}
+            {translate('intro3title')}
+          </Text>
+        </FadeSlideIn>
+
+        <FadeSlideIn delay={400}>
+          <Text style={styles.descText}>
+            {/* {hindiLanguage
+              ? `शांति पाएं इस हलचल भरी दुनिया में हमारी शांतिदायक ब्रीदिंग एक्सरसाइज और माइंडफुल मेडिटेशन सेशन के साथ। तनाव कम करें, मूड बेहतर करें और हमारे गाइडेड सेशन्स के साथ अपनी फोकस क्षमता बढ़ाएं। एक गहरी साँस लें और एक शांत, स्वस्थ जीवन का आनंद उठाएं!`
+              : `Find your peace amidst the chaos with calming breathing exercises and mindful meditation sessions. Reduce stress, boost your mood, and enhance your focus with our guided sessions. Take a deep breath and unlock a calmer, healthier you!`} */}
+              {translate('intro3description')}
+          </Text>
+        </FadeSlideIn>
+      </View>
+
+      {/* Bottom Navigation */}
+      <FadeSlideIn delay={550} distance={16} style={styles.bottomNav}>
+        <NavButton
+          direction="back"
           onPress={() => {
             AnalyticsConsole("TO_IS2")
             navigation.goBack();
           }}
-          style={{
-            // backgroundColor: AppColor.BLACK,
-            width:
-              DeviceHeigth >= 1024 ? DeviceWidth * 0.08 : DeviceWidth * 0.1,
-            height:
-              DeviceHeigth >= 1024 ? DeviceWidth * 0.08 : DeviceWidth * 0.1,
-            borderRadius: 100,
-            margin: 5,
-
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <FitIcon
-            name="arrowleft"
-            size={25}
-            type="AntDesign"
-            color="#f0013b"
-          />
-        </TouchableOpacity>
+        />
+        <StepIndicator currentStep={2} totalSteps={3} />
         {/* <TouchableOpacity
           onPress={() =>{
             AnalyticsConsole('IV_F_IS')
@@ -185,47 +113,87 @@ const IntroductionScreen3 = ({navigation}) => {
             }}
           />
         </TouchableOpacity> */}
-        <View style={{width: 50, height: 50}} />
         <CircleProgress
           progress={0}
-          radius={DeviceHeigth >= 1024 ? 35 : 25}
-          secondayCircleColor={AppColor.WHITE}
+          radius={navButtonRadius()}
+          secondayCircleColor={'#F0F0F0'}
           // clockwise
+          containerStyle={{padding: 0}}
           strokeWidth={3}>
-          <TouchableOpacity
-            activeOpacity={0.7}
+          <NavButton
+            direction="next"
             onPress={() => {
               AnalyticsConsole("TO_IS3")
               dispatch(setShowIntro(true));
               navigation.navigate('LogSignUp');
             }}
-            style={{
-              width:
-                DeviceHeigth >= 1024 ? DeviceWidth * 0.08 : DeviceWidth * 0.1,
-              height:
-                DeviceHeigth >= 1024 ? DeviceWidth * 0.08 : DeviceWidth * 0.1,
-              borderRadius: 100,
-              margin: 5,
-
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <FitIcon
-              name="arrowright"
-              size={25}
-              type="AntDesign"
-              color={AppColor.RED}
-            />
-          </TouchableOpacity>
+          />
         </CircleProgress>
-      </View>
+      </FadeSlideIn>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
-  Container: {
+  container: {
     flex: 1,
     backgroundColor: AppColor.WHITE,
   },
+  skipRow: {
+    height: scale(34),
+    width: '95%',
+    alignSelf: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    zIndex: 1,
+    marginTop: Platform.OS === 'ios' ? 50 : 10,
+  },
+  imageSection: {
+    width: '100%',
+    height: '45%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: AppColor.WHITE,
+  },
+  imageContainer: {
+    width: '85%',
+    height: '90%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  heroImage: {
+    width: '100%',
+    height: '100%',
+  },
+  contentArea: {
+    flex: 1,
+    paddingHorizontal: 24,
+    paddingTop: 16,
+  },
+  titleText: {
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontSize: scale(26),
+    lineHeight: scale(34),
+    fontWeight: '700',
+    color: '#1A1A2E',
+  },
+  descText: {
+    fontFamily: Fonts.MONTSERRAT_REGULAR,
+    fontSize: scale(15),
+    lineHeight: scale(24),
+    fontWeight: '500',
+    color: '#6B7280',
+    marginTop: 14,
+  },
+  bottomNav: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingBottom: Platform.OS === 'ios' ? 34 : 16,
+    flexDirection: 'row',
+    height: 80,
+  },
 });
+
 export default IntroductionScreen3;

@@ -1,16 +1,8 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  StatusBar,
-  Image,
-} from 'react-native';
+import {View, Text, StyleSheet, StatusBar, Platform} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {DeviceWidth, DeviceHeigth} from '../../Component/Config';
+import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {AppColor, Fonts} from '../../Component/Color';
 
-import FitIcon from '../../Component/Utilities/FitIcon';
 import {localImage} from '../../Component/Image';
 import {
   setHindiLanuage,
@@ -21,6 +13,9 @@ import AnimatedLottieView from 'lottie-react-native';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import CircleProgress from '../../Component/Utilities/ProgressCircle';
 import {translate} from '../Translation/TranslationService';
+import {FadeSlideIn, FloatingImage, IntroGlow} from './IntroAnimations';
+import {NavButton, SkipButton, StepIndicator} from './IntroControls';
+import {navButtonRadius, navButtonSize, scale} from './responsive';
 
 const IntroductionScreen1 = ({navigation}) => {
   const dispatch = useDispatch();
@@ -39,191 +34,131 @@ const IntroductionScreen1 = ({navigation}) => {
   );
 
   return (
-    <View style={styles.Container}>
+    <View style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={AppColor.WHITE} />
-      <View
-        style={{
-          width: '100%',
-          height: '50%',
-          opacity: 1,
-          backgroundColor: AppColor.WHITE,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <View
-          style={{
-            height: 30,
-            width: '95%',
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
-            alignItems: 'center',
 
-            zIndex: 1,
-            top: Platform.OS == 'ios' && DeviceHeigth <= 1024 ? 15 : -5,
-          }}>
-          {/* <TouchableOpacity
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
+      {/* Skip Button */}
+      <FadeSlideIn delay={100} distance={-10} style={styles.skipRow}>
+        <SkipButton
+          label={translate('skip')}
+          onPress={() => {
+            AnalyticsConsole('SKIP_IS');
+            dispatch(setShowIntro(true));
+            navigation.navigate('LogSignUp');
+          }}
+        />
+      </FadeSlideIn>
 
-              zIndex: 1,
-              overflow: 'hidden',
-              width: DeviceWidth * 0.08,
-              height: DeviceHeigth * 0.05,
-            }}
-            onPress={() => {
-              AnalyticsConsole(`LAN_C_TO_${hindiLanguage ? 'H' : 'E'}`);
-              dispatch(setHindiLanuage(!hindiLanguage));
-              // console.log("handle press");
-              // handleTranslate()
-            }}>
-            <Image
-              source={localImage.TranslateIntro}
-              resizeMode="contain"
-              style={{height: 30, width: 30}}
-            />
-          </TouchableOpacity> */}
-          <TouchableOpacity
-            // style={{
-            //     justifyContent: 'right',
-            //     alignItems: 'right',
-            //     textAlign:'right',
-            //     zIndex: 1,
-            //     overflow: 'hidden',
-            //     width: DeviceWidth * 0.08,
-            //     height: DeviceHeigth * 0.05,
-            //   }}
-            onPress={() => {
-              AnalyticsConsole('SKIP_IS');
-              dispatch(setShowIntro(true));
-              navigation.navigate('LogSignUp');
-            }}>
-            <Text
-              style={{
-                textDecorationLine: 'underline',
-                color: AppColor.RED,
-                textAlign: 'center',
-                fontWeight: '600',
-                lineHeight: 20,
-                fontSize: 14,
-              }}>
-              {translate('skip')}
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        <Image
-          source={localImage.Intro1}
-          resizeMode="contain"
-          style={{
-            width: '80%',
-            height: '80%',
-            // top: DeviceHeigth * 0.04,
-          }}></Image>
-      </View>
-      <View
-        style={{
-          height: '40%',
-          backgroundColor: '#fff',
-          paddingLeft: 20,
-          paddingTop: 24,
-          paddingRight: 20,
-        }}>
-        <Text
-          style={{
-            fontFamily: Fonts.MONTSERRAT_BOLD,
-            fontSize: 25,
-            lineHeight: 33,
-            fontWeight: '700',
-            color: AppColor.RED,
-          }}>
-          {/* {hindiLanguage ? 'अपना फिटनेस का सफर खुद तय करें!' : 'Get Fit, Your Way!'} */}
-          {translate('intro1title')}
-        </Text>
-
-        <Text
-          style={{
-            fontFamily: Fonts.MONTSERRAT_REGULAR,
-            fontSize: 16,
-            lineHeight: 25,
-            fontWeight: '500',
-            color: '#333333CC',
-            opacity: 0.8,
-            marginTop: 16,
-          }}>
-          {/* {hindiLanguage
-            ? `अपनी परफेक्ट वर्कआउट रूटीन डिजाइन करें! विभिन्न एक्सरसाइज में से चुनें, अपने लक्ष्य के अनुसार प्लान कस्टमाइज़ करें, और अपनी लाइफस्टाइल के अनुसार वर्कआउट का आनंद लें। अपने फिटनेस गोल्स को अपने तरीके से हासिल करें!`
-            : `Design your perfect workout routine! Choose from various exercises, customize your plan based on your goals, and enjoy workouts that fit your lifestyle. Achieve your fitness goals on your terms!`} */}
-          {translate('intro1description')}
-        </Text>
-      </View>
-      <View
-        style={{
-          // alignSelf: 'flex-end',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          height: '10%',
-          backgroundColor: 'white',
-          paddingRight: 20,
-          flexDirection: 'row',
-        }}>
-        <View style={{width: 50, height: 50}} />
-        <View style={{width: 50, height: 50}} />
-        {/* <TouchableOpacity
-          onPress={() =>{
-            AnalyticsConsole('IV_F_IS')
-             navigation.navigate('IntroVideo', {type: 'intro'})}}>
-          <AnimatedLottieView
-            source={localImage.IntroJSON}
-            speed={1}
-            autoPlay
-            loop
-            resizeMode="cover"
-            style={{
-              width: DeviceWidth * 0.3,
-              height: '100%',
-            }}
+      {/* Hero Image */}
+      <View style={styles.imageSection}>
+        <View style={styles.imageContainer}>
+          <IntroGlow />
+          <FloatingImage
+            source={localImage.Intro1}
+            style={styles.heroImage}
           />
-        </TouchableOpacity> */}
+        </View>
+      </View>
+
+      {/* Content Area */}
+      <View style={styles.contentArea}>
+        <FadeSlideIn delay={250}>
+          <Text style={styles.titleText}>
+            {translate('intro1title')}
+          </Text>
+        </FadeSlideIn>
+
+        <FadeSlideIn delay={400}>
+          <Text style={styles.descText}>
+            {translate('intro1description')}
+          </Text>
+        </FadeSlideIn>
+      </View>
+
+      {/* Bottom Navigation */}
+      <FadeSlideIn delay={550} distance={16} style={styles.bottomNav}>
+        <View style={{width: navButtonSize(), height: navButtonSize()}} />
+        <StepIndicator currentStep={0} totalSteps={3} />
         <CircleProgress
           progress={33}
-          radius={DeviceHeigth >= 1024 ? 35 : 25}
-          secondayCircleColor={AppColor.WHITE}
+          radius={navButtonRadius()}
+          secondayCircleColor={'#F0F0F0'}
           strokeWidth={3}
+          containerStyle={{padding: 0}}
           clockwise>
-          <TouchableOpacity
-            activeOpacity={0.7}
+          <NavButton
+            direction="next"
             onPress={() => {
               AnalyticsConsole('TO_IS2');
               navigation.navigate('IntroductionScreen2');
             }}
-            style={{
-              backgroundColor: AppColor.WHITE,
-              width:
-                DeviceHeigth >= 1024 ? DeviceWidth * 0.08 : DeviceWidth * 0.1,
-              height:
-                DeviceHeigth >= 1024 ? DeviceWidth * 0.08 : DeviceWidth * 0.1,
-              borderRadius: 100,
-              margin: 5,
-
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <FitIcon
-              name="arrowright"
-              size={25}
-              type="AntDesign"
-              color={AppColor.RED}
-            />
-          </TouchableOpacity>
+          />
         </CircleProgress>
-      </View>
+      </FadeSlideIn>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
-  Container: {
+  container: {
     flex: 1,
+    backgroundColor: AppColor.WHITE,
+  },
+  skipRow: {
+    height: scale(34),
+    width: '95%',
+    alignSelf: 'center',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    zIndex: 1,
+    marginTop: Platform.OS === 'ios' ? 50 : 10,
+  },
+  imageSection: {
+    width: '100%',
+    height: '45%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: AppColor.WHITE,
+  },
+  imageContainer: {
+    width: '85%',
+    height: '90%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  heroImage: {
+    width: '100%',
+    height: '100%',
+  },
+  contentArea: {
+    flex: 1,
+    paddingHorizontal: 24,
+    paddingTop: 16,
+  },
+  titleText: {
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontSize: scale(26),
+    lineHeight: scale(34),
+    fontWeight: '700',
+    color: '#1A1A2E',
+  },
+  descText: {
+    fontFamily: Fonts.MONTSERRAT_REGULAR,
+    fontSize: scale(15),
+    lineHeight: scale(24),
+    fontWeight: '500',
+    color: '#6B7280',
+    marginTop: 14,
+  },
+  bottomNav: {
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingBottom: Platform.OS === 'ios' ? 34 : 16,
+    flexDirection: 'row',
+    height: 80,
   },
 });
+
 export default IntroductionScreen1;

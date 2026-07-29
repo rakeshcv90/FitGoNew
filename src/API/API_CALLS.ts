@@ -31,6 +31,8 @@ import {EnteringEventFunction} from '../Screen/Event/EnteringEventFunction';
 import {navigate} from '../Component/Utilities/NavigationUtil';
 import {downloadImages} from '../Screen/Splash/downloadBanner';
 import { translate,getCurrentLanguage } from '../Screen/Translation/TranslationService';
+import { LogOut } from '../Component/LogOut';
+// import {LogOut} from '../Component/LogOut';
 
 let deviceID = '';
 DeviceInfo.syncUniqueId().then(uniqueId => {
@@ -43,11 +45,16 @@ const dispatch = store.dispatch;
 
 const UpgradeAppResponse = () => {
   showMessage({
-    message: 'Something went wrong Try Again Or Upgrade your App',
+    message: 'Something went wrong. Please upgrade your app.',
     type: 'danger',
     animationDuration: 500,
+    duration: 2000,
     floating: true,
   });
+  // Auto-logout after the flash message is visible
+  // setTimeout(() => {
+  //   LogOut(dispatch);
+  // }, 2000);
   return 'Something went wrong Try Again';
 };
 
@@ -74,8 +81,9 @@ export const API_CALLS = {
             version: VersionNumber.appVersion,
             device_id: deviceID,
           },
+
           ({data, errors, status, message}) => {
-          
+            
             if (data && status == 200) {
               noMessage &&
                 showMessage({

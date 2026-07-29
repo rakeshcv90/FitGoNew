@@ -91,8 +91,8 @@ android {
         applicationId "fitme.health.fitness.homeworkouts.equipment"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 33
-        versionName "1.33"
+        versionCode 35
+        versionName "1.35"
         multiDexEnabled true
         missingDimensionStrategy "store", "play"
         def date = new Date();
@@ -105,13 +105,18 @@ android {
              storePassword 'singh007'
              keyAlias 'key0'
              keyPassword 'singh007'
+             v1SigningEnabled true
+             v2SigningEnabled true
          }
      }
     buildTypes {
-        
-        // debug {
-            //     signingConfig signingConfigs.debug
-        // }
+        debug {
+            signingConfig signingConfigs.release
+            // Only build arm64-v8a for debug to speed up dev builds (10x faster)
+            ndk {
+                abiFilters "arm64-v8a"
+            }
+        }
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
@@ -125,12 +130,10 @@ android {
 }
 
 dependencies {
-
+    implementation("com.android.billingclient:billing:8.0.0")
     implementation(platform("com.google.firebase:firebase-bom:32.7.3"))
     implementation("com.google.firebase:firebase-crashlytics-ndk")
-    // implementation("com.google.firebase:firebase-analytics")
-    // implementation project(':react-native-google-fit')
-//    implementation 'com.google.android.gms:play-services-ads:22.6.0'
+   
 
     implementation("com.google.android.gms:play-services-fitness:21.1.0")
     implementation("com.google.android.gms:play-services-auth:21.1.1")
@@ -138,17 +141,13 @@ dependencies {
     implementation("androidx.multidex:multidex:2.0.1")
     implementation project(':react-native-iap')
     implementation project(':react-native-keep-awake')
-    // implementation project(':react-native-code-push')
+
     implementation project(':react-native-in-app-review')
-//    implementation ("androidx.appcompat:appcompat:1.7.0-beta01")
+
     implementation 'com.facebook.android:facebook-android-sdk:latest.release'
     implementation 'com.google.android.gms:play-services-ads-api:24.2.0'
-    // debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
-    // debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
-    //     exclude group:'com.squareup.okhttp3', module:'okhttp'
-    // }
-
-    // debugImplementation("com.facebook.flipper:flipper-fresco-plugin:${FLIPPER_VERSION}")
+ 
+   
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {

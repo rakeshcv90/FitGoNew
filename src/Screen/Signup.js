@@ -807,7 +807,7 @@ const Signup = ({navigation}) => {
                       ref={t1}
                       underlineColor="transparent"
                       mode="outlined"
-                      outlineStyle={{borderRadius: 10}}
+                      theme={{roundness: 10}}
                       outlineColor={AppColor.BORDERCOLOR}
                       keyboardType="number-pad"
                       activeUnderlineColor="transparent"
@@ -832,7 +832,7 @@ const Signup = ({navigation}) => {
                       keyboardType="number-pad"
                       activeUnderlineColor="transparent"
                       maxLength={1}
-                      outlineStyle={{borderRadius: 10}}
+                      theme={{roundness: 10}}
                       outlineColor={AppColor.BORDERCOLOR}
                       activeOutlineColor="#E3E3E3"
                       value={txt2}
@@ -854,7 +854,7 @@ const Signup = ({navigation}) => {
                       keyboardType="number-pad"
                       activeUnderlineColor="transparent"
                       maxLength={1}
-                      outlineStyle={{borderRadius: 10}}
+                      theme={{roundness: 10}}
                       outlineColor={AppColor.BORDERCOLOR}
                       activeOutlineColor="#E3E3E3"
                       value={txt3}
@@ -876,7 +876,7 @@ const Signup = ({navigation}) => {
                       keyboardType="number-pad"
                       activeUnderlineColor="transparent"
                       maxLength={1}
-                      outlineStyle={{borderRadius: 10}}
+                      theme={{roundness: 10}}
                       outlineColor={AppColor.BORDERCOLOR}
                       activeOutlineColor="#E3E3E3"
                       value={txt4}

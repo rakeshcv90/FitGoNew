@@ -106,6 +106,8 @@
 	<string>FitGo needs Location access to show Gyms on the basis of Current User's location</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string> FitGo needs library access for user's profile photo</string>
+  <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+  <string>FitGo uses your location to provide location-based services and improve your experience.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

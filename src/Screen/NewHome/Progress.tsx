@@ -6,7 +6,7 @@ import { API_CALLS } from '../../API/API_CALLS';
 import PredefinedStyles from '../../Component/Utilities/PredefineStyles';
 import FitText from '../../Component/Utilities/FitText';
 import { DeviceWidth } from '../../Component/Config';
-import { AppColor } from '../../Component/Color';
+import { AppColor, Fonts } from '../../Component/Color';
 import FitButton from '../../Component/Utilities/FitButton';
 import { navigate } from '../../Component/Utilities/NavigationUtil';
 import DailyProgress from './DailyProgress';
@@ -195,53 +195,35 @@ const Progress = ({ myPlans }: { myPlans: boolean }) => {
 
               return (
                 <View
+                  key={index}
                   style={[
-                    PredefinedStyles.NormalCenter,
-                    { width: DeviceWidth / 7.5, marginBottom: 10 },
+                    styles.dayPillContainer,
+                    isCurrentDay && styles.activeDayPillContainer,
                   ]}>
-                  <FitText
-                    type="normal"
-                    fontWeight={'600'}
-                    color="#8A8A8A"
-                    value={item.slice(0, 3)}
-                  />
+                  <Text
+                    style={[
+                      styles.dayNameText,
+                      isCurrentDay && styles.activeDayText,
+                    ]}>
+                    {item.slice(0, 3)}
+                  </Text>
                   <View
                     style={[
-                      {
-                        width: 20,
-                        height: 20,
-                        borderRadius: 20,
-                        backgroundColor: isCurrentDay
-                          ? '#E35178'
-                          : prevDays
-                            ? '#3333333A'
-                            : AppColor.WHITE,
-                        borderWidth: nextDays ? 1.5 : 0,
-                        borderColor: nextDays ? '#3333331A' : 'transparent',
-                        marginVertical: 5,
-                      },
-                      PredefinedStyles.NormalCenter,
+                      styles.dayDot,
+                      isCurrentDay && styles.activeDayDot,
+                      prevDays && styles.prevDayDot,
+                      nextDays && styles.nextDayDot,
                     ]}>
-                    {prevDays && (
-                      <View
-                        style={[
-                          {
-                            width: 11,
-                            height: 11,
-                            borderRadius: 11,
-                            backgroundColor: '#EBEBEB',
-                          },
-                          PredefinedStyles.NormalCenter,
-                        ]}
-                      />
-                    )}
+                    {prevDays && <View style={styles.completedCheckDot} />}
+                    {isCurrentDay && <View style={styles.activeInnerDot} />}
                   </View>
-                  <FitText
-                    type="SubHeading"
-                    fontWeight={'600'}
-                    color={AppColor.PrimaryTextColor}
-                    value={index + 1 + ''}
-                  />
+                  <Text
+                    style={[
+                      styles.dayNumberText,
+                      isCurrentDay && styles.activeDayText,
+                    ]}>
+                    {index + 1}
+                  </Text>
                 </View>
               );
             })}
@@ -274,5 +256,72 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 5,
     marginHorizontal: 0.2,
+  },
+  dayPillContainer: {
+    width: (DeviceWidth * 0.88) / 7,
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 2,
+    borderRadius: 16,
+    backgroundColor: '#F9FAFB',
+    borderWidth: 1,
+    borderColor: '#F3F4F6',
+  },
+  activeDayPillContainer: {
+    backgroundColor: AppColor.RED,
+    borderColor: AppColor.RED,
+    shadowColor: AppColor.RED,
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  dayNameText: {
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#6B7280',
+    marginBottom: 4,
+  },
+  activeDayText: {
+    color: '#FFFFFF',
+  },
+  dayDot: {
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 2,
+  },
+  activeDayDot: {
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  prevDayDot: {
+    backgroundColor: '#E5E7EB',
+  },
+  nextDayDot: {
+    backgroundColor: 'transparent',
+    borderWidth: 1.5,
+    borderColor: '#D1D5DB',
+  },
+  completedCheckDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#4B5563',
+  },
+  activeInnerDot: {
+    width: 7,
+    height: 7,
+    borderRadius: 3.5,
+    backgroundColor: '#FFFFFF',
+  },
+  dayNumberText: {
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#1F2937',
+    marginTop: 3,
   },
 });

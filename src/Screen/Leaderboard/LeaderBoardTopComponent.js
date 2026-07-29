@@ -1,317 +1,470 @@
-import {Image, Platform, StyleSheet} from 'react-native';
-import {View, Button} from 'react-native';
+import {
+  Image,
+  Platform,
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
+import React, {useEffect} from 'react';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
-  withSpring,
   withTiming,
+  withSpring,
 } from 'react-native-reanimated';
+import LinearGradient from 'react-native-linear-gradient';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {AppColor, Fonts} from '../../Component/Color';
-import React, {useEffect} from 'react';
-import {Text} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import {localImage} from '../../Component/Image';
 import {useSelector} from 'react-redux';
-const LeaderBoardTopComponent = ({data, totalData, listData}) => {
+
+const LeaderBoardTopComponent = ({data = [], totalData = [], listData = []}) => {
   const user1BarHeight = useSharedValue(0);
   const user2BarHeight = useSharedValue(0);
   const user3BarHeight = useSharedValue(0);
-  const rankOffset = useSharedValue(-20);
+  const rankOffset = useSharedValue(-15);
   const rankOpacity = useSharedValue(0);
-  const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
+
+  const getUserDataDetails = useSelector((state: any) => state?.getUserDataDetails);
+
   useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       increaseBarHeight();
-    }, 1000);
+    }, 400);
+    return () => clearTimeout(timer);
   }, []);
+
   const increaseBarHeight = () => {
-    //bar1
-    user1BarHeight.value = withTiming(
-      DeviceHeigth * 0.17,
-      {duration: 2000},
-      () => {
-        rankOffset.value = withTiming(0, {duration: 1000});
-        rankOpacity.value = withTiming(1, {duration: 800});
-      },
-    );
-    //bar2
-    user2BarHeight.value = withTiming(DeviceHeigth * 0.22, {duration: 2000});
-    //bar3
-    user3BarHeight.value = withTiming(DeviceHeigth * 0.12, {duration: 2000});
+    // 2nd Place (Left)
+    user1BarHeight.value = withTiming(DeviceHeigth * 0.16, {duration: 1200});
+    // 1st Place (Center)
+    user2BarHeight.value = withTiming(DeviceHeigth * 0.22, {duration: 1200}, () => {
+      rankOffset.value = withSpring(0, {damping: 12});
+      rankOpacity.value = withTiming(1, {duration: 600});
+    });
+    // 3rd Place (Right)
+    user3BarHeight.value = withTiming(DeviceHeigth * 0.12, {duration: 1200});
   };
-  const animatedStyle1 = useAnimatedStyle(() => {
-    return {
-      height: user1BarHeight.value,
-    };
-  });
-  const animatedStyle2 = useAnimatedStyle(() => {
-    return {
-      height: user2BarHeight.value,
-    };
-  });
-  const animatedStyle3 = useAnimatedStyle(() => {
-    return {
-      height: user3BarHeight.value,
-    };
-  });
+
+  const animatedStyle1 = useAnimatedStyle(() => ({
+    height: user1BarHeight.value,
+  }));
+  const animatedStyle2 = useAnimatedStyle(() => ({
+    height: user2BarHeight.value,
+  }));
+  const animatedStyle3 = useAnimatedStyle(() => ({
+    height: user3BarHeight.value,
+  }));
+
   const coinsAnimation = useAnimatedStyle(() => ({
     transform: [{translateY: rankOffset.value}],
     opacity: rankOpacity.value,
   }));
+
+  // Safe Rank Suffix Formatter
+  const getRankSuffix = (rankNum, defaultRank) => {
+    const num = rankNum || defaultRank;
+    if (num === 1) return '1st';
+    if (num === 2) return '2nd';
+    if (num === 3) return '3rd';
+    return `${num}th`;
+  };
+
   const LeaderBoardList = ({item}) => {
-    const myId = getUserDataDetails?.id == item?.id;
-    if (item && item?.length <= 0) return;
+    if (!item) return null;
+    const isMe = getUserDataDetails?.id === item?.id;
+
     return (
       <View
         style={[
           styles.listContainer,
-          {
-            backgroundColor: myId ? AppColor.RED : AppColor.WHITE,
-          },
+          isMe ? styles.myListContainer : styles.normalListContainer,
         ]}>
-        <View style={[styles.list, {}]}>
+        <View style={styles.listLeft}>
+          <View
+            style={[
+              styles.rankBadge,
+              isMe ? styles.myRankBadge : styles.normalRankBadge,
+            ]}>
+            <Text
+              style={[
+                styles.rankBadgeText,
+                isMe ? {color: '#FF2A54'} : {color: '#4B5563'},
+              ]}>
+              #{item?.rank}
+            </Text>
+          </View>
           <Text
-            style={{
-              fontSize: 15,
-              fontFamily: Fonts.HELVETICA_BOLD,
-              color: myId ? AppColor.WHITE : AppColor.SecondaryTextColor,
-            }}>
-            {item?.rank}
-          </Text>
-          <Text
-            style={{
-              top: -2,
-              fontFamily: Fonts.HELVETICA_BOLD,
-              fontSize: 12,
-              color: myId ? AppColor.WHITE : AppColor.SecondaryTextColor,
-            }}>
-            th
-          </Text>
-          <Text
+            numberOfLines={1}
             style={[
               styles.listName,
-              {color: myId ? AppColor.WHITE : AppColor.SecondaryTextColor},
+              {color: isMe ? '#FFFFFF' : '#111827'},
             ]}>
-            {item?.name}
+            {item?.name || 'Anonymous User'}
           </Text>
         </View>
+
         <View style={styles.listCoin}>
           <Image
             source={localImage.FitCoin}
-            style={{height: 35, width: 35, marginRight: 16}}
+            style={{height: 24, width: 24, marginRight: 6}}
             resizeMode="contain"
           />
           <Text
-            style={{
-              fontSize: 16,
-              fontFamily: Fonts.HELVETICA_BOLD,
-              color: myId ? AppColor.WHITE : AppColor.SecondaryTextColor,
-            }}>
-            {item?.fit_coins > 0 ? item?.fit_coins : 0}
+            style={[
+              styles.coinValueText,
+              {color: isMe ? '#FFFFFF' : '#111827'},
+            ]}>
+            {item?.fit_coins > 0 ? item?.fit_coins : 0} FC
           </Text>
         </View>
       </View>
     );
   };
-  const BarComponent = ({animation1, barColor, data}) => {
+
+  const BarComponent = ({
+    animationStyle,
+    barGradient,
+    itemData,
+    defaultRank,
+    badgeColor,
+    borderColor,
+  }) => {
+    const hasData = itemData && itemData.name;
+    const rankLabel = getRankSuffix(itemData?.rank, defaultRank);
+    const initial = hasData ? itemData.name.trim().charAt(0).toUpperCase() : '—';
+    const displayName = hasData ? itemData.name.split(' ')[0] : '—';
+    const coinsVal = hasData && itemData.fit_coins != null ? itemData.fit_coins : 0;
+
     return (
       <View style={styles.barContainer}>
-        <View style={[styles.outerView]}>
-          <View
-            style={[
-              {marginBottom: 15, alignSelf: 'center', alignItems: 'center'},
-            ]}>
-            {data?.image_path != null ? (
+        <View style={styles.outerView}>
+          {/* Top User Info & Avatar */}
+          <View style={styles.avatarSection}>
+            {/* Rank Crown/Badge */}
+            <View style={[styles.crownBadge, {backgroundColor: badgeColor}]}>
+              <Text style={styles.crownBadgeText}>
+                {defaultRank === 1 ? '👑 1st' : defaultRank === 2 ? '🥈 2nd' : '🥉 3rd'}
+              </Text>
+            </View>
+
+            {hasData && itemData?.image_path ? (
               <Image
                 defaultSource={localImage.avt}
-                source={{uri: data?.image_path}}
-                style={styles.Icon}
+                source={{uri: itemData.image_path}}
+                style={[styles.avatarImg, {borderColor}]}
               />
             ) : (
-              <View style={styles.textBackground}>
-                <Text
-                  style={{
-                    color: AppColor.BLACK,
-                    fontFamily: Fonts.HELVETICA_BOLD,
-                    fontSize: 25,
-                  }}>
-                  {data?.name?.substring(0, 1).toUpperCase()}
-                </Text>
+              <View style={[styles.avatarCircle, {borderColor}]}>
+                <Text style={styles.avatarInitial}>{initial}</Text>
               </View>
             )}
-            <Text
-              style={[
-                styles.name,
-                {
-                  fontFamily:
-                    data?.rank == 1
-                      ? Fonts.HELVETICA_BOLD
-                      : Fonts.HELVETICA_REGULAR,
-                },
-              ]}>
-              {data?.name?.split(' ')[0]}
+
+            <Text numberOfLines={1} style={styles.userName}>
+              {displayName}
             </Text>
           </View>
-          <Animated.View
-            style={[styles.bar, animation1, {backgroundColor: barColor}]}>
-            <Animated.View style={[styles.gradientWrapper, coinsAnimation]}>
-              <Text style={styles.rankText}>{`${data?.rank}${
-                data?.rank == 1 ? 'st' : data?.rank == 2 ? 'nd' : 'rd'
-              }`}</Text>
-              <LinearGradient
-                start={{x: 0, y: 2}}
-                end={{x: 1, y: 0}}
-                colors={[AppColor.GOLD2, AppColor.GOLD1]}
-                style={styles.gradient}>
-                <Image
-                  source={localImage.FitCoin}
-                  style={{width: 20, height: 20}}
-                  resizeMode="contain"
-                />
-                <Text style={styles.coinText}>{data?.fit_coins}</Text>
-              </LinearGradient>
-            </Animated.View>
+
+          {/* Animated Podium Bar */}
+          <Animated.View style={[styles.bar, animationStyle]}>
+            <LinearGradient
+              colors={barGradient}
+              start={{x: 0, y: 0}}
+              end={{x: 0, y: 1}}
+              style={styles.gradientBar}>
+              <Animated.View style={[styles.gradientWrapper, coinsAnimation]}>
+                <Text style={styles.podiumRankText}>{rankLabel}</Text>
+                <View style={styles.coinPill}>
+                  <Image
+                    source={localImage.FitCoin}
+                    style={{width: 16, height: 16}}
+                    resizeMode="contain"
+                  />
+                  <Text style={styles.coinPillText}>{coinsVal}</Text>
+                </View>
+              </Animated.View>
+            </LinearGradient>
           </Animated.View>
         </View>
       </View>
     );
   };
+
   return (
     <View style={styles.container}>
-      <View style={styles.animationWrapper}>
-        <BarComponent
-          animation1={animatedStyle1}
-          barColor={AppColor.BAR1COLOR}
-          data={data[1]}
-        />
-        <BarComponent
-          animation1={animatedStyle2}
-          barColor={AppColor.BAR2COLOR}
-          data={data[0]}
-        />
-        <BarComponent
-          animation1={animatedStyle3}
-          barColor={AppColor.BAR3COLOR}
-          data={data[2]}
-        />
+      {/* 3D Podium Container */}
+      <View style={styles.podiumCard}>
+        <View style={styles.animationWrapper}>
+          {/* 2nd Place (Left) */}
+          <BarComponent
+            animationStyle={animatedStyle1}
+            barGradient={['#E2E8F0', '#CBD5E1']}
+            itemData={data[1]}
+            defaultRank={2}
+            badgeColor="#94A3B8"
+            borderColor="#94A3B8"
+          />
+          {/* 1st Place (Center) */}
+          <BarComponent
+            animationStyle={animatedStyle2}
+            barGradient={['#FEF08A', '#F59E0B']}
+            itemData={data[0]}
+            defaultRank={1}
+            badgeColor="#F59E0B"
+            borderColor="#F59E0B"
+          />
+          {/* 3rd Place (Right) */}
+          <BarComponent
+            animationStyle={animatedStyle3}
+            barGradient={['#FFEDD5', '#FB923C']}
+            itemData={data[2]}
+            defaultRank={3}
+            badgeColor="#FB923C"
+            borderColor="#FB923C"
+          />
+        </View>
       </View>
-      {listData.map((item, index) => (
-        <LeaderBoardList item={item} />
-      ))}
-      {totalData &&
-        totalData?.map((item, index) => <LeaderBoardList item={item} />)}
+
+      {/* Other Ranks List */}
+      <View style={styles.listSection}>
+        {listData && listData.map((item, index) => (
+          <LeaderBoardList key={index} item={item} />
+        ))}
+        {totalData && totalData.map((item, index) => (
+          <LeaderBoardList key={`total-${index}`} item={item} />
+        ))}
+      </View>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
-    width: DeviceWidth * 0.95,
+    width: DeviceWidth * 0.94,
     alignSelf: 'center',
-    backgroundColor: AppColor.WHITE,
-    borderRadius: 12,
     marginVertical: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    // ...Platform.select({
-    //   ios: {
-    //     shadowOffset: {width: 0, height: 2},
-    //     shadowOpacity: 0.2,
-    //     shadowRadius: 4,
-    //   },
-    //   android: {
-    //     elevation: 2,
-    //   },
-    // }),
+  },
+
+  // ── Podium Card ────────────────────────────────────
+  podiumCard: {
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    paddingTop: 16,
+    paddingBottom: 4,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#F3F4F6',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 6},
+        shadowOpacity: 0.06,
+        shadowRadius: 12,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
   animationWrapper: {
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'flex-end',
+    paddingHorizontal: 8,
   },
   barContainer: {
-    height: DeviceHeigth * 0.4,
-    alignSelf: 'center',
-    justifyContent: 'flex-end', // Start the bar from the bottom
+    height: DeviceHeigth * 0.38,
+    justifyContent: 'flex-end',
     marginHorizontal: 4,
-  },
-  bar: {
-    width: DeviceWidth / 3.4,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 25,
   },
   outerView: {
     height: '100%',
     justifyContent: 'flex-end',
-  },
-  gradient: {
-    // width: '60%',
-    borderWidth: 2.5,
-    borderColor: AppColor.GOLD2,
-    borderRadius: 20,
-    flexDirection: 'row',
-    paddingHorizontal: 4,
     alignItems: 'center',
   },
-  coinText: {
-    color: AppColor.WHITE,
-    fontFamily: Fonts.HELVETICA_BOLD,
-    marginLeft: 2,
-  },
-  rankText: {
-    color: AppColor.BLACK,
+  avatarSection: {
     marginBottom: 10,
-    fontSize: 15,
-  },
-  gradientWrapper: {
-    alignSelf: 'center',
-    position: 'absolute',
-    bottom: 15,
     alignItems: 'center',
   },
-  name: {
-    color: AppColor.BLACK,
-    fontFamily: Fonts.HELVETICA_REGULAR,
+  crownBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 10,
+    marginBottom: 4,
   },
-  Icon: {
-    width: 80,
-    height: 80,
-    borderRadius: 80 / 2,
-    overflow: 'hidden',
-    alignSelf: 'center',
-    marginBottom: 15,
+  crownBadgeText: {
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#FFFFFF',
   },
-  textBackground: {
-    marginBottom: 15,
-    width: 80,
-    height: 80,
-    borderRadius: 80 / 2,
-    backgroundColor: '#DBEAFE',
+  avatarImg: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    borderWidth: 3,
+    marginBottom: 6,
+  },
+  avatarCircle: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: '#F3F4F6',
+    borderWidth: 3,
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 6,
   },
-  list: {
+  avatarInitial: {
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#374151',
+  },
+  userName: {
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#111827',
+    maxWidth: DeviceWidth / 3.6,
+    textAlign: 'center',
+  },
+  bar: {
+    width: DeviceWidth / 3.5,
+    borderTopLeftRadius: 18,
+    borderTopRightRadius: 18,
+    overflow: 'hidden',
+  },
+  gradientBar: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    paddingBottom: 14,
+  },
+  gradientWrapper: {
+    alignItems: 'center',
+  },
+  podiumRankText: {
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontSize: 16,
+    fontWeight: '800',
+    color: '#111827',
+    marginBottom: 6,
+  },
+  coinPill: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 12,
+    gap: 4,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  coinPillText: {
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#111827',
+  },
+
+  // ── List Items Section ──────────────────────────────
+  listSection: {
+    width: '100%',
   },
   listContainer: {
     flexDirection: 'row',
-    width: DeviceWidth * 0.95,
+    width: '100%',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 8,
-    paddingVertical: 8,
-    borderRadius: 12,
-    marginVertical: 6,
-    backgroundColor: AppColor.RED,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 18,
+    marginBottom: 8,
+  },
+  normalListContainer: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#F3F4F6',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.04,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  myListContainer: {
+    backgroundColor: '#FF2A54',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#FF2A54',
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  },
+  listLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    flex: 1,
+  },
+  rankBadge: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  normalRankBadge: {
+    backgroundColor: '#F3F4F6',
+  },
+  myRankBadge: {
+    backgroundColor: '#FFFFFF',
+  },
+  rankBadgeText: {
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontSize: 13,
+    fontWeight: '700',
   },
   listName: {
-    marginLeft: 18,
-    fontSize: 16,
-    fontFamily: Fonts.HELVETICA_BOLD,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontSize: 15,
+    fontWeight: '700',
+    flex: 1,
   },
   listCoin: {
     flexDirection: 'row',
     alignItems: 'center',
   },
+  coinValueText: {
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontSize: 14,
+    fontWeight: '700',
+  },
 });
+
 export default React.memo(LeaderBoardTopComponent);

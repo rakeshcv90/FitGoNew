@@ -15,6 +15,8 @@
 		1882488E2D71AE100083A1AA /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1882488D2D71AE100083A1AA /* Launch Screen.storyboard */; };
 		1882488F2D71AE100083A1AA /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1882488D2D71AE100083A1AA /* Launch Screen.storyboard */; };
 		A53867DF2DCC7B040054172B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A53867DE2DCC7B040054172B /* GoogleService-Info.plist */; };
+		A57DF36C2FE2A6CE0069D3DB /* MusicPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = A57DF36A2FE2A6CE0069D3DB /* MusicPlayer.m */; };
+		A57DF36D2FE2A6CE0069D3DB /* MusicPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57DF36B2FE2A6CE0069D3DB /* MusicPlayer.swift */; };
 		A581A6232E278AC900CDB21E /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A581A6222E278AC900CDB21E /* StoreKit.framework */; };
 		A5EBA4532D9FF23E002D8EF3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5EBA4522D9FF23E002D8EF3 /* UIKit.framework */; };
 		D729A1A4250526B361A2CFA8 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
@@ -48,6 +50,10 @@
 		7C925894C35CD7ECD2CEDAF1 /* Pods_FitGo_FitGoTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FitGo_FitGoTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A53867DE2DCC7B040054172B /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A5386E6F2DCC71FE0058479C /* FitGo-Swift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FitGo-Swift.h"; sourceTree = "<group>"; };
+		A57DF3692FE2A6CE0069D3DB /* FitGo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FitGo-Bridging-Header.h"; sourceTree = "<group>"; };
+		A57DF36A2FE2A6CE0069D3DB /* MusicPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MusicPlayer.m; sourceTree = "<group>"; };
+		A57DF36B2FE2A6CE0069D3DB /* MusicPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayer.swift; sourceTree = "<group>"; };
+		A57DF36E2FE2A6DC0069D3DB /* FitGo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FitGo-Bridging-Header.h"; sourceTree = "<group>"; };
 		A581A6222E278AC900CDB21E /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		A58FCA842DCCA92200B8E9D8 /* FitGo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = FitGo.entitlements; path = FitGo/FitGo.entitlements; sourceTree = "<group>"; };
 		A5EBA4522D9FF23E002D8EF3 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -99,6 +105,9 @@
 		13B07FAE1A68108700A75B9A /* FitGo */ = {
 			isa = PBXGroup;
 			children = (
+				A57DF3692FE2A6CE0069D3DB /* FitGo-Bridging-Header.h */,
+				A57DF36A2FE2A6CE0069D3DB /* MusicPlayer.m */,
+				A57DF36B2FE2A6CE0069D3DB /* MusicPlayer.swift */,
 				A58FCA842DCCA92200B8E9D8 /* FitGo.entitlements */,
 				A53867DE2DCC7B040054172B /* GoogleService-Info.plist */,
 				1882488D2D71AE100083A1AA /* Launch Screen.storyboard */,
@@ -109,6 +118,7 @@
 				13B07FB71A68108700A75B9A /* main.m */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
 				A5386E6F2DCC71FE0058479C /* FitGo-Swift.h */,
+				A57DF36E2FE2A6DC0069D3DB /* FitGo-Bridging-Header.h */,
 			);
 			name = FitGo;
 			sourceTree = "<group>";
@@ -227,7 +237,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 2620;
 					};
 				};
 			};
@@ -464,6 +474,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
+				A57DF36C2FE2A6CE0069D3DB /* MusicPlayer.m in Sources */,
+				A57DF36D2FE2A6CE0069D3DB /* MusicPlayer.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -549,7 +561,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.33;
+				MARKETING_VERSION = 1.35;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -560,6 +572,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/FitGo-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -585,7 +598,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.33;
+				MARKETING_VERSION = 1.35;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -596,6 +609,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/FitGo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";

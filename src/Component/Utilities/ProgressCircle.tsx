@@ -168,7 +168,7 @@ const CircleProgress: React.FC<CircleProgressProps> = ({
   );
 
   return (
-    <View style={styles.container || containerStyle}>
+    <View style={[styles.container, containerStyle]}>
       <Svg height={size} width={size}>
         {!changingColors && <Def />}
         <G rotation={startAngle} origin={`${size / 2}, ${size / 2}`}>
@@ -209,6 +209,10 @@ const styles = StyleSheet.create({
   },
   centerText: {
     position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     justifyContent: 'center',
     alignItems: 'center',
   },

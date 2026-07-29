@@ -1,5 +1,7 @@
-import {StyleSheet, TouchableOpacity, View, Animated} from 'react-native';
-import React, {Ref, useCallback, useRef} from 'react';
+import {StyleSheet, TouchableOpacity, View, Platform} from 'react-native';
+import React, {useCallback} from 'react';
+import Animated, {ZoomIn} from 'react-native-reanimated';
+import LinearGradient from 'react-native-linear-gradient';
 import FitIcon from '../../../../Component/Utilities/FitIcon';
 import CircleProgress from '../../../../Component/Utilities/ProgressCircle';
 import {handleExerciseChange} from './Helpers';
@@ -40,7 +42,11 @@ const VideoControls = ({
   setNext,
   setPrevious,
 }: VideoControls) => {
+  const isFirst = number === 0;
+  const isLast = number === (allExercise?.length || 1) - 1;
+
   const prev = () => {
+    if (isFirst) return;
     setCurrentSet(1);
     setProgressPercent(0);
     setPrevious(previous + 1);
@@ -51,7 +57,9 @@ const VideoControls = ({
     setSeconds(allExercise[number - 1]?.exercise_rest.split(' ')[0]);
     setNumber(number - 1);
   };
+
   const nextButton = () => {
+    if (isLast) return;
     setCurrentSet(1);
     setProgressPercent(0);
     setNext(next + 1);
@@ -64,65 +72,130 @@ const VideoControls = ({
   };
 
   const handlePrev = useCallback(prev, [prev]);
-
   const handleNext = useCallback(nextButton, [nextButton]);
 
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '80%',
-        alignSelf: 'center',
-      }}>
-      <TouchableOpacity disabled={number == 0} onPress={handlePrev}>
+    <Animated.View entering={ZoomIn.delay(100).duration(400)} style={styles.controlsRow}>
+      {/* Skip Previous Button - Vibrant Pink Button */}
+      <TouchableOpacity
+        activeOpacity={0.7}
+        disabled={isFirst}
+        onPress={handlePrev}
+        style={[styles.skipBtn, isFirst && styles.skipBtnDisabled]}>
         <FitIcon
           name="skip-previous"
           type="MaterialCommunityIcons"
-          size={30}
-          style={{
-            color: '#6B7280',
-            opacity: number == 0 ? 0.5 : 1,
-          }}
+          size={24}
+          color={isFirst ? '#FF7E95' : '#E11D48'}
         />
       </TouchableOpacity>
+
+      {/* Circle Progress Play/Pause - Vibrant Red Gradient Center */}
       <CircleProgress
-        radius={50}
+        radius={48}
         progress={progressPercent}
-        strokeLinecap={seconds == 0 ? 'butt' : 'round'}
-        strokeWidth={25}
-        changingColorsArray={['#530014', '#F0013B']}
-        secondayCircleColor={AppColor.LIGHTGREY2}>
+        strokeLinecap={seconds === 0 ? 'butt' : 'round'}
+        strokeWidth={18}
+        changingColorsArray={['#FF2A54', '#E11D48']}
+        secondayCircleColor="#FFF1F2">
         <TouchableOpacity
+          activeOpacity={0.85}
+          style={styles.playPauseTouch}
           onPress={() => {
             setPause(!pause);
           }}>
-          <FitIcon
-            name={!pause ? 'play' : 'pause'}
-            type="MaterialCommunityIcons"
-            size={40}
-            color="#1F2937"
-          />
+          <LinearGradient
+            colors={['#FF2A54', '#E11D48']}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 1}}
+            style={styles.playPauseGradient}>
+            <FitIcon
+              name={!pause ? 'play' : 'pause'}
+              type="MaterialCommunityIcons"
+              size={30}
+              color="#FFFFFF"
+            />
+          </LinearGradient>
         </TouchableOpacity>
       </CircleProgress>
+
+      {/* Skip Next Button - Vibrant Pink Button */}
       <TouchableOpacity
-        disabled={number == allExercise?.length - 1}
-        onPress={handleNext}>
+        activeOpacity={0.7}
+        disabled={isLast}
+        onPress={handleNext}
+        style={[styles.skipBtn, isLast && styles.skipBtnDisabled]}>
         <FitIcon
           name="skip-next"
           type="MaterialCommunityIcons"
-          size={30}
-          style={{
-            color: '#6B7280',
-            opacity: number == allExercise?.length - 1 ? 0.5 : 1,
-          }}
+          size={24}
+          color={isLast ? '#FF7E95' : '#E11D48'}
         />
       </TouchableOpacity>
-    </View>
+    </Animated.View>
   );
 };
 
 export default VideoControls;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  controlsRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 32,
+    alignSelf: 'center',
+    marginVertical: 8,
+  },
+  skipBtn: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#FFF1F2',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: '#FECDD3',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#FF2A54',
+        shadowOffset: {width: 0, height: 3},
+        shadowOpacity: 0.15,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  },
+  skipBtnDisabled: {
+    backgroundColor: '#FFF5F7',
+    borderColor: '#FFE4E6',
+    opacity: 0.85,
+  },
+  playPauseTouch: {
+    width: 54,
+    height: 54,
+    borderRadius: 27,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  playPauseGradient: {
+    width: 54,
+    height: 54,
+    borderRadius: 27,
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#FF2A54',
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 6,
+      },
+    }),
+  },
+});

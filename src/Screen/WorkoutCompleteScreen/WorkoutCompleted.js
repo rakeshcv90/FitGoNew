@@ -393,7 +393,7 @@ const WorkoutCompleted = ({navigation, route}) => {
     }
   };
 
-  const onPress = () => navigation.navigate('MyPlans');
+  const onPress = () => navigation.navigate('BottomTab', {screen: 'myplans'});
 
   return (
     <>

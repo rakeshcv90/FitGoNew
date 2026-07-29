@@ -10,20 +10,17 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Dimensions,
+  Animated,
 } from 'react-native';
-import React, {useEffect, useMemo, useState} from 'react';
-import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
-import FitText from '../../Component/Utilities/FitText';
+import React, {useEffect, useMemo, useRef, useState, useCallback} from 'react';
 import {AppColor, Fonts, PLATFORM_IOS} from '../../Component/Color';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {useDispatch, useSelector} from 'react-redux';
-import {ShadowStyle} from '../../Component/Utilities/ShadowStyle';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import GradientButton from '../../Component/GradientButton';
+import FitIcon from '../../Component/Utilities/FitIcon';
 import {localImage} from '../../Component/Image';
 import {showMessage} from 'react-native-flash-message';
 import * as RNIap from 'react-native-iap';
-import moment from 'moment';
 import axios from 'axios';
 import {
   setCustomWorkoutData,
@@ -36,27 +33,265 @@ import {
 } from '../../Component/ThemeRedux/Actions';
 import {useIsFocused} from '@react-navigation/native';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
-// import Carousel from 'react-native-snap-carousel';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
-import VersionNumber, {appVersion} from 'react-native-version-number';
+import VersionNumber from 'react-native-version-number';
 import {findKeyInObject} from '../../Component/Utilities/FindkeyinObject';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import NewHeader1 from '../../Component/Headers/NewHeader1';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import useMusicPlayer from '../NewWorkouts/Exercise/ExerciseUtilities/useMusicPlayer';
 import {resolveImportedAssetOrPath} from '../NewWorkouts/Exercise/ExerciseUtilities/Helpers';
 import {translate} from '../Translation/TranslationService';
-// import {MyRewardedAd} from '../../Component/BannerAdd';
+import LinearGradient from 'react-native-linear-gradient';
+import {ArrowLeft} from '../../Component/Utilities/Arrows/Arrow';
+
+const {width: SCREEN_WIDTH} = Dimensions.get('window');
+const CARD_WIDTH = SCREEN_WIDTH * 0.84;
+
+// Memoized Subscription Card to prevent any render flickering
+const PlanCardItem = React.memo(
+  ({item, index, isSelected, onSelect, getPurchaseHistory}: any) => {
+    const planCap: string = findKeyInObject(
+      item,
+      PLATFORM_IOS ? 'title' : 'name',
+    );
+    const temp =
+      Platform.OS === 'ios'
+        ? []
+        : item?.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList;
+    const price: string =
+      index === 2 && Platform.OS === 'android'
+        ? temp?.length === 1
+          ? temp[0]?.formattedPrice
+          : temp[1]?.formattedPrice
+        : findKeyInObject(
+            item,
+            PLATFORM_IOS ? 'localizedPrice' : 'formattedPrice',
+          );
+    const normalizedPrice = PLATFORM_IOS ? price.replace(/\s/g, '') : price;
+    const planName = planCap.toLowerCase();
+
+    const isBasic = planName.includes('noob');
+    const isPro = planName.includes('pro');
+    const isPremium = !isBasic && !isPro;
+
+    const accentGradients: [string, string] = isBasic
+      ? ['#2563EB', '#3B82F6']
+      : isPro
+      ? ['#059669', '#10B981']
+      : ['#667EEA', '#764BA2'];
+
+    const isActive =
+      getPurchaseHistory?.plan != null && planName === getPurchaseHistory?.plan;
+
+    // Spring scale & opacity animation
+    const scaleAnim = useRef(new Animated.Value(isSelected ? 1 : 0.94)).current;
+    const opacityAnim = useRef(
+      new Animated.Value(isSelected ? 1 : 0.88),
+    ).current;
+
+    useEffect(() => {
+      Animated.parallel([
+        Animated.spring(scaleAnim, {
+          toValue: isSelected ? 1 : 0.94,
+          friction: 8,
+          tension: 100,
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacityAnim, {
+          toValue: isSelected ? 1 : 0.88,
+          duration: 180,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }, [isSelected]);
+
+    return (
+      <Animated.View
+        style={{
+          transform: [{scale: scaleAnim}],
+          opacity: opacityAnim,
+        }}>
+        <TouchableOpacity
+          activeOpacity={0.92}
+          onPress={() => onSelect(item, index)}
+          style={[
+            styles.planCard,
+            isSelected ? styles.planCardSelected : styles.planCardUnselected,
+            isSelected && {borderColor: accentGradients[0]},
+          ]}>
+          {/* Recommended Badge for Premium */}
+          {isPremium && getPurchaseHistory?.plan == null && (
+            <LinearGradient
+              colors={['#FF6B6B', '#FF8E53']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              style={styles.popBadge}>
+              <FitIcon name="star" type="Ionicons" size={11} color="#FFFFFF" />
+              <Text style={styles.popBadgeText}>MOST POPULAR</Text>
+            </LinearGradient>
+          )}
+
+          {/* Active Badge */}
+          {isActive && (
+            <View style={styles.activeBadge}>
+              <Text style={styles.activeBadgeText}>ACTIVE PLAN</Text>
+            </View>
+          )}
+
+          {/* Icon & Plan Title */}
+          <View style={styles.cardHeader}>
+            <Image
+              source={
+                index === 0
+                  ? localImage.BasicPlan
+                  : index === 1
+                  ? localImage.MediumPlan
+                  : localImage.PremiumPlan
+              }
+              resizeMode="contain"
+              style={styles.cardIconImg}
+            />
+            <View style={{flex: 1, marginLeft: 10}}>
+              <Text style={styles.cardPlanTitle}>
+                {isBasic
+                  ? translate('basicPlan')
+                  : isPro
+                  ? translate('mediumPlan')
+                  : translate('premiumPlan')}
+              </Text>
+              <Text style={styles.cardPlanSub}>
+                {isBasic
+                  ? 'Starter fitness journey'
+                  : isPro
+                  ? 'Advanced training tools'
+                  : 'Complete VIP All-Access'}
+              </Text>
+            </View>
+          </View>
+
+          {/* Price Display */}
+          <View style={styles.priceRow}>
+            <Text style={styles.priceBig}>
+              {PLATFORM_IOS ? normalizedPrice : normalizedPrice.split('.')[0]}
+            </Text>
+            <Text style={styles.pricePeriod}>/ month</Text>
+          </View>
+
+          {/* Features Checklist */}
+          <View style={styles.checklistSection}>
+            <View style={styles.checkRow}>
+              <View
+                style={[
+                  styles.checkCircle,
+                  {backgroundColor: accentGradients[0] + '18'},
+                ]}>
+                <FitIcon
+                  name="checkmark"
+                  type="Ionicons"
+                  size={13}
+                  color={accentGradients[0]}
+                />
+              </View>
+              <Text style={styles.checkText}>
+                {isBasic
+                  ? translate('eventsPerMonthBasic')
+                  : isPro
+                  ? translate('eventsPerMonthPro')
+                  : translate('eventsPerMonthPremium')}
+              </Text>
+            </View>
+
+            <View style={styles.checkRow}>
+              <View
+                style={[
+                  styles.checkCircle,
+                  {backgroundColor: accentGradients[0] + '18'},
+                ]}>
+                <FitIcon
+                  name="checkmark"
+                  type="Ionicons"
+                  size={13}
+                  color={accentGradients[0]}
+                />
+              </View>
+              <Text style={styles.checkText}>
+                {translate('unlockExercises')}
+              </Text>
+            </View>
+
+            <View style={styles.checkRow}>
+              <View
+                style={[
+                  styles.checkCircle,
+                  {backgroundColor: accentGradients[0] + '18'},
+                ]}>
+                <FitIcon
+                  name="checkmark"
+                  type="Ionicons"
+                  size={13}
+                  color={accentGradients[0]}
+                />
+              </View>
+              <Text style={styles.checkText}>
+                {isBasic ? 'Standard Support' : 'Priority VIP Support'}
+              </Text>
+            </View>
+
+            <View style={styles.checkRow}>
+              <View
+                style={[
+                  styles.checkCircle,
+                  {backgroundColor: accentGradients[0] + '18'},
+                ]}>
+                <FitIcon
+                  name="checkmark"
+                  type="Ionicons"
+                  size={13}
+                  color={accentGradients[0]}
+                />
+              </View>
+              <Text style={styles.checkText}>
+                {isBasic ? 'With Ads' : 'Fewer Ads'}
+              </Text>
+            </View>
+          </View>
+
+          {/* Action Button */}
+          <View style={styles.actionBtnWrapper}>
+            <LinearGradient
+              colors={
+                planName.includes(getPurchaseHistory?.plan)
+                  ? ['#94A3B8', '#64748B']
+                  : accentGradients
+              }
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              style={styles.actionBtn}>
+              <Text style={styles.actionBtnText}>
+                {planName.includes(getPurchaseHistory?.plan)
+                  ? translate('purchased')
+                  : translate('proceed')}
+              </Text>
+              {!planName.includes(getPurchaseHistory?.plan) && (
+                <FitIcon
+                  name="arrow-forward"
+                  type="Ionicons"
+                  size={17}
+                  color="#FFFFFF"
+                />
+              )}
+            </LinearGradient>
+          </View>
+        </TouchableOpacity>
+      </Animated.View>
+    );
+  },
+);
 
 const NewSubscription = ({navigation, route}: any) => {
-  const {upgrade} = route.params;
+  const {upgrade} = route?.params || {};
   const dispatch = useDispatch();
   const getInAppPurchase = useSelector((state: any) => state.getInAppPurchase);
-  // const getOfferAgreement = useSelector(
-  //   (state: any) => state.getOfferAgreement,
-  // );
-  // const {initRewarded, rewardAdClosed, showRewardedAd} = MyRewardedAd();
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
   );
@@ -64,34 +299,59 @@ const NewSubscription = ({navigation, route}: any) => {
     (state: any) => state.getUserDataDetails,
   );
   const order = ['Noob', 'Pro', 'Premium'];
-  // Sorting the subscriptions by title (Basic, Pro, Premium)
-  const sortedSubscriptions: any = PLATFORM_IOS
-    ? getInAppPurchase.sort((a: any, b: any) => {
-        return order.indexOf(a.title) - order.indexOf(b.title);
-      })
-    : getInAppPurchase.sort((a: any, b: any) => {
-        return order.indexOf(a.name) - order.indexOf(b.name);
-      });
-  const [selected, setSelected] = useState<any>(sortedSubscriptions[2]);
+
+  const sortedSubscriptions: any = useMemo(() => {
+    if (!getInAppPurchase || !Array.isArray(getInAppPurchase)) return [];
+    return PLATFORM_IOS
+      ? [...getInAppPurchase].sort((a: any, b: any) => {
+          return order.indexOf(a.title) - order.indexOf(b.title);
+        })
+      : [...getInAppPurchase].sort((a: any, b: any) => {
+          return order.indexOf(a.name) - order.indexOf(b.name);
+        });
+  }, [getInAppPurchase]);
+
+  const [selected, setSelected] = useState<any>(
+    sortedSubscriptions[2] || sortedSubscriptions[0],
+  );
   const [loading, setForLoading] = useState(false);
   const [currentSelected, setCurrentSelected] = useState(2);
-  const [price, setPrice] = useState<any>('');
   const [refresh, setRefresh] = useState(false);
   const isFocused = useIsFocused();
   const [pause, setPause] = useState(false);
-  const flatListRef = React.useRef(null);
+  const flatListRef = useRef<any>(null);
+
+  // Pulse animation for Crown badge
+  const pulseAnim = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnim, {
+          toValue: 1.08,
+          duration: 1200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulseAnim, {
+          toValue: 1.0,
+          duration: 1200,
+          useNativeDriver: true,
+        }),
+      ]),
+    ).start();
+  }, []);
 
   useEffect(() => {
     if (isFocused) {
-      const selected =
+      const selectedIndex =
         getPurchaseHistory?.plan != null
-          ? getPurchaseHistory?.plan == 'noob'
+          ? getPurchaseHistory?.plan === 'noob'
             ? 0
-            : getPurchaseHistory?.plan == 'pro'
+            : getPurchaseHistory?.plan === 'pro'
             ? 1
             : 2
           : 2;
-      setCurrentSelected(selected);
+      setCurrentSelected(selectedIndex);
       EnteringEventFunction(
         dispatch,
         getPurchaseHistory,
@@ -101,6 +361,7 @@ const NewSubscription = ({navigation, route}: any) => {
       );
     }
   }, [isFocused]);
+
   useEffect(() => {
     const purchaseUpdateSubscription1 = RNIap.purchaseUpdatedListener(
       async purchase => {
@@ -112,7 +373,7 @@ const NewSubscription = ({navigation, route}: any) => {
     );
     const purchaseErrorSubscription1 = RNIap.purchaseErrorListener(
       (error: any) => {
-        if (Platform.OS == 'android') {
+        if (Platform.OS === 'android') {
           showMessage({
             message: error.message,
             titleStyle: {textAlign: 'center'},
@@ -147,17 +408,8 @@ const NewSubscription = ({navigation, route}: any) => {
       }
     };
   }, []);
-  //sound
 
-  const {
-    duration,
-    currentTime,
-    pauseMusic,
-    playMusic,
-    releaseMusic,
-    seekTo,
-    stopMusic,
-  } = useMusicPlayer({
+  const {playMusic, releaseMusic, stopMusic} = useMusicPlayer({
     getSoundOffOn: true,
     pause: pause,
     restStart: false,
@@ -165,158 +417,17 @@ const NewSubscription = ({navigation, route}: any) => {
       require('../../Icon/Images/Subs_sound.wav'),
     ),
   });
+
   useEffect(() => {
-    // initRewarded();
     return () => releaseMusic();
   }, []);
 
-  const restorePurchase = async () => {
-    if (getPurchaseHistory?.plan) {
-      showMessage({
-        message: 'You already have an active subscription.',
-        type: 'danger',
-        animationDuration: 500,
-
-        floating: true,
-        // icon: {icon: 'auto', position: 'left'},
-      });
-      return;
-    }
-    setForLoading(true);
-    try {
-      const purchases = await RNIap.getAvailablePurchases();
-
-      if (purchases?.length == 0) {
-        setForLoading(false);
-        showMessage({
-          message: 'No Active Subscription Found !',
-          type: 'danger',
-          animationDuration: 500,
-
-          floating: true,
-          // icon: {icon: 'auto', position: 'left'},
-        });
-      } else {
-        if (Platform.OS == 'android') {
-          setForLoading(false);
-          const activeSubs = purchases.filter(item => {
-            if (item?.autoRenewingAndroid == true) {
-              setForLoading(false);
-              showMessage({
-                message: 'Subscription Restored!',
-                type: 'success',
-                animationDuration: 500,
-
-                floating: true,
-                // // icon: {icon: 'auto', position: 'left'},
-              });
-            } else {
-              setForLoading(false);
-              showMessage({
-                message: 'No Active Subscription Found!',
-                type: 'danger',
-                animationDuration: 500,
-
-                floating: true,
-                // // icon: {icon: 'auto', position: 'left'},
-              });
-            }
-          });
-        } else {
-          const latestPurchase = purchases[purchases.length - 1];
-
-          const apiRequestBody = {
-            'receipt-data': latestPurchase.transactionReceipt,
-            password: '3a00ec90f8b745678daf489417956f40',
-          };
-          try {
-            const result = await axios(
-              'https://buy.itunes.apple.com/verifyReceipt',
-              {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                data: apiRequestBody,
-              },
-            );
-
-            let timestamp =
-              result.data.latest_receipt_info[0].original_purchase_date;
-
-            const [datePart] = timestamp.split(' ');
-
-            setForLoading(false);
-            if (result.data) {
-              const renewalHistory = result.data.pending_renewal_info;
-
-              const activeSubs = renewalHistory.filter((item: any) => {
-                if (item.auto_renew_status == '1') {
-                  showMessage({
-                    message: 'Subscription Restored',
-                    type: 'danger',
-                    animationDuration: 500,
-
-                    floating: true,
-                    // // icon: {icon: 'auto', position: 'left'},
-                  });
-                  fetchPurchaseHistoryIOS(renewalHistory[0], datePart);
-                } else {
-                  showMessage({
-                    message: 'No Active Subscription Found!',
-                    type: 'danger',
-                    animationDuration: 500,
-
-                    floating: true,
-                    // // icon: {icon: 'auto', position: 'left'},
-                  });
-                }
-              });
-            } else {
-              showMessage({
-                message: 'No Active Subscription Found!',
-                type: 'danger',
-                animationDuration: 500,
-
-                floating: true,
-                // // icon: {icon: 'auto', position: 'left'},
-              });
-            }
-          } catch (error) {
-            showMessage({
-              message: 'No Active Subscription Found!',
-              type: 'danger',
-              animationDuration: 500,
-
-              floating: true,
-              // // icon: {icon: 'auto', position: 'left'},
-            });
-            setForLoading(false);
-            console.log(error);
-          }
-        }
-      }
-    } catch (err) {
-      showMessage({
-        message: 'Failed to Restore Subscription',
-        type: 'danger',
-        animationDuration: 500,
-
-        floating: true,
-        // // icon: {icon: 'auto', position: 'left'},
-      });
-      setForLoading(false);
-      console.error(err);
-    }
-  };
-  // PURCHASE START IOS
   const purchaseItems = async (items: any) => {
     setForLoading(true);
     try {
       const purchase: any = await RNIap.requestSubscription({
         sku: items.productId,
       });
-
       if (purchase) {
         validateIOS(purchase.transactionReceipt);
       } else {
@@ -334,58 +445,46 @@ const NewSubscription = ({navigation, route}: any) => {
         message: 'An error occurred during the purchase.',
         type: 'danger',
         animationDuration: 500,
-
         floating: true,
       });
-      console.log('Failed to purchase ios product', error);
     }
   };
+
   const validateIOS = async (receipt: any) => {
     const receiptBody = {
       'receipt-data': receipt,
       password: '3a00ec90f8b745678daf489417956f40',
     };
-
     try {
       let result: any = 0;
-      if (__DEV__) {
-        result = await axios('https://sandbox.itunes.apple.com/verifyReceipt', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          data: receiptBody,
-        });
-      } else {
-        result = await axios('https://buy.itunes.apple.com/verifyReceipt', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          data: receiptBody,
-        });
-      }
+      const url = __DEV__
+        ? 'https://sandbox.itunes.apple.com/verifyReceipt'
+        : 'https://buy.itunes.apple.com/verifyReceipt';
+      result = await axios(url, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        data: receiptBody,
+      });
 
       if (result.data) {
         const renewalHistory = result.data?.pending_renewal_info;
-
-        // setForLoading(false);
-        if (renewalHistory[0]?.auto_renew_status == 1 && receipt?.length != 0) {
+        if (
+          renewalHistory[0]?.auto_renew_status === 1 &&
+          receipt?.length !== 0
+        ) {
           fetchPurchaseHistoryIOS(
             renewalHistory[0],
             result?.data?.latest_receipt_info[0]?.original_purchase_date,
           );
         } else {
-          console.log('Payment Failed');
-
           setForLoading(false);
         }
       }
     } catch (error) {
-      console.log('Receipt Error', error);
       setForLoading(false);
     }
   };
+
   const fetchPurchaseHistoryIOS = async (item: any, startDate: any) => {
     const price: string = findKeyInObject(selected, 'localizedPrice').replace(
       /\s/g,
@@ -395,37 +494,30 @@ const NewSubscription = ({navigation, route}: any) => {
       user_id: getUserDataDetails.id,
       transaction_id: item.original_transaction_id,
       plan:
-        item.auto_renew_product_id == 'fitme_noob'
+        item.auto_renew_product_id === 'fitme_noob'
           ? 'noob'
-          : item.auto_renew_product_id == 'fitme_pro'
+          : item.auto_renew_product_id === 'fitme_pro'
           ? 'pro'
           : 'premium',
       platform: Platform.OS,
       product_id: item.auto_renew_product_id,
-      plan_value: parseInt(price.substring(1)),
-      // item.auto_renew_product_id == 'fitme_noob'
-      //   ? 30
-      //   : item.auto_renew_product_id == 'fitme_pro'
-      //   ? 69
-      //   : 149,
+      plan_value: parseInt(price.substring(1), 10),
     };
     PlanPurchasetoBackendAPI(data);
   };
 
-  // PURCHASE START ANDROID
   const purchaseItemsAndroid = async (sku: RNIap.Sku, offerToken: any) => {
     try {
       const purchase: any = await RNIap.requestSubscription({
         sku,
         ...(offerToken && {subscriptionOffers: [{sku, offerToken}]}),
       });
-
       fetchPurchaseHistoryAndroid(purchase[0].dataAndroid);
     } catch (error) {
       console.log('Failed to purchase Android product', error);
     }
   };
-  //'fitme_monthly', 'a_month', 'fitme_legend'localizedPrice
+
   const fetchPurchaseHistoryAndroid = async (data: any) => {
     setForLoading(true);
     const price: string = findKeyInObject(selected, 'formattedPrice');
@@ -433,51 +525,33 @@ const NewSubscription = ({navigation, route}: any) => {
     const postData = {
       user_id: getUserDataDetails.id,
       plan:
-        jsonObject.productId == 'fitme_monthly'
+        jsonObject.productId === 'fitme_monthly'
           ? 'noob'
-          : jsonObject.productId == 'a_monthly'
+          : jsonObject.productId === 'a_monthly'
           ? 'pro'
           : 'premium',
       transaction_id: jsonObject.orderId,
       platform: Platform.OS,
       product_id: jsonObject?.productId,
-      plan_value: parseInt(price.substring(1)),
-      // jsonObject.productId == 'fitme_monthly'
-      //   ? 30
-      //   : jsonObject.productId == 'a_monthly'
-      //   ? 69
-      //   : 149,
+      plan_value: parseInt(price.substring(1), 10),
     };
-
     PlanPurchasetoBackendAPI(postData);
   };
 
-  // Pass Purchased plan to Backend
   const PlanPurchasetoBackendAPI = async (data: Object) => {
     try {
       const res = await axios(`${NewAppapi.EVENT_SUBSCRIPTION_POST}`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+        headers: {'Content-Type': 'multipart/form-data'},
         data,
       });
 
       setPause(true);
       playMusic();
-      if (res.data.message == 'Event created successfully') {
-        // PurchaseDetails();
-        getUserDetailData();
-        setForLoading(false);
-        stopMusic();
-        setTimeout(() => {
-          navigation.navigate('UpcomingEvent', {eventType: 'current'});
-        }, 2500);
-      } else if (
-        res.data.message == 'Plan upgraded and new event created successfully'
+      if (
+        res.data.message === 'Event created successfully' ||
+        res.data.message === 'Plan upgraded and new event created successfully'
       ) {
-        //  PurchaseDetails();
-
         getUserDetailData();
         setForLoading(false);
         stopMusic();
@@ -485,7 +559,7 @@ const NewSubscription = ({navigation, route}: any) => {
           navigation.navigate('UpcomingEvent', {eventType: 'current'});
         }, 2500);
       } else if (
-        res.data.message ==
+        res.data.message ===
         'Plan upgraded and existing subscription updated successfully'
       ) {
         PurchaseDetails();
@@ -506,7 +580,6 @@ const NewSubscription = ({navigation, route}: any) => {
       setPause(false);
     } catch (error) {
       setForLoading(false);
-      console.log('Purchase Store Data Error', error, data);
     }
   };
 
@@ -514,13 +587,11 @@ const NewSubscription = ({navigation, route}: any) => {
     try {
       const result = await axios({
         url: `${NewAppapi.EVENT_SUBSCRIPTION_GET}/${getUserDataDetails?.id}`,
-        params: {
-          version: VersionNumber.appVersion,
-        },
+        params: {version: VersionNumber.appVersion},
         method: 'GET',
       });
       setRefresh(false);
-      if (result.data?.message == 'Not any subscription') {
+      if (result.data?.message === 'Not any subscription') {
         dispatch(setPurchaseHistory([]));
         setCurrentSelected(2);
         EnteringEventFunction(
@@ -534,9 +605,9 @@ const NewSubscription = ({navigation, route}: any) => {
         dispatch(setPurchaseHistory(result.data.data));
         upgrade
           ? setCurrentSelected(2)
-          : result.data.data?.plan == 'noob'
+          : result.data.data?.plan === 'noob'
           ? setCurrentSelected(0)
-          : result.data.data?.plan == 'pro'
+          : result.data.data?.plan === 'pro'
           ? setCurrentSelected(1)
           : setCurrentSelected(2);
         EnteringEventFunction(
@@ -548,7 +619,6 @@ const NewSubscription = ({navigation, route}: any) => {
         );
       }
     } catch (error) {
-      console.log(error);
       setRefresh(false);
       dispatch(setPurchaseHistory([]));
     }
@@ -561,7 +631,7 @@ const NewSubscription = ({navigation, route}: any) => {
       );
 
       if (
-        responseData?.data?.msg ==
+        responseData?.data?.msg ===
         'Please update the app to the latest version.'
       ) {
         showMessage({
@@ -569,382 +639,71 @@ const NewSubscription = ({navigation, route}: any) => {
           type: 'danger',
           animationDuration: 500,
           floating: true,
-          icon: {icon: 'auto', position: 'left'},
         });
       } else {
         dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
         dispatch(setOfferAgreement(responseData?.data?.additional_data));
         dispatch(setUserProfileData(responseData?.data?.profile));
         setRefresh(false);
-        if (responseData?.data.event_details == 'Not any subscription') {
+        if (responseData?.data.event_details === 'Not any subscription') {
           dispatch(setPurchaseHistory([]));
           setCurrentSelected(2);
-          EnteringEventFunction(
-            dispatch,
-            [],
-            setEnteredCurrentEvent,
-            setEnteredUpcomingEvent,
-            setPlanType,
-          );
         } else {
-          EnteringEventFunction(
-            dispatch,
-            responseData?.data.event_details,
-            setEnteredCurrentEvent,
-            setEnteredUpcomingEvent,
-            setPlanType,
-          );
           dispatch(setPurchaseHistory(responseData?.data.event_details));
-          responseData?.data?.event_details.plan == 'noob'
+          responseData?.data?.event_details.plan === 'noob'
             ? setCurrentSelected(0)
-            : responseData?.data?.event_details?.plan == 'pro'
+            : responseData?.data?.event_details?.plan === 'pro'
             ? setCurrentSelected(1)
             : setCurrentSelected(2);
-          EnteringEventFunction(
-            dispatch,
-            responseData?.data.event_details,
-            setEnteredCurrentEvent,
-            setEnteredUpcomingEvent,
-            setPlanType,
-          );
         }
       }
     } catch (error) {
-      console.log('GET-USER-DATA', error);
-
       setRefresh(false);
     }
   };
 
-  const RenderItem = ({item, index}: any) => {
-    const planCap: string = findKeyInObject(
-      item,
-      PLATFORM_IOS ? 'title' : 'name',
-    );
-
-    const temp =
-      Platform.OS == 'ios'
-        ? []
-        : item?.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList;
-    const price: string =
-      index == 2 && Platform.OS == 'android'
-        ? temp?.length == 1
-          ? temp[0]?.formattedPrice
-          : temp[1]?.formattedPrice
-        : findKeyInObject(
-            item,
+  const handlePurchase = useCallback(
+    (item: any) => {
+      if (getPurchaseHistory?.plan_value != null) {
+        const index = getInAppPurchase?.findIndex((p: any) => {
+          const price: string = findKeyInObject(
+            p,
             PLATFORM_IOS ? 'localizedPrice' : 'formattedPrice',
           );
-
-    const normalizedPrice = PLATFORM_IOS ? price.replace(/\s/g, '') : price;
-
-    const planName = planCap.toLowerCase();
-    const color = planName.includes('noob')
-      ? AppColor.NEW_SUBS_BLUE
-      : planName.includes('pro')
-      ? AppColor.NEW_SUBS_GREEN
-      : AppColor.NEW_SUBS_ORANGE;
-    const CheckIcon = () => (
-      <Image
-        source={localImage.PlanBenifits}
-        style={{marginRight: 10, width: 15, height: 15}}
-        resizeMode="contain"
-        tintColor={color}
-      />
-    );
-    const lowOpacity = getInAppPurchase?.findIndex(
-      (item: any) => getPurchaseHistory?.product_id == item?.productId,
-    );
-    const Line = () => (
-      <Text numberOfLines={1} style={{color: '#3333331A'}} ellipsizeMode="clip">
-        {Array(80).fill('- ')}
-      </Text>
-    );
-    return (
-      <View
-        style={{
-          // flex: 1,
-          padding: 10,
-          borderColor: color,
-          borderRadius: 5,
-          borderWidth: 1,
-          backgroundColor: AppColor.WHITE,
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: DeviceHeigth <= 640 ? DeviceHeigth * 0.8 : DeviceHeigth * 0.6,
-          // !planName.includes('noob') &&
-          // !planName.includes('pro') &&
-          // !PLATFORM_IOS &&
-          // getPurchaseHistory?.plan_value == null
-          //   ? DeviceHeigth * 0.65
-          //   : DeviceHeigth * 0.55,
-          width: DeviceWidth * 0.85,
-          alignSelf: 'center',
-          margin: 10,
-        }}>
-        {getPurchaseHistory?.plan != null &&
-          planName == getPurchaseHistory?.plan && (
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: '#1B8900',
-                padding: 5,
-                paddingVertical: 2,
-                borderBottomLeftRadius: 5,
-                borderBottomRightRadius: 5,
-                position: 'absolute',
-                top: 0,
-                right: 5,
-              }}>
-              <FitText
-                type="normal"
-                value="Active"
-                color={AppColor.WHITE}
-                fontSize={12}
-                lineHeight={16}
-                fontWeight="600"
-              />
-            </View>
-          )}
-        <Image
-          source={
-            index == 0
-              ? localImage.BasicPlan
-              : index == 1
-              ? localImage.MediumPlan
-              : localImage.PremiumPlan
-          }
-          resizeMode="contain"
-          style={{
-            width: '40%',
-            height: '30%',
-          }}
-        />
-        {!planName.includes('noob') &&
-          !planName.includes('pro') &&
-          getPurchaseHistory?.plan == null && (
-            <Image
-              source={localImage.RecommendFitme}
-              resizeMode="contain"
-              style={styles.recommendContainer}
-            />
-          )}
-        <FitText
-          type="SubHeading"
-          color={color}
-          fontSize={18}
-          lineHeight={24}
-          value={
-            planName.includes('noob')
-              ? translate('basicPlan')
-              : planName.includes('pro')
-              ? translate('mediumPlan')
-              : translate('premiumPlan')
-          }
-          marginVertical={5}
-        />
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: 10,
-          }}>
-          {/* <FitText
-            type="Heading"
-            value={
-              planName.includes('noob')
-                ? '₹99'
-                : planName.includes('pro')
-                ? '₹199'
-                : '₹399'
-            }
-            fontSize={28}
-            lineHeight={34}
-            marginVertical={5}
-            fontFamily={Fonts.MONTSERRAT_MEDIUM}
-            color="#ADADAD"
-            textDecorationLine="line-through"
-          /> */}
-
-          <FitText
-            type="Heading"
-            value={` ${
-              PLATFORM_IOS ? normalizedPrice : normalizedPrice.split('.')[0]
-            }/month`}
-            fontSize={28}
-            lineHeight={34}
-            marginVertical={5}
-          />
-        </View>
-        {!planName.includes('noob') &&
-          !planName.includes('pro') &&
-          !PLATFORM_IOS &&
-          getPurchaseHistory?.plan_value == null && (
-            <View
-              style={[
-                styles.row,
-                {
-                  width: '90%',
-                },
-              ]}>
-              <CheckIcon />
-              <FitText
-                type="normal"
-                value={translate('freeTrial')}
-                color="#333333E5"
-                fontFamily={Fonts.MONTSERRAT_MEDIUM}
-                marginVertical={3}
-              />
-            </View>
-          )}
-        {!planName.includes('noob') &&
-          !planName.includes('pro') &&
-          !PLATFORM_IOS && <Line />}
-        {/* <View
-          style={[
-            styles.row,
-            {
-              width: '90%',
-            },
-          ]}>
-          <CheckIcon />
-          <FitText
-            type="normal"
-            value="Winning price ₹1000/-"
-            color="#333333E5"
-            fontFamily={Fonts.MONTSERRAT_MEDIUM}
-            marginVertical={3}
-          />
-        </View>
-        <Line /> */}
-        <View
-          style={[
-            styles.row,
-            {
-              width: '90%',
-            },
-          ]}>
-          <CheckIcon />
-          <FitText
-            type="normal"
-            value={
-              planName.includes('noob')
-                ? translate('eventsPerMonthBasic')
-                : planName.includes('pro')
-                ? translate('eventsPerMonthPro')
-                : translate('eventsPerMonthPremium')
-            }
-            color="#333333E5"
-            fontFamily={Fonts.MONTSERRAT_MEDIUM}
-            marginVertical={3}
-          />
-        </View>
-        <Line />
-        <View
-          style={[
-            styles.row,
-            {
-              width: '90%',
-            },
-          ]}>
-          <CheckIcon />
-          <FitText
-            type="normal"
-            value={translate('unlockExercises')}
-            color="#333333E5"
-            fontFamily={Fonts.MONTSERRAT_MEDIUM}
-            marginVertical={3}
-          />
-        </View>
-        <Line />
-        <View
-          style={[
-            styles.row,
-            {
-              width: '90%',
-            },
-          ]}>
-          <CheckIcon />
-          <FitText
-            type="normal"
-            value={planName.includes('noob') ? 'With Ads' : 'Fewer Ads'}
-            color="#333333E5"
-            fontFamily={Fonts.MONTSERRAT_MEDIUM}
-            marginVertical={3}
-          />
-        </View>
-        {(planName.includes('noob') || planName.includes('pro')) &&
-          getPurchaseHistory?.plan_value == null && (
-            <View style={{height: 50, width: '100%'}} />
-          )}
-
-        <GradientButton
-          text={
-            planName.includes(getPurchaseHistory?.plan)
-              ? translate('purchased')
-              : translate('proceed')
-          }
-          h={50}
-          colors={[color, color]}
-          textStyle={[
-            styles.buttonText,
-            {
-              color: AppColor.WHITE,
-            },
-          ]}
-          bC={color}
-          alignSelf
-          bR={6}
-          w={DeviceWidth * 0.8}
-          mV={15}
-          onPress={() => {
-            setSelected(item);
-            handlePurchase(item);
-            // AnalyticsConsole(`Pur_${item.name}_PLAN`);
-            AnalyticsConsole(`Pur_${planName.substring(1)}_PLAN`);
-          }}
-          // opacity={price.includes(getPurchaseHistory?.plan_value) ? 0.8 : 1}
-          disabled={planName.includes(getPurchaseHistory?.plan)}
-        />
-      </View>
-    );
-  };
-  const handlePurchase = (item: any) => {
-    if (getPurchaseHistory?.plan_value != null) {
-      const index = getInAppPurchase?.findIndex((item: any) => {
-        const price: string = findKeyInObject(
-          item,
-          PLATFORM_IOS ? 'localizedPrice' : 'formattedPrice',
-        );
-
-        return price.includes(getPurchaseHistory?.plan_value);
-      });
-      if (currentSelected < index) {
-        showMessage({
-          message: 'You can not downgrade the plan',
-          type: 'danger',
-          floating: true,
+          return price.includes(getPurchaseHistory?.plan_value);
         });
-      } else if (
-        getPurchaseHistory?.used_plan < getPurchaseHistory?.allow_usage
-      ) {
-        showMessage({
-          message: `You have ${
-            getPurchaseHistory?.allow_usage - getPurchaseHistory?.used_plan
-          } limit left. Please use them before Purchase new Plan`,
-          type: 'danger',
-          floating: true,
-          duration: 2000,
-        });
-      } else if (getPurchaseHistory?.upcoming_day_status == 1) {
-        showMessage({
-          message: `Please wait for your current challenge to start to upgrade your plan and take part in the new challenges.`,
-          type: 'danger',
-          floating: true,
-          duration: 2000,
-        });
+        if (currentSelected < index) {
+          showMessage({
+            message: 'You can not downgrade the plan',
+            type: 'danger',
+            floating: true,
+          });
+        } else if (
+          getPurchaseHistory?.used_plan < getPurchaseHistory?.allow_usage
+        ) {
+          showMessage({
+            message: `You have ${
+              getPurchaseHistory?.allow_usage - getPurchaseHistory?.used_plan
+            } limit left. Please use them before Purchase new Plan`,
+            type: 'danger',
+            floating: true,
+            duration: 2000,
+          });
+        } else if (getPurchaseHistory?.upcoming_day_status === 1) {
+          showMessage({
+            message: `Please wait for your current challenge to start to upgrade your plan and take part in the new challenges.`,
+            type: 'danger',
+            floating: true,
+            duration: 2000,
+          });
+        } else {
+          PLATFORM_IOS
+            ? purchaseItems(item)
+            : purchaseItemsAndroid(
+                item.productId,
+                item.subscriptionOfferDetails[0].offerToken,
+              );
+        }
       } else {
         PLATFORM_IOS
           ? purchaseItems(item)
@@ -953,395 +712,577 @@ const NewSubscription = ({navigation, route}: any) => {
               item.subscriptionOfferDetails[0].offerToken,
             );
       }
-    } else {
-      PLATFORM_IOS
-        ? purchaseItems(item)
-        : purchaseItemsAndroid(
-            item.productId,
-            item.subscriptionOfferDetails[0].offerToken,
-          );
-    }
-  };
-  const getPrice = (item: any) => {
-    const temp =
-      Platform.OS == 'ios'
-        ? []
-        : item?.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList;
+    },
+    [currentSelected, getInAppPurchase, getPurchaseHistory],
+  );
 
-    const price: string =
-      currentSelected == 2 && Platform.OS == 'android'
-        ? temp?.length == 1
-          ? temp[0]?.formattedPrice
-          : temp[1]?.formattedPrice
-        : findKeyInObject(
-            item,
-            PLATFORM_IOS ? 'localizedPrice' : 'formattedPrice',
-          );
-    const normalizedPrice = PLATFORM_IOS ? price.replace(/\s/g, '') : price;
-    return normalizedPrice;
-  };
+  const handleCardSelect = useCallback(
+    (item: any, index: number) => {
+      setCurrentSelected(index);
+      setSelected(item);
+      flatListRef.current?.scrollToIndex({
+        index,
+        animated: true,
+      });
+      if (currentSelected === index) {
+        handlePurchase(item);
+      }
+    },
+    [currentSelected, handlePurchase],
+  );
+
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
-      <StatusBar backgroundColor={AppColor.WHITE} barStyle={'dark-content'} />
-      <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
-        <NewHeader1 header={translate('header')} backButton />
-        <View style={{flex: 1, marginHorizontal: 20, marginTop: 10}}>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            refreshControl={
-              <RefreshControl
-                refreshing={refresh}
-                onRefresh={getUserDetailData}
-                colors={[AppColor.NEW_DARK_RED, AppColor.NEW_DARK_RED]}
-              />
-            }>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: 20,
-              }}>
-              <FitText
-                value={translate('challengePackages')}
-                type="Heading"
-                fontSize={15}
-                lineHeight={24}
-              />
-              <TouchableOpacity
-                onPress={() => {
-                  // PLATFORM_IOS
-                  //   ? restorePurchase()
-                  //   : Linking.openURL(
-                  //       'https://play.google.com/store/account/subscriptions',
-                  //     );
-                  // showRewardedAd();
-                  // rewardAdClosed().then(isClosed => {
-                  //   if (isClosed) {
-                  PlanPurchasetoBackendAPI({
-                    user_id: getUserDataDetails.id,
-                    transaction_id: 'free',
-                    plan: 'free',
-                    platform: Platform.OS,
-                    product_id: 'fitme_free',
-                    plan_value: 0,
-                  });
-                  //   }
-                  // });
-                }}>
-                <Text
-                  style={{
-                    fontWeight: '500',
-                    fontSize: 14,
-                    lineHeight: 20,
-                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                    color: '#333333',
-                    textDecorationLine: 'underline',
-                  }}>
-                  {PLATFORM_IOS
-                    ? translate('restorePlan')
-                    : translate('managePlan')}
-                </Text>
-              </TouchableOpacity>
-            </View>
-            {sortedSubscriptions && (
-              <FlatList
-                ref={flatListRef}
-                data={sortedSubscriptions}
-                keyExtractor={(_, index) => index.toString()}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                pagingEnabled
-                snapToAlignment="start"
-                snapToInterval={
-                  DeviceHeigth >= 1024 ? DeviceWidth * 0.95 : DeviceWidth * 0.9
-                }
-                decelerationRate="fast"
-                onMomentumScrollEnd={event => {
-                  const index = Math.round(
-                    event.nativeEvent.contentOffset.x /
-                      (DeviceHeigth >= 1024
-                        ? DeviceWidth * 0.95
-                        : DeviceWidth * 0.9),
-                  );
-                  setCurrentSelected(index);
-                }}
-                initialScrollIndex={currentSelected}
-                getItemLayout={(data, index) => ({
-                  length:
-                    DeviceHeigth >= 1024
-                      ? DeviceWidth * 0.95
-                      : DeviceWidth * 0.9,
-                  offset:
-                    index *
-                    (DeviceHeigth >= 1024
-                      ? DeviceWidth * 0.95
-                      : DeviceWidth * 0.9),
-                  index,
-                })}
-                renderItem={({item, index}) => RenderItem({item, index})}
-              />
-            )}
+    <Wrapper styles={{backgroundColor: '#F8FAFC'}}>
+      <StatusBar backgroundColor="#F8FAFC" barStyle="dark-content" />
 
-            <View
-              style={[
-                styles.tabContainer,
-                {
-                  height:
-                    DeviceHeigth >= 1024
-                      ? DeviceHeigth * 0.05
-                      : DeviceHeigth >= 640
-                      ? DeviceHeigth * 0.06
-                      : DeviceHeigth * 0.05,
-                },
-              ]}>
-              {sortedSubscriptions?.map((item: any, index: number) => {
-                const isSelected = currentSelected == index;
-                return (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      setCurrentSelected(index);
-                      flatListRef.current?.scrollToIndex({
-                        index,
-                        animated: true,
-                      });
-                    }}
-                    style={[
-                      styles.tabButton,
-                      {
-                        marginVertical: isSelected ? 0 : 10,
-                        height:
-                          DeviceHeigth >= 1024
-                            ? DeviceHeigth * 0.05
-                            : DeviceHeigth >= 640
-                            ? DeviceHeigth * 0.06
-                            : DeviceHeigth * 0.05,
-                        backgroundColor: isSelected
-                          ? index == 0
-                            ? AppColor.NEW_SUBS_BLUE
-                            : index == 1
-                            ? AppColor.NEW_SUBS_GREEN
-                            : AppColor.NEW_SUBS_ORANGE
-                          : 'transparent',
-                      },
-                    ]}>
-                    <Text
-                      style={{
-                        color: isSelected ? AppColor.WHITE : '#121212B2',
-                        fontFamily: isSelected
-                          ? Fonts.MONTSERRAT_BOLD
-                          : Fonts.MONTSERRAT_MEDIUM,
-                        fontSize: 14,
-                        lineHeight: 14.63,
-                        fontWeight: isSelected ? '600' : '500',
-                        marginTop: 5,
-                        textAlign: 'center',
-                        opacity: isSelected ? 1 : 0.7,
-                      }}>
-                      {index == 0
-                        ? translate('basic')
-                        : index == 1
-                        ? translate('medium')
-                        : translate('premium')}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: DeviceWidth * 0.9,
-                // backgroundColor: '#f5f5f5',
-                padding: 10,
-                borderRadius: 10,
-              }}>
-              {currentSelected == 2 ? (
-                Platform.OS == 'android' ? (
-                  <Text
-                    style={{
-                      fontSize: 11,
-                      fontWeight: '500',
-                      fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                      lineHeight: 16,
-                      color: '#333333',
-                    }}>
-                    {/* Please NOTE: Enjoy the 3-day free trial then you will be
-                    charged {getPrice(sortedSubscriptions[currentSelected])}{' '}
-                    monthly. You can cancel the subscription before your trial
-                    period ends if you do not want to convert to a paid
-                    subscription. Your subscription will renew automatically
-                    until you cancel the subscription, you can manage or cancel
-                    your subscription anytime from the Google Play Store. If you
-                    are unsure how to cancel a subscription, please visit the
-                    Google Support website. Note that deleting the app does not
-                    cancel your subscription. */}
+      {/* Top Header */}
+      <View style={styles.headerBar}>
+        <TouchableOpacity
+          style={styles.backCircleBtn}
+          onPress={() => navigation.goBack()}>
+          <ArrowLeft width={30} height={15} fillColor="#0F172A" />
+        </TouchableOpacity>
 
-                    {translate('noteAndroidPremium')}
-                  </Text>
-                ) : (
-                  <Text
-                    style={{
-                      fontSize: 11,
-                      fontWeight: '500',
-                      fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                      lineHeight: 16,
-                      color: '#333333',
-                    }}>
-                    {translate('noteIOSPremium')}
-                  </Text>
-                )
-              ) : Platform.OS == 'android' ? (
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontWeight: '500',
-                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                    lineHeight: 16,
-                    color: '#333333',
-                  }}>
-                  {translate('noteAndroidNonPremium')}
-                </Text>
-              ) : (
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontWeight: '500',
-                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                    lineHeight: 16,
-                    color: '#333333',
-                  }}>
-                  {translate('noteIOSNonPremium')}
-                </Text>
-              )}
-            </View>
-            <View
-              style={{
-                alignSelf: 'center',
-                width: DeviceWidth * 0.9,
-                paddingBottom: 20,
-                paddingHorizontal: 10,
-              }}>
-              <Text style={styles.policyText}>
-                {translate('acceptterm')}{' '}
-                <Text
+        <Text style={styles.headerTitle}>{translate('header')}</Text>
+
+        <TouchableOpacity
+          style={styles.restoreBtn}
+          onPress={() => {
+            PlanPurchasetoBackendAPI({
+              user_id: getUserDataDetails.id,
+              transaction_id: 'free',
+              plan: 'free',
+              platform: Platform.OS,
+              product_id: 'fitme_free',
+              plan_value: 0,
+            });
+          }}>
+          <Text style={styles.restoreBtnText}>
+            {PLATFORM_IOS ? translate('restorePlan') : translate('managePlan')}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{paddingBottom: 20}}
+        refreshControl={
+          <RefreshControl
+            refreshing={refresh}
+            onRefresh={getUserDetailData}
+            tintColor="#667EEA"
+            colors={['#667EEA', '#764BA2']}
+          />
+        }>
+        {/* Crown Hero Banner with Pulsing Aura */}
+        <View style={styles.heroSection}>
+          <Animated.View style={{transform: [{scale: pulseAnim}]}}>
+            <LinearGradient
+              colors={['#667EEA', '#764BA2']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 1}}
+              style={styles.heroCrownRing}>
+              <FitIcon
+                name="crown"
+                type="MaterialCommunityIcons"
+                size={28}
+                color="#FFD700"
+              />
+            </LinearGradient>
+          </Animated.View>
+          <Text style={styles.heroTitle}>Unlock Premium Access</Text>
+          <Text style={styles.heroSubtitle}>
+            Achieve your fitness goals with unlimited workouts & challenges
+          </Text>
+        </View>
+
+        {/* Segmented Plan Selector Tab Bar */}
+        {sortedSubscriptions && sortedSubscriptions.length > 0 && (
+          <View style={styles.segmentedTabBar}>
+            {sortedSubscriptions.map((item: any, index: number) => {
+              const isSelected = currentSelected === index;
+              const activeGradient: [string, string] =
+                index === 0
+                  ? ['#2563EB', '#3B82F6']
+                  : index === 1
+                  ? ['#059669', '#10B981']
+                  : ['#667EEA', '#764BA2'];
+
+              return (
+                <TouchableOpacity
+                  key={index}
+                  activeOpacity={0.88}
                   onPress={() => {
-                    navigation.navigate('TermaAndCondition', {
-                      title: 'Privacy Policy',
+                    setCurrentSelected(index);
+                    flatListRef.current?.scrollToIndex({
+                      index,
+                      animated: true,
                     });
                   }}
-                  style={styles.policyText1}>
-                  {translate('privacypolicy')}
-                </Text>{' '}
-                {translate('and')}
-                <Text
-                  style={styles.policyText1}
-                  onPress={() => {
-                    navigation.navigate('TermaAndCondition', {
-                      title: 'Terms & Conditions',
-                    });
-                  }}>
-                  {translate('termsOfUse')}
-                </Text>
-              </Text>
-            </View>
-          </ScrollView>
+                  style={styles.segmentTabBtnWrapper}>
+                  {isSelected ? (
+                    <LinearGradient
+                      colors={activeGradient}
+                      start={{x: 0, y: 0}}
+                      end={{x: 1, y: 0}}
+                      style={styles.segmentTabBtnActiveGradient}>
+                      <FitIcon
+                        name={
+                          index === 0
+                            ? 'flash'
+                            : index === 1
+                            ? 'shield-checkmark'
+                            : 'star'
+                        }
+                        type="Ionicons"
+                        size={13}
+                        color="#FFFFFF"
+                      />
+                      <Text style={styles.segmentTabTextActive}>
+                        {index === 0
+                          ? translate('basic')
+                          : index === 1
+                          ? translate('medium')
+                          : translate('premium')}
+                      </Text>
+                    </LinearGradient>
+                  ) : (
+                    <View style={styles.segmentTabBtnInactive}>
+                      <FitIcon
+                        name={
+                          index === 0
+                            ? 'flash-outline'
+                            : index === 1
+                            ? 'shield-checkmark-outline'
+                            : 'star-outline'
+                        }
+                        type="Ionicons"
+                        size={13}
+                        color="#64748B"
+                      />
+                      <Text style={styles.segmentTabTextInactive}>
+                        {index === 0
+                          ? translate('basic')
+                          : index === 1
+                          ? translate('medium')
+                          : translate('premium')}
+                      </Text>
+                    </View>
+                  )}
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        )}
+
+        {/* Horizontal Subscription Cards Carousel */}
+        {sortedSubscriptions && sortedSubscriptions.length > 0 && (
+          <FlatList
+            ref={flatListRef}
+            data={sortedSubscriptions}
+            keyExtractor={(_, index) => index.toString()}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            pagingEnabled
+            snapToAlignment="center"
+            snapToInterval={CARD_WIDTH + 16}
+            decelerationRate="fast"
+            contentContainerStyle={{paddingHorizontal: 20}}
+            onMomentumScrollEnd={event => {
+              const index = Math.round(
+                event.nativeEvent.contentOffset.x / (CARD_WIDTH + 16),
+              );
+              setCurrentSelected(index);
+            }}
+            initialScrollIndex={currentSelected}
+            getItemLayout={(_, index) => ({
+              length: CARD_WIDTH + 16,
+              offset: index * (CARD_WIDTH + 16),
+              index,
+            })}
+            renderItem={({item, index}) => (
+              <PlanCardItem
+                item={item}
+                index={index}
+                isSelected={currentSelected === index}
+                onSelect={handleCardSelect}
+                getPurchaseHistory={getPurchaseHistory}
+              />
+            )}
+          />
+        )}
+
+        {/* Disclaimer Notes */}
+        <View style={styles.disclaimerCard}>
+          <FitIcon
+            name="information-circle-outline"
+            type="Ionicons"
+            size={16}
+            color="#64748B"
+          />
+          <Text style={styles.disclaimerText}>
+            {currentSelected === 2
+              ? Platform.OS === 'android'
+                ? translate('noteAndroidPremium')
+                : translate('noteIOSPremium')
+              : Platform.OS === 'android'
+              ? translate('noteAndroidNonPremium')
+              : translate('noteIOSNonPremium')}
+          </Text>
         </View>
-        {loading && <ActivityLoader visible={loading} />}
-      </Wrapper>
-    </SafeAreaView>
+
+        {/* Terms and Privacy Footer */}
+        <View style={styles.footerPolicySection}>
+          <Text style={styles.policyText}>
+            {translate('acceptterm')}{' '}
+            <Text
+              onPress={() => {
+                navigation.navigate('TermaAndCondition', {
+                  title: 'Privacy Policy',
+                });
+              }}
+              style={styles.policyLink}>
+              {translate('privacypolicy')}
+            </Text>{' '}
+            {translate('and')}{' '}
+            <Text
+              style={styles.policyLink}
+              onPress={() => {
+                navigation.navigate('TermaAndCondition', {
+                  title: 'Terms & Conditions',
+                });
+              }}>
+              {translate('termsOfUse')}
+            </Text>
+          </Text>
+        </View>
+      </ScrollView>
+
+      {loading && <ActivityLoader visible={loading} />}
+    </Wrapper>
   );
 };
 
 export default NewSubscription;
 
 const styles = StyleSheet.create({
-  row: {
+  headerBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: '60%',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingTop: 6,
+    paddingBottom: 4,
   },
-  buttonText: {
-    fontSize: 14,
-    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-    lineHeight: 20,
-    fontWeight: '500',
-    zIndex: 1,
-    color: AppColor.WHITE,
+  backCircleBtn: {
+    width: 35,
+    height: 35,
+    borderRadius: 17,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#0F172A',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 3,
   },
-  triangle: {
-    width: 0,
-    height: 0,
-    // borderLeftWidth: 20,
-    borderRightWidth: 50,
-    borderBottomWidth: 50,
-    top: -25,
-    right: -5,
-    borderStyle: 'solid',
-    backgroundColor: 'transparent',
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderBottomColor: 'white', // Change to your desired color
+  headerTitle: {
+    fontSize: 16.5,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '800',
+    color: '#0F172A',
   },
-  recommendContainer: {
-    width: 50,
-    height: 50,
+  restoreBtn: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
+    backgroundColor: '#EEF2FF',
+  },
+  restoreBtnText: {
+    fontSize: 11.5,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    color: '#667EEA',
+  },
+
+  heroSection: {
+    alignItems: 'center',
+    marginTop: 4,
+    marginBottom: 10,
+    paddingHorizontal: 20,
+  },
+  heroCrownRing: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 8,
+    shadowColor: '#667EEA',
+    shadowOffset: {width: 0, height: 6},
+    shadowOpacity: 0.35,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  heroTitle: {
+    fontSize: 19.5,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '800',
+    color: '#0F172A',
+    textAlign: 'center',
+  },
+  heroSubtitle: {
+    fontSize: 12,
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    color: '#64748B',
+    textAlign: 'center',
+    marginTop: 2,
+  },
+
+  segmentedTabBar: {
+    flexDirection: 'row',
+    backgroundColor: '#F1F5F9',
+    borderRadius: 16,
+    padding: 4,
+    marginHorizontal: 20,
+    marginBottom: 14,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  segmentTabBtnWrapper: {
+    flex: 1,
+  },
+  segmentTabBtnActiveGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 9,
+    borderRadius: 12,
+    gap: 6,
+    shadowColor: '#667EEA',
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  segmentTabBtnInactive: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 9,
+    borderRadius: 12,
+    gap: 6,
+  },
+  segmentTabTextActive: {
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontSize: 12.5,
+    color: '#FFFFFF',
+    fontWeight: '800',
+  },
+  segmentTabTextInactive: {
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    fontSize: 12.5,
+    color: '#64748B',
+    fontWeight: '600',
+  },
+
+  planCard: {
+    width: CARD_WIDTH,
+    borderRadius: 22,
+    padding: 16,
+    paddingTop: 20,
+    marginRight: 16,
+    marginTop: 12,
+    marginBottom: 6,
+    borderWidth: 1.5,
+    position: 'relative',
+    overflow: 'visible',
+  },
+  planCardUnselected: {
+    backgroundColor: '#FAFAFA',
+    borderColor: '#E2E8F0',
+    shadowColor: '#0F172A',
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  planCardSelected: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 2,
+    shadowColor: '#667EEA',
+    shadowOffset: {width: 0, height: 12},
+    shadowOpacity: 0.28,
+    shadowRadius: 20,
+    elevation: 12,
+  },
+  popBadge: {
     position: 'absolute',
-    top: 0,
-    right: 0,
-    padding: 5,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-end',
-    borderTopRightRadius: 5,
+    top: -13,
+    right: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 11,
+    paddingVertical: 4.5,
+    borderRadius: 12,
+    gap: 4,
+    shadowColor: '#FF6B6B',
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.35,
+    shadowRadius: 8,
+    elevation: 6,
+    zIndex: 10,
+  },
+  popBadgeText: {
+    fontSize: 9.5,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    letterSpacing: 0.5,
+  },
+  activeBadge: {
+    position: 'absolute',
+    top: -13,
+    right: 16,
+    backgroundColor: '#10B981',
+    paddingHorizontal: 11,
+    paddingVertical: 4.5,
+    borderRadius: 12,
+    shadowColor: '#10B981',
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.35,
+    shadowRadius: 8,
+    elevation: 6,
+    zIndex: 10,
+  },
+  activeBadgeText: {
+    fontSize: 9.5,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+
+  cardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+    marginTop: 2,
+  },
+  cardIconImg: {
+    width: 40,
+    height: 40,
+  },
+  cardPlanTitle: {
+    fontSize: 16.5,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '800',
+    color: '#0F172A',
+  },
+  cardPlanSub: {
+    fontSize: 11,
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    color: '#64748B',
+    marginTop: 1,
+  },
+
+  priceRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    marginBottom: 12,
+  },
+  priceBig: {
+    fontSize: 28,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '800',
+    color: '#0F172A',
+  },
+  pricePeriod: {
+    fontSize: 13,
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    color: '#64748B',
+    marginLeft: 5,
+  },
+
+  checklistSection: {
+    borderTopWidth: 1,
+    borderColor: '#F1F5F9',
+    paddingTop: 10,
+    marginBottom: 14,
+    gap: 8,
+  },
+  checkRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  checkCircle: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 9,
+  },
+  checkText: {
+    fontSize: 12.5,
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    color: '#334155',
+    flex: 1,
+  },
+
+  actionBtnWrapper: {
+    borderRadius: 14,
+    overflow: 'hidden',
+    marginTop: 2,
+  },
+  actionBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    gap: 6,
+    borderRadius: 14,
+  },
+  actionBtnText: {
+    fontSize: 14,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+
+  disclaimerCard: {
+    flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
+    padding: 12,
+    marginHorizontal: 20,
+    marginTop: 12,
+    alignItems: 'flex-start',
+    gap: 8,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  disclaimerText: {
+    fontSize: 11,
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    color: '#64748B',
+    lineHeight: 15,
+    flex: 1,
+  },
+
+  footerPolicySection: {
+    marginHorizontal: 20,
+    marginTop: 10,
+    alignItems: 'center',
   },
   policyText: {
-    fontSize: 12,
-    lineHeight: 16,
-    fontWeight: '500',
-    color: '#333333',
-    fontFamily: 'Poppins',
+    fontSize: 11,
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    color: '#64748B',
+    textAlign: 'center',
+    lineHeight: 15,
   },
-  policyText1: {
-    fontSize: 12,
-    lineHeight: 16,
-    fontWeight: '500',
-    color: '#333333',
+  policyLink: {
+    color: '#667EEA',
     textDecorationLine: 'underline',
-  },
-  tabContainer: {
-    flexDirection: 'row',
-    height: DeviceWidth * 0.15,
-    backgroundColor: AppColor.WHITE,
-    borderRadius: 50,
-    marginVertical: 20,
-    width: DeviceWidth * 0.88,
-    alignSelf: 'center',
-    shadowColor: '#121212B2',
-    ...Platform.select({
-      ios: {
-        shadowOffset: {width: 1, height: 2},
-        shadowOpacity: 0.5,
-        shadowRadius: 2,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-  },
-  tabButton: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center',
-    borderRadius: 50,
-  },
-  nextButton: {
-    overflow: 'hidden',
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center',
   },
 });

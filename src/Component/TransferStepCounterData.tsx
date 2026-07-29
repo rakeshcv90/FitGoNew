@@ -100,14 +100,14 @@ export const StepcountNoticationStart = async () => {
 const GoogleFitData = async () => {
   try {
     const dailySteps = await GoogleFit.getDailySteps();
-  
+
     const totalSteps = dailySteps.reduce(
       (total: any, acc: any) => (total + acc.steps[0] ? acc.steps[0].value : 0),
       0,
     );
     const distance = ((totalSteps / 20) * 0.01).toFixed(2);
     const calories = ((totalSteps / 20) * 1).toFixed(1);
-  
+
     PedometerNotificationAPI(totalSteps, distance, calories);
   } catch (error) {
     console.error('Error fetching total steps', error);
@@ -136,12 +136,11 @@ export const AppleHealthKitData = async () => {
       if (available) {
         AppleHealthKit.getStepCount(options, (callbackError, results) => {
           if (callbackError) {
-      
           }
-          const totalSteps = results.value;
-          const distance = ((results.value / 20) * 0.01).toFixed(2);
-          const calories = ((results.value / 20) * 1).toFixed(1);
-  
+          const totalSteps = results?.value;
+          const distance = ((results?.value / 20) * 0.01).toFixed(2);
+          const calories = ((results?.value / 20) * 1).toFixed(1);
+
           PedometerNotificationAPI(totalSteps, distance, calories);
         });
       }
@@ -171,7 +170,7 @@ const PedometerNotificationAPI = async (
         // version: 1.1,
       },
     });
-   
+
     if (res?.data?.msg == 'Please update the app to the latest version.') {
     } else {
       TotalCalPostAPI(user_id);
@@ -192,7 +191,6 @@ const TotalCalPostAPI = async (user_id: string) => {
         user_id: user_id,
       },
     });
- 
   } catch (error) {
     console.log('UCustomeCorkout details', error);
   }
@@ -224,7 +222,6 @@ const DeleteWeeklyDataAPI = async (day: number) => {
         '&version=' +
         VersionNumber.appVersion,
     );
-  
   } catch (error) {
     console.log('DeleteWeeklyDataAPI Er ', error);
   }

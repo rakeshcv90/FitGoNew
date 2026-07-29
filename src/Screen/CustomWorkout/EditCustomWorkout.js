@@ -8,17 +8,16 @@ import {
   Platform,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
-import NewHeader from '../../Component/Headers/NewHeader';
+import React, {useEffect, useMemo, useState} from 'react';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {AppColor, Fonts} from '../../Component/Color';
 import {useDispatch, useSelector} from 'react-redux';
-//import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icons from 'react-native-vector-icons/FontAwesome5';
-import Animated, {
-  useAnimatedStyle,
+import AnimatedReanimated, {
   useSharedValue,
-  withTiming,
+  useAnimatedStyle,
+  withSpring,
+  FadeInDown,
+  Layout,
 } from 'react-native-reanimated';
 import {Image} from 'react-native';
 import {localImage} from '../../Component/Image';
@@ -28,9 +27,207 @@ import ActivityLoader from '../../Component/ActivityLoader';
 import AnimatedLottieView from 'lottie-react-native';
 import {setCustomWorkoutData} from '../../Component/ThemeRedux/Actions';
 import VersionNumber from 'react-native-version-number';
-import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
+import {translate} from '../Translation/TranslationService';
+import FitIcon from '../../Component/Utilities/FitIcon';
+import {ArrowLeft} from '../../Component/Utilities/Arrows/Arrow';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
-import NewHeader1 from '../../Component/Headers/NewHeader1';
+
+// --- Body Part Icon Map ---
+const getBodyPartIcon = (title) => {
+  const name = title?.toLowerCase() || '';
+  if (name.includes('bicep')) return {type: 'MaterialCommunityIcons', name: 'arm-flex'};
+  if (name.includes('tricep')) return {type: 'MaterialCommunityIcons', name: 'arm-flex'};
+  if (name.includes('forearm')) return {type: 'MaterialCommunityIcons', name: 'arm-flex'};
+  if (name.includes('chest')) return {type: 'MaterialCommunityIcons', name: 'dumbbell'};
+  if (name.includes('back')) return {type: 'MaterialCommunityIcons', name: 'human-handsup'};
+  if (name.includes('leg') || name.includes('calv') || name.includes('quad')) return {type: 'MaterialCommunityIcons', name: 'run'};
+  if (name.includes('cardio')) return {type: 'MaterialCommunityIcons', name: 'heart-pulse'};
+  if (name.includes('abs') || name.includes('core')) return {type: 'MaterialCommunityIcons', name: 'lightning-bolt'};
+  if (name.includes('shoulder')) return {type: 'MaterialCommunityIcons', name: 'dumbbell'};
+  if (name.includes('full') || name.includes('body')) return {type: 'MaterialCommunityIcons', name: 'fire'};
+  return {type: 'MaterialCommunityIcons', name: 'dumbbell'};
+};
+
+// --- Exercise Card Component ---
+const ExerciseCard = ({item, index, isSelected, onSelect, getStoreVideoLoc}) => {
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{scale: scale.value}],
+  }));
+
+  const onPressIn = () => {
+    scale.value = withSpring(0.95, {damping: 14, stiffness: 280});
+  };
+
+  const onPressOut = () => {
+    scale.value = withSpring(1, {damping: 14, stiffness: 280});
+  };
+
+  const exerciseImageUri = getStoreVideoLoc?.[item?.exercise_title + 'Image']
+    ? 'file://' + getStoreVideoLoc[item?.exercise_title + 'Image']
+    : item?.exercise_image_link ?? localImage.NOWORKOUT;
+
+  return (
+    <AnimatedReanimated.View
+      entering={FadeInDown.delay((index % 6) * 55)
+        .duration(400)
+        .springify()
+        .damping(13)
+        .stiffness(220)}
+      layout={Layout.springify().damping(14).stiffness(200)}
+      style={[animatedStyle]}>
+      <TouchableOpacity
+        activeOpacity={0.92}
+        onPressIn={onPressIn}
+        onPressOut={onPressOut}
+        onPress={onSelect}
+        style={[
+          styles.exerciseCardContainer,
+          isSelected && styles.exerciseCardSelected,
+        ]}>
+        {/* Left Accent Bar */}
+        <LinearGradient
+          colors={isSelected ? ['#10B981', '#059669'] : ['#FF2A54', '#E11D48']}
+          style={styles.cardAccentBar}
+        />
+
+        <View style={styles.cardContentRow}>
+          {/* Exercise Image */}
+          <View
+            style={[
+              styles.exerciseImageWrapper,
+              isSelected && {borderColor: '#A7F3D0', backgroundColor: '#ECFDF5'},
+            ]}>
+            <Image
+              style={styles.exerciseImage}
+              source={{uri: exerciseImageUri}}
+              defaultSource={localImage.NOWORKOUT}
+              resizeMode={'contain'}
+            />
+          </View>
+
+          {/* Exercise Info */}
+          <View style={styles.exerciseInfoColumn}>
+            <Text numberOfLines={1} style={styles.exerciseTitleText}>
+              {item?.exercise_title}
+            </Text>
+
+            {/* Micro Pills Row */}
+            <View style={styles.exerciseBadgesRow}>
+              <View style={styles.exerciseTimePill}>
+                <FitIcon
+                  type="AntDesign"
+                  name="clockcircle"
+                  size={10}
+                  color="#7C3AED"
+                />
+                <Text style={styles.exerciseTimePillText}>
+                  {item?.exercise_rest || '30s'}
+                </Text>
+              </View>
+
+              <View style={styles.exerciseBodyPill}>
+                <FitIcon
+                  type="MaterialCommunityIcons"
+                  name="arm-flex"
+                  size={11}
+                  color="#059669"
+                />
+                <Text style={styles.exerciseBodyPillText}>
+                  {item?.exercise_bodypart || 'Muscle'}
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        {/* Selection Checkbox Toggle */}
+        <View
+          style={[
+            styles.selectionCircle,
+            isSelected && styles.selectionCircleActive,
+          ]}>
+          {isSelected ? (
+            <FitIcon
+              type="MaterialCommunityIcons"
+              name="check-bold"
+              size={14}
+              color="#FFFFFF"
+            />
+          ) : (
+            <FitIcon
+              type="MaterialCommunityIcons"
+              name="plus"
+              size={16}
+              color="#E11D48"
+            />
+          )}
+        </View>
+      </TouchableOpacity>
+    </AnimatedReanimated.View>
+  );
+};
+
+// --- Animated Perfect Category Filter Tab Item ---
+const BodyPartTabItem = ({item, index, isActive, onPress, totalItems}) => {
+  const iconConfig = getBodyPartIcon(item.bodypart_title);
+  const scale = useSharedValue(1);
+
+  useEffect(() => {
+    if (isActive) {
+      scale.value = withSpring(1.04, {damping: 14, stiffness: 260});
+    } else {
+      scale.value = withSpring(1, {damping: 14, stiffness: 260});
+    }
+  }, [isActive]);
+
+  const animatedTabStyle = useAnimatedStyle(() => ({
+    transform: [{scale: scale.value}],
+  }));
+
+  return (
+    <TouchableOpacity
+      activeOpacity={0.85}
+      onPress={onPress}
+      style={{
+        marginLeft: index === 0 ? 14 : 0,
+        marginRight: index === totalItems - 1 ? 14 : 6,
+      }}>
+      <AnimatedReanimated.View style={animatedTabStyle}>
+        {isActive ? (
+          <LinearGradient
+            colors={['#FF2A54', '#E11D48']}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 1}}
+            style={styles.tabGradientActive}>
+            <View style={styles.tabIconCircleActive}>
+              <FitIcon
+                type={iconConfig.type}
+                name={iconConfig.name}
+                size={11.5}
+                color="#E11D48"
+              />
+            </View>
+            <Text style={styles.tabTextActive}>{item.bodypart_title}</Text>
+          </LinearGradient>
+        ) : (
+          <View style={styles.tabPillInactive}>
+            <View style={styles.tabIconCircleInactive}>
+              <FitIcon
+                type={iconConfig.type}
+                name={iconConfig.name}
+                size={11.5}
+                color="#6B7280"
+              />
+            </View>
+            <Text style={styles.tabTextInactive}>{item.bodypart_title}</Text>
+          </View>
+        )}
+      </AnimatedReanimated.View>
+    </TouchableOpacity>
+  );
+};
 
 const EditCustomWorkout = ({navigation, route}) => {
   const data = route?.params?.item;
@@ -38,12 +235,13 @@ const EditCustomWorkout = ({navigation, route}) => {
   const dispatch = useDispatch();
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const getAllExercise = useSelector(state => state.getAllExercise);
+  const getStoreVideoLoc = useSelector(state => state.getStoreVideoLoc);
   const [workoutList, setWorkoutList] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [forLoading, setForLoading] = useState(false);
   const completeProfileData = useSelector(state => state.completeProfileData);
   const [bodyPart, setBodyPart] = useState(
-    completeProfileData?.focusarea[0].bodypart_title,
+    completeProfileData?.focusarea?.[0]?.bodypart_title || 'Biceps',
   );
   const [filteredCategories, setFilteredCategories] = useState([]);
 
@@ -60,143 +258,57 @@ const EditCustomWorkout = ({navigation, route}) => {
       }
     });
 
-    setWorkoutList(datalist);
-    setFilteredCategories(datalist);
+    setWorkoutList(datalist || []);
+    setFilteredCategories(datalist || []);
   }, [bodyPart]);
+
   useEffect(() => {
-    filterData(route?.params?.item);
-  }, []); // removed depedency to resolve the count bug
+    filterData();
+  }, []);
+
   const filterData = () => {
     const ExerciseIds = [];
-    data.exercise_data.map(item => ExerciseIds.push(item.exercise_id));
+    data?.exercise_data?.map(item => ExerciseIds.push(item.exercise_id));
     setSelectedItems(ExerciseIds);
   };
+
   const renderItem1 = useMemo(
     () =>
       ({item, index}) => {
         const isSelected = selectedItems?.includes(item?.exercise_id);
-        const time = parseInt(item?.exercise_rest.split(' ')[0]);
+
         return (
-          <>
-            <TouchableOpacity
-              activeOpacity={0.6}
-              onPress={() => {
-                selectedExercise(item?.exercise_id);
-              }}
-              style={{
-                width: '100%',
-                borderRadius: 10,
-                backgroundColor: '#FDFDFD',
-                marginVertical: 8,
-                flexDirection: 'row',
-                alignSelf: 'center',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                // paddingHorizontal: 20,
-                padding: 5,
-
-                justifyContent: 'space-between',
-              }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Image
-                  source={{uri: item.exercise_image_link}}
-                  defaultSource={localImage.NOWORKOUT}
-                  style={{
-                    width: 80,
-                    height: 80,
-                    justifyContent: 'center',
-                    alignSelf: 'center',
-
-                    borderRadius: 5,
-                    borderWidth: 1,
-                    borderColor: '#D9D9D9',
-                    //marginHorizontal: -7,
-                  }}
-                  resizeMode="contain"
-                />
-                <View
-                  style={{
-                    marginHorizontal: 15,
-                    justifyContent: 'center',
-                    width: DeviceWidth * 0.45,
-                  }}>
-                  <Text
-                    numberOfLines={1}
-                    style={{
-                      fontSize: 17,
-                      fontWeight: '600',
-                      color: '#202020',
-                      lineHeight: 25,
-                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                    }}>
-                    {item?.exercise_title}
-                  </Text>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text style={styles.txt2}>
-                      {'Time - ' +
-                        '1 x ' +
-                        (time > 60
-                          ? Math.floor(time / 60) + ' min'
-                          : time + ' sec')}{' '}
-                      |{' '}
-                    </Text>
-                    <Text style={styles.txt2}>
-                      {'Set - ' + item?.exercise_sets}
-                    </Text>
-                  </View>
-                </View>
-              </View>
-              <Image
-                source={isSelected ? localImage.Minus : localImage.Plus}
-                style={{width: 20, height: 20}}
-                resizeMode="contain"
-                tintColor={'#f0013b'}
-              />
-            </TouchableOpacity>
-            {index !== filteredCategories.length - 1 && (
-              <View
-                style={{
-                  width: '100%',
-                  height: 1,
-
-                  alignItems: 'center',
-                  backgroundColor: '#33333314',
-                }}
-              />
-            )}
-          </>
+          <ExerciseCard
+            item={item}
+            index={index}
+            isSelected={isSelected}
+            onSelect={() => selectedExercise(item?.exercise_id)}
+            getStoreVideoLoc={getStoreVideoLoc}
+          />
         );
       },
     [selectedItems, filteredCategories],
   );
+
   const emptyComponent = () => {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
+      <View style={styles.emptyContainer}>
         <AnimatedLottieView
           source={require('../../Icon/Images/NewImage/NoData.json')}
           speed={2}
           autoPlay
           loop
           resizeMode="contain"
-          style={{
-            width: DeviceWidth * 0.5,
-
-            height: DeviceHeigth * 0.5,
-          }}
+          style={styles.emptyLottie}
         />
+        <Text style={styles.emptyTitle}>No Exercises Found</Text>
+        <Text style={styles.emptySubtitle}>
+          Try selecting a different category tab above
+        </Text>
       </View>
     );
   };
+
   const selectedExercise = data => {
     const index = selectedItems.indexOf(data);
 
@@ -209,6 +321,7 @@ const EditCustomWorkout = ({navigation, route}) => {
 
     setSelectedItems(newSelectedItems);
   };
+
   const submitCustomExercise = async () => {
     setForLoading(true);
     const payload = new FormData();
@@ -254,7 +367,7 @@ const EditCustomWorkout = ({navigation, route}) => {
       setForLoading(false);
       console.log(error);
       showMessage({
-        message: 'Something went wrong pleasr try again',
+        message: 'Something went wrong please try again',
         type: 'danger',
         animationDuration: 500,
         floating: true,
@@ -262,6 +375,7 @@ const EditCustomWorkout = ({navigation, route}) => {
       });
     }
   };
+
   const getUserDetailData = async () => {
     try {
       const responseData = await axios.get(
@@ -289,6 +403,7 @@ const EditCustomWorkout = ({navigation, route}) => {
       setForLoading(false);
     }
   };
+
   const updateFilteredCategories = test => {
     const filteredItems = workoutList.filter(item =>
       item.exercise_title.toLowerCase().includes(test.toLowerCase()),
@@ -296,244 +411,537 @@ const EditCustomWorkout = ({navigation, route}) => {
 
     setFilteredCategories(filteredItems);
   };
-  const TopTabBar = () => {
-    return (
-      <View
-        style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          alignSelf: 'center',
-          width: '100%',
-          alignSelf: 'center',
-        }}>
-        <FlatList
-          data={completeProfileData?.focusarea}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({item, index}) => (
-            <TouchableOpacity
-              activeOpacity={0.9}
+
+  // Sort list to show selected items first
+  const displayData = useMemo(() => {
+    return [
+      ...filteredCategories.filter(item =>
+        selectedItems.includes(item.exercise_id),
+      ),
+      ...filteredCategories.filter(
+        item => !selectedItems.includes(item.exercise_id),
+      ),
+    ];
+  }, [filteredCategories, selectedItems]);
+
+  return (
+    <View style={styles.container}>
+      {forLoading ? <ActivityLoader /> : ''}
+      <Wrapper styles={{backgroundColor: '#FDFDFD'}}>
+        {/* Header Bar */}
+        <View style={styles.topHeaderBarRow}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => navigation.goBack()}
+            style={styles.backButtonCircle}>
+            <ArrowLeft fillColor={AppColor.BLACK} />
+          </TouchableOpacity>
+
+          <View style={styles.headerTitleCenterColumn}>
+            <Text style={styles.headerTitleText} numberOfLines={1}>
+              {data?.workout_name || 'Edit Custom Workout'}
+            </Text>
+            <Text style={styles.headerSubtitleText}>
+              Edit exercises in your plan
+            </Text>
+          </View>
+
+          <View
+            style={[
+              styles.headerBadgeRight,
+              selectedItems.length > 0 && styles.headerBadgeRightActive,
+            ]}>
+            <Text
               style={[
-                styles.listView,
-                {
-                  backgroundColor:
-                    bodyPart == item.bodypart_title ? '#A937371A' : '#fff',
-                  borderWidth: bodyPart != item.bodypart_title ? 1 : 0,
-                  borderColor:
-                    bodyPart != item.bodypart_title ? '#33333333' : '#A937371A',
-                  marginLeft: index == 0 ? DeviceWidth * 0.0 : 0,
-                  marginRight:
-                    index == completeProfileData?.focusarea?.length - 1
-                      ? DeviceWidth * 0.06
-                      : 5,
-                },
-              ]}
+                styles.headerBadgeText,
+                selectedItems.length > 0 && styles.headerBadgeTextActive,
+              ]}>
+              {selectedItems.length}
+            </Text>
+          </View>
+        </View>
+
+        {/* Search Bar */}
+        <View style={styles.searchBarContainer}>
+          <FitIcon
+            type="FontAwesome5"
+            name="search"
+            size={14}
+            color="#9CA3AF"
+          />
+          <TextInput
+            placeholder="Search exercises..."
+            placeholderTextColor="#9CA3AF"
+            value={searchQuery}
+            onChangeText={text => {
+              setSearchQuery(text);
+              updateFilteredCategories(text);
+            }}
+            style={styles.searchInput}
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity
               onPress={() => {
-                setBodyPart(item.bodypart_title);
-              }}>
-              <Text
-                style={{
-                  fontSize: 12,
-                  fontWeight: '500',
-                  lineHeight: 16,
-                  textAlign: 'center',
-                  color:
-                    bodyPart != item.bodypart_title ? '#333333E5' : '#f0013b',
-                  fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                }}>
-                {item.bodypart_title}
-              </Text>
+                setSearchQuery('');
+                updateFilteredCategories('');
+              }}
+              activeOpacity={0.7}>
+              <FitIcon
+                type="MaterialCommunityIcons"
+                name="close-circle"
+                size={18}
+                color="#D1D5DB"
+              />
             </TouchableOpacity>
           )}
+        </View>
+
+        {/* Tight & Perfect Animated Segmented Top Tab Bar */}
+        <View style={styles.segmentedTabTrackContainer}>
+          <FlatList
+            data={completeProfileData?.focusarea}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item, index}) => (
+              <BodyPartTabItem
+                item={item}
+                index={index}
+                isActive={bodyPart === item.bodypart_title}
+                onPress={() => setBodyPart(item.bodypart_title)}
+                totalItems={completeProfileData?.focusarea?.length}
+              />
+            )}
+          />
+        </View>
+
+        {/* Animated Exercise List with Scroll & Filter Entrance Animations */}
+        <AnimatedReanimated.FlatList
+          data={displayData}
+          itemLayoutAnimation={Layout.springify().damping(14).stiffness(200)}
+          contentContainerStyle={{
+            paddingBottom: 90,
+            paddingTop: 4,
+          }}
           showsVerticalScrollIndicator={false}
+          keyExtractor={(item, index) => item?.exercise_id?.toString() || index.toString()}
+          renderItem={renderItem1}
+          ListEmptyComponent={emptyComponent}
           initialNumToRender={10}
           maxToRenderPerBatch={10}
           updateCellsBatchingPeriod={100}
-          removeClippedSubviews={true}
+          removeClippedSubviews={Platform.OS === 'android'}
         />
-      </View>
-    );
-  };
-  return (
-    <>
-      {forLoading ? <ActivityLoader /> : ''}
-      <View style={styles.container}>
-        <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
-          <NewHeader1 header={'Edit Custom Workout'} backButton />
-          <View style={{width: '95%', alignSelf: 'center'}}>
-            <View
-              style={{
-                width: '95%',
-                height: 50,
-                alignSelf: 'center',
-                backgroundColor: '#F3F5F5',
-                borderRadius: 6,
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingLeft: 10,
-                marginBottom: 10,
-              }}>
-              <Icons name="search" size={18} color={'#333333E5'} />
-              <TextInput
-                placeholder="Search Exercise"
-                placeholderTextColor="#33333380"
-                value={searchQuery}
-                onChangeText={text => {
-                  setSearchQuery(text);
-                  updateFilteredCategories(text);
-                }}
-                style={styles.inputText}
-              />
-            </View>
-            <TopTabBar />
-            <View
-              style={[
-                styles.meditionBox,
-                {paddingBottom: 300, top: DeviceHeigth * 0.03},
-              ]}>
-              <FlatList
-                // data={filteredCategories}
-                data={[
-                  ...filteredCategories.filter(item =>
-                    selectedItems.includes(item.exercise_id),
-                  ),
-                  ...filteredCategories.filter(
-                    item => !selectedItems.includes(item.exercise_id),
-                  ),
-                ]}
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={renderItem1}
-                ListEmptyComponent={emptyComponent}
-                initialNumToRender={10}
-                maxToRenderPerBatch={10}
-                updateCellsBatchingPeriod={100}
-                removeClippedSubviews={true}
-              />
-            </View>
-          </View>
-          <View
-            style={{
-              paddingLeft: 15,
-              paddingRight: 15,
-              height: 40,
-              borderRadius: 10,
-              justifyContent: 'center',
-              alignItems: 'center',
-              position: 'absolute',
-              alignSelf: 'center',
-              backgroundColor: '#f0013b',
-              bottom: Platform.OS == 'ios' ? 35 : 10,
-            }}>
-            <TouchableOpacity
-              style={{
-                paddingVertical: 6,
-                borderRadius: 10,
-                justifyContent: 'center',
-                alignItems: 'center',
-                flexDirection: 'row',
-              }}
-              onPress={() => {
-                submitCustomExercise();
-              }}
-              activeOpacity={0.5}>
-              <Image
-                source={localImage.Plus}
-                tintColor={AppColor.WHITE}
-                style={{width: 20, height: 20}}
-              />
-              <Text
-                style={
-                  styles.button
-                }>{`Update Workout (${selectedItems?.length})`}</Text>
-            </TouchableOpacity>
-          </View>
-        </Wrapper>
-      </View>
-    </>
+
+        {/* Compact Floating Action Pill Button */}
+        <TouchableOpacity
+          activeOpacity={0.85}
+          onPress={() => submitCustomExercise()}
+          style={styles.compactFloatingAddButton}>
+          <LinearGradient
+            colors={['#FF2A54', '#E11D48']}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
+            style={styles.compactGradientFabPill}>
+            <Image
+              source={localImage.Plus}
+              tintColor={AppColor.WHITE}
+              style={{width: 18, height: 18}}
+              resizeMode="contain"
+            />
+            <Text style={styles.compactFabBtnText}>
+              {`Update Workout (${selectedItems?.length})`}
+            </Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      </Wrapper>
+    </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //alignItems: 'center',
-    backgroundColor: AppColor.WHITE,
-  },
-  searchBar: {
     backgroundColor: '#FDFDFD',
-    borderWidth: 0.5,
-    borderColor: '#e7e7e7',
   },
-  item: {
-    padding: 17,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  placeholderStyle: {
-    fontSize: 16,
-    color: AppColor.BLACK,
-  },
-  selectedTextStyle: {
-    fontSize: 16,
-    color: AppColor.BLACK,
-  },
-  dropdown: {
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: '#D5191A',
-    width: DeviceWidth * 0.4,
-    padding: 10,
-    height: 50,
-  },
-  textItem: {
-    flex: 1,
-    fontSize: 16,
-    color: AppColor.BLACK,
-  },
-  meditionBox: {
-    backgroundColor: 'white',
-  },
-  button: {
-    fontSize: 15,
-    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-    textAlign: 'center',
-    marginHorizontal: 8,
-    color: AppColor.WHITE,
-    fontWeight: '600',
-    backgroundColor: 'transparent',
-    //lineHeight: 25,
-  },
-  inputText: {
-    paddingLeft: 15,
-    paddingRight: 15,
-    width: '90%',
-    height: 50,
-    fontSize: 12,
-    lineHeight: 18,
-    fontWeight: '600',
-    fontFamily: 'Montserrat',
-    color: '#000',
-  },
-  listView: {
-    paddingLeft: 15,
-    paddingRight: 15,
-    height: 30,
 
-    borderRadius: 25,
-    marginHorizontal: 5,
+  // --- Top Header Bar ---
+  topHeaderBarRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
+  },
+  backButtonCircle: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: '#F9FAFB',
+    borderWidth: 1,
+    borderColor: '#F3F4F6',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  txt2: {
-    fontSize: 13,
-    fontWeight: '400',
-    lineHeight: 25,
-    // opacity: 0.7,
+  headerTitleCenterColumn: {
+    flex: 1,
+    alignItems: 'center',
+    marginHorizontal: 10,
+  },
+  headerTitleText: {
+    fontSize: 18,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    color: '#111827',
+    textAlign: 'center',
+  },
+  headerSubtitleText: {
+    fontSize: 11.5,
     fontFamily: Fonts.MONTSERRAT_MEDIUM,
-    color: '#1E1E1E',
+    color: '#6B7280',
+    marginTop: 1,
+  },
+  headerBadgeRight: {
+    minWidth: 34,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#F3F4F6',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 8,
+  },
+  headerBadgeRightActive: {
+    backgroundColor: '#FFF1F2',
+    borderColor: '#FECDD3',
+  },
+  headerBadgeText: {
+    color: '#6B7280',
+    fontSize: 12.5,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+  },
+  headerBadgeTextActive: {
+    color: '#E11D48',
+  },
+
+  // --- Search Bar ---
+  searchBarContainer: {
+    width: '92%',
+    height: 44,
+    alignSelf: 'center',
+    backgroundColor: '#F9FAFB',
+    borderRadius: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 14,
+    marginTop: 8,
+    marginBottom: 4,
+    borderWidth: 1,
+    borderColor: '#F3F4F6',
+    gap: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.04,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  searchInput: {
+    flex: 1,
+    height: 44,
+    fontSize: 13,
+    fontWeight: '600',
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    color: '#1F2937',
+  },
+
+  // --- Tight & Perfect Animated Segmented Top Tab Bar ---
+  segmentedTabTrackContainer: {
+    height: 36,
+    marginTop: 2,
+    marginBottom: 6,
+    justifyContent: 'center',
+  },
+  tabGradientActive: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    height: 32,
+    borderRadius: 16,
+    gap: 5,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#FF2A54',
+        shadowOffset: {width: 0, height: 3},
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  },
+  tabIconCircleActive: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tabTextActive: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+  },
+  tabPillInactive: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    gap: 5,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 1},
+        shadowOpacity: 0.03,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 1.5,
+      },
+    }),
+  },
+  tabIconCircleInactive: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: '#F3F4F6',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tabTextInactive: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#4B5563',
+    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+  },
+
+  // --- Exercise Card ---
+  exerciseCardContainer: {
+    width: '92%',
+    alignSelf: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 22,
+    padding: 12,
+    marginVertical: 6,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    position: 'relative',
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#F3F4F6',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 5},
+        shadowOpacity: 0.05,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  exerciseCardSelected: {
+    borderColor: '#A7F3D0',
+    backgroundColor: '#F0FDF4',
+  },
+  cardAccentBar: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: 4.5,
+  },
+  cardContentRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    gap: 12,
+    paddingLeft: 6,
+  },
+  exerciseImageWrapper: {
+    width: 66,
+    height: 66,
+    borderRadius: 18,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 2,
+    borderColor: '#F3F4F6',
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 3},
+        shadowOpacity: 0.08,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  exerciseImage: {
+    width: 58,
+    height: 58,
+    borderRadius: 14,
+  },
+  exerciseInfoColumn: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  exerciseTitleText: {
+    fontSize: 15.5,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    color: '#111827',
+    marginBottom: 6,
+  },
+  exerciseBadgesRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  exerciseTimePill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F5F3FF',
+    paddingHorizontal: 9,
+    paddingVertical: 3.5,
+    borderRadius: 9,
+    gap: 4,
+    borderWidth: 1,
+    borderColor: '#DDD6FE',
+  },
+  exerciseTimePillText: {
+    fontSize: 11,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    color: '#7C3AED',
+  },
+  exerciseBodyPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ECFDF5',
+    paddingHorizontal: 9,
+    paddingVertical: 3.5,
+    borderRadius: 9,
+    gap: 4,
+    borderWidth: 1,
+    borderColor: '#A7F3D0',
+  },
+  exerciseBodyPillText: {
+    fontSize: 11,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    color: '#059669',
+  },
+  selectionCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#FFF1F2',
+    borderWidth: 1.5,
+    borderColor: '#FECDD3',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 8,
+  },
+  selectionCircleActive: {
+    backgroundColor: '#10B981',
+    borderColor: '#059669',
+  },
+
+  // --- Empty State ---
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: DeviceHeigth * 0.05,
+  },
+  emptyLottie: {
+    width: DeviceWidth * 0.45,
+    height: DeviceHeigth * 0.3,
+  },
+  emptyTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#1F2937',
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    marginTop: -20,
+  },
+  emptySubtitle: {
+    fontSize: 14,
+    color: '#9CA3AF',
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    marginTop: 6,
+  },
+
+  // --- Compact Floating Action Pill Button ---
+  compactFloatingAddButton: {
+    position: 'absolute',
+    alignSelf: 'center',
+    bottom: Platform.OS === 'ios' ? 20 : 12,
+    borderRadius: 23,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#FF2A54',
+        shadowOffset: {width: 0, height: 6},
+        shadowOpacity: 0.35,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 8,
+      },
+    }),
+  },
+  compactGradientFabPill: {
+    height: 45,
+    paddingHorizontal: 22,
+    borderRadius: 23,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+  },
+  compactFabBtnText: {
+    color: '#FFFFFF',
+    fontSize: 14.5,
+    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+    fontWeight: '600',
   },
 });
+
 export default EditCustomWorkout;

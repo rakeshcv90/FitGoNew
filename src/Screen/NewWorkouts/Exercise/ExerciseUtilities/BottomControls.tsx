@@ -181,12 +181,13 @@ const BottomControls = ({
       {restStart ? (
         <Text
           style={{
-            fontSize: 20,
-            fontWeight: '600',
-            fontFamily: Fonts.HELVETICA_BOLD,
-            lineHeight: 25,
-            color: '#1F2937',
+            fontSize: 18,
+            fontWeight: '700',
+            fontFamily: Fonts.MONTSERRAT_BOLD,
+            color: '#E11D48',
             textAlign: 'center',
+            marginTop: 4,
+            marginBottom: 8,
           }}>
           {translate('getReady')}
         </Text>
@@ -194,97 +195,161 @@ const BottomControls = ({
         <View
           style={{
             flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
+            justifyContent: 'center',
+            alignItems: 'flex-start',
+            paddingHorizontal: 20,
+            marginTop: 12,
+            marginBottom: 4,
+            gap: 32,
           }}>
-          <View
+          {/* Sound Button - Stacked */}
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => setOpenMusic(true)}
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
               alignItems: 'center',
-              width:
-                DeviceHeigth >= 1024
-                  ? isEventPage || allExercise.length <= 1
-                    ? '70%'
-                    : '50%'
-                  : isEventPage || allExercise.length <= 1
-                    ? '90%'
-                    : '70%',
+              gap: 4,
             }}>
-            <TouchableOpacity
-              onPress={() => setOpenMusic(true)}
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginVertical: 5,
-                flexDirection: 'row',
-                paddingRight: 5,
-              }}>
-              <Image
-                source={require('../../../../Icon/Images/soundSettings.png')}
-                style={{ marginRight: 5, width: 15, height: 15 }}
-              />
-              <FitText
-                type="normal"
-                // value={!getSoundOffOn ? ' Sound Off' : ' Sound On'}
-                value={translate('soundSetting')}
-                color="#6B7280"
-                fontFamily={Fonts.HELVETICA_REGULAR}
-                lineHeight={30}
-              />
-            </TouchableOpacity>
             <View
               style={{
-                backgroundColor: '#6B7280',
-                width: 1,
-                height: 20,
-                opacity: 0.5,
-                marginRight: 5,
-              }}
-            />
-            <TouchableOpacity
-              onPress={() => {
-                setOpen(true);
-              }}
-              style={{
+                width: 44,
+                height: 44,
+                borderRadius: 22,
+                backgroundColor: '#FFFFFF',
+                borderWidth: 1.5,
+                borderColor: '#F3F4F6',
                 justifyContent: 'center',
                 alignItems: 'center',
-                marginVertical: 5,
-                flexDirection: 'row',
+                elevation: 2,
+                shadowColor: '#000',
+                shadowOffset: {width: 0, height: 2},
+                shadowOpacity: 0.04,
+                shadowRadius: 4,
               }}>
-              <Image
-                source={require('../../../../Icon/Images/InAppRewards/Exercise_Info1.png')}
-                style={{ width: 15, height: 15 }}
-                resizeMode="contain"
+              <FitIcon
+                name="volume-high"
+                type="MaterialCommunityIcons"
+                size={20}
+                color="#E11D48"
               />
-              <FitText
-                type="normal"
-                value= {translate('exerciseInfo')}
-                color="#6B7280"
-                fontFamily={Fonts.HELVETICA_REGULAR}
-                lineHeight={30}
+            </View>
+            <Text
+              style={{
+                color: '#374151',
+                fontSize: 11,
+                fontWeight: '700',
+                fontFamily: Fonts.MONTSERRAT_BOLD,
+              }}>
+              Sound
+            </Text>
+            <Text
+              style={{
+                color: '#10B981',
+                fontSize: 10,
+                fontWeight: '600',
+                fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+              }}>
+              On
+            </Text>
+          </TouchableOpacity>
+
+          {/* Exercise Info Button - Stacked */}
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => {
+              setOpen(true);
+            }}
+            style={{
+              alignItems: 'center',
+              gap: 4,
+            }}>
+            <View
+              style={{
+                width: 44,
+                height: 44,
+                borderRadius: 22,
+                backgroundColor: '#FFFFFF',
+                borderWidth: 1.5,
+                borderColor: '#F3F4F6',
+                justifyContent: 'center',
+                alignItems: 'center',
+                elevation: 2,
+                shadowColor: '#000',
+                shadowOffset: {width: 0, height: 2},
+                shadowOpacity: 0.04,
+                shadowRadius: 4,
+              }}>
+              <FitIcon
+                name="information-outline"
+                type="MaterialCommunityIcons"
+                size={20}
+                color="#E11D48"
               />
-            </TouchableOpacity>
-          </View>
+            </View>
+            <Text
+              style={{
+                color: '#374151',
+                fontSize: 11,
+                fontWeight: '700',
+                fontFamily: Fonts.MONTSERRAT_BOLD,
+              }}>
+              Exercise Info
+            </Text>
+            <Text
+              style={{
+                color: '#6B7280',
+                fontSize: 10,
+                fontWeight: '600',
+                fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+              }}>
+              Details
+            </Text>
+          </TouchableOpacity>
+
+          {/* Exercise List (if applicable) */}
           {!isEventPage && allExercise.length > 1 && (
             <TouchableOpacity
+              activeOpacity={0.7}
               onPress={() => {
                 setRestStart(false);
                 setOpenSheet(true);
               }}
               style={{
-                justifyContent: 'center',
                 alignItems: 'center',
-                borderRadius: 5,
-                width: 30,
-                height: 30,
-                marginVertical: 5,
+                gap: 4,
               }}>
-              <Image
-                source={localImage.Exercise_List}
-                style={{ width: 15, height: 15 }}
-                resizeMode="contain"
-              />
+              <View
+                style={{
+                  width: 44,
+                  height: 44,
+                  borderRadius: 22,
+                  backgroundColor: '#FFFFFF',
+                  borderWidth: 1.5,
+                  borderColor: '#F3F4F6',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  elevation: 2,
+                  shadowColor: '#000',
+                  shadowOffset: {width: 0, height: 2},
+                  shadowOpacity: 0.04,
+                  shadowRadius: 4,
+                }}>
+                <FitIcon
+                  name="format-list-bulleted"
+                  type="MaterialCommunityIcons"
+                  size={20}
+                  color="#E11D48"
+                />
+              </View>
+              <Text
+                style={{
+                  color: '#374151',
+                  fontSize: 11,
+                  fontWeight: '700',
+                  fontFamily: Fonts.MONTSERRAT_BOLD,
+                }}>
+                List
+              </Text>
             </TouchableOpacity>
           )}
         </View>

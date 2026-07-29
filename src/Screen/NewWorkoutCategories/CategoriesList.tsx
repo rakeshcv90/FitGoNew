@@ -5,13 +5,21 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
+  Platform,
 } from 'react-native';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
+import LinearGradient from 'react-native-linear-gradient';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 import {ExerciseData} from '../NewWorkouts/Exercise/ExerciseUtilities/useExerciseHook';
-import FitText from '../../Component/Utilities/FitText';
 // import NativeAddTest from '../../Component/NativeAd';
-import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
-import {AppColor, Fonts} from '../../Component/Color';
+import {DeviceHeigth} from '../../Component/Config';
+import {Fonts} from '../../Component/Color';
 import {localImage} from '../../Component/Image';
 import FitIcon from '../../Component/Utilities/FitIcon';
 import {showMessage} from 'react-native-flash-message';
@@ -50,32 +58,98 @@ type PlayProps = {
   onPlay: () => void;
 };
 
+const AnimatedCard = ({
+  index = 0,
+  style,
+  onPress,
+  children,
+}: {
+  index?: number;
+  style?: any;
+  onPress: () => void;
+  children?: React.ReactNode;
+}) => {
+  const opacity = useSharedValue(0);
+  const translateY = useSharedValue(16);
+  const scale = useSharedValue(1);
+
+  useEffect(() => {
+    const delay = Math.min(index, 6) * 55;
+    opacity.value = withDelay(delay, withTiming(1, {duration: 320}));
+    translateY.value = withDelay(delay, withTiming(0, {duration: 320}));
+  }, []);
+
+  const enterStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{translateY: translateY.value}],
+  }));
+  const pressStyle = useAnimatedStyle(() => ({
+    transform: [{scale: scale.value}],
+  }));
+
+  return (
+    <Animated.View style={enterStyle}>
+      <Animated.View style={pressStyle}>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          style={style}
+          onPressIn={() => {
+            scale.value = withTiming(0.97, {duration: 100});
+          }}
+          onPressOut={() => {
+            scale.value = withSpring(1, {damping: 14, stiffness: 220});
+          }}
+          onPress={onPress}>
+          {children}
+        </TouchableOpacity>
+      </Animated.View>
+    </Animated.View>
+  );
+};
+
 const PlaySelect = ({
   onPlay,
   progressPercent,
   currentIndex,
   index,
 }: PlayProps) => {
+  const isActive =
+    currentIndex === index && progressPercent > 0 && progressPercent < 100;
+
+  if (isActive) {
+    return (
+      <TouchableOpacity onPress={onPlay} style={styles.actionWrap}>
+        <CircleProgress
+          radius={14}
+          progress={progressPercent}
+          strokeWidth={3}
+          secondayCircleColor="#FFD9E0"
+          containerStyle={{padding: 0}}>
+          <Image
+            source={localImage.ExercisePlay}
+            tintColor="#E11D48"
+            resizeMode="contain"
+            style={{width: 14, height: 14, marginLeft: 2}}
+          />
+        </CircleProgress>
+      </TouchableOpacity>
+    );
+  }
+
   return (
-    <TouchableOpacity onPress={onPlay} style={{}}>
-      <CircleProgress
-        radius={13}
-        progress={currentIndex == index ? progressPercent : 100}
-        strokeWidth={2}
-        changingColorsArray={['#530014', AppColor.RED]}
-        forCategoryList
-        secondayCircleColor={AppColor.RED}>
+    <TouchableOpacity onPress={onPlay} style={styles.actionWrap}>
+      <LinearGradient
+        colors={['#FF2A54', '#E11D48']}
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 1}}
+        style={styles.playCircle}>
         <Image
           source={localImage.ExercisePlay}
-          tintColor={currentIndex == index ? AppColor.RED : '#565656'}
+          tintColor="#FFFFFF"
           resizeMode="contain"
-          style={{
-            width: 12,
-            height: 12,
-            alignSelf: 'center',
-          }}
+          style={{width: 14, height: 14, marginLeft: 2}}
         />
-      </CircleProgress>
+      </LinearGradient>
     </TouchableOpacity>
   );
 };
@@ -92,7 +166,6 @@ const RenderItem = ({
   setCurrentIndex,
 }: RenderItemProps) => {
   const time = parseInt(item?.exercise_rest.split(' ')[0]);
-  const showAds = index + 1 == 2 || (index + 1) % 8 == 0;
   const [visible, setVisible] = useState(false);
 
   const onSelect = () => {
@@ -105,12 +178,12 @@ const RenderItem = ({
 
   return (
     <>
-      <TouchableOpacity
-        key={index}
-        onPress={onSelect}
-        activeOpacity={switchButton ? 0.8 : 1}
-        style={styles.boxContainer}>
-        <View style={styles.boxImage}>
+      <AnimatedCard index={index} style={styles.card} onPress={onSelect}>
+        <LinearGradient
+          colors={['#FF2A54', '#E11D48']}
+          style={styles.cardAccent}
+        />
+        <View style={styles.cardImage}>
           <Image
             style={{
               width: '100%',
@@ -119,56 +192,65 @@ const RenderItem = ({
               alignSelf: 'center',
             }}
             source={{
-              uri: item?.exercise_image_link??localImage.NOWORKOUT,
+              uri: item?.exercise_image_link ?? localImage.NOWORKOUT,
             }}
             resizeMode={'contain'}
           />
         </View>
-        <View
-          style={{
-            marginHorizontal: 15,
-            width: DeviceHeigth >= 1024 ? '80%' : '65%',
-          }}>
-          <Text
-            style={{
-              fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-              fontSize: 16,
-              fontWeight: '600',
-              color: AppColor.LITELTEXTCOLOR,
-              lineHeight: 24,
-            }}>
+        <View style={styles.cardTextWrap}>
+          <Text numberOfLines={1} style={styles.cardTitle}>
             {item?.exercise_title}
           </Text>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Text style={[styles.small, {textTransform: 'capitalize'}]}>
-              {'Time - ' +
-                '1 x ' +
-                (time > 60
-                  ? Math.floor(time / 60) + ' min'
-                  : time + ' sec')}{' '}
-              |{' '}
-            </Text>
-            <Text style={[styles.small, {textTransform: 'capitalize'}]}>
-              {'Set - ' + item?.exercise_sets}
-            </Text>
+          <View style={styles.cardMetaRow}>
+            <View style={[styles.metaBadge, styles.timeBadge]}>
+              <FitIcon
+                type="MaterialCommunityIcons"
+                name="clock-outline"
+                size={12}
+                color="#7C3AED"
+              />
+              <Text style={[styles.metaBadgeText, {color: '#7C3AED'}]}>
+                {'1 x ' +
+                  (time > 60
+                    ? Math.floor(time / 60) + ' min'
+                    : time + ' sec')}
+              </Text>
+            </View>
+            <View style={[styles.metaBadge, styles.setBadge]}>
+              <FitIcon
+                type="MaterialCommunityIcons"
+                name="repeat"
+                size={12}
+                color="#059669"
+              />
+              <Text style={[styles.metaBadgeText, {color: '#059669'}]}>
+                {'Set ' + item?.exercise_sets}
+              </Text>
+            </View>
           </View>
         </View>
         {switchButton ? (
           <TouchableOpacity
             onPress={onSelect}
+            hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
             style={[
-              styles.boxIconView,
-              {
-                backgroundColor: isSelected ? '#f0013b' : 'white',
-                borderColor: isSelected ? '#f0013b' : '#33333399',
-              },
+              styles.checkboxChip,
+              isSelected && styles.checkboxChipActive,
             ]}>
             {isSelected && (
               <FitIcon
-                type="FontAwesome5"
-                name="check"
-                color="white"
-                size={10}
+                type="MaterialCommunityIcons"
+                name="check-circle"
+                color="#E11D48"
+                size={20}
+              />
+            )}
+            {!isSelected && (
+              <FitIcon
+                type="MaterialCommunityIcons"
+                name="checkbox-blank-circle-outline"
+                color="#9CA3AF"
+                size={20}
               />
             )}
           </TouchableOpacity>
@@ -180,14 +262,7 @@ const RenderItem = ({
             index={index}
           />
         )}
-      </TouchableOpacity>
-      {/* <View
-        style={{
-          alignSelf: 'center',
-          alignItems: 'center',
-        }}>
-        {showAds && <NativeAddTest type="image" media={false} />}
-      </View> */}
+      </AnimatedCard>
       <WorkoutsDescription data={item} open={visible} setOpen={setVisible} />
     </>
   );
@@ -254,10 +329,14 @@ const CategoriesList = ({
 
   return (
     <View style={{flex: 1}}>
+      <Text style={styles.resultCountText}>
+        {exerciseData?.length ?? 0} Exercises
+      </Text>
       <FlatList
         data={exerciseData}
         keyExtractor={item => item.exercise_id.toString()}
         ListEmptyComponent={<EmptyComponent />}
+        contentContainerStyle={{paddingTop: 8, paddingBottom: DeviceHeigth * 0.1}}
         renderItem={({item, index}: {item: ExerciseData; index: number}) => (
           <RenderItem
             key={index}
@@ -279,39 +358,134 @@ const CategoriesList = ({
 };
 
 const styles = StyleSheet.create({
-  boxContainer: {
-    flexDirection: 'row',
-    padding: 10,
-    paddingLeft: 5,
-    marginVertical: 5,
-    marginHorizontal:
-      DeviceHeigth >= 1024 ? DeviceWidth * 0.045 : DeviceWidth * 0.04,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  boxImage: {
-    height: 60,
-    width: 60,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#D9D9D9',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  boxIconView: {
-    width: 25,
-    height: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 25 / 2,
-    borderWidth: 1,
-  },
-  small: {
-    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+  resultCountText: {
+    marginBottom: 4,
+    marginLeft: 20,
     fontSize: 12,
-    fontWeight: '500',
-    color: '#1E1E1ECC',
-    lineHeight: 30,
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    color: '#9CA3AF',
+  },
+  card: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 22,
+    marginHorizontal: 16,
+    marginBottom: 10,
+    paddingVertical: 10,
+    paddingLeft: 20,
+    paddingRight: 14,
+    borderWidth: 1,
+    borderColor: '#F3F4F6',
+    overflow: 'hidden',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.06,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  cardAccent: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: 4.5,
+  },
+  cardImage: {
+    width: 58,
+    height: 58,
+    borderRadius: 12,
+    backgroundColor: '#F3F4F6',
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+  },
+  cardTextWrap: {
+    flex: 1,
+    marginHorizontal: 12,
+  },
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    lineHeight: 19,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    color: '#111827',
+  },
+  cardMetaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    marginTop: 5,
+  },
+  metaBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 9,
+    marginRight: 6,
+    marginTop: 2,
+    borderWidth: 1,
+  },
+  timeBadge: {
+    backgroundColor: '#F5F3FF',
+    borderColor: '#DDD6FE',
+  },
+  setBadge: {
+    backgroundColor: '#D1FAE5',
+    borderColor: '#A7F3D0',
+  },
+  metaBadgeText: {
+    fontSize: 11,
+    fontWeight: '700',
+    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+    marginLeft: 4,
+  },
+  actionWrap: {
+    width: 38,
+    height: 38,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  playCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#FF2A54',
+        shadowOffset: {width: 0, height: 3},
+        shadowOpacity: 0.35,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 6,
+      },
+    }),
+  },
+  checkboxChip: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F3F4F6',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+  },
+  checkboxChipActive: {
+    backgroundColor: '#FFF1F2',
+    borderColor: '#FECDD3',
   },
 });
 

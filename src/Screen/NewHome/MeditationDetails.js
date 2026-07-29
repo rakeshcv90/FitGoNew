@@ -4,39 +4,308 @@ import {
   Image,
   TouchableOpacity,
   ImageBackground,
+  StatusBar,
+  StyleSheet,
+  Platform,
+  FlatList,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import NewHeader from '../../Component/Headers/NewHeader';
-import {StatusBar} from 'react-native';
-import {StyleSheet} from 'react-native';
 import {AppColor, Fonts} from '../../Component/Color';
-import Icons from 'react-native-vector-icons/FontAwesome5';
-import VersionNumber, {appVersion} from 'react-native-version-number';
-
+import VersionNumber from 'react-native-version-number';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {useDispatch, useSelector} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
-import {FlatList} from 'react-native';
 import {localImage} from '../../Component/Image';
 import {showMessage} from 'react-native-flash-message';
-import {useFocusEffect, useIsFocused} from '@react-navigation/native';
+import {useIsFocused} from '@react-navigation/native';
 import ActivityLoader from '../../Component/ActivityLoader';
 import AnimatedLottieView from 'lottie-react-native';
 import axios from 'axios';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
-import moment from 'moment';
-// import NativeAddTest from '../../Component/NativeAd';
 import {setVideoLocation} from '../../Component/ThemeRedux/Actions';
 import RNFetchBlob from 'rn-fetch-blob';
-// import {BannerAdd} from '../../Component/BannerAdd';
-// import {bannerAdId} from '../../Component/AdsId';
 import RewardModal from '../../Component/Utilities/RewardModal';
 import UpcomingEventModal from '../../Component/Utilities/UpcomingEventModal';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
+import FitIcon from '../../Component/Utilities/FitIcon';
+import {ArrowLeft} from '../../Component/Utilities/Arrows/Arrow';
+import {ReviewApp} from '../../Component/ReviewApp';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
+import AnimatedReanimated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+  withDelay,
+  withSequence,
+  FadeInDown,
+  FadeInRight,
+  FadeInUp,
+  FadeIn,
+  SlideInRight,
+  Layout,
+  Easing,
+} from 'react-native-reanimated';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
+
+// Vibrant color palette for meditation categories
+const VIBRANT_COLORS = [
+  {color1: '#667EEA', color2: '#764BA2', glow: '#8B5CF6'},
+  {color1: '#F093FB', color2: '#F5576C', glow: '#EC4899'},
+  {color1: '#4FACFE', color2: '#00F2FE', glow: '#06B6D4'},
+  {color1: '#43E97B', color2: '#38F9D7', glow: '#10B981'},
+  {color1: '#FA709A', color2: '#FEE140', glow: '#F59E0B'},
+  {color1: '#A18CD1', color2: '#FBC2EB', glow: '#A78BFA'},
+];
+
+// --- Animated Category Chip ---
+const CategoryChip = ({item, index, isSelected, onPress}) => {
+  const scale = useSharedValue(1);
+  const chipColors = VIBRANT_COLORS[index % VIBRANT_COLORS.length];
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{scale: scale.value}],
+  }));
+
+  const onPressIn = () => {
+    scale.value = withSpring(0.9, {damping: 12, stiffness: 300});
+  };
+  const onPressOut = () => {
+    scale.value = withSpring(1, {damping: 12, stiffness: 300});
+  };
+
+  return (
+    <AnimatedReanimated.View
+      entering={SlideInRight.delay(index * 90)
+        .duration(450)
+        .springify()
+        .damping(13)
+        .stiffness(200)}
+      style={animatedStyle}>
+      <TouchableOpacity
+        activeOpacity={0.85}
+        onPressIn={onPressIn}
+        onPressOut={onPressOut}
+        onPress={onPress}>
+        <LinearGradient
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 1}}
+          colors={[chipColors.color1, chipColors.color2]}
+          style={[
+            styles.categoryChip,
+            isSelected && styles.categoryChipSelected,
+          ]}>
+          {/* Decorative glow circles */}
+          <View
+            style={[
+              styles.chipGlowCircle,
+              {top: -15, right: -10, backgroundColor: 'rgba(255,255,255,0.12)'},
+            ]}
+          />
+          <View
+            style={[
+              styles.chipGlowCircle,
+              {
+                bottom: -20,
+                left: -15,
+                width: 50,
+                height: 50,
+                backgroundColor: 'rgba(255,255,255,0.08)',
+              },
+            ]}
+          />
+
+          {isSelected && (
+            <View style={styles.chipCheckCircle}>
+              <FitIcon
+                type="MaterialCommunityIcons"
+                name="check-bold"
+                size={10}
+                color="#FFFFFF"
+              />
+            </View>
+          )}
+
+          <FitIcon
+            type="MaterialCommunityIcons"
+            name="meditation"
+            size={22}
+            color="rgba(255,255,255,0.9)"
+          />
+          <Text style={styles.categoryChipText} numberOfLines={1}>
+            {item.workout_mindset_title}
+          </Text>
+        </LinearGradient>
+      </TouchableOpacity>
+    </AnimatedReanimated.View>
+  );
+};
+
+// --- Meditation Session Card ---
+const MeditationCard = ({item, index, onPress}) => {
+  const scale = useSharedValue(1);
+  const cardColors = VIBRANT_COLORS[index % VIBRANT_COLORS.length];
+  const [imgError, setImgError] = useState(false);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{scale: scale.value}],
+  }));
+
+  const onPressIn = () => {
+    scale.value = withSpring(0.96, {damping: 14, stiffness: 280});
+  };
+  const onPressOut = () => {
+    scale.value = withSpring(1, {damping: 14, stiffness: 280});
+  };
+
+  const hasValidImage =
+    item.exercise_mindset_image_link != null &&
+    item.exercise_mindset_image_link !== '' &&
+    item.exercise_mindset_image_link.trim().length > 0 &&
+    !imgError;
+
+  return (
+    <AnimatedReanimated.View
+      entering={FadeInDown.delay((index % 6) * 70)
+        .duration(400)
+        .springify()
+        .damping(13)
+        .stiffness(220)}
+      layout={Layout.springify().damping(14).stiffness(200)}
+      style={animatedStyle}>
+      <TouchableOpacity
+        activeOpacity={0.92}
+        onPressIn={onPressIn}
+        onPressOut={onPressOut}
+        onPress={onPress}
+        style={styles.meditationCard}>
+        {/* Always render vibrant gradient background */}
+        <LinearGradient
+          colors={[cardColors.color1, cardColors.color2]}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 1}}
+          style={StyleSheet.absoluteFill}>
+          {/* Decorative orbs */}
+          <View
+            style={{
+              position: 'absolute',
+              top: -20,
+              right: 60,
+              width: 80,
+              height: 80,
+              borderRadius: 40,
+              backgroundColor: 'rgba(255,255,255,0.12)',
+            }}
+          />
+          <View
+            style={{
+              position: 'absolute',
+              bottom: -30,
+              left: 40,
+              width: 100,
+              height: 100,
+              borderRadius: 50,
+              backgroundColor: 'rgba(255,255,255,0.08)',
+            }}
+          />
+          <View
+            style={{
+              position: 'absolute',
+              top: 10,
+              left: '38%',
+              width: 45,
+              height: 45,
+              borderRadius: 25,
+              backgroundColor: 'rgba(255,255,255,0.1)',
+            }}
+          />
+        </LinearGradient>
+
+        {/* Image overlay (only if valid image) */}
+        {hasValidImage && (
+          <ImageBackground
+            source={{uri: item.exercise_mindset_image_link}}
+            style={StyleSheet.absoluteFill}
+            imageStyle={styles.cardImageStyle}
+            resizeMode="cover"
+            onError={() => setImgError(true)}>
+            <LinearGradient
+              colors={[
+                'transparent',
+                'rgba(0,0,0,0.15)',
+                'rgba(0,0,0,0.65)',
+                'rgba(0,0,0,0.9)',
+              ]}
+              locations={[0, 0.3, 0.65, 1]}
+              style={StyleSheet.absoluteFill}
+            />
+          </ImageBackground>
+        )}
+
+        {/* Card content (always on top) */}
+        <View style={styles.cardGradientOverlay}>
+          {/* Play Button */}
+          <View style={styles.playButtonContainer}>
+            <View style={styles.playButtonGlow}>
+              <LinearGradient
+                colors={[cardColors.color1, cardColors.color2]}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 1}}
+                style={styles.playButtonGradient}>
+                <FitIcon type="Ionicons" name="play" size={20} color="#FFFFFF" />
+              </LinearGradient>
+            </View>
+          </View>
+
+          {/* Bottom Info */}
+          <View style={styles.cardBottomRow}>
+            <View style={styles.cardTitleColumn}>
+              <Text style={styles.cardTitle} numberOfLines={2}>
+                {item.exercise_mindset_title}
+              </Text>
+              <View style={styles.cardMetaRow}>
+                <LinearGradient
+                  colors={['rgba(255,255,255,0.25)', 'rgba(255,255,255,0.1)']}
+                  style={styles.metaPillGradient}>
+                  <FitIcon
+                    type="MaterialCommunityIcons"
+                    name="clock-outline"
+                    size={11}
+                    color="#FFFFFF"
+                  />
+                  <Text style={styles.metaPillTextWhite}>
+                    {item.exercise_mindset_time || '5'} min
+                  </Text>
+                </LinearGradient>
+
+                <LinearGradient
+                  colors={['rgba(255,255,255,0.25)', 'rgba(255,255,255,0.1)']}
+                  style={styles.metaPillGradient}>
+                  <FitIcon
+                    type="MaterialCommunityIcons"
+                    name="meditation"
+                    size={11}
+                    color="#FFFFFF"
+                  />
+                  <Text style={styles.metaPillTextWhite}>Mindfulness</Text>
+                </LinearGradient>
+              </View>
+            </View>
+
+            {/* Index Badge */}
+            <View style={styles.indexBadge}>
+              <Text style={styles.indexBadgeText}>
+                {String(index + 1).padStart(2, '0')}
+              </Text>
+            </View>
+          </View>
+        </View>
+      </TouchableOpacity>
+    </AnimatedReanimated.View>
+  );
+};
 
 const MeditationDetails = ({navigation, route}) => {
   let isFocused = useIsFocused();
@@ -57,13 +326,14 @@ const MeditationDetails = ({navigation, route}) => {
     state => state?.enteredUpcomingEvent,
   );
   const getOfferAgreement = useSelector(state => state?.getOfferAgreement);
-  const colors = [
-    {color1: '#E2EFFF', color2: '#9CC2F5', color3: '#425B7B'},
-    {color1: '#BFF0F5', color2: '#8DD9EA', color3: '#1F6979'},
-    {color1: '#FAE3FF', color2: '#C97FCD', color3: '#7C3D80'},
-    {color1: '#FFEBE2', color2: '#DCAF9E', color3: '#1E1E1E'},
-  ];
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    ReviewApp(temp);
+  }, []);
+
+  const temp = () => {};
+
   useEffect(() => {
     if (isFocused) {
       if (route?.params?.item) {
@@ -75,9 +345,9 @@ const MeditationDetails = ({navigation, route}) => {
       setDownloade(0);
     }
   }, [isFocused]);
+
   const getCaterogy = async (id, level) => {
     setForLoading(true);
-
     try {
       const data = await axios(`${NewAppapi.Get_Mindset_Excise}`, {
         method: 'POST',
@@ -103,12 +373,6 @@ const MeditationDetails = ({navigation, route}) => {
       } else if (data?.data?.status == 'data found') {
         setForLoading(false);
         setmindsetExercise(data.data);
-
-        // Promise.all(
-        //   data.data.data.map((item, index) =>
-        //     downloadVideos(item, index, data.data.data.length),
-        //   ),
-        // ).finally(() => setmindsetExercise(data.data.data));
       } else {
         setForLoading(false);
         setmindsetExercise([]);
@@ -131,19 +395,15 @@ const MeditationDetails = ({navigation, route}) => {
       } else {
         await RNFetchBlob.config({
           fileCache: true,
-          // IOSBackgroundTask: true, // Add this for iOS background downloads
           path: filePath,
           appendExt: '.mp3',
         })
           .fetch('GET', data?.exercise_mindset_audio, {
             'Content-Type': 'application/mp4',
-            // key: 'Config.REACT_APP_API_KEY',
           })
           .then(res => {
             StoringData[data?.id] = res.path();
             setDownloade(100 / (len - index));
-
-            // Linking.openURL(`file://${fileDest}`);
           })
           .catch(err => {
             console.log(err);
@@ -154,54 +414,7 @@ const MeditationDetails = ({navigation, route}) => {
     }
     dispatch(setVideoLocation(StoringData));
   };
-  const ListItem = ({title, color}) => (
-    <TouchableOpacity
-      onPress={() => {
-        setHeaderTitle(title);
-        getCaterogy(title.id, title.workout_mindset_level);
-        setSelectedTitle(title?.workout_mindset_title);
-      }}>
-      <LinearGradient
-        start={{x: 0, y: 1}}
-        end={{x: 1, y: 0}}
-        colors={[color.color1, color.color2]}
-        style={[
-          styles.listItem,
-          {
-            width: DeviceHeigth >= 1024 ? DeviceWidth * 0.165 : 100,
-            borderWidth: headerTitle?.id == title?.id ? 2 : 0,
-            borderColor: headerTitle?.id == title?.id && '#368EFF',
-            marginHorizontal: DeviceHeigth >= 1024 ? 10 : 5,
-          },
-        ]}>
-        {headerTitle?.id == title?.id && (
-          <Image
-            source={require('../../Icon/Images/NewImage/tick3.png')}
-            style={[
-              styles.img,
-              {
-                height: 20,
-                width: 20,
-                position: 'absolute',
-                top: 5,
-                alignSelf: 'flex-end',
-                right: 5,
-              },
-            ]}
-            resizeMode="contain"></Image>
-        )}
-        <Text
-          style={[
-            styles.title,
-            {
-              color: '#1E1E1E99',
-            },
-          ]}>
-          {title.workout_mindset_title}
-        </Text>
-      </LinearGradient>
-    </TouchableOpacity>
-  );
+
   const EmptyComponent = () => {
     return (
       <View
@@ -226,338 +439,181 @@ const MeditationDetails = ({navigation, route}) => {
     );
   };
 
-  // const getNativeAdsDisplay = () => {
-  //   if (getPurchaseHistory?.plan != null) {
-  //     if (
-  //       getPurchaseHistory?.plan == 'premium' &&
-  //       getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
-  //     ) {
-  //       return null;
-  //     } else {
-  //       return (
-  //         <View
-  //           style={{
-  //             alignSelf: 'center',
-  //             alignItems: 'center',
-  //             marginVertical: 10,
-
-  //             //  top: DeviceHeigth * 0.1,
-  //           }}>
-  //           <NativeAddTest type="image" media={false} />
-  //         </View>
-  //       );
-  //     }
-  //   } else {
-  //     return (
-  //       <View
-  //         style={{
-  //           alignSelf: 'center',
-  //           alignItems: 'center',
-  //           marginVertical: 10,
-
-  //           //top: DeviceHeigth * 0.1,
-  //         }}>
-  //         <NativeAddTest type="image" media={false} />
-  //       </View>
-  //     );
-  //   }
-  // };
-  // const getAdsDisplay = (index, item) => {
-  //   if (mindsetExercise.length > 1) {
-  //     if (index == 0) {
-  //       return getNativeAdsDisplay();
-  //     } else if ((index + 1) % 6 == 0) {
-  //       return getNativeAdsDisplay();
-  //     }
-  //   }
-  // };
-  // const bannerAdsDisplay = () => {
-  //   if (getPurchaseHistory.length > 0) {
-  //     if (
-  //       getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-  //     ) {
-  //       return null;
-  //     } else {
-  //       return <BannerAdd bannerAdId={bannerAdId} />
-
-  //     }
-  //   } else {
-  //     return   <BannerAdd bannerAdId={bannerAdId} />
-
-  //   }
-  // };
-  const Space = () => (
-    <View
-      style={{height: 15, width: DeviceWidth, backgroundColor: '#F9F9F9'}}
-    />
+  const ShimmerCard = () => (
+    <View style={styles.shimmerCard}>
+      <ShimmerPlaceholder
+        ref={avatarRef}
+        autoRun
+        style={styles.shimmerFull}
+      />
+    </View>
   );
+
   return (
     <View style={styles.container}>
-      <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
+      <StatusBar barStyle={'dark-content'} backgroundColor={'#FDFDFD'} />
+      <Wrapper styles={{backgroundColor: '#FDFDFD'}}>
+        {/* Original Header with ArrowLeft */}
         <NewHeader1 header={headerTitle?.workout_mindset_title} backButton />
-        <Space />
-        <View
-          style={{
-            width: '90%',
-            alignSelf: 'center',
-            // top: DeviceHeigth >= 1024 ? 0 : -DeviceHeigth * 0.02,
-            marginVertical: DeviceHeigth * 0.01,
-          }}>
-          <Text
-            style={{
-              color: AppColor.HEADERTEXTCOLOR,
-              fontFamily: Fonts.MONTSERRAT_BOLD,
-              fontWeight: 'bold',
-              lineHeight: 19.5,
-              fontSize: 18,
-              alignItems: 'center',
-            }}>
-            Categories
-          </Text>
-          <Text
-            style={{
-              color: '#6B7280',
-              fontFamily: 'Montserrat-Medium',
-              fontWeight: '500',
-              lineHeight: 20,
-              fontSize: 14,
-            }}>
-            Looking for something specific?
-          </Text>
-        </View>
-        <View style={styles.meditionBox}>
+
+        {/* Colorful Hero Banner */}
+        <AnimatedReanimated.View
+          entering={FadeIn.duration(500)}>
+          <LinearGradient
+            colors={['#667EEA', '#764BA2', '#F093FB']}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 1}}
+            style={styles.heroBanner}>
+            {/* Decorative floating orbs */}
+            <View style={[styles.floatingOrb, {top: -20, right: 30, width: 80, height: 80, backgroundColor: 'rgba(255,255,255,0.08)'}]} />
+            <View style={[styles.floatingOrb, {bottom: -15, left: 20, width: 60, height: 60, backgroundColor: 'rgba(255,255,255,0.06)'}]} />
+            <View style={[styles.floatingOrb, {top: 10, left: -10, width: 40, height: 40, backgroundColor: 'rgba(255,255,255,0.1)'}]} />
+
+            <View style={styles.bannerContent}>
+              <View style={styles.bannerTextColumn}>
+                <Text style={styles.bannerTitle}>
+                  🧘 Meditation
+                </Text>
+                <Text style={styles.bannerSubtitle}>
+                  Calm your mind, find inner peace
+                </Text>
+                <View style={styles.bannerStatsRow}>
+                  <View style={styles.bannerStat}>
+                    <FitIcon type="MaterialCommunityIcons" name="play-circle" size={14} color="rgba(255,255,255,0.9)" />
+                    <Text style={styles.bannerStatText}>
+                      {mindsetExercise?.data?.length || 0} Sessions
+                    </Text>
+                  </View>
+                  <View style={styles.bannerStatDivider} />
+                  <View style={styles.bannerStat}>
+                    <FitIcon type="MaterialCommunityIcons" name="clock-outline" size={14} color="rgba(255,255,255,0.9)" />
+                    <Text style={styles.bannerStatText}>5-15 min</Text>
+                  </View>
+                </View>
+              </View>
+              <View style={styles.bannerIconCircle}>
+                <FitIcon
+                  type="MaterialCommunityIcons"
+                  name="meditation"
+                  size={36}
+                  color="rgba(255,255,255,0.9)"
+                />
+              </View>
+            </View>
+          </LinearGradient>
+        </AnimatedReanimated.View>
+
+        {/* Categories Section */}
+        <AnimatedReanimated.View
+          entering={FadeInUp.delay(200).duration(400).springify()}
+          style={styles.sectionContainer}>
+          <View style={styles.sectionHeaderRow}>
+            <View style={styles.sectionTitleRow}>
+              <LinearGradient
+                colors={['#667EEA', '#764BA2']}
+                style={styles.sectionIconBadge}>
+                <FitIcon
+                  type="MaterialCommunityIcons"
+                  name="shape"
+                  size={14}
+                  color="#FFFFFF"
+                />
+              </LinearGradient>
+              <Text style={styles.sectionTitleText}>Categories</Text>
+            </View>
+            <LinearGradient
+              colors={['#EDE9FE', '#F5F3FF']}
+              style={styles.sectionPill}>
+              <Text style={[styles.sectionPillText, {color: '#7C3AED'}]}>
+                {allWorkoutData?.mindset_workout_data?.length || 0} types
+              </Text>
+            </LinearGradient>
+          </View>
+
           <FlatList
             data={allWorkoutData?.mindset_workout_data}
             horizontal
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
-            ListEmptyComponent={<EmptyComponent />}
-            renderItem={({item, index}) => {
-              return (
-                <ListItem title={item} color={colors[index % colors.length]} />
-              );
+            contentContainerStyle={{
+              paddingHorizontal: 16,
+              paddingVertical: 12,
+              gap: 12,
             }}
+            ListEmptyComponent={<EmptyComponent />}
+            renderItem={({item, index}) => (
+              <CategoryChip
+                item={item}
+                index={index}
+                isSelected={headerTitle?.id == item?.id}
+                onPress={() => {
+                  setHeaderTitle(item);
+                  getCaterogy(item.id, item.workout_mindset_level);
+                  setSelectedTitle(item?.workout_mindset_title);
+                }}
+              />
+            )}
             initialNumToRender={10}
             maxToRenderPerBatch={10}
             updateCellsBatchingPeriod={100}
             removeClippedSubviews={true}
           />
-          <View style={{height: 20}} />
-        </View>
-        <Space />
-        <View
-          style={{
-            width: '90%',
-            alignSelf: 'center',
+        </AnimatedReanimated.View>
 
-            marginVertical: DeviceHeigth * 0.03,
-          }}>
-          <Text
-            style={{
-              color: AppColor.HEADERTEXTCOLOR,
-              fontFamily: Fonts.MONTSERRAT_BOLD,
-              fontWeight: 'bold',
-              lineHeight: 19.5,
-              fontSize: 18,
-              alignItems: 'center',
-            }}>
-            Explore
-          </Text>
-          <Text
-            style={{
-              color: '#6B7280',
-              fontFamily: 'Montserrat-Medium',
-              fontWeight: '500',
-              lineHeight: 20,
-              fontSize: 14,
-            }}>
-            Start the meditation of your choice.
-          </Text>
-        </View>
-        <View style={[styles.meditionBox, {flex: 1}]}>
+        {/* Explore Section */}
+        <AnimatedReanimated.View
+          entering={FadeInUp.delay(350).duration(400).springify()}
+          style={[styles.sectionContainer, {flex: 1}]}>
+          <View style={styles.sectionHeaderRow}>
+            <View style={styles.sectionTitleRow}>
+              <LinearGradient
+                colors={['#F093FB', '#F5576C']}
+                style={styles.sectionIconBadge}>
+                <FitIcon
+                  type="MaterialCommunityIcons"
+                  name="compass-outline"
+                  size={14}
+                  color="#FFFFFF"
+                />
+              </LinearGradient>
+              <Text style={styles.sectionTitleText}>Explore</Text>
+            </View>
+            <LinearGradient
+              colors={['#FFF1F2', '#FFF7ED']}
+              style={styles.sectionPill}>
+              <Text style={[styles.sectionPillText, {color: '#E11D48'}]}>
+                {mindsetExercise?.data?.length || 0} sessions
+              </Text>
+            </LinearGradient>
+          </View>
+
           {forLoading ? (
             <FlatList
               data={[1, 2, 3, 4]}
               showsVerticalScrollIndicator={false}
               keyExtractor={(item, index) => index.toString()}
-              renderItem={({item, index}) => {
-                return (
-                  <>
-                    <View style={styles.listItem1}>
-                      <View
-                        style={[
-                          styles.listItem1,
-                          {
-                            marginHorizontal: 0,
-                            flexDirection: 'row',
-                            marginHorizontal: 0,
-
-                            justifyContent: 'space-between',
-                          },
-                        ]}>
-                        <View
-                          style={{
-                            width: '65%',
-                            height: 150,
-                            paddingLeft: 5,
-                          }}>
-                          <View
-                            style={{
-                              marginVertical: -DeviceHeigth * 0.002,
-                            }}>
-                            <ShimmerPlaceholder ref={avatarRef} autoRun />
-                            <ShimmerPlaceholder
-                              style={{marginVertical: 10}}
-                              ref={avatarRef}
-                              autoRun
-                            />
-                          </View>
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              alignItems: 'center',
-                              marginVertical: DeviceHeigth * 0.005,
-                              left: -2,
-                            }}>
-                            <View>
-                              <ShimmerPlaceholder
-                                ref={avatarRef}
-                                autoRun
-                                style={[
-                                  styles.img,
-                                  {
-                                    height: 60,
-                                    width: 60,
-                                  },
-                                ]}
-                              />
-                            </View>
-                            <ShimmerPlaceholder
-                              style={{marginHorizontal: 10, width: 75}}
-                              ref={avatarRef}
-                              autoRun
-                            />
-                          </View>
-                        </View>
-                        <View
-                          style={{
-                            width: '30%',
-                            height: 150,
-
-                            left: -20,
-                            marginVertical: -DeviceHeigth * 0.01,
-                          }}>
-                          <ShimmerPlaceholder
-                            ref={avatarRef}
-                            autoRun
-                            style={{
-                              height: 130,
-                              width: DeviceWidth * 0.3,
-                            }}
-                          />
-                        </View>
-                      </View>
-                    </View>
-                  </>
-                );
-              }}
-              initialNumToRender={10}
-              maxToRenderPerBatch={10}
-              updateCellsBatchingPeriod={100}
-              removeClippedSubviews={true}
+              contentContainerStyle={{paddingHorizontal: 16, paddingBottom: 20}}
+              renderItem={() => <ShimmerCard />}
             />
           ) : mindsetExercise?.data?.length > 0 ? (
             <FlatList
               data={mindsetExercise?.data}
               showsVerticalScrollIndicator={false}
               keyExtractor={(item, index) => index.toString()}
+              contentContainerStyle={{paddingHorizontal: 16, paddingBottom: 30}}
               ListEmptyComponent={<EmptyComponent />}
-              //  contentInset={{paddingBottom: DeviceHeigth * 0.1}}
-              renderItem={({item, index}) => {
-                return (
-                  <>
-                    <TouchableOpacity
-                      style={styles.box}
-                      activeOpacity={0.8}
-                      onPress={() => {
-                        navigation.navigate('MeditationExerciseDetails', {
-                          index: index,
-                          allMeditation: mindsetExercise?.data,
-                        });
-                      }}>
-                      <ImageBackground
-                        source={
-                          item.exercise_mindset_image_link != null
-                            ? {uri: item.exercise_mindset_image_link}
-                            : localImage.Noimage
-                        }
-                        style={{
-                          height: '100%',
-                          width: '100%',
-                        }}
-                        resizeMode="stretch">
-                        <LinearGradient
-                          start={{x: 0, y: 1}}
-                          end={{x: 1, y: 0}}
-                          colors={[
-                            'rgba(0,0,0,1)',
-                            'rgba(0,0,0,1)',
-                            'transparent',
-                            'transparent',
-                          ]}
-                          style={[styles.box, styles.grad]}>
-                          <View
-                            style={{
-                              width: '100%',
-                              padding: 10,
-                              flexDirection: 'row',
-                              alignItems: 'center',
-                              justifyContent: 'space-between',
-                              bottom: 0,
-                              position: 'absolute',
-                            }}>
-                            <Text
-                              style={{
-                                color: AppColor.WHITE,
-                                fontFamily: 'Montserrat-SemiBold',
-                                fontWeight: '700',
-                                lineHeight: 25,
-                                fontSize: 18,
-                              }}>
-                              {item.exercise_mindset_title}
-                            </Text>
-                            <TouchableOpacity
-                              // disabled={downloaded > 0 && downloaded != 100}
-                              onPress={() => {
-                                navigation.navigate(
-                                  'MeditationExerciseDetails',
-                                  {
-                                    index: index,
-                                    allMeditation: mindsetExercise?.data,
-                                  },
-                                );
-                              }}>
-                              <Image
-                                source={localImage.Play2}
-                                style={[
-                                  styles.img,
-                                  {
-                                    height: 60,
-                                    width: 60,
-                                    left: -12,
-                                  },
-                                ]}
-                                resizeMode="cover"></Image>
-                            </TouchableOpacity>
-                          </View>
-                        </LinearGradient>
-                      </ImageBackground>
-                    </TouchableOpacity>
-                    {/* {getAdsDisplay(index, item)} */}
-                  </>
-                );
-              }}
+              renderItem={({item, index}) => (
+                <MeditationCard
+                  item={item}
+                  index={index}
+                  onPress={() => {
+                    navigation.navigate('MeditationExerciseDetails', {
+                      index: index,
+                      allMeditation: mindsetExercise?.data,
+                    });
+                  }}
+                />
+              )}
               initialNumToRender={10}
               maxToRenderPerBatch={10}
               updateCellsBatchingPeriod={100}
@@ -566,59 +622,340 @@ const MeditationDetails = ({navigation, route}) => {
           ) : (
             <EmptyComponent />
           )}
-        </View>
+        </AnimatedReanimated.View>
       </Wrapper>
-      {/* {bannerAdsDisplay()} */}
-      {/* <BannerAdd bannerAdId={bannerAdId} /> */}
     </View>
   );
 };
-var styles = StyleSheet.create({
+
+const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: AppColor.WHITE,
+    backgroundColor: '#FDFDFD',
   },
-  meditionBox: {
-    width: '95%',
-    alignSelf: 'center',
-    backgroundColor: 'white',
-  },
-  listItem: {
-    width: 100,
-    height: 100,
+
+  // --- Hero Banner ---
+  heroBanner: {
+    marginHorizontal: 16,
+    marginTop: 2,
+    marginBottom: 4,
     borderRadius: 20,
-    justifyContent: 'center',
-    alignSelf: 'center',
+    padding: 14,
+    overflow: 'hidden',
+    position: 'relative',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#764BA2',
+        shadowOffset: {width: 0, height: 8},
+        shadowOpacity: 0.3,
+        shadowRadius: 16,
+      },
+      android: {
+        elevation: 8,
+      },
+    }),
+  },
+  floatingOrb: {
+    position: 'absolute',
+    borderRadius: 999,
+  },
+  bannerContent: {
+    flexDirection: 'row',
     alignItems: 'center',
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: '700',
-    lineHeight: 23,
-    fontFamily: Fonts.HELVETICA_BOLD,
-    textTransform: 'uppercase',
-  },
-  img: {
-    height: 80,
-    width: 80,
-    borderRadius: 160 / 2,
-  },
-  listItem1: {
-    width: DeviceWidth * 0.95,
-    height: 150,
-    marginVertical: 10,
-    borderRadius: 10,
-    padding: 5,
     justifyContent: 'space-between',
   },
-  box: {
-    width: '97%',
-    height: DeviceHeigth * 0.17,
+  bannerTextColumn: {
+    flex: 1,
+    marginRight: 12,
+  },
+  bannerTitle: {
+    fontSize: 19,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    marginBottom: 2,
+  },
+  bannerSubtitle: {
+    fontSize: 12,
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    color: 'rgba(255,255,255,0.8)',
+    marginBottom: 8,
+  },
+  bannerStatsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  bannerStat: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
+  bannerStatText: {
+    fontSize: 11.5,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    color: 'rgba(255,255,255,0.9)',
+  },
+  bannerStatDivider: {
+    width: 1,
+    height: 14,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+  },
+  bannerIconCircle: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255,255,255,0.2)',
+  },
+
+  // --- Section ---
+  sectionContainer: {
+    marginTop: 4,
+  },
+  sectionHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    marginBottom: 2,
+  },
+  sectionTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  sectionIconBadge: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  sectionTitleText: {
+    fontSize: 17,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    color: '#111827',
+  },
+  sectionPill: {
+    paddingHorizontal: 10,
+    paddingVertical: 4.5,
     borderRadius: 10,
-    alignSelf: 'center',
+  },
+  sectionPillText: {
+    fontSize: 10.5,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+  },
+
+  // --- Category Chip ---
+  categoryChip: {
+    height: 82,
+    width: 85,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 6,
+    overflow: 'hidden',
+    position: 'relative',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255,255,255,0.3)',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 6},
+        shadowOpacity: 0.15,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
+  categoryChipSelected: {
+    borderWidth: 2.5,
+    borderColor: 'rgba(255,255,255,0.6)',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 8},
+        shadowOpacity: 0.25,
+        shadowRadius: 14,
+      },
+      android: {
+        elevation: 8,
+      },
+    }),
+  },
+  chipGlowCircle: {
+    position: 'absolute',
+    width: 40,
+    height: 40,
+    borderRadius: 999,
+  },
+  chipCheckCircle: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: 'rgba(255,255,255,0.35)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  categoryChipText: {
+    fontSize: 10.5,
+    fontWeight: '700',
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    textTransform: 'uppercase',
+    textAlign: 'center',
+    color: '#FFFFFF',
+    marginTop: 6,
+    letterSpacing: 0.3,
+  },
+
+  // --- Meditation Card ---
+  meditationCard: {
+    width: '100%',
+    height: DeviceHeigth * 0.17,
+    borderRadius: 18,
     overflow: 'hidden',
     marginVertical: 5,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#764BA2',
+        shadowOffset: {width: 0, height: 8},
+        shadowOpacity: 0.18,
+        shadowRadius: 14,
+      },
+      android: {
+        elevation: 6,
+      },
+    }),
   },
-  grad: {width: '100%', justifyContent: 'center', marginVertical: 0},
+  cardImageBg: {
+    width: '100%',
+    height: '100%',
+  },
+  cardImageStyle: {
+    borderRadius: 22,
+  },
+  cardGradientOverlay: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    padding: 16,
+  },
+  playButtonContainer: {
+    position: 'absolute',
+    top: 14,
+    right: 14,
+  },
+  playButtonGlow: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255,255,255,0.35)',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 6,
+      },
+    }),
+  },
+  playButtonGradient: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cardBottomRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
+  },
+  cardTitleColumn: {
+    flex: 1,
+    marginRight: 10,
+  },
+  cardTitle: {
+    color: '#FFFFFF',
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    fontSize: 18,
+    lineHeight: 23,
+    marginBottom: 8,
+    textShadowColor: 'rgba(0,0,0,0.5)',
+    textShadowOffset: {width: 0, height: 1},
+    textShadowRadius: 6,
+  },
+  cardMetaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  metaPillGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 4.5,
+    borderRadius: 10,
+    gap: 4,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.2)',
+  },
+  metaPillTextWhite: {
+    color: '#FFFFFF',
+    fontSize: 10.5,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+  },
+  indexBadge: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.25)',
+  },
+  indexBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 13,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '800',
+  },
+
+  // --- Shimmer ---
+  shimmerCard: {
+    width: '100%',
+    height: DeviceHeigth * 0.18,
+    borderRadius: 22,
+    backgroundColor: '#F3F4F6',
+    marginVertical: 6,
+    overflow: 'hidden',
+  },
+  shimmerFull: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 22,
+  },
 });
+
 export default MeditationDetails;

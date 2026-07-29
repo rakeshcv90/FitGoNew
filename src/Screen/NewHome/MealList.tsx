@@ -8,6 +8,14 @@ import {
   View,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
+import LinearGradient from 'react-native-linear-gradient';
+import AnimatedReanimated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  FadeInDown,
+  Layout,
+} from 'react-native-reanimated';
 // import {MyInterstitialAd} from '../../Component/BannerAdd';
 import {useSelector} from 'react-redux';
 import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
@@ -39,6 +47,108 @@ type Item = {
   diet_ingredients: string;
 };
 
+const RecipeCard = ({item, index, checkMealAddCount}: any) => {
+  const scale = useSharedValue(1);
+  const [isLiked, setIsLiked] = useState(false);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{scale: scale.value}],
+  }));
+
+  const onPressIn = () => {
+    scale.value = withSpring(0.94, {damping: 14, stiffness: 280});
+  };
+
+  const onPressOut = () => {
+    scale.value = withSpring(1, {damping: 14, stiffness: 280});
+  };
+
+  const imageSource =
+    item.diet_image == null ? localImage.Noimage : {uri: item.diet_image};
+
+  return (
+    <AnimatedReanimated.View
+      entering={FadeInDown.delay((index % 6) * 70)
+        .duration(380)
+        .springify()}
+      layout={Layout.springify()}
+      style={[styles.cardContainer, animatedStyle]}>
+      <TouchableOpacity
+        activeOpacity={0.92}
+        onPressIn={onPressIn}
+        onPressOut={onPressOut}
+        onPress={() => checkMealAddCount(item)}
+        style={styles.cardInnerTouchable}>
+        {/* Heart Favorite Badge */}
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => setIsLiked(!isLiked)}
+          style={styles.favoriteBadge}>
+          <FitIcon
+            type="MaterialCommunityIcons"
+            name={isLiked ? 'heart' : 'heart-outline'}
+            size={16}
+            color={isLiked ? AppColor.RED : '#9CA3AF'}
+          />
+        </TouchableOpacity>
+
+        {/* Food Image Ring with Floating Calorie Badge */}
+        <View style={styles.imageRingWrapper}>
+          <Image
+            source={imageSource}
+            defaultSource={localImage?.NOWORKOUT}
+            style={styles.foodImage}
+            resizeMode="cover"
+          />
+          <LinearGradient
+            colors={['#FF3366', '#E11D48']}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
+            style={styles.floatingCaloriePill}>
+            <FitIcon
+              type="MaterialCommunityIcons"
+              name="fire"
+              size={10}
+              color="#FFFFFF"
+            />
+            <Text style={styles.floatingCalorieText}>
+              {item?.diet_calories}
+            </Text>
+          </LinearGradient>
+        </View>
+
+        {/* Recipe Title */}
+        <Text style={styles.recipeTitle} numberOfLines={2}>
+          {item?.diet_title}
+        </Text>
+
+        {/* Metrics Row */}
+        <View style={styles.metricsRow}>
+          <View style={styles.timePill}>
+            <FitIcon
+              type="AntDesign"
+              name="clockcircle"
+              size={10}
+              color="#7C3AED"
+            />
+            <Text style={styles.timeText}>{item?.diet_time}</Text>
+          </View>
+
+          <View style={styles.servingsPill}>
+            <FitIcon
+              type="MaterialCommunityIcons"
+              name="silverware-fork-knife"
+              size={10}
+              color="#059669"
+            />
+            <Text style={styles.servingsText}>Healthy</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    </AnimatedReanimated.View>
+  );
+};
+
 const MealList = ({data}: any) => {
   // const {showInterstitialAd} = MyInterstitialAd();
   const getDietFilterData = useSelector(
@@ -46,6 +156,7 @@ const MealList = ({data}: any) => {
   );
   const mealData = useSelector((state: any) => state.mealData);
   const [filterMealList, setFilterMealList] = useState(data);
+
   const checkMealAddCount = (item: Item) => {
     let checkAdsShow = AddCountFunction();
 
@@ -56,25 +167,24 @@ const MealList = ({data}: any) => {
       navigate('MealDetails', {item: item});
     }
   };
+
   useEffect(() => {
     updateFilteredCategories(getDietFilterData);
-  }, [getDietFilterData]);
+  }, [getDietFilterData, data]);
 
   const updateFilteredCategories = (test: number) => {
     let filteredItems = [];
     if (test == -1) {
       setFilterMealList(data);
     } else if (test == 0) {
-      filteredItems = data.filter(
-        (item: any) => item?.meal_type.toLowerCase() == 'veg',
+      filteredItems = data?.filter(
+        (item: any) => item?.meal_type?.toLowerCase() == 'veg',
       );
-
       setFilterMealList(filteredItems);
     } else {
-      filteredItems = data.filter(
-        (item: any) => item?.meal_type.toLowerCase() == 'non_veg',
+      filteredItems = data?.filter(
+        (item: any) => item?.meal_type?.toLowerCase() == 'non_veg',
       );
-
       setFilterMealList(filteredItems);
     }
   };
@@ -84,7 +194,6 @@ const MealList = ({data}: any) => {
       <View
         style={{
           flex: 1,
-
           alignItems: 'center',
         }}>
         <Image
@@ -93,7 +202,6 @@ const MealList = ({data}: any) => {
           style={{
             width: DeviceWidth * 0.7,
             height: DeviceHeigth * 0.3,
-
             marginTop: DeviceHeigth * 0.07,
           }}
         />
@@ -147,6 +255,7 @@ const MealList = ({data}: any) => {
       </View>
     );
   };
+
   return (
     <View style={PredefinedStyles.FlexCenter}>
       <View style={{alignSelf: 'flex-start', marginLeft: 20}}>
@@ -161,165 +270,46 @@ const MealList = ({data}: any) => {
         data={filterMealList}
         numColumns={2}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: 20}}
+        contentContainerStyle={{paddingBottom: 90, paddingHorizontal: 10}}
         ListEmptyComponent={emptyComponent}
-        renderItem={items => {
-          const item: Item = items?.item;
-          return (
-            <TouchableOpacity
-              style={styles.listItem2}
-              onPress={() => {
-                checkMealAddCount(item);
-              }}>
-              <View
-                style={{
-                  height: 100,
-                  width: 100,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: 10,
-                }}>
-                <Image
-                  source={
-                    item.diet_image == null
-                      ? localImage.Noimage
-                      : {
-                          uri: item.diet_image,
-                        }
-                  }
-                  defaultSource={localImage?.NOWORKOUT}
-                  style={{
-                    height: 100,
-                    width: 100,
-                    borderRadius: 200 / 2,
-
-                    alignSelf: 'center',
-                  }}
-                  resizeMode="cover"></Image>
-              </View>
-              <View
-                style={{
-                  marginVertical: 10,
-                  alignSelf: 'center',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 120,
-                }}>
-                <FitText
-                  type="SubHeading"
-                  value={item?.diet_title}
-                  fontWeight="700"
-                  fontSize={14}
-                  lineHeight={20}
-                  color={AppColor.LITELTEXTCOLOR}
-                  numberOfLines={1}
-                  fontFamily={Fonts.MONTSERRAT_REGULAR}
-                />
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  alignSelf: 'center',
-                  justifyContent: 'space-between',
-                }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    alignSelf: 'center',
-                    // justifyContent: 'space-between',
-                  }}>
-                  <Image
-                    source={localImage.Step1}
-                    style={{width: 20, height: 20, marginHorizontal: 5}}
-                    resizeMode="contain"
-                    tintColor={AppColor.RED}
-                  />
-                  <Text
-                    style={{
-                      fontFamily: 'Montserrat-SemiBold',
-                      fontSize: 13,
-                      fontWeight: '500',
-                      color: AppColor.BLACK,
-                      marginHorizontal: 2,
-                      opacity: 0.7,
-                    }}>
-                    {item?.diet_calories} kcal
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    width: 2,
-                    height: 20,
-                    backgroundColor: '#333333',
-                    opacity: 0.6,
-                    marginHorizontal: 5,
-                  }}
-                />
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    alignSelf: 'center',
-                    justifyContent: 'space-between',
-                  }}>
-                  <FitIcon
-                    name="clockcircle"
-                    size={15}
-                    type="AntDesign"
-                    color={AppColor.RED}
-                  />
-                  <Text
-                    style={{
-                      fontFamily: 'Montserrat-SemiBold',
-                      fontSize: 13,
-                      fontWeight: '500',
-                      color: AppColor.BLACK,
-                      marginHorizontal: 2,
-                      opacity: 0.7,
-                    }}>
-                    {item?.diet_time}
-                  </Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-          );
-        }}
-      />
-      {filterMealList?.length > 0 && (
-        <TouchableOpacity
-          onPress={() => {
-            const allMealList = [
-              ...mealData?.breakfast,
-              ...mealData?.lunch,
-              ...mealData?.dinner,
-            ];
-            navigate('CustomMealList', {
-              totalMealData: allMealList,
-            });
-          }}
-          style={[
-            PredefinedStyles.NormalCenter,
-            PredefinedStyles.ShadowStyle,
-            {
-              width: 50,
-              height: 50,
-              borderRadius: 30 / 2,
-              backgroundColor: '#F7F7F7',
-              position: 'absolute',
-              bottom: DeviceHeigth >= 1024 ? 15 : 30,
-              right: 10,
-            },
-          ]}>
-          <FitIcon
-            type="MaterialCommunityIcons"
-            name={'plus'}
-            size={35}
-            color={AppColor.RED}
+        renderItem={({item, index}: any) => (
+          <RecipeCard
+            item={item}
+            index={index}
+            checkMealAddCount={checkMealAddCount}
           />
-        </TouchableOpacity>
-      )}
+        )}
+      />
+
+      <TouchableOpacity
+        activeOpacity={0.88}
+        onPress={() => {
+          const allMealList = [
+            ...(mealData?.breakfast || []),
+            ...(mealData?.lunch || []),
+            ...(mealData?.dinner || []),
+          ];
+          navigate('CustomMealList', {
+            totalMealData: allMealList,
+          });
+        }}
+        style={styles.floatingAddButton}>
+        <LinearGradient
+          colors={['#FF2A54', '#E11D48']}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 1}}
+          style={styles.floatingGradientFab}>
+          <View style={styles.fabIconBadge}>
+            <FitIcon
+              type="MaterialCommunityIcons"
+              name="plus"
+              size={18}
+              color="#FFFFFF"
+            />
+          </View>
+          <Text style={styles.fabText}>Create Meal</Text>
+        </LinearGradient>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -327,18 +317,199 @@ const MealList = ({data}: any) => {
 export default MealList;
 
 const styles = StyleSheet.create({
-  listItem2: {
-    width: DeviceWidth * 0.45,
-    height: DeviceWidth * 0.5,
-    marginHorizontal: 7,
+  cardContainer: {
+    width: (DeviceWidth - 44) / 2,
+    marginHorizontal: 5,
     marginVertical: 8,
-    borderRadius: 10,
-    alignSelf: 'center',
+    borderRadius: 20,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#F3F4F6',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.06,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  },
+  cardInnerTouchable: {
+    padding: 8,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    height: 155,
+    position: 'relative',
+  },
+  favoriteBadge: {
+    position: 'absolute',
+    top: 5,
+    right: 5,
+    zIndex: 10,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: AppColor.WHITE,
-
-    padding: 15,
-    ...PredefinedStyles.ShadowStyle,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 1},
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  imageRingWrapper: {
+    width: 68,
+    height: 68,
+    borderRadius: 34,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    ...Platform.select({
+      ios: {
+        shadowColor: AppColor.RED,
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.14,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  foodImage: {
+    width: 62,
+    height: 62,
+    borderRadius: 31,
+  },
+  floatingCaloriePill: {
+    position: 'absolute',
+    bottom: -5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 5,
+    paddingVertical: 1,
+    borderRadius: 8,
+    gap: 2,
+    borderWidth: 1,
+    borderColor: '#FFFFFF',
+    ...Platform.select({
+      ios: {
+        shadowColor: AppColor.RED,
+        shadowOffset: {width: 0, height: 1},
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  floatingCalorieText: {
+    fontSize: 9,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  recipeTitle: {
+    fontSize: 12,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    color: '#1F2937',
+    textAlign: 'center',
+    marginVertical: 1,
+    height: 28,
+    lineHeight: 14,
+  },
+  metricsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    gap: 4,
+  },
+  timePill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F5F3FF',
+    paddingHorizontal: 6,
+    paddingVertical: 3,
+    borderRadius: 8,
+    gap: 3,
+  },
+  timeText: {
+    fontSize: 10.5,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    color: '#6D28D9',
+  },
+  servingsPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ECFDF5',
+    paddingHorizontal: 6,
+    paddingVertical: 3,
+    borderRadius: 8,
+    gap: 3,
+  },
+  servingsText: {
+    fontSize: 10.5,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    color: '#059669',
+  },
+  floatingAddButton: {
+    position: 'absolute',
+    bottom: DeviceHeigth >= 1024 ? 20 : 24,
+    right: 16,
+    borderRadius: 25,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#FF2A54',
+        shadowOffset: {width: 0, height: 6},
+        shadowOpacity: 0.38,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 9,
+      },
+    }),
+  },
+  floatingGradientFab: {
+    height: 48,
+    paddingHorizontal: 16,
+    borderRadius: 24,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+  },
+  fabIconBadge: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'rgba(255, 255, 255, 0.22)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 8,
+  },
+  fabText: {
+    color: '#FFFFFF',
+    fontSize: 13,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    letterSpacing: 0.3,
   },
 });

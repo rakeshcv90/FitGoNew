@@ -22,7 +22,10 @@ import moment from 'moment';
 import {AnalyticsConsole} from '../../../Component/AnalyticsConsole';
 import ActivityLoader from '../../../Component/ActivityLoader';
 import RatingModal from '../../../Component/RatingModal';
-import { translate, getCurrentLanguage } from '../../Translation/TranslationService';
+import {
+  translate,
+  getCurrentLanguage,
+} from '../../Translation/TranslationService';
 const WeekArray = Array(7)
   .fill(0)
   .map(
@@ -52,7 +55,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
     (state: any) => state.getPurchaseHistory,
   );
 
-  const lang = getCurrentLanguage()
+  const lang = getCurrentLanguage();
 
   const getWeeklyAPI = async () => {
     try {
@@ -105,14 +108,10 @@ const SaveDayExercise = ({navigation, route}: any) => {
         },
       });
       setLoader(false);
-      if (data?.data?.msg == 'coin added successfully') {
-        navigation.navigate('MyPlans');
-      } else {
-        navigation.navigate('MyPlans');
-      }
+      navigation.navigate('BottomTab', {screen: 'myplans'});
     } catch (error) {
       setLoader(false);
-      navigation.navigate('MyPlans');
+      navigation.navigate('BottomTab', {screen: 'myplans'});
       console.log('UCustomeCorkout details', error);
     }
   };
@@ -125,7 +124,9 @@ const SaveDayExercise = ({navigation, route}: any) => {
           '?version=' +
           VersionNumber.appVersion +
           '&user_id=' +
-          getUserDataDetails?.id+'&lang='+lang,
+          getUserDataDetails?.id +
+          '&lang=' +
+          lang,
       });
       if (res.data?.msg != 'version  is required') {
         dispatch(setChallengesData(res.data));
@@ -342,8 +343,8 @@ const SaveDayExercise = ({navigation, route}: any) => {
         <GradientButton
           onPress={() => {
             // analytics().logEvent(`CV_FITME_COMPLETED_DAY_${day}_EXERCISES`);
-            ReviewApp(onPresh)
-            // TESTAPI()
+            ReviewApp(onPresh);
+            TESTAPI();
           }}
           text={translate('saveAndContinue')}
           bR={10}

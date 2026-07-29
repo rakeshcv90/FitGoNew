@@ -1,16 +1,28 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Platform,
+  Image,
+} from 'react-native';
 import React from 'react';
+import Animated, {
+  FadeInDown,
+  FadeInRight,
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 import PredefinedStyles from '../../Component/Utilities/PredefineStyles';
-import {Image} from 'react-native';
 import {useSelector} from 'react-redux';
 import {localImage} from '../../Component/Image';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import {AppColor, Fonts} from '../../Component/Color';
 import {navigate} from '../../Component/Utilities/NavigationUtil';
 import FitIcon, {FitIconTypes} from '../../Component/Utilities/FitIcon';
-import FitText from '../../Component/Utilities/FitText';
 import moment from 'moment';
-import {DeviceWidth} from '../../Component/Config';
 import {translate} from '../Translation/TranslationService';
 
 type Props = {
@@ -24,6 +36,33 @@ type Props = {
   }>;
 };
 
+// Animated Pressable Button Component
+const AnimatedTouch = ({onPress, disabled, style, children}: any) => {
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{scale: scale.value}],
+  }));
+
+  return (
+    <Animated.View style={animatedStyle}>
+      <TouchableOpacity
+        activeOpacity={0.85}
+        disabled={disabled}
+        onPress={onPress}
+        onPressIn={() => {
+          scale.value = withTiming(0.92, {duration: 100});
+        }}
+        onPressOut={() => {
+          scale.value = withSpring(1, {damping: 12, stiffness: 220});
+        }}
+        style={style}>
+        {children}
+      </TouchableOpacity>
+    </Animated.View>
+  );
+};
+
 const HomeHeader = ({leaderboardData}: Props) => {
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
@@ -34,30 +73,22 @@ const HomeHeader = ({leaderboardData}: Props) => {
   const enteredCurrentEvent = useSelector(
     (state: any) => state?.enteredCurrentEvent,
   );
-  const enteredUpcomingEvent = useSelector(
-    (state: any) => state?.enteredUpcomingEvent,
-  );
   const fitCoins = useSelector((state: any) => state.fitCoins);
 
   const Sat =
-    getPurchaseHistory?.currentDay && getPurchaseHistory?.currentDay == 6;
+    getPurchaseHistory?.currentDay && getPurchaseHistory?.currentDay === 6;
   const Sun =
-    getPurchaseHistory?.currentDay && getPurchaseHistory?.currentDay == 0;
-  const dayLeft =
-    getPurchaseHistory?.upcoming_day_status == 1 &&
-    getPurchaseHistory?.event_start_date_upcoming != null
-      ? getPurchaseHistory?.event_start_date_upcoming
-      : getPurchaseHistory?.event_start_date_current;
+    getPurchaseHistory?.currentDay && getPurchaseHistory?.currentDay === 0;
 
   const myRank =
     leaderboardData &&
-    leaderboardData.filter(item => item?.id == getUserDataDetails?.id);
+    leaderboardData.filter(item => item?.id === getUserDataDetails?.id);
 
-  const currentTime = parseInt(moment().format('HH'));
+  const currentTime = parseInt(moment().format('HH'), 10);
   const greeting =
     currentTime < 12
       ? translate('goodmorning')
-      : currentTime > 12 && currentTime < 17
+      : currentTime >= 12 && currentTime < 17
       ? translate('goodafternoon')
       : translate('goodevening');
 
@@ -65,13 +96,13 @@ const HomeHeader = ({leaderboardData}: Props) => {
     name: 'history',
     size: 20,
     type: 'MaterialCommunityIcons',
-    color: AppColor.PrimaryTextColor,
+    color: '#FF2A54',
     bW: 0,
     bR: 20,
-    roundBackground: AppColor.WHITE,
+    roundBackground: '#FFF1F2',
     buttonProps: {
-      disabled: (Sat || Sun) == true,
-      activeOpacity: 0.6,
+      disabled: Sat || Sun,
+      activeOpacity: 0.7,
     },
     onPress: () => {
       AnalyticsConsole('HB');
@@ -79,90 +110,78 @@ const HomeHeader = ({leaderboardData}: Props) => {
     },
   };
 
+  const userName =
+    getUserDataDetails?.name == null
+      ? 'Guest'
+      : getUserDataDetails?.name.split(' ')[0];
+
   return (
     <View style={[PredefinedStyles.rowBetween, styles.container]}>
-      <View style={{width: '45%'}}>
-        <FitText type="SubHeading" value={greeting} />
-        <FitText
-          type="Heading"
-          value={
-            getUserDataDetails?.name == null
-              ? 'Guest'
-              : getUserDataDetails?.name.split(' ')[0]
-          }
-          color={AppColor.RED}
-          fontWeight="700"
-        />
-      </View>
+      {/* User Greeting & Name with FadeInDown Animation */}
+      <Animated.View
+        entering={FadeInDown.duration(500).springify()}
+        style={{flex: 1}}>
+        <Text style={styles.greetingText}>{greeting}</Text>
+        <Text style={styles.nameText} numberOfLines={1}>
+          {userName}
+        </Text>
+      </Animated.View>
+
       {enteredCurrentEvent ? (
-        <View style={[PredefinedStyles.rowBetween, {width: '50%'}]}>
+        <Animated.View
+          entering={FadeInRight.duration(500).springify()}
+          style={styles.rightActions}>
           <FitIcon {...historyIcon} roundIcon />
-          <TouchableOpacity
-            activeOpacity={0.6}
-            disabled={(Sat || Sun) == true}
+
+          <AnimatedTouch
+            disabled={Sat || Sun}
             onPress={() => {
               AnalyticsConsole('HB');
               navigate('WorkoutHistory');
             }}
-            style={[styles.eventContainer, {marginHorizontal: 5}]}>
+            style={styles.eventPill}>
             <Image
               source={localImage.FitCoin}
-              style={{height: 20, width: 20}}
+              style={{height: 18, width: 18}}
               resizeMode="contain"
             />
-            <Text style={[styles.cointxt, {color: AppColor.PrimaryTextColor}]}>
-              {fitCoins ?? 0}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.6}
-            disabled={(Sat || Sun) == true}
+            <Text style={styles.pillText}>{fitCoins ?? 0}</Text>
+          </AnimatedTouch>
+
+          <AnimatedTouch
+            disabled={Sat || Sun}
             onPress={() => {
               AnalyticsConsole('LB');
               navigate('Leaderboard');
             }}
-            style={styles.eventContainer}>
+            style={styles.eventPill}>
             <Image
               source={require('./LeaderboardIMG.png')}
-              style={{height: 20, width: 20}}
+              style={{height: 18, width: 18}}
               resizeMode="contain"
             />
-            <Text style={[styles.cointxt, {color: AppColor.PrimaryTextColor}]}>
-              {`#${myRank[0]?.rank ?? 0} `}
-            </Text>
-          </TouchableOpacity>
-        </View>
+            <Text style={styles.pillText}>{`#${myRank[0]?.rank ?? 0}`}</Text>
+          </AnimatedTouch>
+        </Animated.View>
       ) : (
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
-            alignItems: 'center',
-            width: '30%',
-          }}>
-          {/* <FitIcon
-            {...historyIcon}
-            onPress={() => {
-              AnalyticsConsole('HB');
-              navigate('NewHistory');
-            }}
-            roundIcon
-          /> */}
-          <TouchableOpacity
-            activeOpacity={0.6}
-            disabled={(Sat || Sun) == true}
+        <Animated.View
+          entering={FadeInRight.duration(500).springify()}
+          style={styles.rightActions}>
+          {/* Futuristic Animated Leaderboard Circular Button */}
+          <AnimatedTouch
+            disabled={Sat || Sun}
             onPress={() => {
               AnalyticsConsole('HB');
               navigate('Leaderboard');
             }}
-            style={styles.normalContainer}>
+            style={styles.leaderboardBtn}>
             <Image
               source={require('./LeaderboardIMG.png')}
-              style={{height: 25, width: 25}}
+              style={{height: 24, width: 24}}
               resizeMode="contain"
             />
-          </TouchableOpacity>
-        </View>
+          </AnimatedTouch>
+        </Animated.View>
       )}
     </View>
   );
@@ -172,34 +191,68 @@ export default HomeHeader;
 
 const styles = StyleSheet.create({
   container: {
-    padding: 15,
-    paddingVertical: 20,
-    backgroundColor: AppColor.Background_New,
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 12,
+    backgroundColor: '#FFFFFF',
   },
-  cointxt: {
-    color: '#1E40AF',
-    fontSize: 16,
-    fontFamily: Fonts.HELVETICA_REGULAR,
-    fontWeight: '600',
-    lineHeight: 30,
-    // marginTop: 5,
-    marginLeft: 5,
+  greetingText: {
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    fontSize: 13,
+    color: '#6B7280',
+    fontWeight: '500',
+    letterSpacing: 0.2,
   },
-  eventContainer: {
-    width: 60,
+  nameText: {
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontSize: 26,
+    color: '#FF2A54',
+    fontWeight: '800',
+    marginTop: 1,
+    letterSpacing: -0.3,
+  },
+  rightActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  pillText: {
+    color: '#111827',
+    fontSize: 14,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    marginLeft: 4,
+  },
+  eventPill: {
     height: 40,
-    borderRadius: 30,
+    paddingHorizontal: 12,
+    borderRadius: 20,
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
-    backgroundColor: AppColor.WHITE,
+    backgroundColor: '#FFF1F2',
+    borderWidth: 1,
+    borderColor: '#FECDD3',
   },
-  normalContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 30,
+  leaderboardBtn: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: AppColor.WHITE,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.5,
+    borderColor: '#F3F4F6',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.08,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
   },
 });

@@ -15,6 +15,13 @@ import {
 import React, {useCallback, useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {AppColor, Fonts} from '../../Component/Color';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {useDispatch, useSelector} from 'react-redux';
@@ -58,6 +65,185 @@ import OverExerciseModal from '../../Component/Utilities/OverExercise';
 import {ArrowLeft} from '../../Component/Utilities/Arrows/Arrow';
 
 const format = 'hh:mm:ss';
+
+const AnimatedExerciseCard = ({entryIndex = 0, style, onPress, children}: any) => {
+  const opacity = useSharedValue(0);
+  const translateY = useSharedValue(14);
+  const scale = useSharedValue(1);
+
+  useEffect(() => {
+    const delay = Math.min(entryIndex, 10) * 45;
+    opacity.value = withDelay(delay, withTiming(1, {duration: 280}));
+    translateY.value = withDelay(delay, withTiming(0, {duration: 280}));
+  }, []);
+
+  const enterStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{translateY: translateY.value}],
+  }));
+  const pressStyle = useAnimatedStyle(() => ({
+    transform: [{scale: scale.value}],
+  }));
+
+  return (
+    <Animated.View style={enterStyle}>
+      <Animated.View style={pressStyle}>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          style={style}
+          onPressIn={() => {
+            scale.value = withTiming(0.97, {duration: 100});
+          }}
+          onPressOut={() => {
+            scale.value = withSpring(1, {damping: 14, stiffness: 220});
+          }}
+          onPress={onPress}>
+          {children}
+        </TouchableOpacity>
+      </Animated.View>
+    </Animated.View>
+  );
+};
+
+const Box = ({item, index, isNext, trackerData, onPress}: any) => {
+  const time = parseInt(item?.exercise_rest.split(' ')[0]);
+  const isCompleted = trackerData[index - 1]?.exercise_status == 'completed';
+  const isCurrent = isNext && !isCompleted;
+
+  const cardTint = isCompleted
+    ? ['#F2FBF8', AppColor.WHITE]
+    : isCurrent
+    ? ['#FFF3F2', AppColor.WHITE]
+    : [AppColor.WHITE, AppColor.WHITE];
+  const accentColor = isCompleted
+    ? AppColor.NEW_SUBS_GREEN
+    : isCurrent
+    ? AppColor.RED1
+    : 'transparent';
+
+  return (
+    <AnimatedExerciseCard
+      entryIndex={index - 1}
+      style={[
+        styles.exerciseCard,
+        {borderLeftWidth: 4, borderLeftColor: accentColor},
+      ]}
+      onPress={() => {
+        analytics().logEvent(
+          `CV_FITME_${item?.exercise_title?.split(' ')[0]}_FR_Day`,
+        );
+        onPress(item);
+      }}>
+      <LinearGradient
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 1}}
+        colors={cardTint}
+        style={styles.exerciseCardGradient}>
+        <View style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
+          <View
+            style={[
+              styles.exerciseThumb,
+              isCurrent && {borderColor: AppColor.RED1, borderWidth: 1.5},
+            ]}>
+            <Image
+              style={{height: 68, width: 68, alignSelf: 'center'}}
+              source={{
+                uri:
+                  item.exercise_image_link != ''
+                    ? item.exercise_image
+                    : item.exercise_image_link ?? localImage.NOWORKOUT,
+              }}
+              resizeMode={'contain'}
+            />
+            {isCompleted && (
+              <View style={styles.exerciseCompletedBadge}>
+                <Icons name="check-bold" size={12} color={AppColor.WHITE} />
+              </View>
+            )}
+          </View>
+          <View style={styles.exerciseInfo}>
+            <Text numberOfLines={1} style={styles.small2}>
+              {item?.exercise_title}
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 4,
+              }}>
+              <Icons
+                name="timer-outline"
+                size={13}
+                color={AppColor.RED1}
+                style={{marginRight: 3}}
+              />
+              <Text style={[styles.small, {lineHeight: 16}]}>
+                {'1 x ' +
+                  (time > 60 ? Math.floor(time / 60) + ' min' : time + ' sec')}
+              </Text>
+              <View style={styles.exerciseDivider} />
+              <Icons
+                name="repeat"
+                size={13}
+                color={AppColor.RED1}
+                style={{marginRight: 3}}
+              />
+              <Text style={[styles.small, {lineHeight: 16}]}>
+                {'Set - ' + item?.exercise_sets}
+              </Text>
+            </View>
+            {isCompleted ? (
+              <Text
+                style={[
+                  styles.exerciseStateLabel,
+                  {color: AppColor.NEW_SUBS_GREEN},
+                ]}>
+                Completed
+              </Text>
+            ) : isCurrent ? (
+              <Text
+                style={[styles.exerciseStateLabel, {color: AppColor.RED1}]}>
+                Up next
+              </Text>
+            ) : null}
+          </View>
+        </View>
+        {isCompleted ? (
+          <Icons name="check-circle" size={22} color={AppColor.NEW_SUBS_GREEN} />
+        ) : (
+          <Icons
+            name={'chevron-right'}
+            size={22}
+            color={isCurrent ? AppColor.RED1 : '#33333380'}
+          />
+        )}
+      </LinearGradient>
+    </AnimatedExerciseCard>
+  );
+};
+
+const Box2 = () => {
+  return (
+    <View style={styles.exerciseCard}>
+      <View style={styles.exerciseCardGradient}>
+        <View style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
+          <ShimmerPlaceholder
+            style={{height: 68, width: 68, borderRadius: 12}}
+            autoRun
+          />
+          <View style={styles.exerciseInfo}>
+            <ShimmerPlaceholder style={{height: 12, width: '70%'}} autoRun />
+            <ShimmerPlaceholder
+              style={{height: 10, width: '50%', marginTop: 8}}
+              autoRun
+            />
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+};
+
 const OneDay = ({navigation, route}: any) => {
   const {data, dayData, day, trainingCount, challenge} = route.params;
   const [exerciseData, setExerciseData] = useState([]);
@@ -67,7 +253,6 @@ const OneDay = ({navigation, route}: any) => {
   const [downloaded, setDownloade] = useState(0);
   const [visible, setVisible] = useState(false);
   const [reward, setreward] = useState(0);
-  const avatarRef = React.createRef();
   const [forLoading, setForLoading] = useState(true);
   const [overExerciseVisible, setOverExerciseVisible] = useState(false);
   const [start, setStart] = useState(false);
@@ -193,7 +378,7 @@ const OneDay = ({navigation, route}: any) => {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-        lang:'en',
+        lang: 'en',
       });
 
       if (res?.data?.msg == 'Please update the app to the latest version.') {
@@ -268,8 +453,8 @@ const OneDay = ({navigation, route}: any) => {
             ? NewAppapi.CURRENT_DAY_CHALLENGE_EXERCISE
             : NewAppapi.CURRENT_DAY_EXERCISE,
           method: 'Post',
-          data: {user_details: datas,type: 'day'},
-          lang:'en'
+          data: {user_details: datas, type: 'day'},
+          lang: 'en',
         });
         if (res.data) {
           if (
@@ -315,166 +500,6 @@ const OneDay = ({navigation, route}: any) => {
         console.error(error, 'PostDaysAPIERror');
       }
     });
-  };
-
-  const Box = ({selected, item, index}: any) => {
-    const [isLoading, setIsLoading] = useState(true);
-    const time = parseInt(item?.exercise_rest.split(' ')[0]);
-    return (
-      <>
-        <TouchableOpacity
-          style={styles.box}
-          activeOpacity={0.9}
-          onPress={() => {
-            analytics().logEvent(
-              `CV_FITME_${item?.exercise_title?.split(' ')[0]}_FR_Day`,
-            );
-            setOpen(false);
-            setCurrentExercise(item);
-            setVisible(true);
-          }}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <View
-              style={{
-                height: 80,
-                width: 80,
-                backgroundColor: AppColor.WHITE,
-
-                borderRadius: 5,
-                borderWidth: 1,
-                borderColor: '#D9D9D9',
-              }}>
-              <Image
-                style={{height: 75, width: 75, alignSelf: 'center'}}
-                source={{
-                  uri:
-                    item.exercise_image_link != ''
-                      ? item.exercise_image
-                      : item.exercise_image_link ?? localImage.NOWORKOUT,
-                }}
-                resizeMode={'contain'}
-              />
-              {trackerData[index - 1]?.exercise_status == 'completed' && (
-                <Image
-                  source={localImage.Complete}
-                  style={{
-                    height: 30,
-                    width: 30,
-                    marginLeft:
-                      Platform.OS == 'android'
-                        ? DeviceHeigth * 0.05
-                        : DeviceHeigth > 667
-                        ? DeviceHeigth * 0.05
-                        : DeviceHeigth * 0.06,
-                    marginTop:
-                      Platform.OS == 'android'
-                        ? -DeviceHeigth * 0.035
-                        : DeviceHeigth > 667
-                        ? -DeviceHeigth * 0.03
-                        : -DeviceHeigth * 0.035,
-                  }}
-                  resizeMode="contain"
-                />
-              )}
-            </View>
-            <View
-              style={{
-                alignItems: 'center',
-                marginHorizontal: 20,
-              }}>
-              <View>
-                <Text style={styles.small2}>{item?.exercise_title}</Text>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <Text style={styles.small}>
-                    {'Time - ' +
-                      '1 x ' +
-                      (time > 60
-                        ? Math.floor(time / 60) + ' min'
-                        : time + ' sec')}{' '}
-                    |{' '}
-                  </Text>
-                  <Text style={styles.small}>
-                    {'Set - ' + item?.exercise_sets}
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </View>
-
-          <View style={{}}>
-            <Icons
-              name={'chevron-right'}
-              size={25}
-              color={AppColor.INPUTTEXTCOLOR}
-            />
-          </View>
-        </TouchableOpacity>
-        {index !== exerciseData.length && (
-          <View
-            style={{
-              width: '100%',
-              height: 1,
-              alignItems: 'center',
-              backgroundColor: '#33333314',
-            }}
-          />
-        )}
-      </>
-    );
-  };
-  const Box2 = () => {
-    return (
-      <View style={styles.box}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <View
-            style={{
-              height: 80,
-              width: 80,
-              backgroundColor: AppColor.WHITE,
-
-              borderRadius: 20,
-            }}>
-            <ShimmerPlaceholder
-              style={{
-                height: 75,
-                width: 75,
-                alignSelf: 'center',
-                borderRadius: 20,
-              }}
-              autoRun
-              ref={avatarRef}
-            />
-          </View>
-          <View
-            style={{
-              alignItems: 'center',
-              marginHorizontal: 20,
-            }}>
-            <View>
-              <ShimmerPlaceholder
-                style={{height: 10, width: 100, alignSelf: 'center'}}
-                autoRun
-                ref={avatarRef}
-              />
-
-              <ShimmerPlaceholder
-                style={{height: 10, width: 100, alignSelf: 'center'}}
-                autoRun
-                ref={avatarRef}
-              />
-            </View>
-          </View>
-        </View>
-
-        <View style={{}}>
-          <ShimmerPlaceholder
-            style={{height: 20, width: 40, alignSelf: 'center', top: 10}}
-            autoRun
-            ref={avatarRef}
-          />
-        </View>
-      </View>
-    );
   };
 
   useEffect(() => {
@@ -677,26 +702,46 @@ const OneDay = ({navigation, route}: any) => {
       </Modal>
     );
   };
+  const nextExerciseIdx = trackerData.length
+    ? trackerData.findIndex((item: any) => item?.exercise_status == 'undone')
+    : 0;
+  const handleExercisePress = (item: any) => {
+    setOpen(false);
+    setCurrentExercise(item);
+    setVisible(true);
+  };
   return (
     <View style={{flex: 1, backgroundColor: AppColor.WHITE}}>
       <StatusBar
-        barStyle={'light-content'}
+        barStyle={'dark-content'}
         translucent={true}
         backgroundColor={'transparent'}
       />
-      <ImageBackground
-        translucent={true}
-        style={{width: '100%', height: DeviceHeigth * 0.4}}
-        resizeMode="cover"
-        source={{
-          uri:
-            getStoreVideoLoc[data?.workout_title + 'Image'] != undefined
-              ? 'file://' + getStoreVideoLoc[data?.workout_title + 'Image']
-              : // : data?.workout_image_link != ''
-                // ? data?.workout_image_link
-                data?.workout_image,
-        }}
-      />
+      <View style={{width: '100%', height: DeviceHeigth * 0.4}}>
+        <ImageBackground
+          translucent={true}
+          style={{width: '100%', height: '100%'}}
+          resizeMode="cover"
+          source={{
+            uri:
+              getStoreVideoLoc[data?.workout_title + 'Image'] != undefined
+                ? 'file://' + getStoreVideoLoc[data?.workout_title + 'Image']
+                : // : data?.workout_image_link != ''
+                  // ? data?.workout_image_link
+                  data?.workout_image,
+          }}
+        />
+        <LinearGradient
+          colors={['rgba(0,0,0,0.45)', 'rgba(0,0,0,0)']}
+          style={styles.heroTopScrim}
+          pointerEvents="none"
+        />
+        <LinearGradient
+          colors={['rgba(255,255,255,0)', AppColor.WHITE]}
+          style={styles.heroBottomScrim}
+          pointerEvents="none"
+        />
+      </View>
       <View
         style={{
           position: 'absolute',
@@ -723,43 +768,36 @@ const OneDay = ({navigation, route}: any) => {
               setOpen(false);
             }
           }}
-          style={{marginTop: DeviceWidth * 0.04}}>
-          {/* <AntDesign name={'arrowleft'} size={25} color={AppColor.WHITE} /> */}
+          style={[styles.backButtonBackdrop, {marginTop: -DeviceWidth * 0.06}]}>
           <ArrowLeft fillColor={AppColor.WHITE} />
         </TouchableOpacity>
       </View>
 
       <View style={styles.container}>
-        <Text
-          style={{
-            fontWeight: '700',
-            fontSize: 30,
-            lineHeight: 40,
-            fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-            color: AppColor.BLACK,
-          }}>
-          Day {day}
-        </Text>
-        <Text
-          style={{
-            fontWeight: '400',
-            fontSize: 14,
-            lineHeight: 30,
-            fontFamily: 'Poppins',
-            color: AppColor.BoldText,
-            marginVertical: 5,
-          }}>
-          <Icons
-            name={'clock-outline'}
-            size={15}
-            color={AppColor.INPUTTEXTCOLOR}
-          />
-          {dayData?.total_rest > 60
-            ? ` ${((dayData?.total_rest * 3) / 60).toFixed(0)} min `
-            : ` ${dayData?.total_rest} sec `}
-          <Icons name={'fire'} size={15} color={AppColor.INPUTTEXTCOLOR} />
-          {` ${dayData?.total_calories} Kcal`}
-        </Text>
+        <View style={styles.grabber} />
+        <Text style={styles.dayTitle}>Day {day}</Text>
+        <View style={styles.dayStatsRow}>
+          <View style={styles.dayStatChip}>
+            <Icons name="clock-time-four-outline" size={14} color={AppColor.RED1} />
+            <Text style={styles.dayStatChipText}>
+              {dayData?.total_rest > 60
+                ? `${((dayData?.total_rest * 3) / 60).toFixed(0)} min`
+                : `${dayData?.total_rest} sec`}
+            </Text>
+          </View>
+          <View style={styles.dayStatChip}>
+            <Icons name="fire" size={14} color={AppColor.RED1} />
+            <Text style={styles.dayStatChipText}>
+              {dayData?.total_calories} Kcal
+            </Text>
+          </View>
+          <View style={styles.dayStatChip}>
+            <Icons name="dumbbell" size={14} color={AppColor.RED1} />
+            <Text style={styles.dayStatChipText}>
+              {forLoading ? '...' : exerciseData.length} Exercises
+            </Text>
+          </View>
+        </View>
 
         {forLoading ? (
           <FlatList
@@ -773,7 +811,14 @@ const OneDay = ({navigation, route}: any) => {
           <FlatList
             data={exerciseData}
             renderItem={({item, index}: any) => (
-              <Box selected={-1} index={index + 1} item={item} key={index} />
+              <Box
+                index={index + 1}
+                item={item}
+                key={index}
+                isNext={index === nextExerciseIdx}
+                trackerData={trackerData}
+                onPress={handleExercisePress}
+              />
             )}
             ListEmptyComponent={emptyComponent}
             contentContainerStyle={{flexGrow: 1}}
@@ -813,14 +858,10 @@ const OneDay = ({navigation, route}: any) => {
               getExerciseOutTime != '' &&
               moment().format(format) > getExerciseOutTime
             ) {
-              console.warn(
-                'SHOWINGDF',
-                moment().format(format),
-                getExerciseInTime,
-                getExerciseOutTime,
-              );
               setOverExerciseVisible(true);
-            } else postCurrentDayAPI();
+            } else {
+              postCurrentDayAPI();
+            }
           }}
         />
       </View>
@@ -892,15 +933,127 @@ const styles = StyleSheet.create({
     lineHeight: 25,
     color: '#434343',
   },
-  box: {
-    width: '100%',
-    padding: 10,
-    justifyContent: 'space-between',
-    alignSelf: 'center',
+  heroTopScrim: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: '25%',
+  },
+  heroBottomScrim: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '30%',
+  },
+  backButtonBackdrop: {
+    height: 36,
+    width: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(0,0,0,0.35)',
     alignItems: 'center',
-    marginVertical: 0,
-
+    justifyContent: 'center',
+  },
+  grabber: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: '#E3E3E3',
+    alignSelf: 'center',
+    marginBottom: 12,
+  },
+  dayTitle: {
+    fontWeight: '700',
+    fontSize: 26,
+    lineHeight: 32,
+    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+    color: AppColor.BLACK,
+  },
+  dayStatsRow: {
     flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 14,
+  },
+  dayStatChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF3F2',
+    borderRadius: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    marginRight: 8,
+  },
+  dayStatChipText: {
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#505050',
+    marginLeft: 4,
+  },
+  exerciseCard: {
+    width: '100%',
+    borderRadius: 14,
+    marginBottom: 10,
+    backgroundColor: AppColor.WHITE,
+    shadowColor: 'grey',
+    overflow: 'hidden',
+    ...Platform.select({
+      ios: {
+        shadowOffset: {width: 0, height: 1},
+        shadowOpacity: 0.12,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  exerciseCardGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 10,
+  },
+  exerciseStateLabel: {
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    fontSize: 11,
+    fontWeight: '600',
+    marginTop: 4,
+  },
+  exerciseThumb: {
+    height: 68,
+    width: 68,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#EFEFEF',
+    backgroundColor: AppColor.WHITE,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  exerciseCompletedBadge: {
+    position: 'absolute',
+    bottom: -4,
+    right: -4,
+    height: 20,
+    width: 20,
+    borderRadius: 10,
+    backgroundColor: AppColor.NEW_SUBS_GREEN,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: AppColor.WHITE,
+  },
+  exerciseInfo: {
+    marginLeft: 14,
+    flexShrink: 1,
+  },
+  exerciseDivider: {
+    width: 1,
+    height: 10,
+    backgroundColor: '#D9D9D9',
+    marginHorizontal: 6,
   },
   modalBackGround: {
     flex: 1,

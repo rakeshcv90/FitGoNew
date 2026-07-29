@@ -1,7 +1,33 @@
 import axios, {AxiosResponse, AxiosError} from 'axios';
+import {showMessage} from 'react-native-flash-message';
+import {store} from '../Component/ThemeRedux/Store';
+import {LogOut} from '../Component/LogOut';
 
 const isEmpty = (obj: any) =>
   Object.keys(obj).length === 0 && obj.constructor === Object;
+
+/** Auto-logout if any API signals the user no longer exists */
+const handleUserNotExist = (data: any) => {
+  const msg: string = (data?.msg || data?.message || '').toLowerCase();
+  if (
+    msg.includes('user not exist') ||
+    msg.includes('user does not exist') ||
+    msg.includes('user not found')
+  ) {
+    showMessage({
+      message: 'Session expired. Please log in again.',
+      type: 'danger',
+      animationDuration: 500,
+      duration: 2000,
+      floating: true,
+    });
+    setTimeout(() => {
+      LogOut(store.dispatch);
+    }, 1500);
+    return true;
+  }
+  return false;
+};
 
 const handleResponse = (
   response: AxiosResponse | undefined,
@@ -10,6 +36,8 @@ const handleResponse = (
   if (response) {
     const {status, data} = response;
     const errors = data?.errors || {};
+    // Global user-not-exist guard
+    handleUserNotExist(data);
     return {
       status,
       data: isEmpty(data) ? {} : data,

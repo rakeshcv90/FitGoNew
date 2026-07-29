@@ -10,40 +10,41 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import React, {useEffect, useState, useMemo} from 'react';
+import LinearGradient from 'react-native-linear-gradient';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withRepeat,
+  withSequence,
+  withTiming,
+  Easing,
+} from 'react-native-reanimated';
 import {DeviceHeigth, DeviceWidth} from '../Config';
 import {AppColor, Fonts, PLATFORM_IOS} from '../Color';
 import {AnalyticsConsole} from '../AnalyticsConsole';
-import {useIsFocused, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {AddCountFunction} from '../Utilities/AddCountFunction';
-// import {MyInterstitialAd} from '../BannerAdd';
 import AnimatedLottieView from 'lottie-react-native';
-import analytics from '@react-native-firebase/analytics';
-import {
-  check,
-  request,
-  PERMISSIONS,
-  RESULTS,
-  requestMultiple,
-} from 'react-native-permissions';
-
 import GradientButton from '../GradientButton';
 import {useLocation} from '../Permissions/PermissionHooks';
-import {AuthorizationStatus} from '@notifee/react-native';
 import Geolocation from '@react-native-community/geolocation';
-import {navigate} from '../Utilities/NavigationUtil';
 import {localImage} from '../Image';
 import FitText from '../Utilities/FitText';
 import PredefinedStyles from '../Utilities/PredefineStyles';
 import {ExerciseTime} from '../../Icon/ExerciseTime';
-import FitButton from '../Utilities/FitButton';
 import {useSelector} from 'react-redux';
 import {API_CALLS} from '../../API/API_CALLS';
-import { translate , getCurrentLanguage} from '../../Screen/Translation/TranslationService'
+import {
+  translate,
+  getCurrentLanguage,
+} from '../../Screen/Translation/TranslationService';
+import {FadeSlideIn} from '../../Screen/Introduction/IntroAnimations';
+import FitIcon from '../Utilities/FitIcon';
 
-
+const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
 const UserEspecially = () => {
-  // const {showInterstitialAd} = MyInterstitialAd();
   const navigation = useNavigation();
   const [locationP, setLocationP] = useState(false);
   const [breatheData, setBreatheData] = useState({
@@ -55,35 +56,62 @@ const UserEspecially = () => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
 
   const openBreathe = enteredCurrentEvent ? breatheData.active : true;
-
   const currentLang = getCurrentLanguage();
 
-const data = useMemo(() => [
-  {
-    id: 1,
-    title: translate('customade'),
-    image: require('../../Icon/Images/NewHome/back3.png'),
-    text: translate('customtext'),
-  },
-  {
-    id: 2,
-    title: translate('gyms'),
-    image: require('../../Icon/Images/NewHome/back1.png'),
-    text: translate('gymtext'),
-  },
-  {
-    id: 3,
-    title: translate('diet'),
-    image: require('../../Icon/Images/NewHome/back2.png'),
-    text: translate('diettext'),
-  },
-  {
-    id: 4,
-    title: translate('store'),
-    image: require('../../Icon/Images/NewHome/back4.png'),
-    text: translate('storetext'),
-  },
-], [currentLang]);
+  const breathePulse = useSharedValue(1);
+
+  useEffect(() => {
+    breathePulse.value = withRepeat(
+      withSequence(
+        withTiming(1.08, {duration: 1500, easing: Easing.inOut(Easing.ease)}),
+        withTiming(1, {duration: 1500, easing: Easing.inOut(Easing.ease)}),
+      ),
+      -1,
+      true,
+    );
+  }, []);
+
+  const animatedLotusStyle = useAnimatedStyle(() => ({
+    transform: [{scale: breathePulse.value}],
+  }));
+
+  const data = useMemo(
+    () => [
+      {
+        id: 1,
+        title: translate('customade'),
+        text: translate('customtext'),
+        iconName: 'clipboard-text-outline',
+        gradient: ['#FF5E7E', '#FF8E53'],
+        shadowColor: '#FF5E7E',
+      },
+      {
+        id: 2,
+        title: translate('gyms'),
+        text: translate('gymtext'),
+        iconName: 'map-marker-radius-outline',
+        gradient: ['#8E2DE2', '#5B21B6'],
+        shadowColor: '#8E2DE2',
+      },
+      {
+        id: 3,
+        title: translate('diet'),
+        text: translate('diettext'),
+        iconName: 'food-apple-outline',
+        gradient: ['#10B981', '#059669'],
+        shadowColor: '#10B981',
+      },
+      {
+        id: 4,
+        title: translate('store'),
+        text: translate('storetext'),
+        iconName: 'shopping-outline',
+        gradient: ['#2563EB', '#1D4ED8'],
+        shadowColor: '#2563EB',
+      },
+    ],
+    [currentLang],
+  );
 
   useEffect(() => {
     API_CALLS.getBreatheTime(getUserDataDetails?.id, setBreatheData);
@@ -93,95 +121,89 @@ const data = useMemo(() => [
     if (index == 1) {
       AnalyticsConsole(`CustomWrk_FR_Home`);
       navigation.navigate('CustomWorkout');
-
-      let checkAdsShow = AddCountFunction();
-      if (checkAdsShow == true) {
-        // showInterstitialAd();
-        navigation.navigate('CustomWorkout');
-      } else {
-        navigation.navigate('CustomWorkout');
-      }
     } else if (index == 2) {
       locationPermission();
     } else if (index == 3) {
       AnalyticsConsole(`MEALS_BUTTON`);
-      let checkAdsShow = AddCountFunction();
-      if (checkAdsShow == true) {
-        // showInterstitialAd();
-        navigation.navigate('DietPlatTabBar');
-      } else {
-        navigation.navigate('DietPlatTabBar');
-      }
+      navigation.navigate('DietPlatTabBar');
     } else {
-      let checkAdsShow = AddCountFunction();
-
-      if (checkAdsShow == true) {
-        // showInterstitialAd();
-        navigation.navigate('Store');
-      } else {
-        navigation.navigate('Store');
-      }
+      navigation.navigate('Store');
     }
   };
 
   const Items = ({item, index}) => {
+    const scale = useSharedValue(1);
+    const badgeScale = useSharedValue(1);
+
+    useEffect(() => {
+      badgeScale.value = withRepeat(
+        withSequence(
+          withTiming(1.12, {duration: 1200, easing: Easing.inOut(Easing.ease)}),
+          withTiming(1, {duration: 1200, easing: Easing.inOut(Easing.ease)}),
+        ),
+        -1,
+        true,
+      );
+    }, []);
+
+    const animatedCardStyle = useAnimatedStyle(() => ({
+      transform: [{scale: scale.value}],
+    }));
+
+    const animatedBadgeStyle = useAnimatedStyle(() => ({
+      transform: [{scale: badgeScale.value}],
+    }));
+
     return (
-      <TouchableOpacity
-        activeOpacity={0.7}
-        onPress={() => {
-          HandelClick(index + 1);
-        }}
-        style={{
-          width: '45%',
-          height: PLATFORM_IOS ? DeviceHeigth * 0.15 : DeviceHeigth * 0.125,
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginRight: (index+1) % 2 == 0 ? 0 : 10,
-        }}>
-        <ImageBackground
-          source={item.image}
-          resizeMode={Platform.OS == 'ios' ? 'stretch' : 'contain'}
-          style={{
-            width: '100%',
-            height: '100%',
-            left: DeviceHeigth >= 1024 ? -7 : -3,
-          }}>
-          <View
-            style={{
-              width: '100%',
-              height: '100%',
-              paddingVertical: DeviceWidth * 0.04,
-              paddingLeft: DeviceWidth * 0.05,
-            }}>
-            <Text
-              style={{
-                fontFamily: Fonts.HELVETICA_BOLD,
-                fontSize: 15,
-                lineHeight: 20,
-                color: AppColor.PrimaryTextColor,
-              }}>
-              {item.title}
-            </Text>
-            <View
-              style={{
-                width: '70%',
-                marginVertical: 5,
-              }}>
-              <Text
-                style={{
-                  fontFamily: Fonts.HELVETICA_REGULAR,
-                  fontSize: 13,
-                  lineHeight: 20,
-                  color: AppColor.SecondaryTextColor,
-                }}>
-                {item.text}
+      <FadeSlideIn
+        delay={60 + index * 60}
+        distance={12}
+        style={styles.cardWrapper}>
+        <AnimatedTouchable
+          activeOpacity={0.88}
+          onPressIn={() => {
+            scale.value = withSpring(0.95, {damping: 12, stiffness: 220});
+          }}
+          onPressOut={() => {
+            scale.value = withSpring(1, {damping: 12, stiffness: 220});
+          }}
+          onPress={() => HandelClick(index + 1)}
+          style={[animatedCardStyle]}>
+          <LinearGradient
+            colors={item.gradient}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 1}}
+            style={[
+              styles.featureCardGradient,
+              {shadowColor: item.shadowColor},
+            ]}>
+            <View style={styles.cardHeader}>
+              <Text numberOfLines={1} style={styles.cardTitle}>
+                {item.title}
               </Text>
             </View>
-          </View>
-        </ImageBackground>
-      </TouchableOpacity>
+
+            <Text numberOfLines={2} style={styles.cardDesc}>
+              {item.text}
+            </Text>
+
+            <View style={styles.iconBadgeWrap}>
+              <Animated.View
+                style={[styles.glassIconBadge, animatedBadgeStyle]}>
+                <FitIcon
+                  type="MaterialCommunityIcons"
+                  name={item.iconName}
+                  size={18}
+                  color="#FFFFFF"
+                />
+              </Animated.View>
+            </View>
+          </LinearGradient>
+        </AnimatedTouchable>
+      </FadeSlideIn>
     );
   };
+
   const locationPermission = async () => {
     const result = await checkLocationPermission();
     if (
@@ -190,29 +212,18 @@ const data = useMemo(() => [
     ) {
       setLocationP(true);
     } else {
-      let checkAdsShow = AddCountFunction();
-      if (checkAdsShow == true) {
-        // showInterstitialAd();
-        getCurrentLocation();
-        // navigation.navigate('GymListing');
-      } else {
-        getCurrentLocation();
-        // navigation.navigate('GymListing');
-      }
+      getCurrentLocation();
     }
   };
+
   const getCurrentLocation = () => {
     return new Promise((resolve, reject) => {
       Geolocation.getCurrentPosition(
         position => {
           openMaps(position?.coords);
-          // const coords = {
-          //   lat: latitude, // 36.17367911141759, -115.15029443045587 United States
-          //   lng: longitude,
-          // };
         },
         error => {
-          reject(error); // Call reject with the error object
+          reject(error);
           console.log('coords error---->', error);
         },
       );
@@ -224,10 +235,8 @@ const data = useMemo(() => [
       const {latitude, longitude} = currentLocation;
       const googleMapsUrl = `https://www.google.com/maps/search/gyms/@${latitude},${longitude},15z`;
       Linking.openURL(googleMapsUrl).catch(err =>
-        Alert.alert('Error', `Failed to open Google Maps: ${err.message}`),
+        console.log('Error opening maps', err),
       );
-    } else {
-      Alert.alert('Error', 'Current location not available');
     }
   };
 
@@ -239,39 +248,8 @@ const data = useMemo(() => [
         onRequestClose={() => setLocationP(false)}
         transparent>
         <View style={styles.modalContainer}>
-          <View
-            style={{
-              // height: DeviceHeigth * 0.5,
-              width: DeviceWidth * 0.8,
-              backgroundColor: AppColor.WHITE,
-              borderRadius: 10,
-              padding: 10,
-              paddingBottom: 20,
-              alignItems: 'center',
-              shadowColor: 'rgba(0, 0, 0, 1)',
-              ...Platform.select({
-                ios: {
-                  shadowColor: '#000000',
-                  shadowOffset: {width: 0, height: 1},
-                  shadowOpacity: 0.1,
-                  shadowRadius: 4,
-                },
-                android: {
-                  elevation: 4,
-                },
-              }),
-            }}>
-            <Text
-              style={{
-                fontSize: 20,
-                color: AppColor.LITELTEXTCOLOR,
-                fontWeight: '700',
-                fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                lineHeight: 30,
-                // marginTop: DeviceWidth * 0.05,
-              }}>
-              Enable Your Location
-            </Text>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Enable Your Location</Text>
             <AnimatedLottieView
               source={require('../../Icon/Images/NewImage2/Location.json')}
               speed={2}
@@ -283,45 +261,22 @@ const data = useMemo(() => [
                 height: DeviceHeigth * 0.15,
               }}
             />
-            <Text
-              style={{
-                fontSize: 16,
-                color: AppColor.HEADERTEXTCOLOR,
-                fontWeight: '600',
-                fontFamily: Fonts.MONTSERRAT_REGULAR,
-                lineHeight: 24,
-                textAlign: 'center',
-                marginHorizontal: DeviceWidth * 0.1,
-              }}>
-              {`Please allow required permissions to use the app. Go to App->Permissions and enable all Permissions.`}
+            <Text style={styles.modalDesc}>
+              Please allow required permissions to use the app. Go to App->Permissions and enable all Permissions.
             </Text>
-            <View
-              style={{
-                height: 50,
-                width: '100%',
-                // backgroundColor: 'pink',
-                marginVertical: 20,
-              }}>
+            <View style={{height: 50, width: '100%', marginVertical: 15}}>
               <GradientButton
                 text="Enable Location Services"
                 onPress={() => {
                   Linking.openSettings().finally(() => {
                     setLocationP(false);
-                    locationP();
                   });
                 }}
-                // flex={0.3}
                 w={DeviceWidth * 0.7}
-                mB={-DeviceWidth * 0.05}
                 alignSelf
               />
             </View>
-            <View
-              style={{
-                height: 50,
-                width: '100%',
-                // backgroundColor: 'green',
-              }}>
+            <View style={{height: 50, width: '100%'}}>
               <GradientButton
                 text="Do Not Allow"
                 flex={0}
@@ -336,80 +291,68 @@ const data = useMemo(() => [
       </Modal>
     );
   };
+
   return (
     <>
       <View style={styles.box}>
-        <Text
-          style={{
-            color: AppColor.HEADERTEXTCOLOR,
-            fontFamily: Fonts.MONTSERRAT_BOLD,
-            fontWeight: '600',
-            lineHeight: 30,
-            fontSize: 16,
-            marginBottom: 5,
-            marginLeft: 20,
-          }}>
+        <Text style={styles.sectionHeader}>
           {translate('especially')}
         </Text>
-        {openBreathe && (
-          <ImageBackground
-            source={localImage.breathHome}
-            resizeMode="contain"
-            style={{
-              width: '95%',
-              height: PLATFORM_IOS ? DeviceHeigth * 0.15 : DeviceHeigth * 0.125,
-              marginBottom: 5,
-              marginLeft: 15
-            }}
-            imageStyle={{width: '95%', height: '100%'}}>
-            <View
-              style={{
-                paddingVertical: DeviceWidth * 0.04,
-                marginLeft: DeviceWidth * 0.05,
-                alignSelf: 'flex-start',
-              }}>
-              <FitText
-                type="SubHeading"
-                fontWeight="700"
-                value={translate('breathin')}
-                color={AppColor.WHITE}
-              />
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <ExerciseTime stroke={AppColor.WHITE} />
-                <FitText type="normal" value=" 30 sec" marginTop={2} color={AppColor.WHITE} />
-              </View>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: AppColor.RED,
-                  borderRadius: 20,
-                  paddingHorizontal: 7,
-                  padding: 2,
-                  width: '30%',
-                  marginTop: 5,
-                }}
-                onPress={() =>{
-                  // navigate('Breathe', {slotCoins: breatheData?.coins})
-                  navigation.navigate('Breathe', {type: 'Home'});
-                }
-                  
-                }>
-                <FitText
-                  {...{
-                    type: 'normal',
-                    value: translate('startnow'),
-                    color: AppColor.WHITE,
 
-                    fontSize: 12,
-                  }}
+        {openBreathe && (
+          <LinearGradient
+            colors={['#4F46E5', '#7C3AED', '#C026D3']}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 1}}
+            style={styles.breatheHeroCard}>
+            <ImageBackground
+              source={localImage.breathHome}
+              resizeMode="cover"
+              style={styles.breatheHeroBg}
+              imageStyle={{opacity: 0.25}}>
+              <View style={styles.breatheLeftSection}>
+                <View style={styles.mindfulnessBadge}>
+                  <Text style={styles.mindfulnessText}>● MINDFULNESS</Text>
+                </View>
+
+                <Text style={styles.breatheTitleText}>
+                  {translate('breathin')}
+                </Text>
+
+                <View style={styles.breatheTimeRow}>
+                  <ExerciseTime stroke="#FFFFFF" />
+                  <Text style={styles.breatheTimeText}>30 sec</Text>
+                </View>
+
+                <TouchableOpacity
+                  activeOpacity={0.85}
+                  style={styles.heroStartBtn}
+                  onPress={() => {
+                    navigation.navigate('Breathe', {type: 'Home'});
+                  }}>
+                  <Text style={styles.heroStartBtnText}>
+                    {translate('startnow')} →
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <Animated.View
+                style={[styles.breatheRightBadge, animatedLotusStyle]}>
+                <FitIcon
+                  type="MaterialCommunityIcons"
+                  name="weather-windy"
+                  size={32}
+                  color="#FFFFFF"
                 />
-              </TouchableOpacity>
-            </View>
-          </ImageBackground>
+              </Animated.View>
+            </ImageBackground>
+          </LinearGradient>
         )}
-        <View style={[PredefinedStyles.rowCenter, {flexWrap: 'wrap'}]}>
+
+        <View style={styles.gridContainer}>
           {data.map((item, index) => (
-        <Items item={item} index={index} key={item.id} />
-      ))}
+            <Items item={item} index={index} key={item.id} />
+          ))}
         </View>
       </View>
 
@@ -417,24 +360,215 @@ const data = useMemo(() => [
     </>
   );
 };
-const styles = StyleSheet.create({
-  container: {
-    width: DeviceWidth * 0.95,
 
-    marginVertical: 2,
-  },
+export default UserEspecially;
+
+const styles = StyleSheet.create({
   box: {
     width: DeviceWidth * 0.95,
     backgroundColor: AppColor.WHITE,
     alignSelf: 'center',
-    paddingVertical: 10,
-    borderRadius: 10,
+    paddingVertical: 16,
+    paddingHorizontal: 14,
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: '#F3F4F6',
+    marginVertical: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.04,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  sectionHeader: {
+    color: '#1F2937',
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    lineHeight: 26,
+    fontSize: 17,
+    marginBottom: 12,
+    marginLeft: 2,
+  },
+  breatheHeroCard: {
+    width: '100%',
+    borderRadius: 18,
+    marginBottom: 18,
+    overflow: 'hidden',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#7C3AED',
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  },
+  breatheHeroBg: {
+    width: '100%',
+    padding: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  breatheLeftSection: {
+    flex: 1,
+    alignItems: 'flex-start',
+  },
+  mindfulnessBadge: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 8,
+    marginBottom: 6,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  mindfulnessText: {
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontSize: 9,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    letterSpacing: 0.5,
+  },
+  breatheTitleText: {
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontSize: 17,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    marginBottom: 4,
+  },
+  breatheTimeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  breatheTimeText: {
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    fontSize: 12,
+    fontWeight: '500',
+    color: 'rgba(255, 255, 255, 0.9)',
+    marginLeft: 6,
+  },
+  heroStartBtn: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
+    paddingHorizontal: 16,
+    paddingVertical: 7,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  heroStartBtnText: {
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    color: '#7C3AED',
+    fontWeight: '700',
+    fontSize: 12,
+  },
+  breatheRightBadge: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.35)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  gridContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  cardWrapper: {
+    width: '48%',
+    marginBottom: 14,
+  },
+  featureCardGradient: {
+    width: '100%',
+    height: 104,
+    borderRadius: 18,
+    padding: 12,
+    justifyContent: 'space-between',
+    position: 'relative',
+    ...Platform.select({
+      ios: {
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.28,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  },
+  cardHeader: {
+    width: '100%',
+  },
+  cardTitle: {
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  cardDesc: {
+    fontFamily: Fonts.MONTSERRAT_REGULAR,
+    fontSize: 11,
+    fontWeight: '400',
+    color: 'rgba(255, 255, 255, 0.85)',
+    marginTop: 2,
+    lineHeight: 15,
+  },
+  iconBadgeWrap: {
+    alignSelf: 'flex-end',
+    marginTop: 'auto',
+  },
+  glassIconBadge: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.4)',
   },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    // Semi-transparent background
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalContent: {
+    width: DeviceWidth * 0.82,
+    backgroundColor: AppColor.WHITE,
+    borderRadius: 16,
+    padding: 16,
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 18,
+    color: AppColor.LITELTEXTCOLOR,
+    fontWeight: '700',
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    marginBottom: 10,
+  },
+  modalDesc: {
+    fontSize: 14,
+    color: AppColor.HEADERTEXTCOLOR,
+    fontFamily: Fonts.MONTSERRAT_REGULAR,
+    textAlign: 'center',
+    marginHorizontal: 10,
   },
 });
-export default UserEspecially;

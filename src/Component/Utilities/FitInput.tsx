@@ -90,7 +90,7 @@ const AppInput: FC<Props> = ({
           styles.container,
         ]}>
         {(IconLeft || IconLComp) && (
-          <View style={{width: iconW ?? '10%'}}>
+          <View style={{width: iconW ?? '10%', marginRight: 8}}>
             {IconLeft ? <FitIcon {...(IconLeft as FitIconTypes)} /> : IconLComp}
           </View>
         )}

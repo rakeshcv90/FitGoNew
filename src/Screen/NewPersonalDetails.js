@@ -7,10 +7,11 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   TextInput,
+  StatusBar,
+  Platform,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
-import NewHeader from '../Component/Headers/NewHeader';
-import {AppColor} from '../Component/Color';
+import {AppColor, Fonts} from '../Component/Color';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../Component/Config';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -18,124 +19,59 @@ import {
   setAgreementContent,
   setBanners,
   setCompleteProfileData,
-  setCustomWorkoutData,
   setStoreData,
   setUserProfileData,
 } from '../Component/ThemeRedux/Actions';
-import {StatusBar} from 'react-native';
-
-import {Platform} from 'react-native';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import VersionNumber from 'react-native-version-number';
-import InputText from '../Component/InputText';
 import {localImage} from '../Component/Image';
 import axios from 'axios';
 import ActivityLoader from '../Component/ActivityLoader';
 import {showMessage} from 'react-native-flash-message';
 import {AnalyticsConsole} from '../Component/AnalyticsConsole';
-import NewInputText from '../Component/NewInputText';
 import Wrapper from './WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../Component/Headers/NewHeader1';
-import NewButton from '../Component/NewButton';
 import FitDropdown from '../Component/Utilities/FitDropdown';
+import FitIcon from '../Component/Utilities/FitIcon';
+import LinearGradient from 'react-native-linear-gradient';
+import AnimatedReanimated, {FadeInDown} from 'react-native-reanimated';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
     .required('Full Name is Required')
     .matches(/^[A-Za-z].*/, 'First Name must start with a character')
     .matches(/^[a-zA-Z0-9 ]*$/, 'Full Name must not contain special characters')
-    .min(3, 'First Name must contain atleast 3 characters'),
+    .min(3, 'First Name must contain at least 3 characters'),
   email: Yup.string()
     .matches(/^[\w.\-]+@[\w.\-]+\.\w{2,4}$/, 'Invalid Email Format')
     .required('Email is Required'),
 });
 
-const NewPersonalDetails = ({route, navigation}) => {
+const NewPersonalDetails = ({navigation}) => {
   const dispatch = useDispatch();
   const [forLoading, setForLoading] = useState(false);
-  const [isEditible, setEditable] = useState(false);
+  const [isEditable, setIsEditable] = useState(false);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
-  const [isFocus, setIsFocus] = useState(false);
-  const getLaterButtonData = useSelector(state => state.getLaterButtonData);
   const [goalsData, setGoalsData] = useState([]);
-  const completeProfileData = useSelector(state => state.completeProfileData);
-  const inputRef = useRef(null);
+  const inputRef = useRef < any > null;
+
   useEffect(() => {
     getUserAllInData();
-    setEditable(false);
+    setIsEditable(false);
   }, []);
-  const data = [
-    {label: 'Male', value: 'Male'},
-    {label: 'Female', value: 'Female'},
-  ];
 
   const handleIconPress = () => {
-    setEditable(!isEditible);
-    setTimeout(() => {
-      inputRef.current && inputRef.current?.focus();
-    }, 50);
+    setIsEditable(prev => {
+      const nextState = !prev;
+      if (nextState) {
+        setTimeout(() => {
+          inputRef.current?.focus();
+        }, 80);
+      }
+      return nextState;
+    });
   };
-  const injury = [
-    {
-      injury_id: 4,
-      injury_title: 'Shoulder',
-    },
-    {
-      injury_id: 9,
-      injury_title: 'Knee',
-    },
-    {
-      injury_id: 10,
-      injury_title: 'Ankle',
-    },
-    {
-      injury_id: 11,
-      injury_title: 'Elbow',
-    },
-    {
-      injury_id: 12,
-      injury_title: 'Back',
-    },
-  ];
-  const equipment = [
-    {label: 'With Equipment', value: 'With Equipment'},
-    {label: 'Without Equipment', value: 'Without Equipment'},
-  ];
-  const focusarea = [
-    {value: 1, label: 'Biceps'},
-    {value: 3, label: 'Chest'},
-    {value: 4, label: 'Legs'},
-    {value: 5, label: 'Triceps'},
-    {value: 8, label: 'Abs'},
-    {value: 9, label: 'Shoulders'},
-  ];
-  const workoutarea = [
-    {
-      workoutarea_id: 4,
-
-      workoutarea_title: 'Anywhere',
-    },
-    {
-      workoutarea_id: 5,
-
-      workoutarea_title: 'At Bed',
-    },
-    {
-      workoutarea_id: 6,
-
-      workoutarea_title: 'Outdoor',
-    },
-    {
-      workoutarea_id: 7,
-
-      workoutarea_title: 'At Home',
-    },
-  ];
-  const workout_plans = [
-    {label: 'Workout Created by Us', value: 'AppCreated'},
-    {label: 'Custom Workout', value: 'CustomCreated'},
-  ];
 
   const getUserAllInData = async () => {
     try {
@@ -144,7 +80,7 @@ const NewPersonalDetails = ({route, navigation}) => {
       );
 
       if (
-        responseData?.data?.msg ==
+        responseData?.data?.msg ===
         'Please update the app to the latest version.'
       ) {
         showMessage({
@@ -154,7 +90,7 @@ const NewPersonalDetails = ({route, navigation}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-      } else if (responseData?.data?.msg == 'version is required') {
+      } else if (responseData?.data?.msg === 'version is required') {
         showMessage({
           message: responseData?.data?.msg,
           type: 'danger',
@@ -163,20 +99,20 @@ const NewPersonalDetails = ({route, navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else {
-        const objects = {};
-        responseData.data.data.forEach(item => {
+        const objects: any = {};
+        responseData?.data?.data?.forEach((item: any) => {
           objects[item?.type] = item?.image;
         });
 
         dispatch(setBanners(objects));
-        dispatch(setAgreementContent(responseData?.data?.terms[0]));
+        dispatch(setAgreementContent(responseData?.data?.terms?.[0]));
         dispatch(Setmealdata(responseData?.data?.diets));
         dispatch(setStoreData(responseData?.data?.types));
         dispatch(setCompleteProfileData(responseData?.data?.additional_data));
         const temp = responseData?.data?.additional_data?.goal?.filter(
-          item => item?.goal_gender == getUserDataDetails?.gender,
+          (item: any) => item?.goal_gender === getUserDataDetails?.gender,
         );
-        setGoalsData(temp);
+        setGoalsData(temp || []);
       }
     } catch (error) {
       console.log('all_in_one_api_error', error);
@@ -186,16 +122,10 @@ const NewPersonalDetails = ({route, navigation}) => {
       setGoalsData([]);
     }
   };
-  const renderLabel = item => {
-    if (!isFocus) {
-      return <Text style={[styles.label, {color: 'black'}]}>{item}</Text>;
-    }
-    return null;
-  };
 
-  const handleFormSubmit = async (values, action) => {
+  const handleFormSubmit = async (values: any) => {
     setForLoading(true);
-    // AnalyticsConsole(`PROFILE_UPDATE_BUTTON`);
+    AnalyticsConsole('PROFILE_UPDATE_BUTTON');
     try {
       const dataItem = await axios(`${NewAppapi.UpdateUserProfile}`, {
         method: 'POST',
@@ -217,9 +147,9 @@ const NewPersonalDetails = ({route, navigation}) => {
           workout_plans: values.workout_plans,
         },
       });
-      if (dataItem.data.msg == 'User Updated Successfully') {
+      if (dataItem.data.msg === 'User Updated Successfully') {
         showMessage({
-          message: 'Details updated successfully.',
+          message: 'Personal details updated successfully.',
           floating: true,
           type: 'success',
           animationDuration: 750,
@@ -228,21 +158,10 @@ const NewPersonalDetails = ({route, navigation}) => {
 
         setForLoading(false);
         dispatch(setUserProfileData(dataItem.data.profile));
-      } else if (
-        dataItem?.data?.msg == 'Please update the app to the latest version.'
-      ) {
-        showMessage({
-          message: dataItem?.data?.msg,
-          floating: true,
-          type: 'danger',
-          animationDuration: 750,
-          icon: {icon: 'none', position: 'left'},
-        });
-
-        setForLoading(false);
+        navigation.goBack();
       } else {
         showMessage({
-          message: dataItem?.data?.msg,
+          message: dataItem?.data?.msg || 'Something went wrong',
           floating: true,
           type: 'danger',
           animationDuration: 750,
@@ -253,309 +172,215 @@ const NewPersonalDetails = ({route, navigation}) => {
     } catch (error) {
       setForLoading(false);
       console.log('Update Profile Data', error);
-      //  showMessage({
-      //     message: data.data.msg,
-      //     floating: true,
-      //     type: 'danger',
-      //     animationDuration: 750,
-      //     icon: {icon: 'none', position: 'left'},
-      //   });
     }
   };
 
   return (
     <View style={styles.Container}>
-      {forLoading ? <ActivityLoader /> : null}
-      <Wrapper>
-        <NewHeader1 header={'Details'} backButton />
-        <Formik
-          initialValues={{
-            name: getUserDataDetails?.name,
-            email: getUserDataDetails?.email,
-            gender: getUserDataDetails?.gender,
-            experience: getUserDataDetails?.experience,
-            workout_plans:
-              getUserDataDetails?.workout_plans == 'AppCreated'
-                ? 'Workout Created by Us'
-                : 'Custom Workout',
-            goal: getUserDataDetails?.goal_title,
-            // injury: getUserDataDetails?.injury,
+      <StatusBar barStyle={'dark-content'} backgroundColor={'#F8FAFC'} />
+      {forLoading ? <ActivityLoader visible={true} /> : null}
 
-            targetWeight: getUserDataDetails?.target_weight,
-            equipment: getUserDataDetails?.equipment,
-            focuseAres: [],
-            workPlace: getUserDataDetails?.workoutarea,
-          }}
-          onSubmit={(values, action) => {
-            setEditable(false);
-            handleFormSubmit(values, action);
-          }}
-          validationSchema={validationSchema}>
-          {({
-            values,
-            handleChange,
-            handleSubmit,
-            handleBlur,
-            errors,
-            touched,
-            dirty,
-            setFieldValue,
-          }) => (
-            <>
-              <View style={{flex: 8.5}}>
-                <ScrollView
-                  keyboardDismissMode="interactive"
-                  showsVerticalScrollIndicator={false}
-                  keyboardShouldPersistTaps="handled">
-                  <KeyboardAvoidingView
-                    behavior={Platform.OS == 'ios' ? 'padding' : undefined}>
-                    <View
-                      style={{
-                        paddingTop: 5,
-                        marginLeft: 10,
-                      }}>
-                      {/* <InputText
-                      errors={errors.name}
-                      ref={inputRef}
-                      touched={touched.name}
-                      value={values.name}
-                      onBlur={handleBlur('name')}
-                      onChangeText={handleChange('name')}
-                      right={
-                        <TextInput.Icon
-                          icon={() => (
-                            <TouchableOpacity
-                              onPress={() => {
-                                setEditable(prev => {
-                                  const newEditableState = !prev;
-                                  // We need to defer the focus call until the state has updated
-                                  if (!prev) {
-                                    setTimeout(() => {
-                                      inputRef.current?.focus();
-                                    }, 0);
-                                  }
-                                  return newEditableState;
-                                });
-                              }}>
-                              <Image
-                                source={localImage.Pen_p}
-                                tintColor={AppColor.BoldText}
-                                style={{width: 18, height: 18}}
-                                resizeMode="contain"
-                              />
-                            </TouchableOpacity>
-                          )}
-                          style={{marginTop: 14}}
+      <Wrapper styles={{backgroundColor: '#F8FAFC'}}>
+        <NewHeader1 header={'My Details'} backButton />
+
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled">
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+            {/* Header Hero Profile Card */}
+            <AnimatedReanimated.View
+              entering={FadeInDown.duration(400).springify()}
+              style={styles.heroProfileCard}>
+              <LinearGradient
+                colors={['#667EEA', '#764BA2']}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 1}}
+                style={StyleSheet.absoluteFill}
+              />
+
+              <View style={styles.heroRow}>
+                <View style={styles.avatarRing}>
+                  <Image
+                    source={
+                      getUserDataDetails?.image_path == null
+                        ? localImage.avt
+                        : {uri: getUserDataDetails?.image_path}
+                    }
+                    style={styles.avatarImg}
+                    resizeMode="cover"
+                  />
+                </View>
+
+                <View style={{marginLeft: 14, flex: 1}}>
+                  <Text style={styles.heroNameText} numberOfLines={1}>
+                    {getUserDataDetails?.name || 'Guest User'}
+                  </Text>
+                  <Text style={styles.heroEmailText} numberOfLines={1}>
+                    {getUserDataDetails?.email || 'guest@gmail.com'}
+                  </Text>
+                </View>
+              </View>
+            </AnimatedReanimated.View>
+
+            {/* Form Section */}
+            <Formik
+              initialValues={{
+                name: getUserDataDetails?.name || '',
+                email: getUserDataDetails?.email || '',
+                gender: getUserDataDetails?.gender || '',
+                experience: getUserDataDetails?.experience || '',
+                workout_plans:
+                  getUserDataDetails?.workout_plans === 'AppCreated'
+                    ? 'Workout Created by Us'
+                    : 'Custom Workout',
+                goal: getUserDataDetails?.goal_title || '',
+                targetWeight: getUserDataDetails?.target_weight || '',
+              }}
+              onSubmit={(values, action) => {
+                setIsEditable(false);
+                handleFormSubmit(values);
+              }}
+              validationSchema={validationSchema}>
+              {({
+                values,
+                handleChange,
+                handleSubmit,
+                handleBlur,
+                errors,
+                touched,
+                dirty,
+                setFieldValue,
+              }) => (
+                <View style={styles.formCard}>
+                  {/* Field 1: Full Name */}
+                  <AnimatedReanimated.View
+                    entering={FadeInDown.delay(100).duration(400).springify()}
+                    style={styles.fieldWrapper}>
+                    <Text style={styles.fieldLabel}>Full Name</Text>
+
+                    <TouchableOpacity
+                      activeOpacity={1}
+                      onPress={handleIconPress}
+                      style={[
+                        styles.inputBox,
+                        isEditable && styles.inputBoxActive,
+                      ]}>
+                      <View style={styles.fieldIconBadge}>
+                        <FitIcon
+                          name="person"
+                          type="Ionicons"
+                          size={18}
+                          color="#667EEA"
                         />
-                      }
-                      label="Full Name"
-                      editable={isEditible}
-                      placeholder="Full Name"
-                    /> */}
-                      <View>
-                        {isEditible && (
-                          <Text
-                            style={{
-                              backgroundColor: '#F8F9F9',
-                              color: 'black',
-                              position: 'absolute',
-                              zIndex: 1,
-                              left: 25,
-                              fontSize: 12,
-                              top: -8,
-                              paddingHorizontal: 5,
-                              lineHeight: 20,
-                            }}>
-                            Full Name
-                          </Text>
-                        )}
-                        <View
-                          style={{
-                            backgroundColor: '#F8F9F9',
-                            width: DeviceWidth * 0.9,
-                            alignSelf: 'center',
-                            height: 55,
-                            fontFamily: 'Poppins',
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderRadius: 15,
-                            borderWidth: 1,
-                            left: -5,
-                          }}>
-                          <TextInput
-                            ref={inputRef}
-                            style={{
-                              backgroundColor: '#F8F9F9',
-                              width: '90%',
-                              alignSelf: 'center',
-                              // height: 55,
-                              fontFamily: 'Poppins',
-                              color: 'black',
-                            }}
-                            value={values.name}
-                            onBlur={handleBlur('name')}
-                            onChangeText={handleChange('name')}
-                            placeholder="Full Name"
-                            placeholderTextColor={'grey'}
-                            // editable={isEditible}
-                          />
-                          <TouchableOpacity onPress={handleIconPress}>
-                            <Image
-                              source={localImage.Pen_p}
-                              tintColor={AppColor.BoldText}
-                              style={{width: 18, height: 18}}
-                              resizeMode="contain"
-                            />
-                          </TouchableOpacity>
-                        </View>
-                        {errors.name && touched.name && (
-                          <Text
-                            style={{
-                              color: 'red',
-                              fontSize: 12,
-                              textAlign: 'center',
-                              marginTop: 5,
-                            }}>
-                            {errors}
-                          </Text>
-                        )}
                       </View>
-                    </View>
-                    <View
-                      style={{
-                        marginTop: DeviceHeigth * 0.02,
-                        marginLeft: 10,
-                      }}>
-                      <InputText
-                        errors={errors.email}
-                        touched={touched.email}
-                        onBlur={handleBlur('email')}
+
+                      <TextInput
+                        ref={inputRef}
+                        style={styles.textInputField}
+                        value={values.name}
+                        onBlur={handleBlur('name')}
+                        onChangeText={handleChange('name')}
+                        placeholder="Full Name"
+                        placeholderTextColor="#94A3B8"
+                        editable={isEditable}
+                      />
+
+                      <TouchableOpacity
+                        onPress={handleIconPress}
+                        style={styles.editPenBtn}
+                        activeOpacity={0.7}>
+                        <FitIcon
+                          name={isEditable ? 'checkmark' : 'pencil'}
+                          type="Ionicons"
+                          size={16}
+                          color={isEditable ? '#10B981' : '#64748B'}
+                        />
+                      </TouchableOpacity>
+                    </TouchableOpacity>
+
+                    {errors.name && touched.name && (
+                      <Text style={styles.errorText}>{errors.name}</Text>
+                    )}
+                  </AnimatedReanimated.View>
+
+                  {/* Field 2: Email Address */}
+                  <AnimatedReanimated.View
+                    entering={FadeInDown.delay(200).duration(400).springify()}
+                    style={styles.fieldWrapper}>
+                    <Text style={styles.fieldLabel}>Email Address</Text>
+
+                    <View style={[styles.inputBox, styles.inputBoxDisabled]}>
+                      <View style={styles.fieldIconBadge}>
+                        <FitIcon
+                          name="mail"
+                          type="Ionicons"
+                          size={18}
+                          color="#64748B"
+                        />
+                      </View>
+
+                      <TextInput
+                        style={[styles.textInputField, {color: '#64748B'}]}
                         value={values.email}
-                        onChangeText={handleChange('email')}
-                        label="Email"
-                        placeholder="Enter Email id"
-                        editable={Platform.OS == 'ios' ? true : false}
-                      />
-                    </View>
-                    <View
-                      style={{
-                        marginTop: DeviceHeigth * 0.02,
-                        marginLeft: 10,
-                        marginBottom: 10,
-                      }}>
-                      <InputText
-                        errors={errors.gender}
-                        touched={touched.gender}
-                        onBlur={handleBlur('gender')}
-                        value={values.gender}
-                        onChangeText={handleChange('gender')}
-                        label="Gender"
-                        placeholder={getUserDataDetails?.gender}
+                        placeholder="Email Address"
+                        placeholderTextColor="#94A3B8"
                         editable={false}
                       />
-                    </View>
-                    {/* <View
-                      style={{
-                        marginTop: DeviceHeigth * 0.02,
-                        marginLeft: 10,
-                        marginBottom: 10,
-                      }}>
-                      <InputText
-                        errors={errors.experience}
-                        touched={touched.experience}
-                        onBlur={handleBlur('experience')}
-                        value={values.experience}
-                        onChangeText={handleChange('experience')}
-                        label="Fitness Level"
-                        placeholder={getUserDataDetails?.experience}
-                        editable={false}
+
+                      <FitIcon
+                        name="lock-closed"
+                        type="Ionicons"
+                        size={16}
+                        color="#94A3B8"
                       />
-                    </View> */}
-                    {/* {values.experience == 'Beginner' && (
-                      <>
-                        <View
-                          style={{
-                            marginTop: DeviceHeigth * 0.02,
+                    </View>
+                  </AnimatedReanimated.View>
 
-                            alignItems: 'center',
-                          }}>
-                          {renderLabel('Fitness Goal')}
+                  {/* Field 3: Gender */}
+                  <AnimatedReanimated.View
+                    entering={FadeInDown.delay(300).duration(400).springify()}
+                    style={styles.fieldWrapper}>
+                    <Text style={styles.fieldLabel}>Gender</Text>
 
-                          <Dropdown
-                            style={[styles.dropdown]}
-                            placeholderStyle={styles.placeholderStyle}
-                            itemTextStyle={{color: AppColor.BLACK}}
-                            selectedTextStyle={styles.selectedTextStyle}
-                            data={goalsData}
-                            labelField="goal_title"
-                            valueField="goal_title"
-                            placeholder={getUserDataDetails?.goal_title}
-                            value={values.goal}
-                            onFocus={() => setIsFocus(true)}
-                            onBlur={() => setIsFocus(false)}
-                            onChange={item => {
-                              setFieldValue('goal', item.goal_title);
-                            }}
-                          />
-                        </View>
-                        <View
-                          style={{
-                            marginTop: DeviceHeigth * 0.02,
-                            marginLeft: 10,
-                            paddingBottom: DeviceHeigth * 0.05,
-                            marginBottom: 10,
-                          }}>
-                          <InputText
-                            errors={errors.targetWeight}
-                            touched={touched.targetWeight}
-                            value={values.targetWeight}
-                            onBlur={handleBlur('targetWeight')}
-                            onChangeText={handleChange('targetWeight')}
-                            label="Target Weight"
-                            placeholder="Target Weight"
-                          />
-                        </View>
-                      </>
-                    )} */}
-                    {/* {values.experience == 'Experienced' && (
-                      <View
-                        style={{
-                          marginTop: DeviceHeigth * 0.02,
-
-                          alignItems: 'center',
-                        }}>
-                        {renderLabel('Workout Plan')}
-
-                        <Dropdown
-                          style={[styles.dropdown]}
-                          placeholderStyle={styles.placeholderStyle}
-                          selectedTextStyle={styles.selectedTextStyle}
-                          itemTextStyle={{color: AppColor.BLACK}}
-                          data={workout_plans}
-                          labelField="label"
-                          valueField="label"
-                          placeholder={getUserDataDetails?.workout_plans}
-                          value={values.workout_plans}
-                          onFocus={() => setIsFocus(true)}
-                          onBlur={() => setIsFocus(false)}
-                          onChange={item => {
-                            setFieldValue('workout_plans', item.value);
-                          }}
+                    <View style={[styles.inputBox, styles.inputBoxDisabled]}>
+                      <View style={styles.fieldIconBadge}>
+                        <FitIcon
+                          name="male-female"
+                          type="Ionicons"
+                          size={18}
+                          color="#64748B"
                         />
                       </View>
-                    )} */}
 
-                    {getUserDataDetails.workout_plans == 'AppCreated' &&
-                      values.experience == 'Experienced' && (
+                      <TextInput
+                        style={[styles.textInputField, {color: '#64748B'}]}
+                        value={values.gender}
+                        placeholder="Gender"
+                        placeholderTextColor="#94A3B8"
+                        editable={false}
+                      />
+
+                      <FitIcon
+                        name="lock-closed"
+                        type="Ionicons"
+                        size={16}
+                        color="#94A3B8"
+                      />
+                    </View>
+                  </AnimatedReanimated.View>
+
+                  {/* Field 4: Fitness Goal (if available) */}
+                  {getUserDataDetails?.workout_plans === 'AppCreated' &&
+                    goalsData?.length > 0 && (
+                      <AnimatedReanimated.View
+                        entering={FadeInDown.delay(400)
+                          .duration(400)
+                          .springify()}
+                        style={styles.fieldWrapper}>
                         <FitDropdown
-                          data={[
-                            ...goalsData,
-                            ...goalsData,
-                            ...goalsData,
-                            ...goalsData,
-                          ]}
-                          // listContainerHeight={DeviceHeigth*0.25}
+                          data={goalsData}
                           onChange={item => {
                             setFieldValue('goal', item.goal_title);
                           }}
@@ -564,131 +389,216 @@ const NewPersonalDetails = ({route, navigation}) => {
                           textDisplayKey={'goal_title'}
                           imageDisplayKey={'goal_image'}
                           showItemIcons
-                          // multiSelect
-                          // showLabelsOnMultiSelect
                         />
-                        // <>
-                        //   <View
-                        //     style={{
-                        //       marginTop: DeviceHeigth * 0.02,
+                      </AnimatedReanimated.View>
+                    )}
 
-                        //       alignItems: 'center',
-                        //     }}>
-                        //     {renderLabel('Fitness Goal')}
-
-                        //     <Dropdown
-                        //       style={[styles.dropdown]}
-                        //       placeholderStyle={styles.placeholderStyle}
-                        //       itemTextStyle={{color: AppColor.BLACK}}
-                        //       selectedTextStyle={styles.selectedTextStyle}
-                        //       data={goalsData}
-                        //       labelField="goal_title"
-                        //       valueField="goal_title"
-                        //       placeholder={
-                        //         getUserDataDetails?.goal_title == null
-                        //           ? 'Select Fitness Goal'
-                        //           : getUserDataDetails?.goal_title
-                        //       }
-                        //       value={values.goal}
-                        //       onFocus={() => setIsFocus(true)}
-                        //       onBlur={() => setIsFocus(false)}
-                        //       onChange={item => {
-                        //         setFieldValue('goal', item.goal_title);
-                        //       }}
-                        //     />
-                        //   </View>
-                        //   <View
-                        //     style={{
-                        //       marginTop: DeviceHeigth * 0.02,
-                        //       marginLeft: 10,
-                        //       paddingBottom: DeviceHeigth * 0.05,
-                        //     }}>
-                        //     <InputText
-                        //       errors={errors.targetWeight}
-                        //       touched={touched.targetWeight}
-                        //       value={
-                        //         values?.targetWeight == 'undefined'
-                        //           ? 0
-                        //           : values?.targetWeight
-                        //       }
-                        //       onBlur={handleBlur('targetWeight')}
-                        //       onChangeText={handleChange('targetWeight')}
-                        //       label="Target Weight"
-                        //       keyboardType="number-pad"
-                        //       placeholder="Target Weight"
-                        //     />
-                        //   </View>
-                        // </>
-                      )}
-                  </KeyboardAvoidingView>
-                </ScrollView>
-              </View>
-              <View
-                style={{
-                  flex: 1.5,
-
-                  justifyContent: 'center',
-                }}>
-                <NewButton
-                  title={'Update Profile'}
-                  onPress={handleSubmit}
-                  disabled={!dirty}
-                  ButtonWidth={DeviceWidth * 0.6}
-                  buttonColor={dirty ? AppColor.RED : '#33333380'}
-                />
-              </View>
-            </>
-          )}
-        </Formik>
+                  {/* Submit Button */}
+                  <AnimatedReanimated.View
+                    entering={FadeInDown.delay(500).duration(400).springify()}
+                    style={styles.submitBtnSection}>
+                    <TouchableOpacity
+                      activeOpacity={0.88}
+                      disabled={!dirty || forLoading}
+                      onPress={() => handleSubmit()}
+                      style={[
+                        styles.submitBtnWrapper,
+                        !dirty && {opacity: 0.5},
+                      ]}>
+                      <LinearGradient
+                        colors={
+                          dirty
+                            ? ['#667EEA', '#764BA2']
+                            : ['#94A3B8', '#64748B']
+                        }
+                        start={{x: 0, y: 0}}
+                        end={{x: 1, y: 0}}
+                        style={styles.submitBtn}>
+                        <FitIcon
+                          name="checkmark-circle"
+                          type="Ionicons"
+                          size={20}
+                          color="#FFFFFF"
+                        />
+                        <Text style={styles.submitBtnText}>Update Profile</Text>
+                      </LinearGradient>
+                    </TouchableOpacity>
+                  </AnimatedReanimated.View>
+                </View>
+              )}
+            </Formik>
+          </KeyboardAvoidingView>
+        </ScrollView>
       </Wrapper>
     </View>
   );
 };
+
+export default NewPersonalDetails;
+
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
-    backgroundColor: 'blue',
+    backgroundColor: '#F8FAFC',
   },
-  dropdown: {
-    height: 55,
-    borderColor: '#707070',
+  scrollContent: {
+    paddingBottom: 40,
+  },
+
+  // Hero Card
+  heroProfileCard: {
+    width: DeviceWidth * 0.92,
+    alignSelf: 'center',
+    borderRadius: 24,
+    padding: 20,
+    marginVertical: 12,
+    overflow: 'hidden',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#764BA2',
+        shadowOffset: {width: 0, height: 6},
+        shadowOpacity: 0.22,
+        shadowRadius: 12,
+      },
+      android: {
+        elevation: 6,
+      },
+    }),
+  },
+  heroRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  avatarRing: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    padding: 2,
+    backgroundColor: 'rgba(255,255,255,0.4)',
+  },
+  avatarImg: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#FFFFFF',
+  },
+  heroNameText: {
+    fontSize: 19,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  heroEmailText: {
+    fontSize: 13,
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    color: 'rgba(255,255,255,0.85)',
+    marginTop: 2,
+  },
+
+  // Form Section
+  formCard: {
+    width: DeviceWidth * 0.92,
+    alignSelf: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    padding: 20,
+    marginVertical: 6,
     borderWidth: 1,
-    borderRadius: 15,
-    paddingHorizontal: 15,
-    width: '91%',
+    borderColor: '#F1F5F9',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.04,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
-  icon: {
-    marginRight: 5,
+  fieldWrapper: {
+    marginBottom: 18,
   },
-  label: {
-    position: 'absolute',
-    backgroundColor: 'white',
-    left: 22,
-    top: -5,
-    zIndex: 999,
-    paddingHorizontal: 15,
+  fieldLabel: {
+    fontSize: 12.5,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    color: '#0F172A',
+    marginBottom: 8,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  inputBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F8FAFC',
+    borderRadius: 16,
+    paddingHorizontal: 14,
+    height: 54,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  inputBoxActive: {
+    borderColor: '#667EEA',
+    backgroundColor: '#FFFFFF',
+  },
+  inputBoxDisabled: {
+    backgroundColor: '#F1F5F9',
+    borderColor: '#E2E8F0',
+  },
+  fieldIconBadge: {
+    width: 32,
+    height: 32,
+    borderRadius: 10,
+    backgroundColor: '#EEF2FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  textInputField: {
+    flex: 1,
+    fontSize: 14.5,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '600',
+    color: '#0F172A',
+  },
+  editPenBtn: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#F1F5F9',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorText: {
+    color: '#EF4444',
     fontSize: 12,
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    marginTop: 4,
+    marginLeft: 4,
   },
-  placeholderStyle: {
-    fontSize: 16,
-    color: AppColor.BLACK,
+
+  // Submit Button
+  submitBtnSection: {
+    marginTop: 10,
   },
-  selectedTextStyle: {
-    fontSize: 16,
-    color: AppColor.BLACK,
+  submitBtnWrapper: {
+    borderRadius: 16,
+    overflow: 'hidden',
   },
-  iconStyle: {
-    width: 20,
-    height: 20,
+  submitBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 15,
+    gap: 10,
+    borderRadius: 16,
   },
-  inputSearchStyle: {
-    height: 40,
-    fontSize: 16,
-  },
-  selectedStyle: {
-    borderRadius: 12,
-    borderColor: AppColor.BLACK,
-    marginHorizontal: DeviceWidth * 0.07,
+  submitBtnText: {
+    color: '#FFFFFF',
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontSize: 15,
+    fontWeight: '800',
   },
 });
-export default NewPersonalDetails;

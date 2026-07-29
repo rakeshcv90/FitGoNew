@@ -10,15 +10,19 @@ type Props = {
 
 const useMusicPlayer = ({song, restStart, pause, getSoundOffOn}: Props) => {
   const MusicPlayer = NativeModules.MusicPlayer;
+  if (!MusicPlayer) {
+    console.warn("NativeModules.MusicPlayer is undefined! You MUST rebuild the native app.");
+  }
   const [initialized, setInitialized] = useState(false);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
+  const settingUp = React.useRef(false);
 
   useEffect(() => {
     if (getSoundOffOn) {
       if (initialized)
         restStart ? stopMusicandReset() : pause ? playMusic() : pauseMusic();
-      else if (song?.length != 0) setupMusic();
+      else if (song?.length != 0 && !settingUp.current) setupMusic();
     } else {
       releaseMusic();
     }
@@ -27,26 +31,60 @@ const useMusicPlayer = ({song, restStart, pause, getSoundOffOn}: Props) => {
   useEffect(() => {
     // Start updating current position every second
     const intervalId = setInterval(async () => {
-      const currentPosition = await MusicPlayer?.getCurrentPosition();
-      setCurrentTime(currentPosition);
+      try {
+        const currentPosition = await MusicPlayer?.getCurrentPosition();
+        if (currentPosition !== undefined && !isNaN(currentPosition)) {
+          setCurrentTime(currentPosition);
+        } else {
+          setCurrentTime(0);
+        }
+      } catch (e) {
+        console.warn("Failed to get current position:", e);
+      }
     }, 1000);
 
     return () => clearInterval(intervalId);
   }, []);
 
   const setupMusic = async () => {
-    const isInitialized = await MusicPlayer?.setupPlayer(song);
+    settingUp.current = true;
+    try {
+      const isInitialized = await MusicPlayer?.setupPlayer(song);
 
-    if (isInitialized) {
-      setInitialized(true);
-      getDuration();
-    } else setInitialized(false);
+      if (isInitialized) {
+        setInitialized(true);
+        // Fetch duration, retry once after a delay if it returns 0
+        const time = await MusicPlayer?.getMusicDuration();
+        if (time !== undefined && !isNaN(time) && time > 0) {
+          setDuration(time);
+        } else {
+          // Retry after 1.5 seconds — remote streams may take time to report duration
+          setTimeout(async () => {
+            await getDuration();
+          }, 1500);
+        }
+      } else {
+        setInitialized(false);
+      }
+    } catch (e) {
+      console.warn("setupMusic failed:", e);
+      setInitialized(false);
+    } finally {
+      settingUp.current = false;
+    }
   };
 
   const getDuration = async () => {
-    const time = await MusicPlayer?.getMusicDuration();
-
-    setDuration(time);
+    try {
+      const time = await MusicPlayer?.getMusicDuration();
+      if (time !== undefined && !isNaN(time)) {
+        setDuration(time);
+      } else {
+        setDuration(0);
+      }
+    } catch (e) {
+      console.warn("Failed to get duration:", e);
+    }
   };
 
   const seekTo = (position: number) => {
@@ -84,6 +122,7 @@ const useMusicPlayer = ({song, restStart, pause, getSoundOffOn}: Props) => {
     seekTo,
     currentTime,
     duration,
+    initialized,
   };
 };
 

@@ -25,7 +25,7 @@ import {useIsFocused} from '@react-navigation/native';
 import NewHeader1 from '../Component/Headers/NewHeader1';
 import Wrapper from '../Screen/WorkoutCompleteScreen/Wrapper';
 import BottomSheet1 from '../Component/BottomSheet';
-import { translate } from '../Screen/Translation/TranslationService';
+import {translate} from '../Screen/Translation/TranslationService';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -121,7 +121,7 @@ const DietPlatTabBar = ({navigation}) => {
             width: DeviceWidth * 0.9,
             alignSelf: 'center',
             alignItems: 'center',
-            flexDirection: 'row'
+            flexDirection: 'row',
           }}>
           {meal_type.map((item, index) => {
             return (
@@ -267,46 +267,7 @@ const DietPlatTabBar = ({navigation}) => {
           }}
           iconSource={require('../Icon/Images/NewImage2/filter.png')}
         />
-        {/* <Tab.Navigator
-          initialRouteName="Breakfast"
-          screenOptions={{
-            tabBarLabelStyle: {fontSize: 11, fontWeight: '700'},
-            tabBarInactiveTintColor: AppColor.CHECKBOXCOLOR,
-            tabBarActiveTintColor: AppColor.BLACK,
-            tabBarStyle: {backgroundColor: AppColor.WHITE},
-            tabBarItemStyle: {
-              // width: 'auto',
-            },
-            tabBarContentContainerStyle: {
-              // justifyContent: 'space-between', // Distribute tabs evenly
-            },
-            tabBarIndicatorStyle: {backgroundColor: AppColor.RED},
-          }}
-          screenListeners={{
-            state: e => {
-              const route = e.data.state.routes[e.data.state.index];
-              setShowSearchButton(route.name !== 'My meal');
-            },
-          }}>
-          <Tab.Screen
-            name="Breakfast"
-            component={NewMealList}
-            initialParams={{data: mealData?.breakfast}}
-          />
-          <Tab.Screen
-            name="Lunch"
-            component={NewMealList}
-            initialParams={{data: mealData?.lunch}}
-          />
-          <Tab.Screen
-            name="Dinner"
-            component={NewMealList}
-            initialParams={{data: mealData?.dinner}}
-          />
-          {getCustomDietData.length > 0 && (
-            <Tab.Screen name="My meal" component={CreateMealList} />
-          )}
-        </Tab.Navigator> */}
+
         <BottomSheet1 ref={refStandard}>
           <BottomSheetContent />
         </BottomSheet1>

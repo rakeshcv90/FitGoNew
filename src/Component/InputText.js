@@ -34,7 +34,7 @@ const InputText = ({...Props}) => {
             mode="outlined"
             dense={true}
             activeOutlineColor="#707070"
-            outlineStyle={{borderRadius: 15}}
+            theme={{roundness: 15}}
             contentStyle={{
               paddingTop: 0,
               paddingBottom: 0,

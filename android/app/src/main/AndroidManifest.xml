@@ -29,6 +29,10 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="allowBackup">
+        <!-- 16KB page size support for Android 15+ devices -->
+        <meta-data
+            android:name="android.support.FLEXIBLE_PAGE_SIZES"
+            android:value="true" />
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-7924921064490662~8184618877"/>

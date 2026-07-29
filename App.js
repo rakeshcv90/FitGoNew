@@ -28,6 +28,8 @@ LogBox.ignoreLogs([
   'Animated: `useNativeDriver` was not specified. This is a required option and must be explicitly set to `true` or `false`',
 ]);
 
+import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
+
 const App = () => {
   useEffect(() => {
     requestPermissionforNotification(dispatch);
@@ -85,28 +87,30 @@ const App = () => {
     };
   }, []);
   return (
-    <>
-      <NavigationContainer
-        ref={navigationRef}
-        onStateChange={state => {
-          analytics().logScreenView({
-            screen_name: state.routes[state.index].name, //logging screen name to firebase Analytics
-          });
-          crashlytics().setAttributes({
-            platform: Platform.OS,
-            CrashedScreenName: state.routes[state.index].name,
-          });
-        }}>
-        <LoginStack updateAvialable={'hello'} />
-      </NavigationContainer>
-      <FlashMessage
-        position="top"
-        hideOnPress={true}
-        autoHide={true}
-        duration={2500}
-        statusBarHeight={StatusBar_Bar_Height + 30}
-      />
-    </>
+    <SafeAreaProvider>
+      <SafeAreaView style={{flex: 1, backgroundColor: '#FFFFFF'}} edges={['top', 'left', 'right']}>
+        <NavigationContainer
+          ref={navigationRef}
+          onStateChange={state => {
+            analytics().logScreenView({
+              screen_name: state.routes[state.index].name, //logging screen name to firebase Analytics
+            });
+            crashlytics().setAttributes({
+              platform: Platform.OS,
+              CrashedScreenName: state.routes[state.index].name,
+            });
+          }}>
+          <LoginStack updateAvialable={'hello'} />
+        </NavigationContainer>
+        <FlashMessage
+          position="top"
+          hideOnPress={true}
+          autoHide={true}
+          duration={2500}
+          statusBarHeight={StatusBar_Bar_Height + 30}
+        />
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 const styles = StyleSheet.create({

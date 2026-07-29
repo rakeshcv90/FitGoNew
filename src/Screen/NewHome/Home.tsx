@@ -33,6 +33,9 @@ import OfferAnimation from './OfferAnimation';
 import {AppleHealthKitData} from '../../Component/TransferStepCounterData';
 import {hasFreeEvent} from '../Event/EnteringEventFunction';
 import {translate, getCurrentLanguage} from '../Translation/TranslationService';
+import {FadeSlideIn} from '../Introduction/IntroAnimations';
+import DraggableChatButton from './DraggableChatButton';
+
 const Home = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const getUserDataDetails = useSelector(
@@ -57,6 +60,7 @@ const Home = () => {
     API_CALLS.getAllExercisesData(getUserDataDetails?.id, lang);
     AppleHealthKitData();
   }, [loader]);
+
   useEffect(() => {
     if (getPurchaseHistory && hasFreeEvent(getPurchaseHistory)) {
       setTimeout(() => {
@@ -64,11 +68,17 @@ const Home = () => {
       }, 3000);
     }
   }, [getPurchaseHistory]);
+
   setDefaultAlarm();
+
   return (
     <Wrapper styles={{backgroundColor: '#f7f7f7'}}>
       <StatusBar backgroundColor={AppColor.WHITE} barStyle={'dark-content'} />
-      <HomeHeader leaderboardData={leaderboardData} />
+
+      <FadeSlideIn delay={50} distance={-10}>
+        <HomeHeader leaderboardData={leaderboardData} />
+      </FadeSlideIn>
+
       <ScrollView
         refreshControl={
           <RefreshControl
@@ -82,77 +92,93 @@ const Home = () => {
             colors={[AppColor.RED, AppColor.RED]}
           />
         }>
-        {enteredCurrentEvent && <OfferAnimation />}
-        <NativeAdBanner loader={loader} />
-        {/* <BannerAd
-          style={{width: '100%', height: 50}} // Ensure height and width are specified
-        /> */}
-        <View style={styles.whiteBox}>
-          <Progress myPlans={false} />
-        </View>
+        {enteredCurrentEvent && (
+          <FadeSlideIn delay={150} distance={15}>
+            <OfferAnimation />
+          </FadeSlideIn>
+        )}
+
+        <FadeSlideIn delay={200} distance={15}>
+          <NativeAdBanner loader={loader} />
+        </FadeSlideIn>
+
+        <FadeSlideIn delay={280} distance={20}>
+          <View style={styles.whiteBox}>
+            <Progress myPlans={false} />
+          </View>
+        </FadeSlideIn>
 
         {getPastWinners && getPastWinners.length > 0 && (
-          <PastWinnersComponent pastWinners={getPastWinners} />
+          <FadeSlideIn delay={360} distance={20}>
+            <PastWinnersComponent pastWinners={getPastWinners} />
+          </FadeSlideIn>
         )}
-        <UserEspecially />
-        <FocuseMind />
+
+        <FadeSlideIn delay={440} distance={20}>
+          <UserEspecially />
+        </FadeSlideIn>
+
+        <FadeSlideIn delay={520} distance={20}>
+          <FocuseMind />
+        </FadeSlideIn>
+
         {enteredCurrentEvent && (
-          <View
-            style={[
-              PredefinedStyles.rowBetween,
-              styles.whiteBox,
-              {paddingVertical: 0},
-            ]}>
+          <FadeSlideIn delay={600} distance={20}>
             <View
-              style={{width: '50%', alignItems: 'flex-start', paddingLeft: 20}}>
-              <FitText
-                type="SubHeading"
-                fontWeight="700"
-                value={translate('inviteFriendVoucher')}
-                color={AppColor.PrimaryTextColor}
-              />
-              <FitText
-                type="normal"
-                value={translate('copyReferralCode')}
-                color={AppColor.SecondaryTextColor}
-              />
-              <FitText
-                type="normal"
-                fontWeight="700"
-                value={referralCode}
-                color={AppColor.PrimaryTextColor}
-              />
-              <FitButton
-                onPress={() => navigate('Referral')}
-                titleText={translate('invite')}
-                textColor={AppColor.WHITE}
-                w={'half'}
-                padV={7}
-                style={{alignSelf: 'flex-start'}}
+              style={[
+                PredefinedStyles.rowBetween,
+                styles.whiteBox,
+                {paddingVertical: 0},
+              ]}>
+              <View
+                style={{
+                  width: '50%',
+                  alignItems: 'flex-start',
+                  paddingLeft: 20,
+                }}>
+                <FitText
+                  type="SubHeading"
+                  fontWeight="700"
+                  value={translate('inviteFriendVoucher')}
+                  color={AppColor.PrimaryTextColor}
+                />
+                <FitText
+                  type="normal"
+                  value={translate('copyReferralCode')}
+                  color={AppColor.SecondaryTextColor}
+                />
+                <FitText
+                  type="normal"
+                  fontWeight="700"
+                  value={referralCode}
+                  color={AppColor.PrimaryTextColor}
+                />
+                <FitButton
+                  onPress={() => navigate('Referral')}
+                  titleText={translate('invite')}
+                  textColor={AppColor.WHITE}
+                  w={'half'}
+                  padV={7}
+                  style={{alignSelf: 'flex-start'}}
+                />
+              </View>
+              <Image
+                source={require('./InviteImage.png')}
+                style={{width: '50%', bottom: 0}}
+                resizeMode="contain"
               />
             </View>
-            <Image
-              source={require('./InviteImage.png')}
-              style={{width: '50%', bottom: 0}}
-              resizeMode="contain"
-            />
-          </View>
+          </FadeSlideIn>
         )}
       </ScrollView>
-      <TouchableOpacity
-        activeOpacity={0.7}
+
+      <DraggableChatButton
         onPress={() => {
           AnalyticsConsole(`AI_TRAINER_BUTTON`);
           navigate('AITrainer');
         }}
-        style={styles.chat}>
-        <FitIcon
-          name="chat-processing"
-          size={30}
-          type="MaterialCommunityIcons"
-          color={AppColor.RED}
-        />
-      </TouchableOpacity>
+      />
+
       <AdEventPopup
         modalVisible={modalVisible}
         onClose={() => setModalVisible(false)}
@@ -175,36 +201,51 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: '#000000E5',
     borderColor: AppColor.WHITE,
-    // top: PLATFORM_IOS ? 5 : 13,
   },
   whiteBox: {
-    padding: 10,
+    padding: 12,
     backgroundColor: AppColor.WHITE,
-    marginVertical: 10,
+    marginVertical: 8,
     width: '95%',
     alignSelf: 'center',
-    borderRadius: 10,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: '#F3F4F6',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.04,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  chatWrapper: {
+    position: 'absolute',
+    bottom: 20,
+    right: 12,
   },
   chat: {
     width: 56,
     height: 56,
-    backgroundColor: '#F7F7F7',
-    position: 'absolute',
-    bottom: 20,
-    right: 10,
-    borderRadius: 16,
+    backgroundColor: AppColor.WHITE,
+    borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: 'rgba(0, 0, 0, 1)',
+    borderWidth: 1,
+    borderColor: '#F3F4F6',
     ...Platform.select({
       ios: {
-        shadowColor: 'rgba(0, 0, 0, 1)',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.3,
-        shadowRadius: 3,
+        shadowColor: AppColor.RED,
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.25,
+        shadowRadius: 8,
       },
       android: {
-        elevation: 4,
+        elevation: 5,
       },
     }),
   },

@@ -14,24 +14,14 @@
 platform :ios, min_ios_version_supported
 prepare_react_native_project!
 setup_permissions([
-  # 'AppTrackingTransparency',
-  # 'BluetoothPeripheral',
-  # 'Calendars',
+
     'Camera',
-  # 'Contacts',
-  # 'FaceID',
-  # 'LocationAccuracy',
-  # 'LocationAlways',
+ 
   'LocationWhenInUse',
-  # 'MediaLibrary',
-  # 'Microphone',
-  # 'Motion',
+
     'Notifications',
     'PhotoLibrary',
-  # 'PhotoLibraryAddOnly',
-  # 'Reminders',
-  # 'Siri',
-  # 'SpeechRecognition',
+
    'StoreKit',
 ])
 
@@ -82,7 +72,7 @@ target 'FitGo' do
         if patch_targets.include?(target.name)
       target.build_configurations.each do |config|
         config.build_settings['OTHER_CPLUSPLUSFLAGS'] ||= ''
-        config.build_settings['OTHER_CPLUSPLUSFLAGS'] << ' -include "/Users/yogeshrana/AndroidStudioProjects/FirstReactNative/FitGoNew/ios/FollyCharTraitsPatch.h"'
+        config.build_settings['OTHER_CPLUSPLUSFLAGS'] << " -include \"#{__dir__}/FollyCharTraitsPatch.h\""
       end
     end
   end

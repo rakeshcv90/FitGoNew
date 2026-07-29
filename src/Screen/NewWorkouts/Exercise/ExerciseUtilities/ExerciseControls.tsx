@@ -4,9 +4,14 @@ import {
   Image,
   TouchableOpacity,
   View,
+  Text,
+  StyleSheet,
+  Platform,
 } from 'react-native';
 import React, {FC, useEffect, useState} from 'react';
-import {AppColor} from '../../../../Component/Color';
+import LinearGradient from 'react-native-linear-gradient';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {AppColor, Fonts} from '../../../../Component/Color';
 import {
   DeviceHeigth,
   DeviceWidth,
@@ -37,6 +42,7 @@ type ExerciseControlsProps = {
   number: number;
   setNumber: Function;
   setIsRest: Function;
+  setRestStartParent?: Function;
   back: boolean;
   setBack: Function;
   allExercise: Array<ExerciseData>;
@@ -383,19 +389,14 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
   return (
     <>
       <View
-        style={[
-          {
-            // height: DeviceHeigth * 0.28,
-            paddingTop: restSet ? 30 : 10,
-            paddingHorizontal: 20,
-            backgroundColor: AppColor.WHITE,
-            width: DeviceHeigth >= 1024 ? '95%' : '90%',
-            alignSelf: 'center',
-            borderRadius: 10,
-            paddingBottom: restSet ? 30 : 0,
-          },
-          ShadowStyle,
-        ]}>
+        style={{
+          width: '100%',
+          alignItems: 'center',
+          paddingHorizontal: 20,
+          paddingTop: restSet ? 12 : 4,
+          paddingBottom: restSet ? 24 : 16,
+          backgroundColor: 'transparent',
+        }}>
         <ExerciseTimer
           currentSet={currentSet}
           exerciseTitle={allExercise[number].exercise_title}
@@ -404,29 +405,52 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
           totalSets={parseInt(allExercise[number].exercise_sets)}
         />
         {restStart ? (
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: DeviceWidth,
-              alignSelf: 'center',
-            }}>
+          <View style={styles.readyContainer}>
+            {/* Circle Countdown Progress */}
             <CircleProgress
-              radius={50}
+              radius={46}
               progress={progressPercent}
-              // strokeLinecap={timer == 0 ? 'butt' : 'round'}
-              strokeWidth={25}
-              changingColorsArray={['#E35178', '#7F274C']}
-              secondayCircleColor={AppColor.LIGHTGREY2}>
-              <TouchableOpacity onPress={reset}>
-                <Image
-                  source={require('../../../../Icon/Images/InAppRewards/SkipButton.png')}
-                  style={{width: 40, height: 40}}
-                  resizeMode="contain"
-                />
+              strokeWidth={18}
+              changingColorsArray={['#FF2A54', '#E11D48']}
+              secondayCircleColor="#FFF1F2">
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={reset}
+                style={styles.skipCircleTouch}>
+                <Icon name="skip-next" size={22} color="#E11D48" />
+                <Text style={styles.skipCircleText}>SKIP</Text>
               </TouchableOpacity>
             </CircleProgress>
+
+            {/* Form Tip Card */}
+            <View style={styles.tipCard}>
+              <View style={styles.tipIconWrap}>
+                <Icon name="dumbbell" size={22} color="#FF2A54" />
+              </View>
+              <View style={styles.tipTextCol}>
+                <Text style={styles.tipTitle}>Focus on your form</Text>
+                <Text style={styles.tipSub}>
+                  Slow and controlled movements give the best results.
+                </Text>
+              </View>
+            </View>
+
+            {/* Get Ready Main CTA Button */}
+            <TouchableOpacity
+              activeOpacity={0.88}
+              onPress={() => {
+                setRestStart(false);
+                reset();
+              }}
+              style={styles.getReadyTouch}>
+              <LinearGradient
+                colors={['#FF2A54', '#FF7E5F']}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 0}}
+                style={styles.getReadyGradient}>
+                <Text style={styles.getReadyText}>Get Ready</Text>
+              </LinearGradient>
+            </TouchableOpacity>
           </View>
         ) : restSet ? (
           <RestButtons
@@ -441,7 +465,6 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
-              // width: '100%',
               alignSelf: 'center',
             }}>
             <VideoControls
@@ -496,3 +519,104 @@ const ExerciseControls: FC<ExerciseControlsProps> = ({
 };
 
 export default ExerciseControls;
+
+const styles = StyleSheet.create({
+  readyContainer: {
+    alignItems: 'center',
+    width: '100%',
+    marginVertical: 4,
+  },
+  skipCircleTouch: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  skipCircleText: {
+    fontSize: 9,
+    fontWeight: '800',
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    color: '#E11D48',
+    letterSpacing: 0.5,
+    marginTop: -2,
+  },
+  tipCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    width: '92%',
+    marginTop: 18,
+    marginBottom: 14,
+    gap: 14,
+    borderWidth: 1,
+    borderColor: '#F3F4F6',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.05,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  tipIconWrap: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#FFF1F2',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tipTextCol: {
+    flex: 1,
+  },
+  tipTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    color: '#111827',
+    marginBottom: 2,
+  },
+  tipSub: {
+    fontSize: 12,
+    fontWeight: '500',
+    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+    color: '#6B7280',
+    lineHeight: 16,
+  },
+  getReadyTouch: {
+    width: '92%',
+    height: 50,
+    borderRadius: 25,
+    overflow: 'hidden',
+    marginTop: 4,
+    marginBottom: 8,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#FF2A54',
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
+  getReadyGradient: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  getReadyText: {
+    fontSize: 16,
+    fontWeight: '700',
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    color: '#FFFFFF',
+  },
+});

@@ -10,7 +10,6 @@ import {
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {AppColor, Fonts, PLATFORM_IOS} from '../../Component/Color';
-import {Image} from 'react-native';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import RenderHTML from 'react-native-render-html';
 import Tts from 'react-native-tts';
@@ -22,11 +21,12 @@ import {setSoundOnOff} from '../../Component/ThemeRedux/Actions';
 import Video from 'react-native-video';
 import axios from 'axios';
 import VersionNumber from 'react-native-version-number';
-import {getCurrentLanguage, translate} from '../Translation/TranslationService';
+import {getCurrentLanguage} from '../Translation/TranslationService';
 
 const WorkoutsDescription = ({data, open, setOpen, id}: any) => {
   const [ttsInitialized, setTtsInitialized] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [videoAspect, setVideoAspect] = useState(16 / 9);
   const TextSpeech = `${data?.exercise_instructions}`;
   const [description, SetDescription] = useState('');
   const [title, setTitle] = useState('');
@@ -44,19 +44,19 @@ const WorkoutsDescription = ({data, open, setOpen, id}: any) => {
   );
 
   const getExerciseDescription = async () => {
-    if (id !== null && id !== undefined) {
+    if (data?.exercise_id !== null && data?.exercise_id !== undefined) {
       const res = await axios({
         url: NewAppapi.GET_SINGLE_EXERCISE,
         method: 'GET',
         params: {
           user_id: getUserDataDetails?.id,
           version: VersionNumber.appVersion,
-          exercise_id: id,
+          exercise_id: data?.exercise_id,
           lang: lang,
         },
       });
       // SetDescription(res.data[0].exercise_instructions);
-
+      console.log('Test Data', res.data.data);
       if (res.data.data?.length > 0) {
         SetDescription('');
         SetDescription(res.data.data[0].exercise_instructions);
@@ -106,42 +106,72 @@ const WorkoutsDescription = ({data, open, setOpen, id}: any) => {
   }, [open, getSoundOffOn]);
 
   useEffect(() => {
-    if (id !== null && id !== undefined) {
+    if (data?.exercise_id !== null && data?.exercise_id !== undefined) {
       getExerciseDescription();
     }
   }, [id]);
   const tag = {
+    body: {
+      marginTop: 0,
+      marginBottom: 0,
+    },
     p: {
       color: '#3A4750',
-      fontSize: 12,
-      lineHeight: 15,
+      fontSize: 14,
+      lineHeight: 21,
       fontFamily: 'Poppins',
+      marginTop: 0,
+      marginBottom: 10,
     },
     strong: {
-      color: '#C8170D',
-      fontSize: 10,
+      color: '#E11D48',
+      fontSize: 12,
     },
     li: {
-      color: '#505050',
+      color: '#4B5563',
       fontSize: 14,
       lineHeight: 22,
       fontFamily: 'Poppins',
       fontWeight: '500',
-      marginBottom: 5,
+      marginBottom: 10,
     },
     ul: {
       color: '#3A4750',
+      marginTop: 0,
+      marginBottom: 0,
+      paddingLeft: 4,
     },
     ol: {
       color: '#3A4750',
+      marginTop: 0,
+      marginBottom: 0,
+      paddingLeft: 4,
     },
   };
+  const renderersProps = {
+    ul: {
+      markerBoxStyle: {paddingRight: 10},
+      markerTextStyle: {color: '#E11D48', fontSize: 18, fontWeight: '700' as const},
+    },
+    ol: {
+      markerBoxStyle: {paddingRight: 10},
+      markerTextStyle: {color: '#E11D48', fontSize: 14, fontWeight: '700' as const},
+    },
+  };
+  // Some exercises come back with a leading empty paragraph/line-break from
+  // the API, which shows up as an ugly gap above the instructions list.
+  const sanitizedInstructions = (data?.exercise_instructions || '')
+    .replace(/^(?:\s|<p>(?:&nbsp;|\s)*<\/p>|<br\s*\/?>)+/i, '')
+    .trim();
+  const time = data?.exercise_rest
+    ? parseInt(data.exercise_rest.split(' ')[0])
+    : null;
   return (
     <Modal visible={open} onRequestClose={() => null} animationType="slide">
       <View
         style={{
           flex: 1,
-          backgroundColor: AppColor.WHITE,
+          backgroundColor: '#FAFAFA',
         }}>
         {isLoading && (
           <View style={styles.loader}>
@@ -162,8 +192,7 @@ const WorkoutsDescription = ({data, open, setOpen, id}: any) => {
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
-            paddingLeft: 10,
-            paddingRight: 10,
+            paddingHorizontal: 16,
             marginTop: PLATFORM_IOS ? DeviceHeigth * 0.06 : DeviceHeigth * 0.03,
           }}>
           <TouchableOpacity
@@ -171,14 +200,8 @@ const WorkoutsDescription = ({data, open, setOpen, id}: any) => {
               setOpen(false);
               SetDescription('');
             }}
-            style={{
-              width: 25,
-              height: 25,
-
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <Icon name="close" color={AppColor.DARKGRAY} size={25} />
+            style={styles.headerChip}>
+            <Icon name="close" color="#374151" size={20} />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
@@ -188,81 +211,73 @@ const WorkoutsDescription = ({data, open, setOpen, id}: any) => {
                 dispatch(setSoundOnOff(true));
               }
             }}
-            style={{
-              width: 25,
-              height: 25,
-
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <Image
-              style={{
-                width: 30,
-                height: 30,
-
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              source={
-                getSoundOffOn
-                  ? require('../../Icon/Images/NewImage2/sound.png')
-                  : require('../../Icon/Images/NewImage2/soundmute.png')
-              }
+            style={[
+              styles.headerChip,
+              getSoundOffOn && styles.headerChipActive,
+            ]}>
+            <Icon
+              name={getSoundOffOn ? 'volume-high' : 'volume-off'}
+              color={getSoundOffOn ? '#E11D48' : '#374151'}
+              size={20}
             />
           </TouchableOpacity>
         </View>
-        <Video
-          source={{
-            uri: data?.exercise_video,
-          }}
-          repeat={true}
-          resizeMode="contain"
-          style={{
-            height: DeviceWidth * 0.7,
-            width: DeviceWidth * 0.95,
-            alignSelf: 'center',
-
-            marginTop: 10,
-            // top: -DeviceHeigth * 0.07,
-            // zIndex: -1,
-          }}
-          onReadyForDisplay={() => {
-            setIsLoading(false);
-          }}
-          // poster={
-          //   data?.exercise_image?.includes('https')
-          //     ? data?.exercise_image
-          //     : data?.exercise_image_link
-          // }
-        />
+        <View style={[styles.videoFrame, {aspectRatio: videoAspect}]}>
+          <Video
+            source={{
+              uri: data?.exercise_video,
+            }}
+            repeat={true}
+            resizeMode="cover"
+            style={styles.video}
+            onLoad={(e: any) => {
+              const {width, height} = e?.naturalSize || {};
+              if (width && height) {
+                setVideoAspect(width / height);
+              }
+            }}
+            onReadyForDisplay={() => {
+              setIsLoading(false);
+            }}
+          />
+        </View>
         <View style={styles.container}>
           <View style={styles.content}>
-            <Text
-              style={{
-                fontSize: 24,
-                fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                color: AppColor.BLACK,
-              }}>
-              {title}
-            </Text>
-            <Text />
+            <View style={styles.sheetHandle} />
+            <Text style={styles.exerciseTitle}>{title}</Text>
+            {(time || data?.exercise_sets) && (
+              <View style={styles.metaRow}>
+                {!!time && (
+                  <View style={[styles.metaBadge, styles.timeBadge]}>
+                    <Icon name="clock-outline" size={13} color="#7C3AED" />
+                    <Text style={[styles.metaBadgeText, {color: '#7C3AED'}]}>
+                      {'1 x ' +
+                        (time > 60
+                          ? Math.floor(time / 60) + ' min'
+                          : time + ' sec')}
+                    </Text>
+                  </View>
+                )}
+                {!!data?.exercise_sets && (
+                  <View style={[styles.metaBadge, styles.setBadge]}>
+                    <Icon name="repeat" size={13} color="#059669" />
+                    <Text style={[styles.metaBadgeText, {color: '#059669'}]}>
+                      {'Set ' + data.exercise_sets}
+                    </Text>
+                  </View>
+                )}
+              </View>
+            )}
+            <Text style={styles.sectionHeading}>How to do it</Text>
             <ScrollView showsVerticalScrollIndicator={false}>
-              {data?.workout_description ? (
-                <RenderHTML
-                  source={{html: description}}
-                  contentWidth={DeviceWidth}
-                  tagsStyles={tag}
-                />
-              ) : (
-                <RenderHTML
-                  source={{html: description}}
-                  contentWidth={DeviceWidth}
-                  tagsStyles={tag}
-                />
-              )}
+              <RenderHTML
+                source={{html: sanitizedInstructions}}
+                contentWidth={DeviceWidth}
+                tagsStyles={tag}
+                renderersProps={renderersProps}
+              />
             </ScrollView>
           </View>
-          <View style={styles.shadow}></View>
         </View>
       </View>
     </Modal>
@@ -272,30 +287,101 @@ const WorkoutsDescription = ({data, open, setOpen, id}: any) => {
 export default WorkoutsDescription;
 
 const styles = StyleSheet.create({
+  headerChip: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#F3F4F6',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerChipActive: {
+    backgroundColor: '#FFF1F2',
+  },
+  videoFrame: {
+    width: DeviceWidth * 0.95,
+    alignSelf: 'center',
+    marginTop: 14,
+    borderRadius: 20,
+    overflow: 'hidden',
+    backgroundColor: '#1F2937',
+  },
+  video: {
+    width: '100%',
+    height: '100%',
+  },
   container: {
     flex: 1,
-    position: 'relative',
-    marginTop: -DeviceHeigth * 0.05,
+    marginTop: 16,
   },
   content: {
     flex: 1,
     backgroundColor: AppColor.WHITE,
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 20,
-    padding: 10,
+    borderTopRightRadius: 24,
+    borderTopLeftRadius: 24,
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: -6},
+        shadowOpacity: 0.06,
+        shadowRadius: 12,
+      },
+      android: {
+        elevation: 8,
+      },
+    }),
   },
-  shadow: {
-    position: 'absolute',
-    top: -4, // Adjust this value to fine-tune the shadow position
-    left: 0,
-    right: 0,
-    opacity: 0.6,
-    height: 20, // Height of the shadow
-    backgroundColor: AppColor.GRAY,
-    // Adjust opacity as needed
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 20,
-    zIndex: -1, // Push the shadow behind the content
+  sheetHandle: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: '#E5E7EB',
+    alignSelf: 'center',
+    marginBottom: 12,
+  },
+  exerciseTitle: {
+    fontSize: 20,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    color: '#111827',
+  },
+  metaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  metaBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 9,
+    paddingVertical: 4,
+    borderRadius: 10,
+    marginRight: 8,
+    borderWidth: 1,
+  },
+  timeBadge: {
+    backgroundColor: '#F5F3FF',
+    borderColor: '#DDD6FE',
+  },
+  setBadge: {
+    backgroundColor: '#D1FAE5',
+    borderColor: '#A7F3D0',
+  },
+  metaBadgeText: {
+    fontSize: 12,
+    fontWeight: '700',
+    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+    marginLeft: 4,
+  },
+  sectionHeading: {
+    fontSize: 15,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '700',
+    color: '#1F2937',
+    marginTop: 18,
+    marginBottom: 10,
   },
   category: {
     fontFamily: 'Poppins',

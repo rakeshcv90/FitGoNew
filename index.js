@@ -1,6 +1,7 @@
 /**
  * @format
  */
+import 'setimmediate'; // Polyfill for RN 0.77+ which removed global setImmediate
 import 'react-native-gesture-handler';
 import {AppRegistry, Linking} from 'react-native';
 import App, {navigationRef} from './App';
@@ -38,6 +39,38 @@ import axios from 'axios';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {findKeyInObject} from './src/Component/Utilities/FindkeyinObject';
+import {LogOut} from './src/Component/LogOut';
+import {showMessage} from 'react-native-flash-message';
+
+// ── Global axios interceptor: auto-logout on 'user not exist' ─────────────
+axios.interceptors.response.use(
+  response => {
+    const msg = (
+      response?.data?.msg ||
+      response?.data?.message ||
+      ''
+    ).toLowerCase();
+    if (
+      msg.includes('user not exist') ||
+      msg.includes('user does not exist') ||
+      msg.includes('user not found')
+    ) {
+      showMessage({
+        message: 'Session expired. Please log in again.',
+        type: 'danger',
+        animationDuration: 500,
+        duration: 2000,
+        floating: true,
+      });
+      setTimeout(() => {
+        LogOut(store.dispatch);
+      }, 1500);
+    }
+    return response;
+  },
+  error => Promise.reject(error),
+);
+// ─────────────────────────────────────────────────────────────────────────────
 
 notifee.createChannel({
   id: 'Time',

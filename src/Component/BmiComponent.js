@@ -11,117 +11,121 @@ import LinearGradient from 'react-native-linear-gradient';
 import {AppColor, Fonts} from './Color';
 import {DeviceWidth, DeviceHeigth} from './Config';
 import {TextInput} from 'react-native-paper';
-import {useState} from 'react';
+import {useMemo, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {AnalyticsConsole} from './AnalyticsConsole';
 import {setBmi} from './ThemeRedux/Actions';
 import {showMessage} from 'react-native-flash-message';
 import {translate} from '../Screen/Translation/TranslationService';
 export const BmiMeter = ({getBmi}) => {
+  const numericBmi = parseFloat(getBmi || '0');
+  const [containerWidth, setContainerWidth] = useState(0);
+
+  // Map BMI 14 to 36 onto 0% to 100% position
+  const positionPercent = useMemo(() => {
+    if (!numericBmi || isNaN(numericBmi)) return 50;
+    const minBmi = 14;
+    const maxBmi = 36;
+    const clamped = Math.min(Math.max(numericBmi, minBmi), maxBmi);
+    return ((clamped - minBmi) / (maxBmi - minBmi)) * 100;
+  }, [numericBmi]);
+
+  const categoryColor = useMemo(() => {
+    if (numericBmi <= 0) return '#64748B';
+    if (numericBmi < 18.5) return '#3B82F6';
+    if (numericBmi < 25) return '#10B981';
+    if (numericBmi < 30) return '#F59E0B';
+    return '#EF4444';
+  }, [numericBmi]);
+
+  const categoryText = useMemo(() => {
+    if (numericBmi <= 0) return translate('noData');
+    if (numericBmi < 18.5) return translate('underWeight');
+    if (numericBmi < 25) return translate('normal');
+    return translate('overWeight');
+  }, [numericBmi]);
+
+  const meterWidth = containerWidth > 0 ? containerWidth : DeviceWidth * 0.8;
+  const pointerLeft = (meterWidth * positionPercent) / 100;
+
+  // Clamp tooltip left position so badge never overflows card bounds
+  const badgeWidthEstimate = 125;
+  const clampedBadgeLeft = Math.max(
+    0,
+    Math.min(pointerLeft - badgeWidthEstimate / 2, meterWidth - badgeWidthEstimate),
+  );
+
   return (
-    <>
-      <View style={{width: DeviceWidth * 0.9, alignSelf: 'center'}}>
+    <View
+      style={styles.meterContainer}
+      onLayout={e => {
+        const w = e.nativeEvent.layout.width;
+        if (w > 0) setContainerWidth(w);
+      }}>
+      {/* Floating Pointer & Tooltip Container */}
+      <View style={styles.tooltipContainerRow}>
         <View
-          style={{
-            width: 100,
-            marginLeft:
-              getBmi > 0 && getBmi <= 18
-                ? DeviceWidth * 0.1
-                : getBmi > 18 && getBmi < 25
-                ? DeviceWidth * 0.35
-                : getBmi
-                ? DeviceWidth * 0.6
-                : DeviceWidth * 0.35,
-          }}>
-          <View
-            style={{
-              backgroundColor: '#F25C19',
-              borderRadius: 8,
-              padding: 5,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text style={{fontWeight: '500', color: AppColor.WHITE}}>
-              {getBmi <= 18
-                ? translate('underWeight')
-                : getBmi > 18 && getBmi < 25
-                ? translate('normal')
-                : isFinite(getBmi)
-                ? translate('overWeight')
-                : translate('noData')}
+          style={[
+            styles.tooltipWrapper,
+            {
+              left: clampedBadgeLeft,
+            },
+          ]}>
+          <View style={[styles.tooltipBadge, {backgroundColor: categoryColor}]}>
+            <Text numberOfLines={1} style={styles.tooltipText}>
+              {numericBmi > 0 ? numericBmi.toFixed(1) : '--'} • {categoryText}
             </Text>
           </View>
-          <View style={styles.arrowheadContainer}>
-            <View style={styles.arrowhead} />
-          </View>
+        </View>
+
+        {/* Down Arrow sitting exactly above the pointer line */}
+        <View
+          style={[
+            styles.tooltipArrow,
+            {
+              left: Math.max(4, Math.min(pointerLeft - 5, meterWidth - 10)),
+              borderTopColor: categoryColor,
+            },
+          ]}
+        />
+      </View>
+
+      {/* Multi-Color Gradient Meter Bar */}
+      <View style={styles.gradientBarWrapper}>
+        <LinearGradient
+          colors={['#3B82F6', '#10B981', '#F59E0B', '#EF4444']}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          style={styles.gradientBar}
+        />
+        {/* Pointer Line Indicator */}
+        <View
+          style={[
+            styles.pointerLine,
+            {
+              left: Math.max(4, Math.min(pointerLeft - 1.5, meterWidth - 4)),
+              backgroundColor: '#FFFFFF',
+            },
+          ]}
+        />
+      </View>
+
+      {/* Gauge Scale Labels */}
+      <View style={styles.scaleLabelsRow}>
+        <View style={styles.scaleTickItem}>
+          <View style={[styles.scaleDot, {backgroundColor: '#3B82F6'}]} />
+          <Text style={styles.scaleText}>18.5</Text>
+        </View>
+        <View style={styles.scaleTickItem}>
+          <View style={[styles.scaleDot, {backgroundColor: '#10B981'}]} />
+          <Text style={styles.scaleText}>25.0</Text>
+        </View>
+        <View style={styles.scaleTickItem}>
+          <View style={[styles.scaleDot, {backgroundColor: '#F59E0B'}]} />
+          <Text style={styles.scaleText}>30.0</Text>
         </View>
       </View>
-      <LinearGradient
-        colors={[
-          '#BCFFF7',
-          '#92FFBD',
-          '#00BE4C',
-          '#FFC371',
-          '#FF7A1A',
-          '#D5191A',
-          '#941000',
-        ]}
-        style={{
-          width: DeviceWidth * 0.9,
-          height: 18,
-          borderRadius: 6,
-          alignSelf: 'center',
-        }}
-        start={{x: 0, y: 1}}
-        end={{x: 1, y: 0}}
-      />
-      <View
-        style={{
-          flexDirection: 'row',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          width: DeviceWidth * 0.88,
-          marginTop: 5,
-          alignSelf: 'center',
-        }}>
-        <Text
-          style={{
-            color: AppColor.BLACK,
-            position: 'absolute',
-            fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-          }}>
-          {'0'}
-        </Text>
-        <Text
-          style={{
-            color: AppColor.BLACK,
-            fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-            textAlign: 'center',
-            width: 85,
-            marginLeft:
-              getBmi > 0 && getBmi <= 18
-                ? DeviceWidth * 0.1
-                : getBmi > 18 && getBmi < 25
-                ? DeviceWidth * 0.35
-                : DeviceWidth * 0.6,
-          }}>
-          {getBmi}
-        </Text>
-        <Text
-          style={{
-            color: AppColor.BLACK,
-            fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-            right: isFinite(getBmi) ? null : 28,
-            textAlign: 'center',
-          }}>
-          {getBmi < 18
-            ? (getBmi * 2 + 10).toFixed(0)
-            : getBmi > 18 && getBmi < 25
-            ? (getBmi * 2).toFixed(0)
-            : (getBmi * 2 - 8).toFixed(0)}
-        </Text>
-      </View>
-    </>
+    </View>
   );
 };
 // for modal content
@@ -137,23 +141,23 @@ const WeightHeight = ({
 }) => {
   const [selectedItem, setSelectedItem] = useState(0);
   return (
-    <View style={styles.View2}>
-      <Text style={styles.txt2}>{heading}</Text>
-      <View style={styles.View3}>
+    <View style={{marginTop: 14}}>
+      <Text style={styles.inputHeadingText}>{heading}</Text>
+      <View style={styles.inputRowContainer}>
         {heading == translate('height') && selectedItem == 0 ? (
-          <>
+          <View style={{flexDirection: 'row', gap: 8}}>
             <TextInput
-              style={{width: DeviceWidth * 0.24}}
+              style={{width: DeviceWidth * 0.22, backgroundColor: '#FFFFFF'}}
               underlineColor="transparent"
               placeholder="ft"
-              placeholderTextColor={AppColor.GRAY2}
+              placeholderTextColor="#94A3B8"
               mode="outlined"
               keyboardType="decimal-pad"
               activeUnderlineColor="transparent"
               maxLength={1}
-              outlineStyle={{borderRadius: 10}}
-              outlineColor={AppColor.BORDERCOLOR}
-              activeOutlineColor="#C8170D"
+              theme={{roundness: 12}}
+              outlineColor="#E2E8F0"
+              activeOutlineColor="#667EEA"
               value={value}
               onChangeText={txt => {
                 if (txt < 4 && txt != '') {
@@ -171,17 +175,17 @@ const WeightHeight = ({
               }}
             />
             <TextInput
-              style={{width: DeviceWidth * 0.24}}
+              style={{width: DeviceWidth * 0.22, backgroundColor: '#FFFFFF'}}
               underlineColor="transparent"
               mode="outlined"
               keyboardType="decimal-pad"
               activeUnderlineColor="transparent"
-              placeholder="inch"
-              placeholderTextColor={AppColor.GRAY2}
+              placeholder="in"
+              placeholderTextColor="#94A3B8"
               maxLength={2}
-              outlineStyle={{borderRadius: 10}}
-              outlineColor={AppColor.BORDERCOLOR}
-              activeOutlineColor="#C8170D"
+              theme={{roundness: 12}}
+              outlineColor="#E2E8F0"
+              activeOutlineColor="#667EEA"
               value={heightInch}
               onChangeText={txt => {
                 if (txt > 12) {
@@ -198,10 +202,10 @@ const WeightHeight = ({
                 }
               }}
             />
-          </>
+          </View>
         ) : (
           <TextInput
-            style={{width: DeviceWidth * 0.5}}
+            style={{width: DeviceWidth * 0.46, backgroundColor: '#FFFFFF'}}
             underlineColor="transparent"
             mode="outlined"
             keyboardType="decimal-pad"
@@ -212,28 +216,25 @@ const WeightHeight = ({
                 ? translate('lbs')
                 : translate('cm')
             }
-            placeholderTextColor={AppColor.GRAY2}
+            placeholderTextColor="#94A3B8"
             activeUnderlineColor="transparent"
             maxLength={3}
-            outlineStyle={{borderRadius: 10}}
-            outlineColor={AppColor.BORDERCOLOR}
-            activeOutlineColor="#C8170D"
+            theme={{roundness: 12}}
+            outlineColor="#E2E8F0"
+            activeOutlineColor="#667EEA"
             value={value}
             onChangeText={txt => {
               setValue(txt);
             }}
           />
         )}
-        {arr.map((v, i) => (
-          <View key={i}>
+
+        {/* Unit Selector Pills */}
+        <View style={styles.unitSelectorGroup}>
+          {arr.map((v, i) => (
             <TouchableOpacity
-              style={[
-                styles.button1,
-                {
-                  backgroundColor:
-                    selectedItem == i ? AppColor.BLACK : AppColor.GRAY2,
-                },
-              ]}
+              key={i}
+              activeOpacity={0.88}
               onPress={() => {
                 setSelectedItem(i);
                 if (heading == translate('weight')) {
@@ -242,24 +243,28 @@ const WeightHeight = ({
                   setHeightType(i == 0 ? translate('ft') : translate('cm'));
                 }
               }}>
-              <Text
-                style={[
-                  styles.txt3,
-                  {
-                    color: selectedItem == i ? AppColor.WHITE : AppColor.BLACK,
-                  },
-                ]}>
-                {v}
-              </Text>
+              {selectedItem === i ? (
+                <LinearGradient
+                  colors={['#667EEA', '#764BA2']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={styles.unitPillSelected}>
+                  <Text style={styles.unitPillTextSelected}>{v}</Text>
+                </LinearGradient>
+              ) : (
+                <View style={styles.unitPillInactive}>
+                  <Text style={styles.unitPillTextInactive}>{v}</Text>
+                </View>
+              )}
             </TouchableOpacity>
-          </View>
-        ))}
+          ))}
+        </View>
       </View>
     </View>
   );
 };
-//modal
 
+// Modern BMI Modal
 export const BMImodal = ({setModalVisible, modalVisible, dispatch}) => {
   const [weight, setWeight] = useState('');
   const [height, setHeight] = useState('');
@@ -311,23 +316,37 @@ export const BMImodal = ({setModalVisible, modalVisible, dispatch}) => {
 
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       visible={modalVisible}
       onRequestClose={() => setModalVisible(false)}>
       <View style={styles.modalContainer}>
-        <View style={[styles.modalContent, {backgroundColor: AppColor.WHITE}]}>
-          <View style={styles.View1}>
-            <Text style={styles.txt1}>BMI</Text>
-            <Icon
-              name="close"
-              onPress={() => {
-                setModalVisible(false);
-              }}
-              size={27}
-              color={AppColor.BLACK}
-            />
+        <View style={styles.modalContentCard}>
+          {/* Header */}
+          <View style={styles.modalHeaderRow}>
+            <View style={styles.modalHeaderTitleGroup}>
+              <View style={styles.modalHeaderIconBadge}>
+                <Icon name="scale-bathroom" size={20} color="#667EEA" />
+              </View>
+              <View>
+                <Text style={styles.modalTitleText}>BMI Calculator</Text>
+                <Text style={styles.modalSubText}>
+                  Update weight & height to calculate
+                </Text>
+              </View>
+            </View>
+
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => setModalVisible(false)}
+              style={styles.modalCloseCircle}>
+              <Icon name="close" size={18} color="#64748B" />
+            </TouchableOpacity>
           </View>
+
+          <View style={styles.modalDivider} />
+
+          {/* Form Fields */}
           <WeightHeight
             arr={[translate('kg'), translate('lbs')]}
             heading={translate('weight')}
@@ -344,36 +363,25 @@ export const BMImodal = ({setModalVisible, modalVisible, dispatch}) => {
             heightInch={heightInch}
             setHeightType={setHeightType}
           />
-          <View
-            style={{
-              borderWidth: 0.3,
-              height: 0,
-              marginTop: 15,
-              borderColor: AppColor.GRAY2,
-            }}
-          />
-          <View
-            style={[
-              styles.View3,
-              {marginTop: 20, alignItems: 'center', justifyContent: 'flex-end'},
-            ]}>
-            <TouchableOpacity
-              style={styles.button2}
-              onPress={() => {
-                HandleSubmitBMI();
-              }}>
-              <Text
-                style={[
-                  styles.txt3,
-                  {
-                    color: AppColor.WHITE,
-                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                  },
-                ]}>
-                {translate('calculate')}
+
+          <View style={styles.modalDivider} />
+
+          {/* Action Submit Button */}
+          <TouchableOpacity
+            activeOpacity={0.88}
+            onPress={() => HandleSubmitBMI()}
+            style={styles.submitBmiBtnWrapper}>
+            <LinearGradient
+              colors={['#667EEA', '#764BA2']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              style={styles.submitBmiBtn}>
+              <Text style={styles.submitBmiBtnText}>
+                {translate('calculate')} BMI
               </Text>
-            </TouchableOpacity>
-          </View>
+              <Icon name="arrow-right" size={18} color="#FFFFFF" />
+            </LinearGradient>
+          </TouchableOpacity>
         </View>
       </View>
     </Modal>
@@ -409,24 +417,97 @@ export const CaloriesActionReport = ({arr}) => {
   );
 };
 const styles = StyleSheet.create({
-  arrowheadContainer: {
+  meterContainer: {
+    width: '100%',
+    paddingVertical: 10,
+  },
+  tooltipContainerRow: {
+    width: '100%',
+    height: 32,
+    position: 'relative',
+    marginBottom: 4,
+  },
+  tooltipWrapper: {
+    position: 'absolute',
+    top: 0,
+  },
+  tooltipBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 8,
+    shadowColor: '#0F172A',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  tooltipText: {
+    fontSize: 11,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    color: '#FFFFFF',
+    fontWeight: '800',
+  },
+  tooltipArrow: {
+    position: 'absolute',
+    bottom: 0,
     width: 0,
     height: 0,
-    borderLeftWidth: 10,
-    borderRightWidth: 10,
-    borderTopWidth: 20,
+    borderLeftWidth: 5,
+    borderRightWidth: 5,
+    borderTopWidth: 6,
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
-    borderTopColor: '#F25C19', // Adjust the color of the arrowhead
-    borderStyle: 'solid',
-    alignSelf: 'center',
-    marginTop: -1,
   },
-  arrowhead: {
-    width: 0,
-    height: 0,
-    backgroundColor: 'transparent',
+
+  gradientBarWrapper: {
+    width: '100%',
+    height: 14,
+    borderRadius: 7,
+    position: 'relative',
+    overflow: 'hidden',
   },
+  gradientBar: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 7,
+  },
+  pointerLine: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    width: 3,
+    borderRadius: 1.5,
+    shadowColor: '#000000',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.4,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+
+  scaleLabelsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginTop: 8,
+  },
+  scaleTickItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  scaleDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+  },
+  scaleText: {
+    fontSize: 10.5,
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    color: '#64748B',
+    fontWeight: '600',
+  },
+
   View1: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -496,7 +577,128 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: `rgba(0,0,0,0.3)`,
-    // Semi-transparent background
+    backgroundColor: 'rgba(15, 23, 42, 0.5)',
+  },
+  modalContentCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    padding: 20,
+    width: DeviceWidth * 0.9,
+    maxWidth: 400,
+    shadowColor: '#0F172A',
+    shadowOffset: {width: 0, height: 10},
+    shadowOpacity: 0.18,
+    shadowRadius: 20,
+    elevation: 8,
+  },
+  modalHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  modalHeaderTitleGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  modalHeaderIconBadge: {
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    backgroundColor: '#EEF2FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalTitleText: {
+    fontSize: 16.5,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontWeight: '800',
+    color: '#0F172A',
+  },
+  modalSubText: {
+    fontSize: 11,
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    color: '#64748B',
+    marginTop: 1,
+  },
+  modalCloseCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#F1F5F9',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalDivider: {
+    height: 1,
+    backgroundColor: '#F1F5F9',
+    marginVertical: 14,
+  },
+
+  inputHeadingText: {
+    fontSize: 13,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    color: '#0F172A',
+    fontWeight: '700',
+    marginBottom: 6,
+  },
+  inputRowContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+  unitSelectorGroup: {
+    flexDirection: 'row',
+    gap: 6,
+  },
+  unitPillSelected: {
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  unitPillTextSelected: {
+    fontSize: 12,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    color: '#FFFFFF',
+    fontWeight: '800',
+  },
+  unitPillInactive: {
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 12,
+    backgroundColor: '#F1F5F9',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  unitPillTextInactive: {
+    fontSize: 12,
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    color: '#64748B',
+    fontWeight: '600',
+  },
+
+  submitBmiBtnWrapper: {
+    borderRadius: 14,
+    overflow: 'hidden',
+  },
+  submitBmiBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    gap: 8,
+    borderRadius: 14,
+  },
+  submitBmiBtnText: {
+    fontSize: 14.5,
+    fontFamily: Fonts.MONTSERRAT_BOLD,
+    color: '#FFFFFF',
+    fontWeight: '800',
   },
 });

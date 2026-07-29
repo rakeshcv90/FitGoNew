@@ -1,15 +1,15 @@
-import {Image, ImageBackground, StyleSheet, Text, View} from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import {StyleSheet, View, Platform, ScrollView, TouchableOpacity} from 'react-native';
+import React, {useState, useRef} from 'react';
+import Animated, {
+  FadeInUp,
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 import {AppColor} from '../../Component/Color';
-import PredefinedStyles from '../../Component/Utilities/PredefineStyles';
-import FitText from '../../Component/Utilities/FitText';
-import {ScrollView} from 'react-native';
 import {DeviceWidth} from '../../Component/Config';
-// import NativeAddTest from '../../Component/NativeAd';
-import {API_CALLS} from '../../API/API_CALLS';
 import {useSelector} from 'react-redux';
-// import NativeAdsView from '../../Component/NativeAd';
-import {useIsFocused} from '@react-navigation/native';
 import NewBanner from '../../Component/NewHomeUtilities/NewBanner';
 
 type Props = {
@@ -19,6 +19,7 @@ type Props = {
 const NativeAdBanner = ({loader}: Props) => {
   const scrollViewRef = useRef<ScrollView>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const scale = useSharedValue(1);
 
   const enteredCurrentEvent = useSelector(
     (state: any) => state?.enteredCurrentEvent,
@@ -35,16 +36,13 @@ const NativeAdBanner = ({loader}: Props) => {
   const Sat = getPurchaseHistory?.currentDay == 6;
   const Sun = getPurchaseHistory?.currentDay == 0;
 
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{scale: scale.value}],
+  }));
+
   return (
-    <View style={{padding: 20}}>
-      <View
-        style={[
-          styles.container,
-          {
-            backgroundColor: currentIndex == 1 ? AppColor.WHITE : 'transparent',
-            borderRadius: 20,
-          },
-        ]}>
+    <Animated.View entering={FadeInUp.duration(550).springify()} style={styles.outerWrap}>
+      <Animated.View style={[styles.container, animatedStyle]}>
         <ScrollView
           ref={scrollViewRef}
           horizontal
@@ -66,47 +64,39 @@ const NativeAdBanner = ({loader}: Props) => {
             enteredCurrentEvent={enteredCurrentEvent}
             enteredUpcomingEvent={enteredUpcomingEvent}
           />
-          {/* <NativeAdsView
-            width={DeviceWidth * 0.95}
-            media={false}
-            type="image"
-          /> */}
         </ScrollView>
-      </View>
-      {/* <View style={[PredefinedStyles.rowCenter, {marginTop: 15}]}>
-        {[1, 2].map(i => (
-          <View
-            style={[
-              styles.box,
-              {
-                backgroundColor:
-                  currentIndex == i - 1 ? AppColor.RED : '#D9D9D9',
-              },
-            ]}
-          />
-        ))}
-      </View> */}
-    </View>
+      </Animated.View>
+    </Animated.View>
   );
 };
 
 export default NativeAdBanner;
 
 const styles = StyleSheet.create({
+  outerWrap: {
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 6,
+    alignItems: 'center',
+  },
   container: {
-    borderRadius: 20,
-    height: DeviceWidth * 0.35,
-    width: DeviceWidth * 0.9,
+    borderRadius: 24,
+    width: DeviceWidth * 0.92,
+    alignSelf: 'center',
     overflow: 'hidden',
-  },
-  page: {
-    justifyContent: 'center',
-    // alignItems: 'center',
-  },
-  box: {
-    width: 10,
-    height: 10,
-    borderRadius: 10,
-    marginHorizontal: 2,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#F3F4F6',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 6},
+        shadowOpacity: 0.08,
+        shadowRadius: 12,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
   },
 });

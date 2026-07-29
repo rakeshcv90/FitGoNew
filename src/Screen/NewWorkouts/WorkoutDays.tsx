@@ -1,3 +1,6 @@
+/* eslint-disable react/no-unstable-nested-components */
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable radix */
 import {
   Image,
   Modal,
@@ -8,26 +11,29 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {AppColor, Fonts} from '../../Component/Color';
-import GradientText from '../../Component/GradientText';
+
 import moment from 'moment';
 import LinearGradient from 'react-native-linear-gradient';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
-import ProgressButton from '../../Component/ProgressButton';
+
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import {localImage} from '../../Component/Image';
 import {showMessage} from 'react-native-flash-message';
 import axios from 'axios';
-import {useFocusEffect, useIsFocused} from '@react-navigation/native';
+import {useIsFocused} from '@react-navigation/native';
 import ActivityLoader from '../../Component/ActivityLoader';
 import analytics from '@react-native-firebase/analytics';
-// import {
-//   BannerAdd,
-//   MyInterstitialAd,
-//   MyRewardedAd,
-// } from '../../Component/BannerAdd';
+
 import {
   setFitmeMealAdsCount,
   setSubscriptiomModal,
@@ -35,23 +41,24 @@ import {
 } from '../../Component/ThemeRedux/Actions';
 import AnimatedLottieView from 'lottie-react-native';
 import RNFetchBlob from 'rn-fetch-blob';
-import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
-import {bannerAdId} from '../../Component/AdsId';
-// import NativeAddTest from '../../Component/NativeAd';
-import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
+
 import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
-import NewHeader from '../../Component/Headers/NewHeader';
+
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 
-const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
+const formatDuration = (seconds: number) => {
+  if (!seconds || isNaN(seconds)) return '0 sec';
+  return seconds > 60
+    ? `${((seconds * 3) / 60).toFixed(0)} min`
+    : `${seconds} sec`;
+};
 
 const WorkoutDays = ({navigation, route}: any) => {
   const {data, challenge} = route.params;
   const [selected, setSelected] = useState(0);
   const [refresh, setRefresh] = useState(false);
   const [open, setOpen] = useState(true);
-  const [phase, setPhase] = useState(1);
   const [day, setDay] = useState(1);
   const [trainingCount, setTrainingCount] = useState(-1);
   const [totalCount, setTotalCount] = useState(-1);
@@ -86,6 +93,16 @@ const WorkoutDays = ({navigation, route}: any) => {
     }
     totalTime = totalTime + parseInt(data?.days[day]?.total_rest);
   }
+  const allDays = Object.values(data?.days || {});
+  const totalDaysCount = allDays.length;
+  const workoutDaysCount = totalDaysCount - restDays.length;
+  const completedDaysCount = allDays.filter(
+    (item: any, index: number) => selected != 0 && index < selected,
+  ).length;
+  const progressPercent =
+    totalDaysCount > 0
+      ? Math.min(100, Math.round((completedDaysCount / totalDaysCount) * 100))
+      : 0;
   useEffect(() => {
     if (isFocuse) {
       postViewsAPI();
@@ -108,7 +125,7 @@ const WorkoutDays = ({navigation, route}: any) => {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-        lang:'en',
+        lang: 'en',
       });
 
       if (res.data?.msg != 'No data found') {
@@ -435,7 +452,8 @@ const WorkoutDays = ({navigation, route}: any) => {
                   source={require('../../Icon/Images/NewImage/ads.png')}
                   style={{width: 25, height: 25}}
                 />
-                <Text style={[styles.buttonText, {color: '#505050', left: 10}]}>
+                <Text
+                  style={[styles.buttonText, {color: '#505050', left: 10}]}>
                   Watch Ads to unlock Workouts
                 </Text>
               </LinearGradient>
@@ -445,258 +463,206 @@ const WorkoutDays = ({navigation, route}: any) => {
       </Modal>
     );
   };
-  
-  const Box = ({
-    selected,
-    item,
-    index,
-    active,
-    percent,
-    selectedIndex,
+
+  const AnimatedDayCard = ({
+    entryIndex = 0,
+    style,
+    disabled,
+    onPress,
+    children,
   }: any) => {
+    const opacity = useSharedValue(0);
+    const translateY = useSharedValue(14);
+    const scale = useSharedValue(1);
+
+    useEffect(() => {
+      const delay = Math.min(entryIndex, 10) * 45;
+      opacity.value = withDelay(delay, withTiming(1, {duration: 280}));
+      translateY.value = withDelay(delay, withTiming(0, {duration: 280}));
+    }, []);
+
+    const enterStyle = useAnimatedStyle(() => ({
+      opacity: opacity.value,
+      transform: [{translateY: translateY.value}],
+    }));
+    const pressStyle = useAnimatedStyle(() => ({
+      transform: [{scale: scale.value}],
+    }));
+
+    return (
+      <Animated.View style={enterStyle}>
+        <Animated.View style={pressStyle}>
+          <TouchableOpacity
+            disabled={disabled}
+            activeOpacity={0.85}
+            style={style}
+            onPressIn={() => {
+              scale.value = withTiming(0.97, {duration: 100});
+            }}
+            onPressOut={() => {
+              scale.value = withSpring(1, {damping: 14, stiffness: 220});
+            }}
+            onPress={onPress}>
+            {children}
+          </TouchableOpacity>
+        </Animated.View>
+      </Animated.View>
+    );
+  };
+
+  const Box = ({item, index, active, percent, selectedIndex}: any) => {
+    const isRestDay = item?.total_rest == 0;
+    const isCompleted = percent && !isRestDay;
+    const isCurrent = selectedIndex && !isCompleted && !isRestDay;
+    const isLocked =
+      !isRestDay && !isCompleted && !isCurrent && index != 1 && !active;
+
+    const cardTint = isCompleted
+      ? ['#F2FBF8', AppColor.WHITE]
+      : isCurrent
+      ? ['#FFF3F2', AppColor.WHITE]
+      : isLocked
+      ? ['#F4F4F4', '#F4F4F4']
+      : isRestDay
+      ? ['#FAFAFA', '#FAFAFA']
+      : [AppColor.WHITE, AppColor.WHITE];
+
+    const accentColor = isCompleted
+      ? AppColor.NEW_SUBS_GREEN
+      : isCurrent
+      ? AppColor.RED1
+      : 'transparent';
+
+    const onPressDay = () => {
+      analytics().logEvent(`CV_FITME_CLICKED_ON_DAY_${index}_EXERCISES`);
+      AddCountFunction();
+      index - 1 == 0 || active
+        ? navigation.navigate('OneDay', {
+            data: data,
+            dayData: item,
+            day: index,
+            trainingCount: trainingCount,
+            challenge,
+          })
+        : showMessage({
+            message: `Please complete day ${
+              index - 1
+            } workout to unlock day ${index}`,
+            type: 'danger',
+            duration: 1000,
+            floating: true,
+          });
+    };
+
     return (
       <>
-        <TouchableOpacity
-          key={index}
-          disabled={item?.total_rest == 0}
+        <AnimatedDayCard
+          entryIndex={index - 1}
+          disabled={isRestDay}
+          onPress={onPressDay}
           style={[
-            styles.box,
+            styles.dayCard,
             {
-              opacity: !selected && item?.total_rest != 0 ? 0.9 : 1,
-              width: DeviceWidth * 0.95,
-              // DeviceHeigth < 1280 ? DeviceWidth * 0.85 : DeviceWidth * 0.89,
-              height: DeviceHeigth * 0.085,
-              marginTop: 6,
+              borderLeftWidth: 4,
+              borderLeftColor: accentColor,
+              borderStyle: isRestDay ? 'dashed' : 'solid',
+              opacity: isLocked ? 0.75 : 1,
             },
-          ]}
-          activeOpacity={0.6}
-          onPress={() => {
-            analytics().logEvent(`CV_FITME_CLICKED_ON_DAY_${index}_EXERCISES`);
-            let checkAdsShow = AddCountFunction();
-            if (checkAdsShow == true) {
-              // showInterstitialAd();
-              index - 1 == 0
-                ? navigation.navigate('OneDay', {
-                    data: data,
-                    dayData: item,
-                    day: index,
-                    trainingCount: trainingCount,
-                    challenge,
-                  })
-                : active
-                ? navigation.navigate('OneDay', {
-                    data: data,
-                    dayData: item,
-                    day: index,
-                    trainingCount: trainingCount,
-                    challenge,
-                  })
-                : showMessage({
-                    message: `Please complete day ${
-                      index - 1
-                    } workout to unlock day ${index}`,
-                    type: 'danger',
-
-                    duration: 1000,
-                    floating: true,
-                    // icon: {icon: 'auto', position: 'left'},
-                  });
-            } else {
-              index - 1 == 0
-                ? navigation.navigate('OneDay', {
-                    data: data,
-                    dayData: item,
-                    day: index,
-                    trainingCount: trainingCount,
-                    challenge,
-                  })
-                : active
-                ? navigation.navigate('OneDay', {
-                    data: data,
-                    dayData: item,
-                    day: index,
-                    trainingCount: trainingCount,
-                    challenge,
-                  })
-                : showMessage({
-                    message: `Please complete day ${
-                      index - 1
-                    } workout to unlock day ${index}`,
-                    type: 'danger',
-
-                    duration: 1000,
-                    floating: true,
-                    // icon: {icon: 'auto', position: 'left'},
-                  });
-            }
-          }}>
+          ]}>
           <LinearGradient
-            start={{x: 1, y: 0}}
-            end={{x: 0, y: 1}}
-            colors={[AppColor.WHITE, AppColor.WHITE]}
-            style={[
-              styles.box,
-              {
-                opacity: !selected && item?.total_rest != 0 ? 0.9 : 1,
-                width: DeviceWidth * 0.95,
-                // DeviceHeigth < 1280 ? DeviceWidth * 0.85 : DeviceWidth * 0.89,
-                height: DeviceHeigth * 0.085,
-              },
-            ]}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              {item?.total_rest == 0 ? (
-                <View
-                  style={{
-                    height:
-                      DeviceHeigth >= 1024
-                        ? DeviceWidth * 0.18
-                        : DeviceWidth * 0.18,
-                    width:
-                      DeviceHeigth >= 1024
-                        ? DeviceWidth * 0.18
-                        : DeviceWidth * 0.18,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    // marginLeft: DeviceWidth * 0.12,
-                    borderRadius: 10,
-                    borderWidth: 1,
-                    borderColor: '#D9D9D9',
-                  }}>
-                  <Image
-                    source={localImage.Rest}
-                    style={{
-                      height:
-                        DeviceHeigth >= 1024
-                          ? DeviceWidth * 0.14
-                          : DeviceWidth * 0.15,
-                      width:
-                        DeviceHeigth >= 1024
-                          ? DeviceWidth * 0.14
-                          : DeviceWidth * 0.16,
-                      // marginLeft: DeviceWidth * 0.12,
-                      // borderRadius: 10,
-                      // borderWidth: 1,
-                      // borderColor: '#D9D9D9',
-                      opacity: percent ? 0.5 : 1,
-                    }}
-                    resizeMode="contain"
-                  />
-                </View>
-              ) : (
-                <Text
-                  style={{
-                    width:
-                      DeviceHeigth >= 1024
-                        ? DeviceWidth * 0.08
-                        : DeviceWidth * 0.14,
-                    alignItems: 'center',
-                    alignSelf: 'center',
-                    textAlign: 'center',
-                    justifyContent: 'center',
-                    borderRadius: 5,
-                    borderColor: '#d9d9d9',
-                    borderWidth: 1,
-                    padding: 5,
-                    fontWeight: '700',
-                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                    fontSize: 32,
-                    lineHeight: 40,
-                    color: selectedIndex ? '#f0013b' : '#333333B2',
-                  }}>
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 1}}
+            colors={cardTint}
+            style={styles.dayCardGradient}>
+            {isRestDay ? (
+              <View style={styles.restBadge}>
+                <Image
+                  source={localImage.Rest}
+                  style={styles.restIcon}
+                  resizeMode="contain"
+                />
+              </View>
+            ) : isCompleted ? (
+              <View
+                style={[
+                  styles.numberBadge,
+                  {backgroundColor: AppColor.NEW_SUBS_GREEN},
+                ]}>
+                <Icons name="check-bold" size={22} color={AppColor.WHITE} />
+              </View>
+            ) : isCurrent ? (
+              <LinearGradient
+                start={{x: 0, y: 1}}
+                end={{x: 1, y: 0}}
+                colors={[AppColor.RED1, '#941000']}
+                style={styles.numberBadge}>
+                <Text style={styles.numberBadgeText}>
                   {index < 10 ? `0${index}` : index}
                 </Text>
-              )}
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginHorizontal: 10,
-                  width: DeviceHeigth >= 1024 ? '80%' : '75%',
-                }}>
-                <View>
+              </LinearGradient>
+            ) : isLocked ? (
+              <View style={[styles.numberBadge, styles.lockedBadge]}>
+                <Icons name="lock-outline" size={20} color="#9A9A9A" />
+              </View>
+            ) : (
+              <View style={[styles.numberBadge, styles.plainBadge]}>
+                <Text style={[styles.numberBadgeText, {color: '#333333B2'}]}>
+                  {index < 10 ? `0${index}` : index}
+                </Text>
+              </View>
+            )}
+
+            <View style={styles.dayCardContent}>
+              <View style={{flexShrink: 1}}>
+                <Text
+                  numberOfLines={1}
+                  style={[
+                    styles.category,
+                    {color: isLocked ? '#33333380' : AppColor.BLACK},
+                  ]}>{`Day ${index}`}</Text>
+                {isRestDay ? (
+                  <Text style={[styles.small, {color: '#696969'}]}>
+                    Recovery day
+                  </Text>
+                ) : isCompleted ? (
+                  <Text
+                    style={[styles.small, {color: AppColor.NEW_SUBS_GREEN}]}>
+                    Completed
+                  </Text>
+                ) : isLocked ? (
+                  <Text style={[styles.small, {color: '#9A9A9A'}]}>
+                    Locked
+                  </Text>
+                ) : (
                   <Text
                     style={[
-                      styles.category,
-                      {
-                        fontSize: DeviceHeigth < 1280 ? 16 : 14,
-                        color:
-                          !selectedIndex && item?.total_rest != 0
-                            ? '#333333B2'
-                            : AppColor.BLACK,
-                        marginBottom: 10,
-                      },
-                    ]}>{`Day-${index}`}</Text>
-                  {item?.total_rest == 0 ? (
-                    <Text
-                      style={[
-                        styles.small,
-                        {
-                          color:
-                            !selectedIndex && item?.total_rest != 0
-                              ? '#333333B2'
-                              : AppColor.BLACK,
-                          lineHeight: DeviceHeigth >= 1024 ? 30 : 20,
-                        },
-                      ]}>
-                      Rest
-                    </Text>
-                  ) : (
-                    <Text
-                      style={[
-                        styles.small,
-                        {
-                          color: !selectedIndex ? '#33333380' : AppColor.BLACK,
-                        },
-                      ]}>
-                      {item?.total_rest > 60
-                        ? `${((item?.total_rest * 3) / 60).toFixed(0)} min`
-                        : `${item?.total_rest} sec`}
-                      {'   '}
-                      <Text
-                        style={{
-                          fontSize: 30,
-                          fontWeight: '600',
-                          color:
-                            !percent && selectedIndex
-                              ? AppColor.BLACK
-                              : '#505050',
-                          lineHeight: 0,
-                          marginHorizontal: 10,
-                          fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                        }}>
-                        .
-                      </Text>
-                      {'   '}
-                      {item?.total_calories} Kcal
-                      {/* {moment(139).format('S')} min | {item?.total_calories} Kcal */}
-                    </Text>
-                  )}
-                </View>
-                <Icons
-                  name={
-                    percent && item?.total_rest != 0 ? 'check' : 'chevron-right'
-                  }
-                  size={25}
-                  color={
-                    percent && item?.total_rest != 0
-                      ? '#f0013b'
-                      : !selectedIndex && item?.total_rest != 0
-                      ? '#33333380'
-                      : AppColor.BLACK
-                  }
-                />
-
-                {/* percent && item?.total_rest != 0 */}
+                      styles.small,
+                      {color: isCurrent ? '#505050' : '#33333380'},
+                    ]}>
+                    {formatDuration(item?.total_rest)}
+                    {'  •  '}
+                    {item?.total_calories} Kcal
+                  </Text>
+                )}
               </View>
+              {isCompleted ? (
+                <Icons
+                  name="check-circle"
+                  size={22}
+                  color={AppColor.NEW_SUBS_GREEN}
+                />
+              ) : isLocked ? (
+                <Icons name="lock-outline" size={20} color="#9A9A9A" />
+              ) : !isRestDay ? (
+                <Icons
+                  name="chevron-right"
+                  size={24}
+                  color={isCurrent ? AppColor.RED1 : '#33333380'}
+                />
+              ) : null}
             </View>
           </LinearGradient>
-        </TouchableOpacity>
+        </AnimatedDayCard>
         {getAdsDisplay(index, item)}
       </>
     );
@@ -753,6 +719,70 @@ const WorkoutDays = ({navigation, route}: any) => {
       }
     }
   };
+  const ProgressBar = ({percentValue}: any) => {
+    const width = useSharedValue(0);
+    useEffect(() => {
+      width.value = withTiming(percentValue, {duration: 600});
+    }, [percentValue]);
+    const barStyle = useAnimatedStyle(() => ({
+      width: `${width.value}%`,
+    }));
+    return (
+      <View style={styles.progressTrack}>
+        <Animated.View style={[styles.progressFill, barStyle]} />
+      </View>
+    );
+  };
+
+  const ProgressHeader = () => (
+    <View style={styles.progressCard}>
+      <LinearGradient
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 1}}
+        colors={['#FFF5F5', AppColor.WHITE]}
+        style={styles.progressGradient}>
+        <View style={styles.progressTopRow}>
+          <View style={{flexShrink: 1}}>
+            <Text style={styles.progressTitle}>Your Progress</Text>
+            <Text style={styles.progressSubtitle}>
+              {completedDaysCount} of {totalDaysCount} days completed
+            </Text>
+          </View>
+          <View style={styles.progressPercentBadge}>
+            <Text style={styles.progressPercentText}>{progressPercent}%</Text>
+          </View>
+        </View>
+        <ProgressBar percentValue={progressPercent} />
+        <View style={styles.statsRow}>
+          <View style={styles.statChip}>
+            <Icons
+              name="clock-time-four-outline"
+              size={16}
+              color={AppColor.RED1}
+            />
+            <Text style={styles.statChipText}>{formatDuration(totalTime)}</Text>
+          </View>
+          <View style={styles.statDivider} />
+          <View style={styles.statChip}>
+            <Icons name="dumbbell" size={16} color={AppColor.RED1} />
+            <Text style={styles.statChipText}>{workoutDaysCount} Workouts</Text>
+          </View>
+          <View style={styles.statDivider} />
+          <View style={styles.statChip}>
+            <Icons name="sleep" size={16} color={AppColor.RED1} />
+            <Text style={styles.statChipText}>{restDays.length} Rest</Text>
+          </View>
+        </View>
+        {challenge && (
+          <View style={styles.challengeBadge}>
+            <Icons name="trophy-outline" size={14} color="#8A6A00" />
+            <Text style={styles.challengeBadgeText}>Challenge Mode</Text>
+          </View>
+        )}
+      </LinearGradient>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
@@ -762,47 +792,35 @@ const WorkoutDays = ({navigation, route}: any) => {
             data?.workout_title == undefined ? data?.title : data?.workout_title
           }
         />
-        <>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              // flexDirection: 'row',
-              paddingBottom: DeviceHeigth * 0.03,
-              alignItems: 'center',
-            }}>
-            <View style={{top: 10}}>
-              {!refresh &&
-                Object.values(data?.days).map((item: any, index: number) => {
-                  return (
-                    <Box
-                      active={
-                        selected != 0 &&
-                        index <= selected &&
-                        data?.days[index + 1]?.total_rest != 0
-                      }
-                      index={index + 1}
-                      item={item}
-                      percent={
-                        challenge
-                          ? selected != 0 && index < selected
-                          : selected != 0 && index < selected
-                      }
-                      selected={
-                        challenge
-                          ? selected != 0 && index == selected - 1
-                          : selected != 0 && index < selected
-                      }
-                      selectedIndex={selected == index}
-                    />
-                  );
-                })}
-            </View>
-          </ScrollView>
-        </>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingBottom: DeviceHeigth * 0.03,
+            alignItems: 'center',
+          }}>
+          <ProgressHeader />
+          <View style={{top: 10, width: '100%', alignItems: 'center'}}>
+            {!refresh &&
+              Object.values(data?.days).map((item: any, index: number) => {
+                return (
+                  <Box
+                    key={index}
+                    active={
+                      selected != 0 &&
+                      index <= selected &&
+                      data?.days[index + 1]?.total_rest != 0
+                    }
+                    index={index + 1}
+                    item={item}
+                    percent={selected != 0 && index < selected}
+                    // eslint-disable-next-line eqeqeq
+                    selectedIndex={selected == index}
+                  />
+                );
+              })}
+          </View>
+        </ScrollView>
 
-        <View></View>
-        {/* {bannerAdsDisplay()} */}
-        {/* <BannerAdd bannerAdId={bannerAdId} /> */}
         <ActivityLoader visible={refresh} />
         <PaddoMeterPermissionModal />
       </Wrapper>
@@ -831,27 +849,176 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     lineHeight: 16,
   },
-  box: {
-    //   flex: 1,
+  dayCard: {
     alignSelf: 'center',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 10,
-    borderRadius: 10,
-    marginVertical: 6,
+    width: DeviceWidth * 0.95,
+    borderRadius: 16,
+    marginTop: 8,
     backgroundColor: AppColor.WHITE,
     shadowColor: 'grey',
+    overflow: 'hidden',
     ...Platform.select({
       ios: {
-        //shadowColor: '#000000',
         shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
+        shadowOpacity: 0.15,
+        shadowRadius: 5,
       },
       android: {
         elevation: 3,
       },
     }),
+  },
+  dayCardGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    minHeight: DeviceHeigth * 0.09,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+  },
+  numberBadge: {
+    height: DeviceWidth * 0.135,
+    width: DeviceWidth * 0.135,
+    borderRadius: (DeviceWidth * 0.135) / 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  numberBadgeText: {
+    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+    fontWeight: '700',
+    fontSize: 18,
+    color: AppColor.WHITE,
+  },
+  lockedBadge: {
+    backgroundColor: '#EAEAEA',
+  },
+  plainBadge: {
+    backgroundColor: AppColor.WHITE,
+    borderWidth: 1,
+    borderColor: '#D9D9D9',
+  },
+  restBadge: {
+    height: DeviceWidth * 0.135,
+    width: DeviceWidth * 0.135,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#D9D9D9',
+    backgroundColor: AppColor.WHITE,
+  },
+  restIcon: {
+    height: DeviceWidth * 0.09,
+    width: DeviceWidth * 0.09,
+  },
+  dayCardContent: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginLeft: 12,
+  },
+  progressCard: {
+    width: DeviceWidth * 0.95,
+    borderRadius: 18,
+    marginTop: 12,
+    overflow: 'hidden',
+    shadowColor: 'grey',
+    ...Platform.select({
+      ios: {
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.12,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  progressGradient: {
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: '#FBE4E2',
+    padding: 16,
+  },
+  progressTopRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  progressTitle: {
+    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+    fontWeight: '700',
+    fontSize: 16,
+    color: AppColor.BLACK,
+  },
+  progressSubtitle: {
+    fontFamily: Fonts.MONTSERRAT_REGULAR,
+    fontSize: 12,
+    color: '#696969',
+    marginTop: 3,
+  },
+  progressPercentBadge: {
+    backgroundColor: AppColor.RED1,
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+  progressPercentText: {
+    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+    fontWeight: '700',
+    fontSize: 13,
+    color: AppColor.WHITE,
+  },
+  progressTrack: {
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#F0DEDD',
+    marginTop: 14,
+    overflow: 'hidden',
+  },
+  progressFill: {
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: AppColor.RED1,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 14,
+  },
+  statChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  statChipText: {
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#505050',
+    marginLeft: 5,
+  },
+  statDivider: {
+    width: 1,
+    height: 14,
+    backgroundColor: '#E3D3D2',
+  },
+  challengeBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    marginTop: 12,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 20,
+    backgroundColor: AppColor.LIGHT_YELLOW,
+  },
+  challengeBadgeText: {
+    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#8A6A00',
+    marginLeft: 5,
   },
   modalBackGround: {
     flex: 1,
