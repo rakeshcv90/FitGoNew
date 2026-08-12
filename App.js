@@ -6,7 +6,7 @@ import Router, {LoginStack} from './src/Navigation/Router';
 import FlashMessage from 'react-native-flash-message';
 import {useDispatch} from 'react-redux';
 import {DeviceHeigth, DeviceWidth} from './src/Component/Config';
-import { loadLanguage } from './src/Screen/Translation/TranslationService';
+import {loadLanguage} from './src/Screen/Translation/TranslationService';
 
 import {
   requestPermissionforNotification,
@@ -33,7 +33,7 @@ import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 const App = () => {
   useEffect(() => {
     requestPermissionforNotification(dispatch);
-    
+
     // RemoteMessage();
   }, []);
 
@@ -88,7 +88,9 @@ const App = () => {
   }, []);
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={{flex: 1, backgroundColor: '#FFFFFF'}} edges={['top', 'left', 'right']}>
+      <SafeAreaView
+        style={{flex: 1, backgroundColor: '#FFFFFF'}}
+        edges={['top', 'left', 'right']}>
         <NavigationContainer
           ref={navigationRef}
           onStateChange={state => {

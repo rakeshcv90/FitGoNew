@@ -53,25 +53,18 @@ const IntroductionScreen1 = ({navigation}) => {
       <View style={styles.imageSection}>
         <View style={styles.imageContainer}>
           <IntroGlow />
-          <FloatingImage
-            source={localImage.Intro1}
-            style={styles.heroImage}
-          />
+          <FloatingImage source={localImage.Intro1} style={styles.heroImage} />
         </View>
       </View>
 
       {/* Content Area */}
       <View style={styles.contentArea}>
         <FadeSlideIn delay={250}>
-          <Text style={styles.titleText}>
-            {translate('intro1title')}
-          </Text>
+          <Text style={styles.titleText}>{translate('intro1title')}</Text>
         </FadeSlideIn>
 
         <FadeSlideIn delay={400}>
-          <Text style={styles.descText}>
-            {translate('intro1description')}
-          </Text>
+          <Text style={styles.descText}>{translate('intro1description')}</Text>
         </FadeSlideIn>
       </View>
 

@@ -325,8 +325,7 @@ const SplashAnimation = () => {
       {
         translateX:
           -shimmerBandWidth +
-          ((shimmerRef.value + 1) / 2) *
-            (shimmerMaskWidth + shimmerBandWidth),
+          ((shimmerRef.value + 1) / 2) * (shimmerMaskWidth + shimmerBandWidth),
       },
     ],
   }));
@@ -336,8 +335,7 @@ const SplashAnimation = () => {
       {
         translateX:
           -shimmerBandWidth +
-          ((shimmer2Ref.value + 1) / 2) *
-            (shimmerMaskWidth + shimmerBandWidth),
+          ((shimmer2Ref.value + 1) / 2) * (shimmerMaskWidth + shimmerBandWidth),
       },
     ],
   }));

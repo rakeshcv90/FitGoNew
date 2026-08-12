@@ -10,9 +10,9 @@ import {
   setShowIntro,
 } from '../../Component/ThemeRedux/Actions';
 import AnimatedLottieView from 'lottie-react-native';
-import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import CircleProgress from '../../Component/Utilities/ProgressCircle';
-import { translate } from '../Translation/TranslationService';
+import {translate} from '../Translation/TranslationService';
 import {FadeSlideIn, FloatingImage, IntroGlow} from './IntroAnimations';
 import {NavButton, SkipButton, StepIndicator} from './IntroControls';
 import {navButtonRadius, navButtonSize, scale} from './responsive';
@@ -60,10 +60,7 @@ const IntroductionScreen2 = ({navigation, route}) => {
       <View style={styles.imageSection}>
         <View style={styles.imageContainer}>
           <IntroGlow />
-          <FloatingImage
-            source={localImage.Intro2}
-            style={styles.heroImage}
-          />
+          <FloatingImage source={localImage.Intro2} style={styles.heroImage} />
         </View>
       </View>
 
@@ -75,7 +72,7 @@ const IntroductionScreen2 = ({navigation, route}) => {
               ? 'फिट रहें, इनाम पाएं!'
               : 'Earn While You Burn!'}
                */}
-               {translate('intro2title')}
+            {translate('intro2title')}
           </Text>
         </FadeSlideIn>
 
@@ -84,7 +81,7 @@ const IntroductionScreen2 = ({navigation, route}) => {
             {/* {hindiLanguage
               ? `हमारे रोमांचक फिटनेस चैलेंजेस में हिस्सा लें और अपनी सीमाओं को चुनौती दें! लीडरबोर्ड पर चढ़ें, और अपनी मेहनत को शानदार इनामों में बदलते हुए देखें।`
               : `Join our thrilling fitness challenges and push your limits! Climb to the top of the leaderboard, and watch as your hard work transforms into exciting rewards.`} */}
-              {translate('intro2description')}
+            {translate('intro2description')}
           </Text>
         </FadeSlideIn>
       </View>
@@ -94,7 +91,7 @@ const IntroductionScreen2 = ({navigation, route}) => {
         <NavButton
           direction="back"
           onPress={() => {
-            AnalyticsConsole("TO_IS1")
+            AnalyticsConsole('TO_IS1');
             navigation.goBack();
           }}
         />
@@ -125,7 +122,7 @@ const IntroductionScreen2 = ({navigation, route}) => {
           <NavButton
             direction="next"
             onPress={() => {
-              AnalyticsConsole("TO_IS3")
+              AnalyticsConsole('TO_IS3');
               navigation.navigate('IntroductionScreen3');
             }}
           />
