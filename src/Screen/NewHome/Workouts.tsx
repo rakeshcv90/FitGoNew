@@ -724,6 +724,9 @@ const Workouts = ({navigation}: any) => {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
+        nestedScrollEnabled={true}
+        removeClippedSubviews={Platform.OS === 'android'}
+        overScrollMode="never"
         contentContainerStyle={{paddingBottom: 40}}>
         {/* Section 1: Focus Area (Body Type) 2x2 Premium Grid */}
         <AnimatedReanimated.View
@@ -736,6 +739,8 @@ const Workouts = ({navigation}: any) => {
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
+            nestedScrollEnabled={true}
+            overScrollMode="never"
             contentContainerStyle={styles.focusPillScroll}>
             {focuseArea.map((item, idx) => (
               <FocusCardPillItem
@@ -790,6 +795,7 @@ const Workouts = ({navigation}: any) => {
             <FlatList
               data={getChallengesData}
               showsVerticalScrollIndicator={false}
+              scrollEnabled={false}
               keyExtractor={(_, index) => index.toString()}
               renderItem={renderItem1}
               contentContainerStyle={{gap: 14, paddingHorizontal: 16}}

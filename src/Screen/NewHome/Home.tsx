@@ -80,6 +80,10 @@ const Home = () => {
       </FadeSlideIn>
 
       <ScrollView
+        showsVerticalScrollIndicator={false}
+        nestedScrollEnabled={true}
+        removeClippedSubviews={Platform.OS === 'android'}
+        overScrollMode="never"
         refreshControl={
           <RefreshControl
             refreshing={loader}

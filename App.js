@@ -90,7 +90,7 @@ const App = () => {
     <SafeAreaProvider>
       <SafeAreaView
         style={{flex: 1, backgroundColor: '#FFFFFF'}}
-        edges={['top', 'left', 'right']}>
+        edges={['top', 'left', 'right', 'bottom']}>
         <NavigationContainer
           ref={navigationRef}
           onStateChange={state => {

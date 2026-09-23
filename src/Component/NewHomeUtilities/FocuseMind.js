@@ -158,6 +158,8 @@ const FocuseMind = () => {
               data={allWorkoutData?.mindset_workout_data}
               horizontal
               showsHorizontalScrollIndicator={false}
+              nestedScrollEnabled={true}
+              overScrollMode="never"
               contentContainerStyle={{paddingHorizontal: 14, paddingVertical: 6}}
               keyExtractor={(item, index) => index.toString()}
               ListEmptyComponent={emptyComponent}

@@ -29,6 +29,7 @@ import {setupSubscription} from './setupSubscription';
 import {API_CALLS} from '../../API/API_CALLS';
 import useSetupAds from './useSetupAds';
 import {useSelector} from 'react-redux';
+import {store} from '../../Component/ThemeRedux/Store';
 import checkAllPermissions from './checkAllPermissions';
 import LottieView from 'lottie-react-native';
 import AdmobInterstitial from '../../Component/NativeCodeAds/AdmobInterstitial';
@@ -273,9 +274,6 @@ const BackgroundParticle = ({
   return <Animated.View style={style} pointerEvents="none" />;
 };
 
-// ═════════════════════════════════════════════════════════════════
-//  MAIN SPLASH COMPONENT
-// ═════════════════════════════════════════════════════════════════
 const NewSplash = ({navigation}: any) => {
   const [loader, setLoader] = useState(true);
 
@@ -297,7 +295,6 @@ const NewSplash = ({navigation}: any) => {
   const loaderCardTranslateY = useSharedValue(30);
   const screenOpacity = useSharedValue(0);
 
-  // Premium loader animations
   const topGradientOpacity = useSharedValue(0);
   const bottomVignetteOpacity = useSharedValue(0);
   const progressWidth = useSharedValue(0);
@@ -407,60 +404,78 @@ const NewSplash = ({navigation}: any) => {
   };
 
   useEffect(() => {
-    const applyLanguage = async () => {
-      await handleLangChange(lang); // or 'hi', 'en', etc.
-    };
-    applyLanguage();
-    loadLanguage();
-  }, []);
-
-  useEffect(() => {
-    if (Platform.OS === 'android') {
-      AdmobInterstitial.loadAd()
-        .then(() => console.log('Ad Loaded'))
-        .catch(err => console.error('Ad Load Failed 123 .....', err));
-    }
-  }, []);
-
-  useEffect(() => {
-    const time = setTimeout(() => {
-      setLoader(false);
-    }, 10000);
-    return () => clearTimeout(time);
-  }, []);
-
-  useEffect(() => {
-    if (!loader) loadScreen();
-  }, [loader]);
-
-  const afterAdFunction = () => {
-    setupSubscription();
-    API_CALLS.getMajorData(lang);
-    if (getUserDataDetails.id != null) {
-      API_CALLS.postLogin(getUserDataDetails?.name, getUserDataDetails?.email);
-      API_CALLS.getUserDataDetails(getUserDataDetails?.id, lang);
-      if (getUserDataDetails.gender != null) {
-        API_CALLS.getAllWorkouts(getUserDataDetails?.id, lang);
+    const initializeApp = async () => {
+      // 1. Preload Ad (run in background, do not await)
+      if (Platform.OS === 'android') {
+        AdmobInterstitial.loadAd()
+          .then(() => console.log('Ad Loaded'))
+          .catch(err => console.error('Ad Load Failed .....', err));
       }
-      API_CALLS.pastWinners();
-      getAllExercise &&
-        getChallengesData &&
-        API_CALLS.getAllExercisesData(getUserDataDetails?.id, lang);
+
+      // 2. Ensure language is set before fetching
+      await handleLangChange(lang);
+      loadLanguage();
+
+      // 3. Fetch all required API data AND WAIT for it to finish
+      await fetchAllDataAsync();
+
+      // 4. Trigger routing using fresh Redux state
+      executeRoutingLogic();
+    };
+
+    initializeApp();
+  }, []);
+
+  const fetchAllDataAsync = async () => {
+    setupSubscription();
+
+    const promises = [API_CALLS.getMajorData(lang)];
+
+    // We use the currently available Redux state for the API request parameters
+    if (getUserDataDetails?.id) {
+      promises.push(API_CALLS.postLogin(getUserDataDetails?.name, getUserDataDetails?.email));
+      promises.push(API_CALLS.getUserDataDetails(getUserDataDetails?.id, lang));
+      promises.push(API_CALLS.pastWinners());
+
+      if (getUserDataDetails?.gender) {
+        promises.push(API_CALLS.getAllWorkouts(getUserDataDetails?.id, lang));
+      }
+
+      const isExerciseDataMissing = !getAllExercise || getAllExercise.length === 0;
+      const isChallengesDataMissing = !getChallengesData || getChallengesData.length === 0;
+      
+      if (isExerciseDataMissing || isChallengesDataMissing) {
+        promises.push(API_CALLS.getAllExercisesData(getUserDataDetails?.id, lang));
+      }
     }
-    // const time = setTimeout(() => {
-    // loadScreen()
-    // }, 10000);
+
+    try {
+      // Add a minimum splash screen time to ensure premium animations finish gracefully (e.g. 2.5s)
+      const minSplashTime = new Promise(resolve => setTimeout(resolve, 2500));
+      await Promise.allSettled([...promises, minSplashTime]);
+      console.log('Background API calls and min splash time completed successfully');
+    } catch (error) {
+      console.error('Error fetching background data:', error);
+    }
   };
 
-  const loadScreen = () => {
-    setLoader(true);
-    if (showIntro) {
+  const executeRoutingLogic = () => {
+    setLoader(false);
+
+    // Get fresh state from store to avoid stale closure issues
+    // since fetchAllDataAsync might have just updated these values in Redux!
+    const freshState = store.getState();
+    const freshIntro = freshState.showIntro;
+    const freshUser = freshState.getUserDataDetails;
+    const freshAgreement = freshState.getOfferAgreement;
+
+    if (freshIntro) {
       console.log('111');
-      if (getUserDataDetails?.id) {
+      if (freshUser?.id) {
         console.log('112');
-        if (getUserDataDetails?.profile_compl_status == 1) {
+        if (freshUser?.profile_compl_status == 1) {
           console.log('113');
-          if (getOfferAgreement?.term_condition == 'Accepted') {
+          if (freshAgreement?.term_condition == 'Accepted') {
             console.log('114');
             checkAllPermissions();
           } else {
@@ -527,7 +542,6 @@ const NewSplash = ({navigation}: any) => {
         navigation.replace('IntroductionScreen1');
       }
     }
-    afterAdFunction();
   };
   //  useSetupAds({ afterAdFunction, setLoader });
 

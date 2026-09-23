@@ -30,18 +30,7 @@ const checkAllPermissions = () => {
     }),
   ).then(results => {
     const condition = results.some(result => {
-      return (
-        result?.result == RESULTS.DENIED ||
-        result.result == RESULTS.BLOCKED ||
-        (isObject(result?.result) &&
-          result?.result['android.permission.ACCESS_FINE_LOCATION'] ==
-          RESULTS.BLOCKED) ||
-        (isObject(result?.result) &&
-          result?.result['android.permission.ACCESS_FINE_LOCATION'] ==
-          RESULTS.DENIED) ||
-        (isObject(result?.result) &&
-          result?.result['authorizationStatus'] === AuthorizationStatus.DENIED)
-      );
+      return !trueCondition(result?.result);
     });
     if (condition) {
     

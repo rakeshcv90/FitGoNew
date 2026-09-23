@@ -127,7 +127,8 @@ export const trueCondition = result => {
     result === RESULTS.GRANTED ||
     result === RESULTS.LIMITED ||
     (isObject &&
-      result['android.permission.ACCESS_FINE_LOCATION'] == RESULTS.GRANTED) ||
+      (result['android.permission.ACCESS_FINE_LOCATION'] == RESULTS.GRANTED ||
+       result['android.permission.ACCESS_COARSE_LOCATION'] == RESULTS.GRANTED)) ||
     (isObject &&
       result['authorizationStatus'] === AuthorizationStatus.AUTHORIZED)
   );
@@ -138,8 +139,8 @@ export const alertCondition = result => {
   return (
     result === RESULTS.BLOCKED ||
     (isObject &&
-      result['android.permission.ACCESS_FINE_LOCATION'] == //location permissions
-        RESULTS.BLOCKED) ||
+      result['android.permission.ACCESS_FINE_LOCATION'] == RESULTS.BLOCKED &&
+      result['android.permission.ACCESS_COARSE_LOCATION'] == RESULTS.BLOCKED) ||
     (isObject && result['authorizationStatus'] === AuthorizationStatus.DENIED)
   );
 };

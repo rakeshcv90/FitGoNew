@@ -65,7 +65,7 @@ react {
 /**
  * Set this to true to Run Proguard on Release builds to minify the Java bytecode.
  */
-def enableProguardInReleaseBuilds = false
+def enableProguardInReleaseBuilds = true
 
 /**
  * The preferred build flavor of JavaScriptCore (JSC)
@@ -91,8 +91,8 @@ android {
         applicationId "fitme.health.fitness.homeworkouts.equipment"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 35
-        versionName "1.35"
+        versionCode 36
+        versionName "1.36"
         multiDexEnabled true
         missingDimensionStrategy "store", "play"
         def date = new Date();

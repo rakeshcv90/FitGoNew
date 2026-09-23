@@ -845,7 +845,8 @@ const MyPlans = ({navigation}: any) => {
               style={{
                 width: '100%',
                 height: 56,
-                backgroundColor: getEquipmentExercise == 0 ? '#FFF1F2' : '#F9FAFB',
+                backgroundColor:
+                  getEquipmentExercise == 0 ? '#FFF1F2' : '#F9FAFB',
                 marginVertical: 6,
                 borderRadius: 16,
                 flexDirection: 'row',
@@ -876,7 +877,8 @@ const MyPlans = ({navigation}: any) => {
               style={{
                 width: '100%',
                 height: 56,
-                backgroundColor: getEquipmentExercise == 1 ? '#FFF1F2' : '#F9FAFB',
+                backgroundColor:
+                  getEquipmentExercise == 1 ? '#FFF1F2' : '#F9FAFB',
                 marginVertical: 6,
                 borderRadius: 16,
                 flexDirection: 'row',
@@ -991,10 +993,7 @@ const MyPlans = ({navigation}: any) => {
       }, 5000);
     }, [visible2]);
     return (
-      <Modal
-        animationType="slide"
-        statusBarTranslucent
-        visible={visible2}>
+      <Modal animationType="slide" statusBarTranslucent visible={visible2}>
         <View
           style={{
             flex: 1,
@@ -1043,7 +1042,8 @@ const MyPlans = ({navigation}: any) => {
                       marginTop: 10,
                       textAlign: 'center',
                     }}>
-                    Just a moment! We're tailoring the perfect workout plan for you.
+                    Just a moment! We're tailoring the perfect workout plan for
+                    you.
                   </Text>
                 </View>
               </View>
@@ -1199,11 +1199,7 @@ const MyPlans = ({navigation}: any) => {
                         style={{height: 18, width: 18}}
                         resizeMode="contain"
                       />
-                      <Text
-                        style={[
-                          styles.cointxt,
-                          {color: '#111827'},
-                        ]}>
+                      <Text style={[styles.cointxt, {color: '#111827'}]}>
                         {fitCoins <= 0 ? 0 : fitCoins ?? 0}
                       </Text>
                     </TouchableOpacity>
@@ -1220,11 +1216,7 @@ const MyPlans = ({navigation}: any) => {
                         style={{height: 18, width: 18}}
                         resizeMode="contain"
                       />
-                      <Text
-                        style={[
-                          styles.cointxt,
-                          {color: '#111827'},
-                        ]}>
+                      <Text style={[styles.cointxt, {color: '#111827'}]}>
                         {`#${myRank ?? 0} `}
                       </Text>
                     </TouchableOpacity>

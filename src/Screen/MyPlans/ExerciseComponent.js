@@ -189,6 +189,12 @@ export const ExerciseComponetWithoutEvents = ({
           item?.exercise_id?.toString() || index.toString()
         }
         showsVerticalScrollIndicator={false}
+        nestedScrollEnabled={true}
+        removeClippedSubviews={Platform.OS === 'android'}
+        overScrollMode="never"
+        initialNumToRender={8}
+        maxToRenderPerBatch={10}
+        windowSize={5}
         contentContainerStyle={{
           paddingBottom: insets.bottom + 140,
           paddingHorizontal: DeviceWidth * 0.04,
@@ -342,6 +348,12 @@ export const ExerciseComponentWithEvent = ({
               item?.exercise_id?.toString() || index.toString()
             }
             showsVerticalScrollIndicator={false}
+            nestedScrollEnabled={true}
+            removeClippedSubviews={Platform.OS === 'android'}
+            overScrollMode="never"
+            initialNumToRender={8}
+            maxToRenderPerBatch={10}
+            windowSize={5}
             contentContainerStyle={{
               paddingBottom: insets.bottom + 120,
               paddingHorizontal: DeviceWidth * 0.04,

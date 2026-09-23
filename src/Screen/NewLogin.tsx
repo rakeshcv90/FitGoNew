@@ -376,29 +376,31 @@ const NewLogin = () => {
     transform: [{translateY: cardTranslate.value}],
   }));
 
-  const handleFormSubmit = (values: Values, action?: FormikHelpers<Values>) => {
+  const handleFormSubmit = async (values: Values, action?: FormikHelpers<Values>) => {
     setVisible(false);
-    API_CALLS.postLogin(values?.name, values?.email).then((res: any) => {
+    setLoader(true);
+
+    try {
+      const res: any = await API_CALLS.postLogin(values?.name, values?.email);
+
       if (res?.status && !res?.email) {
-        API_CALLS.getUserDataDetails(res?.user_id, lang).then((data: any) => {
-          if (data) {
-            API_CALLS.getSubscriptionDetails(res?.user_id, lang).then(
-              (data2: any) => {
-                if (res?.allcompleted) {
-                  API_CALLS.getAllWorkouts(res?.user_id, lang);
-                  navigate('BottomTab');
-                } else if (res?.status) {
-                  navigate('Yourself');
-                } else if (!res?.term) {
-                  navigate('OfferTerms');
-                }
-              },
-            );
+        const data: any = await API_CALLS.getUserDataDetails(res?.user_id, lang);
+        
+        if (data) {
+          await API_CALLS.getSubscriptionDetails(res?.user_id, lang);
+          
+          if (res?.allcompleted) {
+            API_CALLS.getAllWorkouts(res?.user_id, lang);
+            navigate('BottomTab');
+          } else if (res?.status) {
+            navigate('Yourself');
+          } else if (!res?.term) {
+            navigate('OfferTerms');
           }
-        });
+        }
       } else {
         showMessage({
-          message: `Multiple User with same userID ${res?.email}`,
+          message: `Multiple User with same email ${res?.email ?? values.email}`,
           type: 'danger',
           floating: true,
         });
@@ -409,7 +411,11 @@ const NewLogin = () => {
         });
         setVisible(true);
       }
-    });
+    } catch (error) {
+      console.error('Login error:', error);
+    } finally {
+      setLoader(false);
+    }
   };
 
   const UpdateEmail = () => (
@@ -450,18 +456,25 @@ const NewLogin = () => {
               mH={0}
             />
             <FitButton
-              onPress={() =>
-                API_CALLS.updateEmailOnLogin(
-                  allData.name,
-                  allData.email,
-                  allData.insertedEmail,
-                ).finally(() =>
-                  handleFormSubmit({
-                    name: allData.name,
-                    email: allData.insertedEmail,
-                  }),
-                )
-              }
+              onPress={async () => {
+                setVisible(false);
+                setLoader(true);
+                try {
+                  await API_CALLS.updateEmailOnLogin(
+                    allData.name,
+                    allData.email,
+                    allData.insertedEmail,
+                  );
+                } catch (e) {
+                  console.error('Email update failed:', e);
+                }
+                
+                // Trigger form submit with the updated email (it manages loader state internally)
+                handleFormSubmit({
+                  name: allData.name,
+                  email: allData.insertedEmail,
+                });
+              }}
               w={'half'}
               titleText="Update"
               textColor={AppColor.WHITE}

@@ -10,10 +10,7 @@ import com.facebook.react.defaults.DefaultReactActivityDelegate
 class MainActivity : ReactActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        savedInstanceState?.remove("android:support:fragments")
-        savedInstanceState?.remove("android:fragments")
-     
-        super.onCreate(savedInstanceState)
+        super.onCreate(null)
         WindowCompat.setDecorFitsSystemWindows(window, true)
     }
   /**

@@ -51,6 +51,7 @@ import {storeAgreementApi} from '../../Component/Permissions/PermissionHooks';
 import {
   permissionMethods,
   UIArray,
+  trueCondition,
 } from '../../Component/Permissions/PermissionMethods';
 import {RESULTS} from 'react-native-permissions';
 import {AuthorizationStatus} from '@notifee/react-native';
@@ -181,19 +182,7 @@ const OfferTerms = ({navigation, route}: any) => {
       }),
     ).then(results => {
       const condition = results.some(result => {
-        return (
-          result?.result == RESULTS.DENIED ||
-          result.result == RESULTS.BLOCKED ||
-          (isObject(result?.result) &&
-            result?.result['android.permission.ACCESS_FINE_LOCATION'] ==
-              RESULTS.BLOCKED) ||
-          (isObject(result?.result) &&
-            result?.result['android.permission.ACCESS_FINE_LOCATION'] ==
-              RESULTS.DENIED) ||
-          (isObject(result?.result) &&
-            result?.result['authorizationStatus'] ===
-              AuthorizationStatus.DENIED)
-        );
+        return !trueCondition(result?.result);
       });
       if (condition) {
         navigation.navigate('PermissionScreen');
