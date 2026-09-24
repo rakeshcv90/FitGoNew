@@ -8,11 +8,11 @@ import {
   Platform,
   TouchableOpacity,
   ScrollView,
-  Modal,
   Linking,
   StatusBar,
   ActivityIndicator,
 } from 'react-native';
+import { Portal } from 'react-native-paper';
 import React, {useEffect, useRef, useState} from 'react';
 
 import {AppColor, Fonts} from '../Component/Color';
@@ -541,12 +541,10 @@ const NewProfile = ({navigation}) => {
     return (
       <View
         style={{flex: 1, position: 'absolute', width: '100%', height: '100%'}}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={true}
-          onRequestClose={() => setUpadteScreenVisibilty(false)}>
-          <View style={styles.uploadModalBackdrop}>
+        {UpdateScreenVisibility && (
+          <Portal>
+            <View style={[StyleSheet.absoluteFill, { zIndex: 9999, elevation: 9999 }]}>
+              <View style={styles.uploadModalBackdrop}>
             <BlurView
               style={StyleSheet.absoluteFill}
               blurType="dark"
@@ -697,7 +695,9 @@ const NewProfile = ({navigation}) => {
               </View>
             </AnimatedReanimated.View>
           </View>
-        </Modal>
+        </View>
+        </Portal>
+        )}
       </View>
     );
   };
@@ -739,15 +739,12 @@ const NewProfile = ({navigation}) => {
     };
 
     return (
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          if (!deleteLoading) setModalVisible(false);
-        }}>
-        <StatusBar barStyle="light-content" backgroundColor="rgba(15, 23, 42, 0.65)" />
-        <View style={styles.modalOverlayContainer}>
+      <React.Fragment>
+        {modalVisible && (
+          <Portal>
+            <View style={[StyleSheet.absoluteFill, { zIndex: 9999, elevation: 9999 }]}>
+              <StatusBar barStyle="light-content" backgroundColor="rgba(15, 23, 42, 0.65)" />
+              <View style={styles.modalOverlayContainer}>
           <AnimatedReanimated.View
             entering={ZoomIn.duration(350).springify()}
             style={styles.deleteModalCardContainer}>
@@ -842,21 +839,21 @@ const NewProfile = ({navigation}) => {
             </View>
           </AnimatedReanimated.View>
         </View>
-      </Modal>
+        </View>
+        </Portal>
+        )}
+      </React.Fragment>
     );
   };
 
   const renderLogoutConfirmModal = () => {
     return (
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={logoutModalVisible}
-        onRequestClose={() => {
-          if (!logoutLoading) setLogoutModalVisible(false);
-        }}>
-        <StatusBar barStyle="light-content" backgroundColor="rgba(15, 23, 42, 0.65)" />
-        <View style={styles.modalOverlayContainer}>
+      <React.Fragment>
+        {logoutModalVisible && (
+          <Portal>
+            <View style={[StyleSheet.absoluteFill, { zIndex: 9999, elevation: 9999 }]}>
+              <StatusBar barStyle="light-content" backgroundColor="rgba(15, 23, 42, 0.65)" />
+              <View style={styles.modalOverlayContainer}>
           <AnimatedReanimated.View
             entering={ZoomIn.duration(350).springify()}
             style={styles.logoutModalCardContainer}>
@@ -924,9 +921,12 @@ const NewProfile = ({navigation}) => {
                 </LinearGradient>
               </TouchableOpacity>
             </View>
-          </AnimatedReanimated.View>
+            </AnimatedReanimated.View>
+          </View>
         </View>
-      </Modal>
+        </Portal>
+        )}
+      </React.Fragment>
     );
   };
 

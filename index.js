@@ -9,6 +9,7 @@ import {name as appName} from './app.json';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import {persister, store} from './src/Component/ThemeRedux/Store';
+import {Provider as PaperProvider} from 'react-native-paper';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {useEffect} from 'react';
 import messaging from '@react-native-firebase/messaging';
@@ -358,7 +359,9 @@ const AppRedux = () => {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persister}>
-        <App />
+        <PaperProvider>
+          <App />
+        </PaperProvider>
       </PersistGate>
     </Provider>
   );

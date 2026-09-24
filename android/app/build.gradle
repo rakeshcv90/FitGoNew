@@ -91,8 +91,8 @@ android {
         applicationId "fitme.health.fitness.homeworkouts.equipment"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 36
-        versionName "1.36"
+        versionCode 37
+        versionName "1.37"
         multiDexEnabled true
         missingDimensionStrategy "store", "play"
         def date = new Date();
