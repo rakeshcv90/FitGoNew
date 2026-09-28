@@ -87,7 +87,7 @@ const NotificationType = data => {
   const screenName = findKeyInObject(data, 'screen');
   const Params = findKeyInObject(data, 'params');
 
-  if (screenName != null) {
+  if (screenName != null && navigationRef.current) {
     // if(Params != null){
     //   navigationRef.current.navigate(screenName)
     // }
@@ -387,5 +387,5 @@ const AppRedux = () => {
 try {
   AppRegistry.registerComponent(appName, () => AppRedux);
 } catch (error) {
-  console.error('App registration failed:', e);
+  console.error('App registration failed:', error);
 }

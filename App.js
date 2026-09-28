@@ -94,12 +94,15 @@ const App = () => {
         <NavigationContainer
           ref={navigationRef}
           onStateChange={state => {
+            if (!state || !state.routes || state.index == null) return;
+            const currentRoute = state.routes[state.index];
+            if (!currentRoute) return;
             analytics().logScreenView({
-              screen_name: state.routes[state.index].name, //logging screen name to firebase Analytics
+              screen_name: currentRoute.name,
             });
             crashlytics().setAttributes({
               platform: Platform.OS,
-              CrashedScreenName: state.routes[state.index].name,
+              CrashedScreenName: currentRoute.name,
             });
           }}>
           <LoginStack updateAvialable={'hello'} />

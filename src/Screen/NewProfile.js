@@ -895,8 +895,8 @@ const NewProfile = ({navigation}) => {
                 onPress={() => {
                   setLogoutLoading(true);
                   setTimeout(() => {
-                    setLogoutLoading(false);
-                    setLogoutModalVisible(false);
+                    // Call LogOut directly without updating component state first,
+                    // since LogOut resets Redux and navigates away, unmounting this component
                     LogOut(dispatch);
                   }, 1200);
                 }}>

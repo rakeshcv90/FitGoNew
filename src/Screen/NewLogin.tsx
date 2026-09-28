@@ -44,17 +44,18 @@ import {
   FloatingImage,
 } from './Introduction/IntroAnimations';
 
-const validationSchema = Yup.object().shape({
-  name: Yup.string()
-    .required(translate('namevalid'))
-    .matches(/^[A-Za-z].*/, translate('namechar'))
-    .matches(/^[a-zA-Z0-9 ]*$/, translate('namespecial'))
-    .min(3, translate('namevalid')),
+const getValidationSchema = () =>
+  Yup.object().shape({
+    name: Yup.string()
+      .required(translate('namevalid'))
+      .matches(/^[A-Za-z].*/, translate('namechar'))
+      .matches(/^[a-zA-Z0-9 ]*$/, translate('namespecial'))
+      .min(3, translate('namevalid')),
 
-  email: Yup.string()
-    .matches(/^[\w.\-]+@[\w.\-]+\.\w{2,4}$/, translate('emailvalid'))
-    .required(translate('emailreq')),
-});
+    email: Yup.string()
+      .matches(/^[\w.\-]+@[\w.\-]+\.\w{2,4}$/, translate('emailvalid'))
+      .required(translate('emailreq')),
+  });
 
 type Values = {
   name: string;
@@ -383,22 +384,55 @@ const NewLogin = () => {
     try {
       const res: any = await API_CALLS.postLogin(values?.name, values?.email);
 
+      if (!res) {
+        showMessage({
+          message: 'Something went wrong. Please try again.',
+          type: 'danger',
+          floating: true,
+        });
+        setLoader(false);
+        return;
+      }
+
       if (res?.status && !res?.email) {
-        const data: any = await API_CALLS.getUserDataDetails(res?.user_id, lang);
-        
-        if (data) {
-          await API_CALLS.getSubscriptionDetails(res?.user_id, lang);
-          
-          if (res?.allcompleted) {
-            API_CALLS.getAllWorkouts(res?.user_id, lang);
-            navigate('BottomTab');
-          } else if (res?.status) {
-            navigate('Yourself');
-          } else if (!res?.term) {
-            navigate('OfferTerms');
-          }
+        if (!res?.user_id) {
+          showMessage({
+            message: 'Login failed. Please try again.',
+            type: 'danger',
+            floating: true,
+          });
+          setLoader(false);
+          return;
         }
-      } else {
+
+        try {
+          const data: any = await API_CALLS.getUserDataDetails(res.user_id, lang);
+          
+          if (data) {
+            await API_CALLS.getSubscriptionDetails(res.user_id, lang).catch(
+              (err: any) => console.warn('Subscription fetch failed:', err),
+            );
+            
+            if (res?.allcompleted) {
+              API_CALLS.getAllWorkouts(res.user_id, lang).catch(
+                (err: any) => console.warn('Workouts fetch failed:', err),
+              );
+              navigate('BottomTab');
+            } else if (res?.status) {
+              navigate('Yourself');
+            } else if (!res?.term) {
+              navigate('OfferTerms');
+            }
+          }
+        } catch (dataError) {
+          console.error('User data fetch error:', dataError);
+          showMessage({
+            message: 'Failed to load user data. Please try again.',
+            type: 'danger',
+            floating: true,
+          });
+        }
+      } else if (res?.email) {
         showMessage({
           message: `Multiple User with same email ${res?.email ?? values.email}`,
           type: 'danger',
@@ -413,6 +447,11 @@ const NewLogin = () => {
       }
     } catch (error) {
       console.error('Login error:', error);
+      showMessage({
+        message: 'Login failed. Please try again.',
+        type: 'danger',
+        floating: true,
+      });
     } finally {
       setLoader(false);
     }
@@ -534,7 +573,7 @@ const NewLogin = () => {
                 email: '',
               }}
               onSubmit={handleFormSubmit}
-              validationSchema={validationSchema}>
+              validationSchema={getValidationSchema()}>
               {({
                 values,
                 handleChange,
